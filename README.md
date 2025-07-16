@@ -1,7 +1,7 @@
 Apache Spark (Distributed computing engine)
 
 ## 🟩 1. Apache Spark Core Concepts
-📌 **RDD, DataFrame, Lazy |  fault** /fɔːlt/ **tolerance** /ˈtɒlərəns/ **mechanisms** /ˈmekənɪzəmz/
+📌 **RDD, DataFrame, Lazy |  fault tolerance mechanisms** /fɔːlt/ /ˈtɒlərəns/ /ˈmekənɪzəmz/
 
 ```mermaid
 flowchart TB
