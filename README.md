@@ -81,3 +81,7 @@ flowchart TD
     style T4 fill:#f3e5f5,stroke:#6a1b9a
     style T5 fill:#f3e5f5,stroke:#6a1b9a
 ```
+
+## 🟧 3. Shuffle & Partitioning
+
+📌 **Shuffle = Costly, Wide vs Narrow**
