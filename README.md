@@ -185,3 +185,39 @@ flowchart TD
     style D fill:#f1f8e9,stroke:#33691e,stroke-width:2px
     style E fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
 ```
+
+## ⚙️ 5. General Spark Tuning (Skew Indirectly Helpful)
+
+These don't solve skew but improve performance or stability overall.
+
+1. **Memory Configuration**
+    - Adjust executor/driver memory
+    - Configure memory overhead
+2. **Parallelism Settings**
+    - Tune `spark.sql.shuffle.partitions`
+    - Adjust `spark.default.parallelism`
+3. **GC Optimization**
+    - Tune memory fraction
+    - Switch to G1GC or ZGC
+4. **Dynamic Resource Allocation**
+    - Enable auto-scaling of executors
+5. **Caching & Persistence**
+    - Reuse intermediate results
+   
+```mermaid
+flowchart TD
+    A["🔥 Spark Optimization Techniques"]
+
+    A --> G1["⚙️ Memory Tuning<br>- executor.memory<br>- memoryOverhead"]
+    A --> G2["⚙️ Parallelism<br>- shuffle partitions"]
+    A --> G3["⚙️ GC Config<br>- memory fraction<br>- G1GC"]
+    A --> G4["⚙️ Dynamic Allocation<br>- auto executor scaling"]
+    A --> G5["⚙️ Caching<br>- persist()/cache()"]
+
+    style A fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    style G1 fill:#e0f7fa,stroke:#0288d1,stroke-width:2px
+    style G2 fill:#e0f7fa,stroke:#0288d1,stroke-width:2px
+    style G3 fill:#e0f7fa,stroke:#0288d1,stroke-width:2px
+    style G4 fill:#e0f7fa,stroke:#0288d1,stroke-width:2px
+    style G5 fill:#e0f7fa,stroke:#0288d1,stroke-width:2px
+```
