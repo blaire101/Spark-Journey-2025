@@ -1,3 +1,7 @@
+## 🟩 1. Core Concepts
+
+📌 **RDD, DataFrame, Lazy |  fault** /fɔːlt/ **tolerance** /ˈtɒlərəns/ **mechanisms** /ˈmekənɪzəmz/
+
 ```mermaid
 flowchart TB
     SPARK["Apache Spark<br>(Distributed computing engine for data processing)"]
@@ -48,6 +52,9 @@ flowchart TB
 ```
 
 ---
+## 🟨 2. Execution Model
+
+📌 **Job → Stage → Task**
 
 ```mermaid
 flowchart TD
