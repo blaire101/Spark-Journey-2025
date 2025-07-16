@@ -189,19 +189,6 @@ flowchart TD
 ## ⚙️ 5. General Spark Tuning (Skew Indirectly Helpful)
 
 These don't solve skew but improve performance or stability overall.
-
-1. **Memory Configuration**
-    - Adjust executor/driver memory
-    - Configure memory overhead
-2. **Parallelism Settings**
-    - Tune `spark.sql.shuffle.partitions`
-    - Adjust `spark.default.parallelism`
-3. **GC Optimization**
-    - Tune memory fraction
-4. **Dynamic Resource Allocation**
-    - Enable auto-scaling of executors
-5. **Caching & Persistence**
-    - Reuse intermediate results
    
 ```mermaid
 flowchart TD
@@ -220,3 +207,16 @@ flowchart TD
     style G4 fill:#e0f7fa,stroke:#0288d1,stroke-width:2px
     style G5 fill:#e0f7fa,stroke:#0288d1,stroke-width:2px
 ```
+
+1. **Memory Configuration**
+    - Adjust executor/driver memory
+    - Configure memory overhead
+2. **Parallelism Settings**
+    - Tune `spark.sql.shuffle.partitions`
+    - Adjust `spark.default.parallelism`
+3. **GC Optimization**
+    - Tune memory fraction
+4. **Dynamic Resource Allocation**
+    - Enable auto-scaling of executors
+5. **Caching & Persistence**
+    - Reuse intermediate results
