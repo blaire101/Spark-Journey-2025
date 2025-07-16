@@ -3,10 +3,9 @@ Apache Spark (Distributed computing engine)
 ## 🟩 1. Apache Spark Core Concepts
 📌 **RDD, DataFrame, Lazy |  fault tolerance mechanisms** /fɔːlt/ /ˈtɒlərəns/ /ˈmekənɪzəmz/
 
-| No. | ❓Question | ✅ Answer | 📘 Notes |
-| --- | --- | --- | --- |
-| 1 | **What is Apache Spark?** | A distributed computing engine for large-scale data processing. | Supports in-memory computation and APIs in Scala, Python, Java, SQL. |
-| 2 | **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
+|  ❓Question | ✅ Answer | 📘 Notes |
+| --- | --- | --- |
+| **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
 
 ```mermaid
 flowchart TB
