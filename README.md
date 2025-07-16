@@ -119,30 +119,49 @@ flowchart TD
 
 ```mermaid
 flowchart TB
-    Case1["1️⃣ Skewed Join Keys"] --> C1a["📡 Broadcast Join<br>Use for small table (&lt;10 MB)"] & C1b["♻️ AQE Skew Join<br>Enable adaptive shuffle join"]
-    Case2["2️⃣ Skewed Aggregation"] --> C2a["🧂 Salting<br>Append random suffix"] & C2b["📊 Local Aggregate<br>Group by salted key"] & C2c["📉 Global Merge<br>Final group by key"]
-    Case3["3️⃣ Skewed Input Files"] --> C3a["🔁 Repartition files"] & C3b["📁 Avoid GZIP (non‑splittable)"]
-    Case4["4️⃣ Manual SQL Optimization"] --> C4a["💡 SQL Hint<br>/*+ BROADCAST(table) */"]
-    Case5["5️⃣ General Spark Tuning"] --> C5a["🧭 Monitor Spark UI"] & C5b["⚙️ spark.sql.shuffle.partitions"] & C5c["✅ spark.sql.adaptive.enabled=true"]
-    C5c --> n1["Untitled Node"]
+    C1["1️⃣ Skewed Join Keys"]
+    C2["2️⃣ Skewed Aggregation"]
+    C3["3️⃣ Skewed Input Files"]
+    C4["4️⃣ Manual SQL Optimization"]
+    C5["5️⃣ General Spark Tuning"]
 
-     C1a:::leaf
-     C1b:::leaf
-     C2a:::leaf
-     C2b:::leaf
-     C2c:::leaf
-     C3a:::leaf
-     C3b:::leaf
-     C4a:::leaf
-     C5a:::leaf
-     C5b:::leaf
-     C5c:::leaf
-    classDef leaf fill:#ffffff,stroke:#888,stroke-width:1.5px
-    style Case1 fill:#f8bbd0,stroke:#ad1457,stroke-width:2px
-    style Case2 fill:#ffe082,stroke:#f57f17,stroke-width:2px
-    style Case3 fill:#b2ebf2,stroke:#00838f,stroke-width:2px
-    style Case4 fill:#c5e1a5,stroke:#558b2f,stroke-width:2px
-    style Case5 fill:#d1c4e9,stroke:#6a1b9a,stroke-width:2px
+    %% Chain vertically
+    C1 --> C2
+    C2 --> C3
+    C3 --> C4
+    C4 --> C5
+
+    %% Case 1 branches
+    C1 --> C1a["📡 Broadcast Join"]
+    C1 --> C1b["♻️ AQE Skew Join"]
+    C1 --> C1c["🧂 Salting Join Key<br>+ Expand small table"]
+
+    %% Case 2 branches
+    C2 --> C2a["🧂 Salting Key"]
+    C2 --> C2b["📊 Local Aggregate"]
+    C2 --> C2c["🔁 Global Merge"]
+
+    %% Case 3 branches
+    C3 --> C3a["🔁 Repartition files"]
+    C3 --> C3b["📁 Use splittable formats"]
+
+    %% Case 4 branches
+    C4 --> C4a["💡 SQL Hint<br>/*+ BROADCAST(table) */"]
+
+    %% Case 5 branches
+    C5 --> C5a["🧭 Spark UI Monitor"]
+    C5 --> C5b["⚙️ shuffle.partitions"]
+    C5 --> C5c["✅ AQE enabled"]
+
+    %% Styling
+    style C1 fill:#f8bbd0,stroke:#ad1457,stroke-width:2px
+    style C2 fill:#ffe082,stroke:#f57f17,stroke-width:2px
+    style C3 fill:#b2ebf2,stroke:#00838f,stroke-width:2px
+    style C4 fill:#c5e1a5,stroke:#558b2f,stroke-width:2px
+    style C5 fill:#d1c4e9,stroke:#6a1b9a,stroke-width:2px
+    classDef leaf fill:#ffffff,stroke:#888
+    class C1a,C1b,C1c,C2a,C2b,C2c,C3a,C3b,C4a,C5a,C5b,C5c leaf
+
 ```
 
 
