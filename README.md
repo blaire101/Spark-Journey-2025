@@ -198,7 +198,6 @@ These don't solve skew but improve performance or stability overall.
     - Adjust `spark.default.parallelism`
 3. **GC Optimization**
     - Tune memory fraction
-    - Switch to G1GC or ZGC
 4. **Dynamic Resource Allocation**
     - Enable auto-scaling of executors
 5. **Caching & Persistence**
