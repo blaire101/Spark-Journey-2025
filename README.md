@@ -1,12 +1,11 @@
-## 🟩 1. Core Concepts
+Apache Spark (Distributed computing engine)
 
+## 🟩 1. Apache Spark Core Concepts
 📌 **RDD, DataFrame, Lazy |  fault** /fɔːlt/ **tolerance** /ˈtɒlərəns/ **mechanisms** /ˈmekənɪzəmz/
 
 ```mermaid
 flowchart TB
-    SPARK["Apache Spark<br>(Distributed computing engine)"]
     Session["SparkSession spark"]
-
     subgraph APIs ["Data Ingestion APIs"]
       PyAPI["PySpark<br>spark.read.text(...)"]
       SQLAPI["SparkSQL<br>createOrReplaceTempView(...)"]
@@ -27,7 +26,6 @@ flowchart TB
     Action --> Driver["Driver<br>receives final result"]
 
     %% Styling
-    style SPARK    fill:#eeeeee,stroke:#333,stroke-width:2px
     style Session  fill:#f0f4c3,stroke:#827717,stroke-width:2px
     style PyAPI    fill:#bbdefb,stroke:#0d47a1,stroke-width:2px
     style SQLAPI   fill:#d1c4e9,stroke:#4a148c,stroke-width:2px
