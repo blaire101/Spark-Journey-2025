@@ -11,7 +11,6 @@ flowchart TB
       SQLAPI["SparkSQL<br>createOrReplaceTempView(...)"]
     end
 
-    SPARK --> Session
     Session --> PyAPI
     Session --> SQLAPI
 
