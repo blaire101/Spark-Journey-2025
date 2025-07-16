@@ -5,7 +5,7 @@ Apache Spark (Distributed computing engine)
 
 ```mermaid
 flowchart TB
-    Session["spark (SparkSession)"]
+    Session["SparkSession"]
     subgraph APIs ["Data Ingestion APIs"]
       PyAPI["PySpark<br>spark.read.text(...)"]
       SQLAPI["SparkSQL<br>createOrReplaceTempView(...)"]
