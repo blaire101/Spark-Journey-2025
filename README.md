@@ -117,51 +117,71 @@ flowchart TD
 
 🔥 Data Skew in Spark - *Unbalanced data across partitions*
 
+### 🟢 1. Skewed Input Files
+
 ```mermaid
-flowchart TB
-    C1["1️⃣ Skewed Join Keys"]
-    C2["2️⃣ Skewed Aggregation"]
-    C3["3️⃣ Skewed Input Files"]
-    C4["4️⃣ Manual SQL Optimization"]
-    C5["5️⃣ General Spark Tuning"]
+flowchart TD
+    A["Input Files<br>City Logs (Text)"] --> B["Spark Read<br>spark.read.text(...)"]
+    B --> C1["Partition 0<br>📄 10MB"]
+    B --> C2["Partition 1<br>📄 500KB"]
+    B --> C3["Partition 2<br>📄 600KB"]
+    
+    C1 --> D["Skewed Stage Execution<br>❌ One task takes much longer"]
+    
+    D --> E["✅ Solution:<br>• Repartition<br>• Combine small files<br>• Use columnar format (e.g., Parquet)"]
 
-    %% Chain vertically
-    C1 --> C2
-    C2 --> C3
-    C3 --> C4
-    C4 --> C5
-
-    %% Case 1 branches
-    C1 --> C1a["📡 Broadcast Join"]
-    C1 --> C1b["♻️ AQE Skew Join"]
-    C1 --> C1c["🧂 Salting Join Key<br>+ Expand small table"]
-
-    %% Case 2 branches
-    C2 --> C2a["🧂 Salting Key"]
-    C2 --> C2b["📊 Local Aggregate"]
-    C2 --> C2c["🔁 Global Merge"]
-
-    %% Case 3 branches
-    C3 --> C3a["🔁 Repartition files"]
-    C3 --> C3b["📁 Use splittable formats"]
-
-    %% Case 4 branches
-    C4 --> C4a["💡 SQL Hint<br>/*+ BROADCAST(table) */"]
-
-    %% Case 5 branches
-    C5 --> C5a["🧭 Spark UI Monitor"]
-    C5 --> C5b["⚙️ shuffle.partitions"]
-    C5 --> C5c["✅ AQE enabled"]
-
-    %% Styling
-    style C1 fill:#f8bbd0,stroke:#ad1457,stroke-width:2px
-    style C2 fill:#ffe082,stroke:#f57f17,stroke-width:2px
-    style C3 fill:#b2ebf2,stroke:#00838f,stroke-width:2px
-    style C4 fill:#c5e1a5,stroke:#558b2f,stroke-width:2px
-    style C5 fill:#d1c4e9,stroke:#6a1b9a,stroke-width:2px
-    classDef leaf fill:#ffffff,stroke:#888
-    class C1a,C1b,C1c,C2a,C2b,C2c,C3a,C3b,C4a,C5a,C5b,C5c leaf
-
+    style A fill:#f0f4c3,stroke:#827717,stroke-width:2px
+    style D fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style E fill:#e0f7fa,stroke:#006064,stroke-width:2px
 ```
 
+### 🟣 2. Skewed Join Keys
 
+```mermaid
+flowchart TD
+    A["Join Two Tables<br>users JOIN logs<br>ON user_id"]
+    A --> B["Skewed Key Detected<br>e.g., user_id = 123 appears 1M times"]
+    
+    B --> C1["Solution 1: Broadcast Join<br>if one table is small (<10MB)"]
+    B --> C2["Solution 2: Salting<br>add random prefix/suffix to skewed keys"]
+    B --> C3["Solution 3: AQE<br>Adaptive Query Execution handles skewed joins"]
+
+    style A fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    style B fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+    style C1 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style C2 fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    style C3 fill:#fff3e0,stroke:#e65100,stroke-width:2px
+```
+
+### 🟡 3. Skewed Aggregation Keys
+
+```mermaid
+flowchart TD
+    A["Raw DataFrame<br>Logs with city names"]
+    A --> B["Aggregation: GROUP BY city"]
+    B --> C["Skewed Key Detected<br>e.g., 'Singapore' appears 1M times"]
+    
+    C --> D["✅ Solution:<br>• Add salt (e.g., city_1, city_2)<br>• First stage: group by salted keys<br>• Second stage: merge original keys"]
+
+    style A fill:#f0f4c3,stroke:#827717,stroke-width:2px
+    style B fill:#bbdefb,stroke:#0d47a1,stroke-width:2px
+    style C fill:#f8bbd0,stroke:#c2185b,stroke-width:2px
+    style D fill:#e0f7fa,stroke:#006064,stroke-width:2px
+```
+
+### 🔧 4. General Spark Tuning & SQL Optimization
+
+```mermaid
+flowchart TD
+    A["🔥 Task takes long or skewed output"]
+    A --> B["Check Spark UI"]
+    A --> C["Enable AQE<br>(Adaptive Query Execution)"]
+    A --> D["Use SQL Hints<br>e.g., BROADCAST(table), REPARTITION(N)"]
+    A --> E["Tune configs:<br>• spark.sql.shuffle.partitions<br>• spark.sql.autoBroadcastJoinThreshold"]
+
+    style A fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+    style B fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style C fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style D fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    style E fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+```
