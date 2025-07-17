@@ -123,8 +123,7 @@ flowchart TD
 |----------|-------------------|--------|-------------------------------------------------------------------------|
 | Stage 1  | Map Tasks          | 3      | Each processes one original input partition.                           |
 | Stage 1  | Shuffle Map Tasks  | 3      | Same as above; each writes shuffle files for downstream consumption.   |
-| - | - | - |
-| Stage 2  | Reduce Tasks       | 2      | Each fetches its partitioned data from all 3 shuffle files, merges and aggregates. |
+| **Stage 2**  | Reduce Tasks       | 2      | **Each fetches its partitioned data from all 3 shuffle files, merges and aggregates.** |
 
 ## 4. Data Skew（skewness)
 
