@@ -117,6 +117,15 @@ flowchart TD
     style Note1 fill:#fffde7,stroke:#fbc02d,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
+🔁 Task Count Comparison
+
+| Stage    | Task Type         | Count | Description                                                             |
+|----------|-------------------|--------|-------------------------------------------------------------------------|
+| Stage 1  | Map Tasks          | 3      | Each processes one original input partition.                           |
+| Stage 1  | Shuffle Map Tasks  | 3      | Same as above; each writes shuffle files for downstream consumption.   |
+| - | - | - |
+| Stage 2  | Reduce Tasks       | 2      | Each pulls data from 3 shuffle map tasks and aggregates into 2 partitions. |
+
 ## 4. Data Skew（skewness)
 
 🔥 Data Skew in Spark - *Unbalanced data across partitions*
