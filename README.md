@@ -56,9 +56,6 @@ flowchart TB
 | 7 | What is a Spark job? | Triggered by action, consists of stages. |
 | 8 | What is a stage in Spark? | A set of tasks between shuffles. |
 | 9 | What is a task? | Unit of execution on a partition. |
-| Stage1 | contains narrow transformations (e.g. `map`, `filter`) that don't require shuffling data. | 👉 It is divided into multiple **Tasks**, each processing one partition (e.g. Partition 0, 1, 2). These tasks run **in parallel**. |
-| Stage2 | begins **after** Stage 1 is completed, it involves **shuffle** operations like `reduceByKey` | 👉 It too is broken into **Tasks**, now operating on **shuffled partitions** (e.g. Partition A, B). Again, tasks in this stage run in parallel.， Once Stage 2 completes, the final result is returned to the **Driver** |
-
 
 ```mermaid
 flowchart TD
@@ -85,6 +82,12 @@ flowchart TD
     style T4 fill:#f3e5f5,stroke:#6a1b9a
     style T5 fill:#f3e5f5,stroke:#6a1b9a
 ```
+
+| No. | Question | Summary |
+| --- | --- | --- |
+| Stage1 | contains narrow transformations (e.g. `map`, `filter`) that don't require shuffling data. | 👉 It is divided into multiple **Tasks**, each processing one partition (e.g. Partition 0, 1, 2). These tasks run **in parallel**. |
+| Stage2 | begins **after** Stage 1 is completed, it involves **shuffle** operations like `reduceByKey` | 👉 It too is broken into **Tasks**, now operating on **shuffled partitions** (e.g. Partition A, B). Again, tasks in this stage run in parallel.， Once Stage 2 completes, the final result is returned to the **Driver** |
+
    
 ## 🟧 3. Shuffle & Partitioning
 
