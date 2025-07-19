@@ -41,10 +41,25 @@ flowchart TB
     style Driver   fill:#ffffff,stroke:#999,stroke-width:1px,stroke-dasharray:5 5
 ```
 
+| No. | ❓Question | ✅ Answer | 📘 Notes |
+| --- | --- | --- | --- |
+| 1 | **What is Apache Spark?** | A distributed computing engine for large-scale data processing. | Supports in-memory computation and APIs in Scala, Python, Java, SQL. |
+| 2 | **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
+| 3 | **What is a DataFrame?** | A distributed table with named columns and typed rows. | Built on RDDs; optimized by Catalyst engine; like a distributed Pandas/DataTable. |
+| 4 | **What is a transformation?** | A lazy operation that returns a new RDD or DataFrame. | Examples: `map()`, `filter()`, `groupBy()`. |
+| 5 | **What is an action?** | An operation that triggers actual computation and returns results. | Examples: `collect()`, `count()`, `show()`. |
+| 6 | **What is lazy evaluation?** | Spark builds a logical DAG of transformations, which is only executed when an action is called. | Enables optimization and fault tolerance. |
+
 ---
 ## 🟨 2. Execution Model
 
 📌 **Job → Stage → Task**
+
+| No. | Question | Summary |
+| --- | --- | --- |
+| 7 | What is a Spark job? | Triggered by action, consists of stages. |
+| 8 | What is a stage in Spark? | A set of tasks between shuffles. |
+| 9 | What is a task? | Unit of execution on a partition. |
 
 ```mermaid
 flowchart TD
@@ -72,9 +87,33 @@ flowchart TD
     style T5 fill:#f3e5f5,stroke:#6a1b9a
 ```
 
+1. **Action** (e.g. `collect()`) is triggered by the user on an RDD or DataFrame.
+    
+    👉 This marks the start of an execution plan.
+    
+2. A **Spark Job** is created in response to the Action.
+    
+    👉 A job consists of one or more **stages**.
+    
+3. **Stage 1** contains narrow transformations (e.g. `map`, `filter`) that don't require shuffling data.
+    
+    👉 It is divided into multiple **Tasks**, each processing one partition (e.g. Partition 0, 1, 2). These tasks run **in parallel**.
+    
+4. **Stage 2** begins **after** Stage 1 is completed, it involves **shuffle** operations like `reduceByKey`.
+    
+    👉 It too is broken into **Tasks**, now operating on **shuffled partitions** (e.g. Partition A, B). Again, tasks in this stage run in parallel.
+    
+5. Once Stage 2 completes, the final result is returned to the **Driver**.
+   
 ## 🟧 3. Shuffle & Partitioning
 
 📌 **Shuffle = Costly, Wide vs Narrow**
+
+| # | Question | Summary |
+| --- | --- | --- |
+| 10 | What is a shuffle in Spark? | Data redistribution across partitions. |
+| 11 | Why is shuffle expensive? | Disk I/O + network + serialization. |
+| 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
 
 ```mermaid
 flowchart TD
@@ -128,6 +167,28 @@ flowchart TD
 ## 4. Data Skew（skewness)
 
 🔥 Data Skew in Spark - *Unbalanced data across partitions*
+
+| Category                      | Optimization Methods                                           |
+|------------------------------|----------------------------------------------------------------|
+| 1️⃣ Skewed Input Files        | Repartitioning, Merging small files, Using more suitable file formats |
+| 2️⃣ Skewed Join Keys          | Broadcast Join, Salting, Adaptive Query Execution (AQE)       |
+| 3️⃣ Skewed Aggregation        | Salting + Two-stage aggregation                               |
+| 4️⃣ General Tuning & SQL Hints| SQL hints, Repartitioning, Adaptive Query Execution (AQE)     |
+
+| # | Question | Summary |
+| --- | --- | --- |
+| 13 | What is data skew? | Unbalanced data across partitions. |
+| 14 | What causes it? | Skewed key distribution. |
+| 15 | Why is it bad? | Causes long-running tasks, resource underuse. |
+| 16 | How to detect it? | Spark UI (task duration, skewed keys). |
+| 17 | What ops are sensitive? | Joins, groupByKey, reduceByKey. |
+| 18 | What is salting? | Adding randomness to distribute hot keys. |
+| 19 | How does salting+grouping work? | Salt keys → aggregate → merge. |
+| 20 | What is a broadcast join? | Send small table to all workers. |
+| 21 | When to use broadcast? | Small tables (<10MB), skewed joins. |
+| 22 | What Spark configs help? | `spark.sql.shuffle.partitions`, `autoBroadcastJoinThreshold`. |
+| 23 | What is AQE? | Adaptive runtime optimizations (incl. skew fix). |
+| 24 | Other methods to handle skew? | Filter hot keys, use approx algorithms, repartition. |
 
 ### 🟢 1. Skewed Input Files
 
