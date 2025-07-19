@@ -3,9 +3,15 @@ Apache Spark (Distributed computing engine)
 ## 🟩 1. Apache Spark Core Concepts
 📌 **RDD, DataFrame, Lazy |  fault tolerance mechanisms** /fɔːlt/ /ˈtɒlərəns/ /ˈmekənɪzəmz/
 
-|  ❓Question | ✅ Answer | 📘 Notes |
-| --- | --- | --- |
-| **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
+| No. | ❓Question | ✅ Answer | 📘 Notes |
+| --- | --- | --- | --- |
+| 1 | **What is Apache Spark?** | A distributed computing engine for large-scale data processing. | Supports in-memory computation and APIs in Scala, Python, Java, SQL. |
+| 2 | **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
+| 3 | **What is a DataFrame?** | A distributed table with named columns and typed rows. | Built on RDDs; optimized by Catalyst engine; like a distributed Pandas/DataTable. |
+| 4 | **What is a transformation?** | A lazy operation that returns a new RDD or DataFrame. | Examples: `map()`, `filter()`, `groupBy()`. |
+| 5 | **What is an action?** | An operation that triggers actual computation and returns results. | Examples: `collect()`, `count()`, `show()`. |
+| 6 | **What is lazy evaluation?** | Spark builds a logical DAG of transformations, which is only executed when an action is called. | Enables optimization and fault tolerance. |
+
 
 ```mermaid
 flowchart TB
@@ -40,15 +46,6 @@ flowchart TB
     style Action   fill:#ede7f6,stroke:#5e35b1,stroke-width:2px
     style Driver   fill:#ffffff,stroke:#999,stroke-width:1px,stroke-dasharray:5 5
 ```
-
-| No. | ❓Question | ✅ Answer | 📘 Notes |
-| --- | --- | --- | --- |
-| 1 | **What is Apache Spark?** | A distributed computing engine for large-scale data processing. | Supports in-memory computation and APIs in Scala, Python, Java, SQL. |
-| 2 | **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
-| 3 | **What is a DataFrame?** | A distributed table with named columns and typed rows. | Built on RDDs; optimized by Catalyst engine; like a distributed Pandas/DataTable. |
-| 4 | **What is a transformation?** | A lazy operation that returns a new RDD or DataFrame. | Examples: `map()`, `filter()`, `groupBy()`. |
-| 5 | **What is an action?** | An operation that triggers actual computation and returns results. | Examples: `collect()`, `count()`, `show()`. |
-| 6 | **What is lazy evaluation?** | Spark builds a logical DAG of transformations, which is only executed when an action is called. | Enables optimization and fault tolerance. |
 
 ---
 ## 🟨 2. Execution Model
