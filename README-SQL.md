@@ -279,7 +279,23 @@ ORDER BY city, order_date, rn;
 ## 🔁 Retention & Rolling Behavior
 
 ### 10. Seller 30-Day Retention Rate
+
+**📘 Step 0: Sample Input Table – transactions**
+
++-----------+------------------+
+| seller_id | transaction_date |
++-----------+------------------+
+| 101       | 2024-01-05       |
+| 101       | 2024-02-03       |
+| 101       | 2024-03-10       |
+| 102       | 2024-01-02       |
+| 102       | 2024-01-10       |
+| 102       | 2024-03-20       |
+| 103       | 2024-02-01       |
++-----------+------------------+
+
 ```sql
+-- 🧮 Step 1: Use LAG() to Get Each Seller's Previous Transaction Date
 WITH prev_txn AS (
   SELECT 
       seller_id, 
@@ -287,6 +303,19 @@ WITH prev_txn AS (
       LAG(transaction_date) OVER (PARTITION BY seller_id ORDER BY transaction_date) AS prev_date
   FROM transactions
 )
+```
+| seller\_id | transaction\_date | prev\_date |
+| ---------- | ----------------- | ---------- |
+| 101        | 2024-01-05        | *(null)*   |
+| 101        | 2024-02-03        | 2024-01-05 |
+| 101        | 2024-03-10        | 2024-02-03 |
+| 102        | 2024-01-02        | *(null)*   |
+| 102        | 2024-01-10        | 2024-01-02 |
+| 102        | 2024-03-20        | 2024-01-10 |
+| 103        | 2024-02-01        | *(null)*   |
+
+```sql
+-- 🧾 Step 2: Calculate Daily Retention
 SELECT 
     transaction_date,
     COUNT(seller_id) AS total,
@@ -298,14 +327,23 @@ GROUP BY
     transaction_date;
 ```
 
-**Sample Table: `transactions`**
+| transaction\_date | total | retained | rate |
+| ----------------- | ----- | -------- | ---- |
+| 2024-01-02        | 1     | 0        | 0.00 |
+| 2024-01-05        | 1     | 0        | 0.00 |
+| 2024-01-10        | 1     | 1        | 1.00 |
+| 2024-02-01        | 1     | 0        | 0.00 |
+| 2024-02-03        | 1     | 1        | 1.00 |
+| 2024-03-10        | 1     | 1        | 1.00 |
+| 2024-03-20        | 1     | 0        | 0.00 |
 
-| seller_id | transaction_date |
-|-----------|------------------|
-| 101       | 2024-01-05       |
-| 101       | 2024-02-03       |
-| 101       | 2024-03-10       |
+**🔄 Summary**
 
+| Step   | Description                                                                |
+| ------ | -------------------------------------------------------------------------- |
+| Step 1 | Use `LAG()` to retrieve each seller's previous transaction date            |
+| Step 2 | Count, for each day, how many sellers are active and how many are retained |
+| Step 3 | Compute retention rate as `retained / total`                               |
 
 ---
 
