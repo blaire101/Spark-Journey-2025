@@ -1,4 +1,4 @@
-PySpark Notes   
+# PySpark Notes   
 
 📌 **Core Concepts:** RDD, DataFrame, Lazy Evaluation, Fault Tolerance /fɔːlt/ /ˈtɒlərəns/, Execution Mechanisms /ˈmekənɪzəmz/
 
