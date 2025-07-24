@@ -232,6 +232,14 @@ ORDER BY order_date, daily_sales DESC; -- important point
 
 ✅ Step 2: operator_sales
 
+```sql
+WITH operator_sales AS (
+    SELECT city, order_date, operator_id, SUM(sales) AS total_sales
+    FROM orders
+    GROUP BY city, order_date, operator_id
+),
+```
+
 | city     | order\_date | operator\_id | total\_sales |
 | -------- | ----------- | ------------ | ------------ |
 | Beijing  | 2025-01-01  | 101          | 500          |
@@ -243,15 +251,19 @@ ORDER BY order_date, daily_sales DESC; -- important point
 | Shanghai | 2025-01-01  | 203          | 200          |
 | Shanghai | 2025-01-01  | 204          | 100          |
 
-```sql
-WITH operator_sales AS (
-    SELECT city, order_date, operator_id, SUM(sales) AS total_sales
-    FROM orders
-    GROUP BY city, order_date, operator_id
-),
-```
-
 ✅ Step 3: ranked 
+
+```sql
+ranked AS (
+    SELECT city, order_date, operator_id, total_sales,
+        ROW_NUMBER() OVER (PARTITION BY city, order_date ORDER BY total_sales DESC) AS rn
+    FROM operator_sales
+),
+SELECT city, order_date, operator_id, total_sales, rn
+FROM ranked
+WHERE rn <= 3
+ORDER BY city, order_date, rn;
+```
 
 | city     | order\_date | operator\_id | total\_sales | rn |
 | -------- | ----------- | ------------ | ------------ | -- |
@@ -262,16 +274,7 @@ WITH operator_sales AS (
 | Shanghai | 2025-01-01  | 202          | 300          | 2  |
 | Shanghai | 2025-01-01  | 203          | 200          | 3  |
 
-```sql
-ranked AS (
-    SELECT *,
-        ROW_NUMBER() OVER (PARTITION BY city, order_date ORDER BY total_sales DESC) AS rn
-    FROM operator_sales
-)
-SELECT * FROM ranked WHERE rn <= 3;
-```
 
----
 
 ## 🔁 Retention & Rolling Behavior
 
