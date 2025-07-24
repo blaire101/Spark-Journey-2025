@@ -16,6 +16,22 @@
 
 ![sql](docs/sql-1.png)
 
+**Duplicates**:
+
+```sql
+SELECT name, COUNT(*) FROM students
+GROUP BY name
+HAVING COUNT(*) > 1;
+```
+
+**Left Anti Join**:
+ 
+```sql
+SELECT a.* FROM a
+LEFT JOIN b ON a.key = b.key
+WHERE b.key IS NULL;
+```
+
 ### 2. Joins & Subqueries
 - `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN`, `SELF JOIN`, `CROSS JOIN`
 
@@ -198,13 +214,55 @@ ORDER BY order_date, daily_sales DESC; -- important point
 
 ---
 
-### 2.2 Top 3 Operators per City per Day
+### 9. Top 3 Operators per City per Day
+
+✅ Step 1: orders
+
+| order\_id | city     | order\_date | operator\_id | sales |
+| --------- | -------- | ----------- | ------------ | ----- |
+| 1         | Beijing  | 2025-01-01  | 101          | 200   |
+| 2         | Beijing  | 2025-01-01  | 101          | 300   |
+| 3         | Beijing  | 2025-01-01  | 102          | 300   |
+| 4         | Beijing  | 2025-01-01  | 103          | 250   |
+| 5         | Beijing  | 2025-01-01  | 104          | 100   |
+| 6         | Shanghai | 2025-01-01  | 201          | 400   |
+| 7         | Shanghai | 2025-01-01  | 202          | 300   |
+| 8         | Shanghai | 2025-01-01  | 203          | 200   |
+| 9         | Shanghai | 2025-01-01  | 204          | 100   |
+
+✅ Step 2: operator_sales
+
+| city     | order\_date | operator\_id | total\_sales |
+| -------- | ----------- | ------------ | ------------ |
+| Beijing  | 2025-01-01  | 101          | 500          |
+| Beijing  | 2025-01-01  | 102          | 300          |
+| Beijing  | 2025-01-01  | 103          | 250          |
+| Beijing  | 2025-01-01  | 104          | 100          |
+| Shanghai | 2025-01-01  | 201          | 400          |
+| Shanghai | 2025-01-01  | 202          | 300          |
+| Shanghai | 2025-01-01  | 203          | 200          |
+| Shanghai | 2025-01-01  | 204          | 100          |
+
 ```sql
 WITH operator_sales AS (
     SELECT city, order_date, operator_id, SUM(sales) AS total_sales
     FROM orders
     GROUP BY city, order_date, operator_id
 ),
+```
+
+✅ Step 3: ranked 
+
+| city     | order\_date | operator\_id | total\_sales | rn |
+| -------- | ----------- | ------------ | ------------ | -- |
+| Beijing  | 2025-01-01  | 101          | 500          | 1  |
+| Beijing  | 2025-01-01  | 102          | 300          | 2  |
+| Beijing  | 2025-01-01  | 103          | 250          | 3  |
+| Shanghai | 2025-01-01  | 201          | 400          | 1  |
+| Shanghai | 2025-01-01  | 202          | 300          | 2  |
+| Shanghai | 2025-01-01  | 203          | 200          | 3  |
+
+```sql
 ranked AS (
     SELECT *,
         ROW_NUMBER() OVER (PARTITION BY city, order_date ORDER BY total_sales DESC) AS rn
@@ -213,56 +271,11 @@ ranked AS (
 SELECT * FROM ranked WHERE rn <= 3;
 ```
 
-**Intermediate Sample:**
-
-| city     | order_date | operator_id | total_sales | rn |
-|----------|-------------|-------------|-------------|----|
-| Beijing  | 2025-01-01  | 101         | 500         | 1  |
-| Beijing  | 2025-01-01  | 102         | 300         | 2  |
-
 ---
 
-## 3. 🧠 Sessionization (App Logs)
+## 🔁 Retention & Rolling Behavior
 
-### 3.1 Group App Logs Into Sessions (> 60s Gap)
-```sql
-WITH logs_diff AS (
-  SELECT id, ts,
-      LAG(ts) OVER (PARTITION BY id ORDER BY ts) AS prev_ts,
-      CASE 
-        WHEN ts - LAG(ts) OVER (PARTITION BY id ORDER BY ts) > 60 
-          OR LAG(ts) IS NULL THEN 1 ELSE 0 END AS is_new_session
-  FROM logs
-),
-sessions AS (
-  SELECT id, ts,
-      SUM(is_new_session) OVER (PARTITION BY id ORDER BY ts) AS session_id
-  FROM logs_diff
-)
-SELECT * FROM sessions;
-```
-
-**Sample Table: `logs`**
-
-| id   | ts          |
-|------|-------------|
-| 1001 | 17523641234 |
-| 1001 | 17523641256 |
-| 1001 | 17523641334 |
-
-**Output:**
-
-| id   | ts          | session_id |
-|------|-------------|------------|
-| 1001 | 17523641234 | 1          |
-| 1001 | 17523641256 | 1          |
-| 1001 | 17523641334 | 2          |
-
----
-
-## 4. 🔁 Retention & Rolling Behavior
-
-### 4.1 Seller 30-Day Retention Rate
+### 10. Seller 30-Day Retention Rate
 ```sql
 WITH prev_txn AS (
   SELECT 
@@ -290,69 +303,6 @@ GROUP BY
 | 101       | 2024-02-03       |
 | 101       | 2024-03-10       |
 
----
-
-## 5. 🎥 Live Stream Max Online Count
-
-### 5.1 Count Concurrent Streamers
-```sql
-SELECT MAX(amt) AS max_online
-FROM (
-  SELECT dt, SUM(tag) OVER (ORDER BY dt) AS amt
-  FROM (
-    SELECT stt AS dt, 1 AS tag FROM streams
-    UNION ALL
-    SELECT edt AS dt, -1 AS tag FROM streams
-  ) events
-) result;
-```
-
-**Sample Table: `streams`**
-
-| id   | stt                 | edt                 |
-|------|---------------------|---------------------|
-| 1    | 2025-01-01 10:00:00 | 2025-01-01 12:00:00 |
-| 2    | 2025-01-01 11:00:00 | 2025-01-01 13:00:00 |
-
----
-
-## 6. 🧾 Bonus Techniques
-
-- **Duplicates**:
-```sql
-SELECT name, COUNT(*) FROM students GROUP BY name HAVING COUNT(*) > 1;
-```
-
-- **Nth Highest (Per Group)**:
-```sql
-SELECT * FROM (
-  SELECT user_id, amount,
-         ROW_NUMBER() OVER (PARTITION BY city ORDER BY amount DESC) AS rn
-  FROM transactions
-) t WHERE rn = 3;
-```
-
-- **Left Anti Join**:
-```sql
-SELECT a.* FROM a
-LEFT JOIN b ON a.key = b.key
-WHERE b.key IS NULL;
-```
-
-- **Overlapping Ranges**:
-```sql
-MAX(edt) OVER (PARTITION BY id ORDER BY stt ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING)
-```
-
----
-
-## ✅ Tips for Interview Prep
-
-1. Master `WINDOW FUNCTIONS`: ROW_NUMBER, LAG, SUM OVER
-2. Practice `SESSIONIZATION`, `ROLLING SUM`, `RETENTION`
-3. Real use-cases: sales ranking, login streaks, top-N filters
-4. Review join types and query execution order
-5. Understand skew handling, filter pushdown, indexing
 
 ---
 
