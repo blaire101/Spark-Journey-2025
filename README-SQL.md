@@ -280,12 +280,10 @@ ORDER BY city, order_date, rn;
 
 ### 10. Seller 30-Day Retention Rate
 
-**📘 Step 0: Sample Input Table – transactions**
+**📘 Step 0: Table – transactions**
 
-```
-+-----------+------------------+
 | seller_id | transaction_date |
-+-----------+------------------+
+|-----------|------------------|
 | 101       | 2024-01-05       |
 | 101       | 2024-02-03       |
 | 101       | 2024-03-10       |
@@ -293,8 +291,6 @@ ORDER BY city, order_date, rn;
 | 102       | 2024-01-10       |
 | 102       | 2024-03-20       |
 | 103       | 2024-02-01       |
-+-----------+------------------+
-```
 
 ```sql
 -- 🧮 Step 1: Use LAG() to Get Each Seller's Previous Transaction Date
