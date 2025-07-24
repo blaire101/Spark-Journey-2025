@@ -111,6 +111,8 @@ if __name__ == "__main__":
 
 ### 4.2 UDF Implementation – Step by Step
 
+🧠 **udf(func_name, XType()), check, withColumn("col\_name", ur\_udf)**
+
 ```python
 from pyspark.sql.functions import udf
 from pyspark.sql.types import IntegerType
