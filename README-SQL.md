@@ -282,6 +282,7 @@ ORDER BY city, order_date, rn;
 
 **📘 Step 0: Sample Input Table – transactions**
 
+```
 +-----------+------------------+
 | seller_id | transaction_date |
 +-----------+------------------+
@@ -293,6 +294,7 @@ ORDER BY city, order_date, rn;
 | 102       | 2024-03-20       |
 | 103       | 2024-02-01       |
 +-----------+------------------+
+```
 
 ```sql
 -- 🧮 Step 1: Use LAG() to Get Each Seller's Previous Transaction Date
