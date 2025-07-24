@@ -4,8 +4,7 @@
 
 - spark concepts & pyspark sample
     
-    ![spark-1-Mermaid-Chart.png](3%20Spark%20&%20PySpark%2011d94e330a45806c9bcdcdb97e908063/spark-1-Mermaid-Chart.png)
-    
+
     ```sql
     from pyspark.sql import SparkSession
     from pyspark.sql.functions import col, lit
