@@ -52,18 +52,30 @@ HAVING AVG(daily_sum) > 3;
 
 ### 5. Average Days Between Transactions
 ```sql
+-- Step 1: Get previous transaction date
 WITH transaction_date AS (
-    SELECT customer_id, txn_date,
-        LAG(txn_date) OVER (PARTITION BY customer_id ORDER BY txn_date) AS prev_date
-    FROM transaction
-),
-diff_days AS (
-    SELECT customer_id, DATEDIFF(txn_date, prev_date) AS gap
-    FROM transaction_date
-    WHERE prev_date IS NOT NULL
+    SELECT
+        customer_id,
+        txn_date,
+        LAG(txn_date) OVER (PARTITION BY customer_id ORDER BY txn_date) AS prev_transaction_date
+    FROM 
+        transaction
 )
-SELECT customer_id, AVG(gap) AS avg_gap
-FROM diff_days
+
+-- Step 2: Calculate days between transactions
+, date_diff AS (
+    SELECT
+        customer_id,
+        DATEDIFF(txn_date, prev_transaction_date) AS date_between_transactions
+    FROM transaction_date
+    WHERE prev_transaction_date IS NOT NULL
+)
+
+-- Step 3: Calculate average days between transactions
+SELECT
+    customer_id,
+    AVG(date_between_transactions) AS avg_days_transactions
+FROM date_diff
 GROUP BY customer_id;
 ```
 
