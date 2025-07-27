@@ -277,3 +277,74 @@ flowchart TD
     - Enable auto-scaling of executors
 5. **Caching & Persistence**
     - Reuse intermediate results
+  
+## 6. QA
+
+**Q1 :** After Spark reads data, what determines the number of partitions, and what is the role of`sql.shuffle.partitions`? Is setting it to 200 meaningful?
+
+
+<details>
+<summary>💡QA</summary>
+    
+set `spark.sql.shuffle.partitions` = 3
+
+**1.1 hdfs** block
+
+The initial partition count is determined by the data source (file block size, input format, default parallelism, etc.). The `spark.sql.shuffle.partitions` parameter sets the number of partitions for shuffle operations (e.g., join, aggregation /ˌæɡrɪˈɡeɪʃn/，not map). Setting it to 200 can improve parallelism in large datasets, but may cause overhead for small datasets.
+
+**1.2 Read & Partition:**
+
+After Spark reads the data, it splits the data into multiple partitions, which determines the degree of parallelism [pærəlelɪzəm] == The number of tasks running in parallel.   [In Spark, each partition corresponds to one task]
+
+**1.3 Map Phase:**
+
+ local transformations on data within each partition without inter-task communication.
+
+**1.4 Reduce Phase:**
+
+Through a shuffle operation, data is re-partitioned by key for global aggregation
+
+**1.5 Relationship between tasks and partitions:**
+
+Each partition is generally processed by one task. 
+
+The overall parallelism depends on the number of partitions, but it is also limited by the available resources in the cluster (e.g., the number of CPU cores).
+
+- Hadoop MR vs Spark MR
+    
+<div align="center">
+  <img src="docs/spark-components-arch.webp" alt="Diagram" width="700">
+</div>
+
+**(1) In-Memory Computing**
+
+- **Spark**: Can caches data in memory to reduce disk I/O and speed up processing.
+- **MapReduce**: Writes intermediate results to disk, higher I/O and slower performance.
+
+---
+- **MapReduce:** Each transformation requires its own job—map (and reduce)—that writes its output to HDFS before the next job, resulting in multiple map phases and disk I/O.
+- **Spark:** Chains multiple transformations in a single DAG job, keeping data in memory between stages and avoiding extra HDFS writes.
+
+**(2) DAG Execution Engine**
+
+- **Spark**: Uses a **DAG** engine to optimise tasks end-to-end. It merges multiple operations into one stage, reducing task startup and data transfer time.
+- **MapReduce**: Follows a fixed Map → Reduce flow with limited optimisation across steps.
+- **Spark Architecture**
+    
+<div align="center">
+  <img src="docs/spark-components.webp" alt="Diagram" width="700">
+</div>
+    
+- **Driver & SparkContext**:
+    
+    The driver start the application using SparkContext, create RDDs,  builds execution plan DAG.
+    
+- **DAG Scheduler & Execution Engine**:
+    
+    The DAG Scheduler splits the DAG into stages and tasks. The EE runs these tasks on workers
+
+<div align="center">
+  <img src="docs/spark-5-catalyst.web" alt="Diagram" width="700">
+</div>
+
+</details>
