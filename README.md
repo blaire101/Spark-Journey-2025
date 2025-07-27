@@ -278,73 +278,139 @@ flowchart TD
 5. **Caching & Persistence**
     - Reuse intermediate results
   
-## 6. QA
+## 6. ❓ Spark Shuffle and Partitioning QA
 
-**Q1 :** After Spark reads data, what determines the number of partitions, and what is the role of`sql.shuffle.partitions`? Is setting it to 200 meaningful?
-
+---
 
 <details>
-<summary>💡QA</summary>
-    
-set `spark.sql.shuffle.partitions` = 3
+<summary>### Q1: After Spark reads data, what determines the number of partitions, and what is the role of `spark.sql.shuffle.partitions`? Is setting it to 200 meaningful?</summary>
 
-**1.1 hdfs** block
+**A:**
+- The initial partition count is determined by the data source (e.g., HDFS block size, file format, and parallelism).
+- `spark.sql.shuffle.partitions` sets the number of partitions **after a shuffle** (e.g., joins, aggregations, groupBy), not during file read.
+- Setting it to 200 can be helpful for **large datasets**, increasing parallelism; however, it might introduce overhead for small datasets.
 
-The initial partition count is determined by the data source (file block size, input format, default parallelism, etc.). The `spark.sql.shuffle.partitions` parameter sets the number of partitions for shuffle operations (e.g., join, aggregation /ˌæɡrɪˈɡeɪʃn/，not map). Setting it to 200 can improve parallelism in large datasets, but may cause overhead for small datasets.
+```sql
+-- Set partition count for shuffle
+SET spark.sql.shuffle.partitions = 200;
+```
 
-**1.2 Read & Partition:**
+#### 🔍 Detailed Explanation:
 
-After Spark reads the data, it splits the data into multiple partitions, which determines the degree of parallelism [pærəlelɪzəm] == The number of tasks running in parallel.   [In Spark, each partition corresponds to one task]
+##### 1.1 Input Partitioning:
+- Spark reads data based on HDFS block size or other input format configurations. This determines the **initial parallelism**.
 
-**1.3 Map Phase:**
+##### 1.2 Read & Partition:
+- After reading, data is split into partitions.
+- More partitions = more parallel tasks = higher throughput (if cluster resources allow).
 
- local transformations on data within each partition without inter-task communication.
+##### 1.3 Map Phase:
+- Tasks transform data within their partition.
+- No shuffle or inter-node communication occurs in this phase.
 
-**1.4 Reduce Phase:**
+##### 1.4 Reduce Phase:
+- Shuffle re-partitions data based on key, such as `groupBy`, `join`, etc.
+- Number of reduce tasks is controlled by `spark.sql.shuffle.partitions`.
 
-Through a shuffle operation, data is re-partitioned by key for global aggregation
+##### 1.5 Partitions ↔️ Tasks:
+- One partition = One task.
+- Parallelism depends on partition count **and** available cluster resources (e.g., executor cores).
 
-**1.5 Relationship between tasks and partitions:**
+</details>
 
-Each partition is generally processed by one task. 
+<details>
+<summary>### Q2: What's the difference between MapReduce and Spark in terms of shuffle and memory?</summary>
 
-The overall parallelism depends on the number of partitions, but it is also limited by the available resources in the cluster (e.g., the number of CPU cores).
+**A:**
 
-- Hadoop MR vs Spark MR
-    
+- **Spark**: Supports in-memory computation and DAG execution.
+- **MapReduce**: Always writes intermediate data to disk.
+
+#### 🔹 (1) In-Memory Advantage:
+
+- Spark can cache data in memory across stages, significantly reducing I/O overhead.
+- MapReduce flushes to HDFS between each stage.
+
+```markdown
+Diagram:
+```
 <div align="center">
   <img src="docs/spark-components-arch.webp" alt="Diagram" width="700">
 </div>
 
-**(1) In-Memory Computing**
+#### 🔹 (2) DAG Execution:
 
-- **Spark**: Can caches data in memory to reduce disk I/O and speed up processing.
-- **MapReduce**: Writes intermediate results to disk, higher I/O and slower performance.
+- Spark builds a Directed Acyclic Graph (DAG) of stages and tasks.
+- Reduces unnecessary data writes by chaining operations intelligently.
 
----
-- **MapReduce:** Each transformation requires its own job—map (and reduce)—that writes its output to HDFS before the next job, resulting in multiple map phases and disk I/O.
-- **Spark:** Chains multiple transformations in a single DAG job, keeping data in memory between stages and avoiding extra HDFS writes.
-
-**(2) DAG Execution Engine**
-
-- **Spark**: Uses a **DAG** engine to optimise tasks end-to-end. It merges multiple operations into one stage, reducing task startup and data transfer time.
-- **MapReduce**: Follows a fixed Map → Reduce flow with limited optimisation across steps.
-- **Spark Architecture**
-    
+```markdown
+Diagram:
+```
 <div align="center">
   <img src="docs/spark-components.webp" alt="Diagram" width="700">
 </div>
-    
-- **Driver & SparkContext**:
-    
-    The driver start the application using SparkContext, create RDDs,  builds execution plan DAG.
-    
-- **DAG Scheduler & Execution Engine**:
-    
-    The DAG Scheduler splits the DAG into stages and tasks. The EE runs these tasks on workers
 
+#### 🔹 (3) Spark Architecture:
+
+- **Driver & SparkContext**: Starts app, builds DAG via RDD/DataFrame ops.
+- **DAG Scheduler**: Splits stages, submits tasks.
+- **Execution Engine**: Executes tasks on workers.
+
+```markdown
+Diagram:
+```
 <div align="center">
   <img src="docs/spark-5-catalyst.web" alt="Diagram" width="700">
 </div>
+
+</details>
+
+<details>
+<summary>### Q3: Why is "Shuffle Read" the bottleneck in skewed aggregations?</summary>
+
+**A:**
+
+- Spark reduce tasks fetch partition files written by map tasks — this is the **Shuffle Read** stage.
+- Under skew, some partitions are significantly larger → more data to read → **slower tasks**.
+- Aggregation (CPU-bound) is usually lightweight vs I/O-heavy Shuffle Read.
+
+#### 📊 Spark UI Indicators:
+
+- **Shuffle Read Time**: High = skewed data fetch.
+- **Task CPU Time**: Usually low even in skew cases.
+
+</details>
+
+<details>
+<summary>### Q4: How do I troubleshoot Spark performance problems?</summary>
+
+**A:**
+
+| **Step** | **Description**  | **Key Focus** |
+| --- | --- | --- |
+| **1. Web UI** | Identify slow jobs and stages.  | Optimize resource allocation and adjust configurations. |
+| **2. SQL Code & DAG Inspection** | Analyze long SQL queries and the corresponding DAG to pinpoint problematic parts  | Simplify query logic and optimize expensive operations. |
+| **3. Examine Execution Plans** | Use EXPLAIN to view the logical, optimized logical, and physical plans. Focus on problematic nodes like HashAggregate, SortAggregate, SortMergeJoin, etc. | Identify problematic nodes and adjust join strategies or grouping techniques. |
+| **4.** Web UI - **Stage Summary Metrics** | Analyze task metrics in the Spark Web UI (execution time, data processed) to detect data skew, slow tasks, or resource bottlenecks. | Identify data skew and resource bottlenecks by examining task-level metrics. |
+| **5. Data Context Investigation** | Examine the underlying datasets (e.g., using GROUP BY and COUNT queries) to detect skewed keys or large columns that may cause performance issues. | Collaborate with teams to adjust the data model or partitioning strategy if necessary. |
+
+💡 Also monitor:
+- **Shuffle Read Time**: If it dominates, the issue is I/O, not CPU.
+- **Task Duration Distribution**: Long tails often mean skew.
+- **Spill Metrics**: Frequent spills imply memory pressure.
+
+</details>
+
+<details>
+<summary>### Q5: What is Spark Catalyst Optimizer?</summary>
+
+**A:**
+- Catalyst is the **query optimizer** in SparkSQL.
+- Applies rule-based optimizations:
+  - Predicate Pushdown
+  - Constant Folding
+  - Join Reordering
+  - Column Pruning
+- Generates efficient execution plans for better performance.
 
 </details>
