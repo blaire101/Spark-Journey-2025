@@ -399,3 +399,47 @@ SET spark.sql.shuffle.partitions = 200;
 - Generates efficient execution plans for better performance.
 
 </details>
+
+
+<details>
+<summary><strong>Q6: How to use salting to resolve join skew in Spark?</strong></summary>
+
+```sql
+-- Spark SQL / Hive SQL
+WITH saltedLarge AS (
+  SELECT 
+    CONCAT(CAST(FLOOR(RAND() * 10) AS STRING), '_', joinKey) AS saltedKey,
+    someValue
+  FROM largeTable
+),
+
+saltedSmall AS (
+  WITH saltValues AS (
+    SELECT '0' AS salt
+    UNION ALL SELECT '1'
+    UNION ALL SELECT '2'
+    UNION ALL SELECT '3'
+    UNION ALL SELECT '4'
+    UNION ALL SELECT '5'
+    UNION ALL SELECT '6'
+    UNION ALL SELECT '7'
+    UNION ALL SELECT '8'
+    UNION ALL SELECT '9'
+  )
+  SELECT 
+    CONCAT(sv.salt, '_', t.joinKey) AS saltedKey,
+    otherValue
+  FROM smallTable t
+  CROSS JOIN saltValues sv
+)  -- 
+
+SELECT 
+  split(s.saltedKey, '_')[1] AS originalKey,
+  sum(s.someValue) AS aggregatedValue
+FROM saltedLarge s
+JOIN saltedSmall ss
+  ON s.saltedKey = ss.saltedKey
+GROUP BY split(s.saltedKey, '_')[1];
+```
+
+</details>
