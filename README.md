@@ -102,12 +102,16 @@ flowchart TD
 <details>
 <summary><strong>Narrow vs Wise Dependency</strong></summary>
 
-| No. | ❓Question                              | ✅ Answer                                                                                                                                               | 📘 Notes                                                                                                                                                               |
-|-----|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1   | What is a Narrow Dependency in Spark?  | A **narrow dependency** means that **each partition** of the parent RDD is used by **at most one partition** of the child RDD.                        | No shuffle is needed. Examples: `map`, `filter`, `union`. Enables pipelined execution, better for performance.                                                       |
-| 2   | What is a Wide Dependency in Spark?    | A **wide dependency** means that **multiple partitions** of the parent RDD are used by **multiple partitions** of the child RDD.                      | Triggers shuffle operations like `groupBy`, `reduceByKey`, and `join`. Requires disk I/O and network transfer, often the performance bottleneck.                     |
-| 3   | Why are Wide Dependencies expensive?   | Because they involve **shuffles**, where data is redistributed across nodes, leading to **network I/O**, **disk spill**, and **task skew**.          | Can significantly increase job duration. Need to tune with partitioning, salting, or enable AQE for optimization.                                                     |
-| 4   | Can Spark optimize Wide Dependencies?  | Yes, Spark can use **Adaptive Query Execution (AQE)** to mitigate skew and merge small partitions, reducing overhead.                                 | Use configs like `spark.sql.adaptive.enabled`, `spark.sql.adaptive.skewJoin.enabled`, and partition-related settings to help with optimization.                       |
+<div align="center">
+  <img src="docs/spark-wide-dependency.webp" alt="Diagram" width="500">
+</div>
+
+| No. | ❓Question                              | ✅ Answer                                                                                                                                                   | 📘 Notes                                                                                                                                                                   |
+|-----|----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1   | What is a Narrow Dependency in Spark?  | A **narrow dependency** means that **each partition** of the parent RDD is used by **at most one partition** of the child RDD.                            | No shuffle is required. Examples include `map`, `filter`, and `union`. These operations allow pipelined execution and are typically faster and more efficient.           |
+| 2   | What is a Wide Dependency in Spark?    | A **wide dependency** means that **multiple partitions** of the parent RDD may be used by **multiple partitions** of the child RDD.                       | This necessitates a shuffle across the cluster, typically seen in operations like `groupBy`, `reduceByKey`, or `join`. It incurs higher overhead and network transfer.   |
+| 3   | Why are Wide Dependencies expensive?   | Because they involve **shuffles**, during which data must be **redistributed** across nodes, leading to **disk I/O**, **network transfer**, and **skew**. | Wide dependencies are often the primary bottleneck. Optimisation may require techniques such as salting, repartitioning, or adaptive execution.                         |
+| 4   | Can Spark optimise Wide Dependencies?  | Yes, Spark can use **Adaptive Query Execution (AQE)** to detect skew and adjust partitioning dynamically to reduce overhead.                             | Enable configs like `spark.sql.adaptive.enabled` and `spark.sql.adaptive.skewJoin.enabled`. AQE may merge small partitions or split skewed ones to improve performance. |
 
 </details>
 
@@ -399,7 +403,7 @@ SET spark.sql.shuffle.partitions = 200;
 **A:** Catalyst is the **query optimiser** in SparkSQL.
 
 <div align="center">
-  <img src="docs/spark-5-catalyst.webp" alt="Diagram" width="700">
+  <img src="docs/spark-catalyst.webp" alt="Diagram" width="700">
 </div>
 
 - Applies rule-based optimizations:
