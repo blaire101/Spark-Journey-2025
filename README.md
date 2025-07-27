@@ -321,8 +321,6 @@ SET spark.sql.shuffle.partitions = 200;
 <details>
 <summary><strong>Q2: What's the difference between MapReduce and Spark in terms of shuffle and memory?</strong></summary>
 
-**A:**
-
 - **Spark**: Supports in-memory computation and DAG execution.
 - **MapReduce**: Always writes intermediate data to disk.
 
@@ -355,8 +353,6 @@ SET spark.sql.shuffle.partitions = 200;
 <details>
 <summary><strong> Q3: Why is "Shuffle Read" the bottleneck in skewed aggregations?</strong></summary>
 
-**A:**
-
 - Spark **reduce tasks** fetch partition files written by map tasks — this is the **Shuffle Read** stage.
 - Under skew, some partitions are significantly larger → more data to read → **slower tasks**.
 - Aggregation (CPU-bound) is usually lightweight vs I/O-heavy Shuffle Read.
@@ -370,8 +366,6 @@ SET spark.sql.shuffle.partitions = 200;
 
 <details>
 <summary><strong>Q4: How do I troubleshoot Spark performance problems?</strong></summary>
-
-**A:**
 
 | **Step** | **Description**  | **Key Focus** |
 | --- | --- | --- |
