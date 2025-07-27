@@ -278,7 +278,7 @@ flowchart TD
 5. **Caching & Persistence**
     - Reuse intermediate results
   
-## 6. ❓ Spark Shuffle and Partitioning QA
+## 6. ❓ Spark QA
 
 ---
 
