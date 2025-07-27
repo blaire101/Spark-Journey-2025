@@ -357,7 +357,7 @@ SET spark.sql.shuffle.partitions = 200;
 
 **A:**
 
-- Spark reduce tasks fetch partition files written by map tasks — this is the **Shuffle Read** stage.
+- Spark **reduce tasks** fetch partition files written by map tasks — this is the **Shuffle Read** stage.
 - Under skew, some partitions are significantly larger → more data to read → **slower tasks**.
 - Aggregation (CPU-bound) is usually lightweight vs I/O-heavy Shuffle Read.
 
@@ -391,8 +391,7 @@ SET spark.sql.shuffle.partitions = 200;
 <details>
 <summary><strong>Q5: What is Spark Catalyst Optimizer?</strong></summary>
 
-**A:**
-- Catalyst is the **query optimiser** in SparkSQL.
+**A:** Catalyst is the **query optimiser** in SparkSQL.
 
 <div align="center">
   <img src="docs/spark-5-catalyst.webp" alt="Diagram" width="700">
