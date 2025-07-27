@@ -283,7 +283,7 @@ flowchart TD
 ---
 
 <details>
-<summary>### Q1: After Spark reads data, what determines the number of partitions, and what is the role of `spark.sql.shuffle.partitions`? Is setting it to 200 meaningful?</summary>
+<summary><strong>Q1: After Spark reads data, what determines the number of partitions, and what is the role of `spark.sql.shuffle.partitions`? Is setting it to 200 meaningful?</strong></summary>
 
 **A:**
 - The initial partition count is determined by the data source (e.g., HDFS block size, file format, and parallelism).
@@ -319,7 +319,7 @@ SET spark.sql.shuffle.partitions = 200;
 </details>
 
 <details>
-<summary>### Q2: What's the difference between MapReduce and Spark in terms of shuffle and memory?</summary>
+<summary><strong>Q2: What's the difference between MapReduce and Spark in terms of shuffle and memory?</strong></summary>
 
 **A:**
 
