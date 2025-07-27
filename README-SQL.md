@@ -66,7 +66,181 @@ GROUP BY customer_id
 HAVING AVG(daily_sum) > 3;
 ```
 
+<details>
+<summary><strong>Coding -  Continuous 3 Days</strong></summary>
+
+    #### 1. Objective
+    
+    Identify users who have logged in continuously for at least 3 days and calculate related info:
+    
+    - **user_id**: User ID
+    - **Continuous login start and end dates**
+    - **Number of consecutive login days**
+    
+    #### 2. Core Idea
+    
+    **a. Using ROW_NUMBER() to Build a Group Identifier**
+    
+    - Use `ROW_NUMBER()` to generate a sequence number (rank) for each user based on the login date order.
+    - Utilize `DATE_SUB(login_date, rank)` to create a grouping flag (`flag_date`) that groups consecutive dates.
+    - **Principle**: If the difference between the login date and the assigned rank is constant, then the records belong to the same continuous group.
+    
+    **b. Group Aggregation**
+    
+    - Group by `user_id` and the grouping flag (`flag_date`) to aggregate the consecutive login days.
+    - Use `HAVING COUNT(1) >= 3` to filter out groups that do not meet the minimum of 3 consecutive login days.
+    
+    **c. Output Result**
+    
+    - **user_id**: User ID
+    - **flag_date**: Group flag indicating a continuous login segment
+    - **cnt**: Number of consecutive login days
+    - **min_login_date** and **max_login_date**: The start and end dates of the continuous login segment
+
+| user_id | login_date |
+| --- | --- |
+| A | 2025-01-01 |
+| A | 2025-01-02 |
+| A | 2025-01-03 |
+| A | 2025-01-05 |
+
+```sql
+-- Step 1: Assign Row Numbers and Calculate Grouping Flag
+WITH t2_sub_flag AS 
+(
+	SELECT 
+	    user_id,
+	    login_date,
+	    ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY login_date) AS rk,
+	    DATE_SUB(login_date, ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY login_date)) AS flag_date
+	FROM table1;
+	-- WHERE amount > 30
+)
+
+-- Step 2: Group and Filter for Continuous Login Segments
+WITH segments AS 
+(
+	SELECT
+	    user_id,
+	    flag_date,
+	    COUNT(1) AS cnt,
+	    MIN(login_date) AS min_login_date,
+	    MAX(login_date) AS max_login_date
+	FROM 
+	    t2_sub_flag
+	GROUP BY 
+	    user_id, flag_date
+	HAVING 
+	    COUNT(1) >= 3
+)
+-- Step 3: Join Back to Original Table to List Concrete Login Dates
+SELECT 
+    s.user_id,
+    s.flag_date,
+    s.cnt,
+    s.min_login_date,
+    s.max_login_date,
+    t.login_date
+FROM segments s
+JOIN table1 t
+    ON t.user_id = s.user_id 
+   AND t.login_date BETWEEN s.min_login_date AND s.max_login_date
+ORDER BY s.user_id, t.login_date;
+```
+
+Example Intermediate Output:
+
+| user_id | login_date | rk | flag_date |
+| --- | --- | --- | --- |
+| A | 2025-01-01 | 1 | 2024-12-31 |
+| A | 2025-01-02 | 2 | 2024-12-31 |
+| A | 2025-01-03 | 3 | 2024-12-31 |
+| A | 2025-01-05 | 4 | 2025-01-01 |
+
+**Expected Final Output:**
+
+| user_id | flag_date | cnt | min_login_date | max_login_date |
+| --- | --- | --- | --- | --- |
+| A | 2024-12-31 | 3 | 2025-01-01 | 2025-01-03 |
+
+Expected Final Output:
+
+| user_id | flag_date | cnt | min_login_date | max_login_date | login_date |
+| --- | --- | --- | --- | --- | --- |
+| A | 2024-12-31 | 3 | 2025-01-01 | 2025-01-03 | 2025-01-01 |
+| A | 2024-12-31 | 3 | 2025-01-01 | 2025-01-03 | 2025-01-02 |
+| A | 2024-12-31 | 3 | 2025-01-01 | 2025-01-03 | 2025-01-03 |
+
+**Variant 2 – Allowing a One-Day Gap for Continuous Logins**
+
+**Example Input Data (table1):**
+
+| user_id | login_date |
+| --- | --- |
+| A | 2025-01-01 |
+| A | 2025-01-03 |
+| A | 2025-01-05 |
+| A | 2025-01-06 |
+
+**Result from `login_diffs`:**
+
+| user_id | login_date | diff_days | gap_flag |
+| --- | --- | --- | --- |
+| A | 2025-01-01 | NULL | 0 |
+| A | 2025-01-03 | 2 | 0 |
+| A | 2025-01-05 | 2 | 0 |
+| A | 2025-01-06 | 1 | 0 |
+
+```sql
+WITH login_diffs AS (
+  SELECT
+    user_id,
+    login_date,
+    DATEDIFF(login_date, LAG(login_date) OVER (PARTITION BY user_id ORDER BY login_date)) AS diff_days,
+    CASE 
+      WHEN DATEDIFF(login_date, LAG(login_date) OVER (PARTITION BY user_id ORDER BY login_date)) > 2 
+      THEN 1 ELSE 0 END AS gap_flag
+  FROM table1
+)
+```
+
+Step 2: Assign Segment IDs Based on the Gaps
+
+```sql
+, segments AS (
+  SELECT
+    user_id,
+    login_date,
+    SUM(gap_flag) OVER (PARTITION BY user_id ORDER BY login_date) AS segment_id
+  FROM login_diffs
+)
+```
+
+*Result from `segments`:*
+
+| user_id | login_date | segment_id |
+| --- | --- | --- |
+| A | 2025-01-01 | 0 |
+| A | 2025-01-03 | 0 |
+| A | 2025-01-05 | 0 |
+| A | 2025-01-06 | 0 |
+
+```sql
+SELECT
+  user_id,
+  segment_id,
+  MIN(login_date) AS min_login_date,
+  MAX(login_date) AS max_login_date,
+  DATEDIFF(MAX(login_date), MIN(login_date)) + 1 AS continuous_days
+FROM segments
+GROUP BY user_id, segment_id
+HAVING DATEDIFF(MAX(login_date), MIN(login_date)) + 1 >= 3;
+```
+
+</details>
+
 ### 5. Average Days Between Transactions
+
 ```sql
 -- Step 1: Get previous transaction date
 WITH transaction_date AS (
