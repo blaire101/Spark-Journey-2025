@@ -69,31 +69,10 @@ HAVING AVG(daily_sum) > 3;
 <details>
 <summary><strong>Coding -  Continuous 3 Days</strong></summary>
 
-#### 1. Objective
+- **a. Using ROW_NUMBER() to Build a Group Identifier**  
+- **b. Group Aggregation**
 
-Identify users who have logged in continuously for at least 3 days and calculate related info:
-
-- **user_id**: User ID  
-- **Continuous login start and end dates**  
-- **Number of consecutive login days**
-
-#### 2. Core Idea
-
-**a. Using ROW_NUMBER() to Build a Group Identifier**
-
-- Use `ROW_NUMBER()` to generate a sequence number (rank) for each user based on the login date order.
-- Utilise `DATE_SUB(login_date, rank)` to create a grouping flag (`flag_date`) that groups consecutive dates.
-- **Principle**: If the difference between the login date and the assigned rank is constant, then the records belong to the same continuous group.
-
-**b. Group Aggregation**
-
-- Group by `user_id` and the grouping flag (`flag_date`) to aggregate the consecutive login days.
-- Use `HAVING COUNT(1) >= 3` to filter out groups that do not meet the minimum of 3 consecutive login days.
-
-**c. Output Result**
-
-- **user_id**: User ID  
-- **flag_date**: Group flag indicating a continuous login segment  
+- **user_id**: User ID / **flag_date**: Group flag indicating a continuous login segment  
 - **cnt**: Number of consecutive login days  
 - **min_login_date** and **max_login_date**: The start and end dates of the continuous login segment
 
