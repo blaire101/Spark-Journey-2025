@@ -285,7 +285,6 @@ flowchart TD
 <details>
 <summary><strong>Q1: After Spark reads data, what determines the number of partitions, and what is the role of `spark.sql.shuffle.partitions`? Is setting it to 200 meaningful?</strong></summary>
 
-**A:**
 - The initial partition count is determined by the data source (e.g., HDFS block size, file format, and parallelism).
 - `spark.sql.shuffle.partitions` sets the number of partitions **after a shuffle** (e.g., joins, aggregations, groupBy), not during file read.
 - Setting it to 200 can be helpful for **large datasets**, increasing parallelism; however, it might introduce overhead for small datasets.
