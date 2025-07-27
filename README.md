@@ -351,7 +351,7 @@ SET spark.sql.shuffle.partitions = 200;
 - **Execution Engine**: Executes tasks on workers.
 
 <div align="center">
-  <img src="docs/spark-5-catalyst.web" alt="Diagram" width="700">
+  <img src="docs/spark-5-catalyst.webp" alt="Diagram" width="700">
 </div>
 
 </details>
