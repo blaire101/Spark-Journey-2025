@@ -99,6 +99,18 @@ flowchart TD
 | 11 | Why is shuffle expensive? | Disk I/O + network + serialization. |
 | 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
 
+<details>
+<summary><strong>Narrow vs Wise Dependency</strong></summary>
+
+| No. | ❓Question                              | ✅ Answer                                                                                                                                               | 📘 Notes                                                                                                                                                               |
+|-----|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1   | What is a Narrow Dependency in Spark?  | A **narrow dependency** means that **each partition** of the parent RDD is used by **at most one partition** of the child RDD.                        | No shuffle is needed. Examples: `map`, `filter`, `union`. Enables pipelined execution, better for performance.                                                       |
+| 2   | What is a Wide Dependency in Spark?    | A **wide dependency** means that **multiple partitions** of the parent RDD are used by **multiple partitions** of the child RDD.                      | Triggers shuffle operations like `groupBy`, `reduceByKey`, and `join`. Requires disk I/O and network transfer, often the performance bottleneck.                     |
+| 3   | Why are Wide Dependencies expensive?   | Because they involve **shuffles**, where data is redistributed across nodes, leading to **network I/O**, **disk spill**, and **task skew**.          | Can significantly increase job duration. Need to tune with partitioning, salting, or enable AQE for optimization.                                                     |
+| 4   | Can Spark optimize Wide Dependencies?  | Yes, Spark can use **Adaptive Query Execution (AQE)** to mitigate skew and merge small partitions, reducing overhead.                                 | Use configs like `spark.sql.adaptive.enabled`, `spark.sql.adaptive.skewJoin.enabled`, and partition-related settings to help with optimization.                       |
+
+</details>
+
 ```mermaid
 flowchart TD
     subgraph InputPartitions["Input Partitions"]
