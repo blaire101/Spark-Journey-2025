@@ -331,17 +331,13 @@ SET spark.sql.shuffle.partitions = 200;
 - Spark can cache data in memory across stages, significantly reducing I/O overhead.
 - MapReduce flushes to HDFS between each stage.
 
-<div align="center">
-  <img src="docs/spark-components-arch.webp" alt="Diagram" width="700">
-</div>
-
 #### 🔹 (2) DAG Execution:
 
 - Spark builds a Directed Acyclic Graph (DAG) of stages and tasks.
 - Reduces unnecessary data writes by chaining operations intelligently.
 
 <div align="center">
-  <img src="docs/spark-components.webp" alt="Diagram" width="700">
+  <img src="docs/spark-components-arch.webp" alt="Diagram" width="700">
 </div>
 
 #### 🔹 (3) Spark Architecture:
@@ -351,7 +347,7 @@ SET spark.sql.shuffle.partitions = 200;
 - **Execution Engine**: Executes tasks on workers.
 
 <div align="center">
-  <img src="docs/spark-5-catalyst.webp" alt="Diagram" width="700">
+  <img src="docs/spark-components.webp" alt="Diagram" width="700">
 </div>
 
 </details>
@@ -396,7 +392,12 @@ SET spark.sql.shuffle.partitions = 200;
 <summary><strong>Q5: What is Spark Catalyst Optimizer?</strong></summary>
 
 **A:**
-- Catalyst is the **query optimizer** in SparkSQL.
+- Catalyst is the **query optimiser** in SparkSQL.
+
+<div align="center">
+  <img src="docs/spark-5-catalyst.webp" alt="Diagram" width="700">
+</div>
+
 - Applies rule-based optimizations:
   - Predicate Pushdown
   - Constant Folding
