@@ -16,6 +16,14 @@
 
 ![sql](docs/sql-1.png)
 
+
+```sql
+-- IFNULL
+SELECT IFNULL(score, 0) AS score_val FROM student;
+-- COALESCE
+SELECT COALESCE(score, 0) AS score_val FROM student;
+```
+
 **Duplicates**:
 
 ```sql
