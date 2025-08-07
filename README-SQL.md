@@ -69,8 +69,6 @@ LAG(txn_date) OVER (PARTITION BY customer_id ORDER BY txn_date)
 
 #### Case 1: Average of Daily Totals Spend > 3
 
-Logic:
-
 - Aggregate by day to get each customer’s total spend per day.
 - Average those daily totals and filter customers whose daily average exceeds 3.
 
