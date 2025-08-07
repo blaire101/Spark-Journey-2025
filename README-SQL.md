@@ -26,9 +26,7 @@ GROUP BY name
 HAVING COUNT(*) > 1;
 ```
 
-**Left Join**: 
-
-The query returns only those rows from a whose key does not exist in b
+**Left Join**:  The query returns only those rows from a whose key does not exist in b
  
 ```sql
 SELECT a.* 
