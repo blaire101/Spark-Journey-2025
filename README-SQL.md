@@ -57,16 +57,54 @@ LAG(txn_date) OVER (PARTITION BY customer_id ORDER BY txn_date)
 
 ## 🧑‍💻 SQL Classic Use Cases
 
-### 4. Daily Average Spend > 3
+| customer\_id | txn\_date  | txn\_amount |
+| ------------ | ---------- | ----------- |
+| 1            | 2025-08-01 | 1.00        |
+| 1            | 2025-08-01 | 2.00        |
+| 1            | 2025-08-02 | 5.00        |
+| 2            | 2025-08-01 | 4.00        |
+| 2            | 2025-08-02 | 2.00        |
+
+### 4. Average Spend - Questions
+
+#### Case 1: Average of Daily Totals Spend > 3
+
+Logic:
+
+- Aggregate by day to get each customer’s total spend per day.
+- Average those daily totals and filter customers whose daily average exceeds 3.
+
 ```sql
-SELECT customer_id, AVG(daily_sum) AS average_spend
+SELECT
+  customer_id,
+  AVG(daily_sum) AS average_spend
 FROM (
-    SELECT customer_id, txn_date, SUM(txn_amount) AS daily_sum
-    FROM transaction
-    GROUP BY customer_id, txn_date
-) daily_spend
+  -- Step 1: sum per customer per day
+  SELECT
+    customer_id,
+    txn_date,
+    SUM(txn_amount) AS daily_sum
+  FROM transaction
+  GROUP BY customer_id, txn_date
+) AS daily_spend
 GROUP BY customer_id
 HAVING AVG(daily_sum) > 3;
+```
+
+Result on the sample data:
+
+- customer_id = 1: daily sums = {3.00, 5.00} → average = 4.00 → included
+- customer_id = 2: daily sums = {4.00, 2.00} → average = 3.00 → excluded
+
+#### Case 2: Average of Individual Transactions > 3
+
+```sql
+SELECT
+  customer_id,
+  AVG(txn_amount) AS average_spend
+FROM transaction
+GROUP BY customer_id
+HAVING AVG(txn_amount) > 3;
 ```
 
 <details>
