@@ -20,7 +20,7 @@
 **Duplicates**:
 
 ```sql
-SELECT name, COUNT(*) FROM students
+SELECT name, COUNT(*), count(student_id) FROM students -- COUNT(column)	Counts column is NOT NULL
 GROUP BY name
 HAVING COUNT(*) > 1;
 ```
