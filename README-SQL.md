@@ -26,11 +26,14 @@ GROUP BY name
 HAVING COUNT(*) > 1;
 ```
 
-**Left Anti Join**:
+**Left Join**: 
+
+The query returns only those rows from a whose key does not exist in b
  
 ```sql
-SELECT a.* FROM a
-LEFT JOIN b ON a.key = b.key
+SELECT a.* 
+FROM a 
+LEFT JOIN b ON a.key = b.key 
 WHERE b.key IS NULL;
 ```
 
