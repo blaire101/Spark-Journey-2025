@@ -14,7 +14,7 @@
 - `WHERE`: `NOT IN`, `NULL`, `<>`
 - Aggregate Functions: `AVG()`, `SUM()`, `COUNT()`
 - Conditional: `IF`, `IFNULL(expr, val)`, `CASE WHEN`, `SELECT IFNULL(score, 0) AS score_val FROM student;`
-- NULL Handling: `COALESCE()`, `SELECT COALESCE(score, 0) AS score_val FROM student;`
+- NULL Handling: `COALESCE()`, `SELECT COALESCE(score1, score2, 0) AS score_val FROM student;`
 - `DISTINCT`
 
 **Duplicates**:
