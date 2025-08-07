@@ -13,16 +13,9 @@
 - `FROM`, `WHERE`, `GROUP BY`, `HAVING`, `SELECT`, `ORDER BY`
 - `WHERE`: `NOT IN`, `NULL`, `<>`
 - Aggregate Functions: `AVG()`, `SUM()`, `COUNT()`
-- Conditional: `IF`, `IFNULL(expr, val)`, `CASE WHEN`
-- NULL Handling: `COALESCE()`
+- Conditional: `IF`, `IFNULL(expr, val)`, `CASE WHEN`, `SELECT IFNULL(score, 0) AS score_val FROM student;`
+- NULL Handling: `COALESCE()`, `SELECT COALESCE(score, 0) AS score_val FROM student;`
 - `DISTINCT`
-
-```sql
--- IFNULL
-SELECT IFNULL(score, 0) AS score_val FROM student;
--- COALESCE
-SELECT COALESCE(score, 0) AS score_val FROM student;
-```
 
 **Duplicates**:
 
