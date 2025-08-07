@@ -7,15 +7,15 @@
 ## 📘 SQL Basics
 
 ### 1. Query Structure & Clauses
+
+![sql](docs/sql-1.png)
+
 - `FROM`, `WHERE`, `GROUP BY`, `HAVING`, `SELECT`, `ORDER BY`
 - `WHERE`: `NOT IN`, `NULL`, `<>`
 - Aggregate Functions: `AVG()`, `SUM()`, `COUNT()`
 - Conditional: `IF`, `IFNULL(expr, val)`, `CASE WHEN`
 - NULL Handling: `COALESCE()`
 - `DISTINCT`
-
-![sql](docs/sql-1.png)
-
 
 ```sql
 -- IFNULL
