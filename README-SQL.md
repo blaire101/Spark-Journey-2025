@@ -13,8 +13,8 @@
 - `FROM`, `WHERE`, `GROUP BY`, `HAVING`, `SELECT`, `ORDER BY`
 - `WHERE`: `NOT IN`, `NULL`, `<>`
 - Aggregate Functions: `AVG()`, `SUM()`, `COUNT()`
-- Conditional: `IF`, `IFNULL(expr, val)`, `CASE WHEN`, `SELECT IFNULL(score, 0) AS score_val FROM student;`
-- NULL Handling: `COALESCE()`, `SELECT COALESCE(score1, score2, 0) AS score_val FROM student;`
+- Conditional: `CASE WHEN`, `IFNULL(expr, val)`, `SELECT IFNULL(score, 0) AS score_val FROM student;`
+- NULL Handling: `COALESCE()`, `SELECT COALESCE(score1, score2, 0) AS score_val FROM student;`   **COALESCE more Versatile**
 - `DISTINCT`
 
 **Duplicates**:
