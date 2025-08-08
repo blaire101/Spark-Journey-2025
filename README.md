@@ -208,7 +208,8 @@ flowchart TD
     style E fill:#e0f7fa,stroke:#006064,stroke-width:2px
 ```
 
-**Solution:**
+<details>
+<summary>💬 **Solution:**</summary>
 
 > SET spark.sql.shuffle.partitions = 20;     
 > SET hive.exec.dynamic.partition.mode = nonstrict;
@@ -231,6 +232,8 @@ graph TD
     classDef overwrite fill:#e6fffb,stroke:#13c2c2,stroke-width:2px;
     classDef success fill:#f0f5ff,stroke:#2f54eb,stroke-width:2px;
 ```
+
+</details>
 
 ### 🟣 2. Skewed Join Keys
 
