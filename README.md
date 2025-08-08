@@ -1,7 +1,13 @@
+## 📚 Table of Contents
+
+- [Chap 1. Apache Spark Core Concepts](#-1-apache-spark-core-concepts)
+- [Chap 2. Execution Model](#-2-execution-model)
+- [Chap 3. Shuffle & Partitioning](#-3-shuffle--partitioning)
+- [Chap 4. Data Skew（Skewness）](#4-data-skewskewness)
+- [Chap 5. General Spark Tuning (Skew Indirectly Helpful)](#5-general-spark-tuning-skew-indirectly-helpful)
+- [Chap 6. ❓ Spark QA](#6--spark-qa)
+
 Apache Spark (Distributed computing engine)
-
-[Chap 1. Apache Spark Core Concepts](#-1-apache-spark-core-concepts)
-
 
 ## 🟩 1. Apache Spark Core Concepts
 📌 **RDD, DataFrame, Lazy |  fault tolerance mechanisms** /fɔːlt/ /ˈtɒlərəns/ /ˈmekənɪzəmz/
