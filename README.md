@@ -1,6 +1,7 @@
 Apache Spark (Distributed computing engine)
 
-🟩 [1. Apache Spark Core Concepts](https://github.com/blaire101/Spark-Journey-2025/blob/main/README.md#-1-apache-spark-core-concepts)
+[Chap 1. Apache Spark Core Concepts](https://github.com/blaire101/Spark-Journey-2025/blob/main/README.md#-1-apache-spark-core-concepts)
+
 - [What is Apache Spark?](#what-is-apache-spark)
 - [What is an RDD?](#what-is-an-rdd)
 - [What is a DataFrame?](#what-is-a-dataframe)
