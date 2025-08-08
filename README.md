@@ -210,6 +210,9 @@ flowchart TD
 
 **Solution:**
 
+> SET spark.sql.shuffle.partitions = 20;     
+> SET hive.exec.dynamic.partition.mode = nonstrict;
+
 ```mermaid
 graph TD
     A[Detect too many small files]:::start --> B[Set spark.sql parameters]:::config
