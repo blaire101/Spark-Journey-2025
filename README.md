@@ -208,6 +208,27 @@ flowchart TD
     style E fill:#e0f7fa,stroke:#006064,stroke-width:2px
 ```
 
+**Solution:**
+
+```mermaid
+graph TD
+    A[Detect too many small files]:::start --> B[Set spark.sql parameters]:::config
+    B --> C[Use INSERT OVERWRITE]:::action
+    C --> D{Need to shuffle output?}:::decision
+    D -- Yes --> E[Use DISTRIBUTE BY rand（） or column]:::shuffle
+    D -- No --> F[Direct INSERT OVERWRITE]:::overwrite
+    E --> G[Files merged successfully]:::success
+    F --> G
+
+    classDef start fill:#e6f7ff,stroke:#1890ff,stroke-width:2px;
+    classDef config fill:#f9f0ff,stroke:#9254de,stroke-width:2px;
+    classDef action fill:#fffbe6,stroke:#faad14,stroke-width:2px;
+    classDef decision fill:#fff0f6,stroke:#eb2f96,stroke-width:2px;
+    classDef shuffle fill:#f6ffed,stroke:#52c41a,stroke-width:2px;
+    classDef overwrite fill:#e6fffb,stroke:#13c2c2,stroke-width:2px;
+    classDef success fill:#f0f5ff,stroke:#2f54eb,stroke-width:2px;
+```
+
 ### 🟣 2. Skewed Join Keys
 
 ```mermaid
