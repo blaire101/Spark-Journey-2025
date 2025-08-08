@@ -1,6 +1,6 @@
 Apache Spark (Distributed computing engine)
 
-[Chap 1. Apache Spark Core Concepts](https://github.com/blaire101/Spark-Journey-2025/blob/main/README.md#-1-apache-spark-core-concepts)
+[Chap 1. Apache Spark Core Concepts](#-1-apache-spark-core-concepts)
 
 
 ## 🟩 1. Apache Spark Core Concepts
