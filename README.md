@@ -280,7 +280,7 @@ flowchart TD
 | ------------------------ | --------------------------------------- | ------------------------------------------------ |
 | **Optimization timing**  | After shuffle (runtime)                 | Before shuffle (logical rewrite)                 |
 | **Implementation**       | Automatic (enable config)               | Manual (modify SQL/ETL)                          |
-| **Skew type handled**    | Join/aggregation skew **after** shuffle | Join skew or data source skew **before** shuffle |
+| **Skew type handled**    | Join/aggregation skew **after** shuffle <br> 1. AQE does not rewrite data to disk — it only modifies the scheduling metadata. <br> 2. The shuffle files remain exactly the ones written by the map stage. <br> 3. As a result, AQE’s overhead is minimal (it’s just analysis and re-planning), and there’s no need for a disk rewrite. | Join skew or data source skew **before** shuffle |
 | **Intrusiveness**        | No SQL changes required                 | SQL changes required                             |
 | **Best fit scenario**    | Skew is mild and/or not fixed           | Skewed key is known and severe                   |
 
