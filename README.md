@@ -219,7 +219,7 @@ flowchart TD
 
 
 ```sbashql
-spark.conf.set("spark.sql.files.maxPartitionBytes", 256*1024*1024)  # 128–512MB 常用
+spark.conf.set("spark.sql.files.maxPartitionBytes", 256*1024*1024)  # 128–512MB common setting
 spark.conf.set("spark.sql.files.openCostInBytes",   8*1024*1024)    # 8–16MB adjustable for small file sizes, 1M+8M = 9M
 
 # 1000 1M small files,
