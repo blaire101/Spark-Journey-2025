@@ -221,13 +221,10 @@ flowchart TD
 ```sbashql
 spark.conf.set("spark.sql.files.maxPartitionBytes", 256*1024*1024)  # 128–512MB common setting
 spark.conf.set("spark.sql.files.openCostInBytes",   8*1024*1024)    # 8–16MB adjustable for small file sizes, 1M+8M = 9M
-
-# 1000 1M small files,
-# 1000 / 256 = 4 tasks VS 1000 / (256/9) = 36 tasks
-
+# 1000 1M small files
+# 1000 / 256 = 4 tasks VS 1000 / (256/9) = 36 tasks can reduce file handles
 spark.conf.set("spark.sql.orc.enableVectorizedReader","true")
 spark.conf.set("spark.sql.orc.filterPushdown","true")
-
 # AQE (valid for shuffles)
 spark.conf.set("spark.sql.adaptive.enabled","true")
 spark.conf.set("spark.sql.adaptive.coalescePartitions.enabled","true")
