@@ -276,6 +276,14 @@ flowchart TD
     style C3 fill:#fff3e0,stroke:#e65100,stroke-width:2px
 ```
 
+| Feature                  | AQE (Adaptive Query Execution)          | Salting                                          |
+| ------------------------ | --------------------------------------- | ------------------------------------------------ |
+| **Optimization timing**  | After shuffle (runtime)                 | Before shuffle (logical rewrite)                 |
+| **Implementation**       | Automatic (enable config)               | Manual (modify SQL/ETL)                          |
+| **Skew type handled**    | Join/aggregation skew **after** shuffle | Join skew or data source skew **before** shuffle |
+| **Intrusiveness**        | No SQL changes required                 | SQL changes required                             |
+| **Best fit scenario**    | Skew is mild and/or not fixed           | Skewed key is known and severe                   |
+
 ### 🟡 3. Skewed Aggregation Keys
 
 ```mermaid
