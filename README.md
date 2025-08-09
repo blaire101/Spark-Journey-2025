@@ -218,7 +218,7 @@ flowchart TD
 ```
 
 
-```sbashql
+```bash
 spark.conf.set("spark.sql.files.maxPartitionBytes", 256*1024*1024)  # 128–512MB common setting
 spark.conf.set("spark.sql.files.openCostInBytes",   8*1024*1024)    # 8–16MB adjustable for small file sizes, 1M+8M = 9M
 # 1000 1M small files
@@ -283,6 +283,12 @@ flowchart TD
 | **Skew type handled**    | Join/aggregation skew **after** shuffle <br> 1. AQE does not rewrite data to disk — it only modifies the scheduling metadata. <br> 2. The shuffle files remain exactly the ones written by the map stage. <br> 3. As a result, AQE’s overhead is minimal (it’s just analysis and re-planning), and there’s no need for a disk rewrite. | Join skew or data source skew **before** shuffle |
 | **Intrusiveness**        | No SQL changes required                 | SQL changes required                             |
 | **Best fit scenario**    | Skew is mild and/or not fixed           | Skewed key is known and severe                   |
+
+
+How Spark chooses (Spark 3.3)
+- Broadcast first: if one side fits autoBroadcastJoinThreshold → BHJ. (You can disable by setting to -1 or force via /*+ BROADCAST(t) */.) 
+- Otherwise default = SMJ for equi-joins (because spark.sql.join.preferSortMergeJoin=true by default). 
+- SHJ: considered when SMJ is not preferred (set spark.sql.join.preferSortMergeJoin=false, or hint /*+ SHUFFLE_HASH(t) */). Spark uses a per-partition hash map on the build side.
 
 ### 🟡 3. Skewed Aggregation Keys
 
