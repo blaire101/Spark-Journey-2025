@@ -637,28 +637,27 @@ WITH first_txn AS (
 
 **Step 2 — Candidate returns within (0, 30] days after first_date**
 
-| f.seller\_id | f.first\_date | return\_date |             |
-| ---------- | ----------- | ------------ | ----------- |
-| 201        | 2024-01-02  | 2024-01-20   | ← 18 days ✅ |
-| 202        | 2024-01-02  | 2024-01-25   | ← 23 days ✅ |
-| 203        | 2024-01-02  | (NULL)       | ← no return |
-| 204        | 2024-03-01  | 2024-03-20   | ← 19 days ✅ |
+| f.seller\_id | f.first\_date | return\_date | gap\_days |
+| ---------- | ----------- | ------------ | --------- |
+| 201        | 2024-01-02  | 2024-01-20   | 18        |
+| 202        | 2024-01-02  | 2024-01-25   | 23        |
+| 203        | 2024-01-02  | (NULL)       | (NULL)    |
+| 204        | 2024-03-01  | 2024-03-20   | 19        |
 
 > (Note: 201’s 2024-02-02 is 31 days after 2024-01-02, so it is excluded.)
 
 ```sql
 cand_returns AS (
-  SELECT
-    f.seller_id,
-    f.first_date,
-    t.transaction_date AS return_date
-  FROM first_txn f
-  LEFT JOIN transactions t
-    ON t.seller_id = f.seller_id
-   AND t.transaction_date >  f.first_date
-   AND t.transaction_date <= date_add(f.first_date, 30)
+	SELECT
+	  f.seller_id,
+	  f.first_date,
+	  t.transaction_date AS return_date,
+      DATEDIFF(t.transaction_date, f.first_date) AS gap_days
+	FROM first_txn f
+	LEFT JOIN transactions t
+	  ON t.seller_id = f.seller_id
+	 AND DATEDIFF(t.transaction_date, f.first_date) BETWEEN 1 AND 30
 )
-SELECT * FROM cand_returns ORDER BY seller_id, return_date;
 ```
 
 **Step 3 — Collapse to per-seller retained flag (0/1)**
@@ -682,7 +681,7 @@ flags AS (
 SELECT * FROM flags ORDER BY seller_id;
 ```
 
-**Step 4 — Final cohort 30-day retention**
+**Step 4 — Final cohort 30-day retention** - GROUP BY first_date
 
 | cohort\_date | cohort\_size | retained\_30d | retention\_rate\_30d |
 | ------------ | ------------ | ------------- | -------------------- |
