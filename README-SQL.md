@@ -306,7 +306,15 @@ WITH transaction_date AS (
     FROM transaction_date
     WHERE prev_transaction_date IS NOT NULL
 )
+```
 
+| customer\_id | date\_between\_transactions   |
+| ------------ | ----------------------------- |
+| C1           | 4   (2024-01-05 − 2024-01-01) |
+| C1           | 5   (2024-01-10 − 2024-01-05) |
+| C2           | 2   (2024-01-04 − 2024-01-02) |
+
+```sql
 -- Step 3: Calculate average days between transactions
 SELECT
     customer_id,
@@ -314,6 +322,11 @@ SELECT
 FROM date_diff
 GROUP BY customer_id;
 ```
+
+| customer\_id | avg\_days\_transactions |
+| ------------ | ----------------------- |
+| C1           | 4.5   ( (4 + 5) / 2 )   |
+| C2           | 2.0                     |
 
 ### 6. Top 10 Spenders in Last 30 Days
 ```sql
