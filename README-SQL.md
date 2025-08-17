@@ -545,26 +545,15 @@ A simple analogy:
 | 203        | 2024-01-02        | NULL       | NULL      |
 
 ```sql
-prev_txn AS (
-  SELECT
-    seller_id,
+SELECT
+  seller_id,
+  transaction_date,
+  LAG(transaction_date) OVER (PARTITION BY seller_id ORDER BY transaction_date) AS prev_date,
+  DATEDIFF(
     transaction_date,
-    LAG(transaction_date) OVER (
-      PARTITION BY seller_id
-      ORDER BY transaction_date
-    ) AS prev_date
-  FROM base
-),
-with_gap AS (
-  SELECT
-    seller_id,
-    transaction_date,
-    prev_date,
-    CASE WHEN prev_date IS NULL THEN NULL
-         ELSE datediff(transaction_date, prev_date)
-    END AS gap_days
-  FROM prev_txn
-),
+    LAG(transaction_date) OVER (PARTITION BY seller_id ORDER BY transaction_date)
+  ) AS gap_days
+FROM transactions;
 ```
 
 **Step 2**
