@@ -67,7 +67,7 @@ LAG(txn_date) OVER (PARTITION BY customer_id ORDER BY txn_date)
 
 ### 4. Average Spend - Questions
 
-#### Case 1: User - Daily - Average of Totals Spend > 3
+#### Case 1: Find customers whose average daily spend exceeds 3.
 
 - Aggregate by day to get each customer’s total spend per day.
 - Average those daily totals and filter customers whose daily average exceeds 3.
