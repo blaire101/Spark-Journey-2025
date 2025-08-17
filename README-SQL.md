@@ -94,6 +94,8 @@ Result on the sample data:
 - customer_id = 1: daily sums = {3.00, 5.00} → average = 4.00 → included
 - customer_id = 2: daily sums = {4.00, 2.00} → average = 3.00 → excluded
 
+---
+
 Case 2: On **average**, how much is each **individual transaction** / **per customer**?
 
 ```sql
