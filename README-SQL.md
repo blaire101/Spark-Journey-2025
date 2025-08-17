@@ -602,6 +602,13 @@ ORDER BY transaction_date;
 
 We compute **cohort 30-day retention** directly on table **`transactions(seller_id, transaction_date)`** — *no extra base/DEDUP step*.
 
+**Methodology**
+
+```
+	FROM first_txn f
+	LEFT JOIN transactions t
+```
+
 | seller_id | transaction_date |
 |-----------|------------------|
 | 201       | 2024-01-02 |
