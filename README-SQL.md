@@ -510,66 +510,201 @@ ORDER BY city, order_date, rn;
 | Shanghai | 2025-01-01  | 202          | 300          | 2  |
 | Shanghai | 2025-01-01  | 203          | 200          | 3  |
 
+### 10. 30-Day Retention
 
+🔄 Difference Between Rolling Retention and Cohort Retention
 
-## 🔁 Retention & Rolling Behavior
+- **Rolling retention** → For each day, check whether the active users today returned within 30 days of their previous activity.
+- **Cohort retention** → Group users by their first use date and then track whether they come back within a specific future time window.
 
-### 10. Seller 30-Day Retention Rate
+A simple analogy:
 
-**📘 Step 0: Table – transactions**
+- Rolling is like “monitoring every day to see who has come back.”
+- Cohort is like “looking at a batch of new users and seeing how long it takes them to come back.”
+
+#### 10.1 🔄 A) Rolling 30-Day Retention (gap-based)
+
+| seller\_id | transaction\_date |            desc           |
+| ---------- | ----------------- | ------------------------- |
+| 201        | 2024-01-02        |                           |
+| 201        | 2024-01-20        | ← return within 30 days ✅ |
+| 201        | 2024-02-02        | ← return within 30 days ✅ |
+| 202        | 2024-01-02        |                           |
+| 202        | 2024-01-25        | ← return within 30 days ✅ |
+| 203        | 2024-01-02        | ← no return ❌             |
+
+Result Output：
+
+| cohort\_date | cohort\_size | retained\_30d | retention\_rate\_30d |
+| ------------ | ------------ | ------------- | -------------------- |
+| 2024-01-02   | 3            | 2             | 0.67 (≈ 66.7%)       |
+
+**Step 1 - prev\_data, gap_days**
+
+| seller\_id | transaction\_date | prev\_date | gap\_days |
+| ---------- | ----------------- | ---------- | --------- |
+| 201        | 2024-01-02        | NULL       | NULL      |
+| 201        | 2024-01-20        | 2024-01-02 | 18        |
+| 201        | 2024-02-02        | 2024-01-20 | 13        |
+| 202        | 2024-01-02        | NULL       | NULL      |
+| 202        | 2024-01-25        | 2024-01-02 | 23        |
+| 203        | 2024-01-02        | NULL       | NULL      |
+
+**Step 2**
+
+| transaction\_date | total\_active | eligible\_repeaters | retained | rate\_among\_eligible |
+| ----------------- | ------------- | ------------------- | -------- | --------------------- |
+| 2024-01-02        | 3             | 0                   | 0        | NULL                  |
+| 2024-01-20        | 1             | 1                   | 1        | 1.00                  |
+| 2024-01-25        | 1             | 1                   | 1        | 1.00                  |
+| 2024-02-02        | 1             | 1                   | 1        | 1.00                  |
+
+```sql
+WITH base AS (
+  SELECT DISTINCT seller_id, transaction_date
+  FROM transactions
+),
+prev_txn AS (
+  SELECT
+    seller_id,
+    transaction_date,
+    LAG(transaction_date) OVER (
+      PARTITION BY seller_id
+      ORDER BY transaction_date
+    ) AS prev_date
+  FROM base
+),
+with_gap AS (
+  SELECT
+    seller_id,
+    transaction_date,
+    prev_date,
+    CASE WHEN prev_date IS NULL THEN NULL
+         ELSE datediff(transaction_date, prev_date)
+    END AS gap_days
+  FROM prev_txn
+),
+daily AS (
+  SELECT
+    transaction_date,
+    COUNT(*) AS total_active,
+    COUNT(prev_date) AS eligible_repeaters,
+    SUM(CASE WHEN gap_days <= 30 THEN 1 ELSE 0 END) AS retained
+  FROM with_gap
+  GROUP BY transaction_date
+)
+SELECT
+  transaction_date,
+  total_active,
+  eligible_repeaters,
+  retained,
+  CASE WHEN eligible_repeaters = 0 THEN NULL
+       ELSE ROUND(retained * 1.0 / eligible_repeaters, 2)
+  END AS rate_among_eligible
+FROM daily
+ORDER BY transaction_date;
+```
+
+#### 10.2 🔄 B) Cohort 30-Day Retention 
+
+We compute **cohort 30-day retention** directly on table **`transactions(seller_id, transaction_date)`** — *no extra base/DEDUP step*.
 
 | seller_id | transaction_date |
 |-----------|------------------|
-| 101       | 2024-01-05       |
-| 101       | 2024-02-03       |
-| 101       | 2024-03-10       |
-| 102       | 2024-01-02       |
-| 102       | 2024-01-10       |
-| 102       | 2024-03-20       |
-| 103       | 2024-02-01       |
+| 201       | 2024-01-02 |
+| 201       | 2024-01-20 |  ← return within 30 days ✅
+| 201       | 2024-02-02 |  ← return within 30 days ✅
+| 202       | 2024-01-02 |
+| 202       | 2024-01-25 |  ← return within 30 days ✅
+| 203       | 2024-01-02 |  ← no return ❌
+
+**Cohort date of interest:** `2024-01-02` (users 201, 202, 203 joined on this day)
+
+---
+
+**Step 1 — First transaction per seller (cohort anchor)**
 
 ```sql
--- 🧮 Step 1: Use LAG() to Get Each Seller's Previous Transaction Date
-WITH prev_txn AS (
-  SELECT 
-      seller_id, 
-      transaction_date,
-      LAG(transaction_date) OVER (PARTITION BY seller_id ORDER BY transaction_date) AS prev_date
+WITH first_txn AS (
+  SELECT
+    seller_id,
+    MIN(transaction_date) AS first_date
   FROM transactions
+  GROUP BY seller_id
 )
+SELECT * FROM first_txn ORDER BY seller_id;
 ```
-| seller\_id | transaction\_date | prev\_date |
-| ---------- | ----------------- | ---------- |
-| 101        | 2024-01-05        | *(null)*   |
-| 101        | 2024-02-03        | 2024-01-05 |
-| 101        | 2024-03-10        | 2024-02-03 |
-| 102        | 2024-01-02        | *(null)*   |
-| 102        | 2024-01-10        | 2024-01-02 |
-| 102        | 2024-03-20        | 2024-01-10 |
-| 103        | 2024-02-01        | *(null)*   |
+
+Output：
+
+| seller\_id | first\_date |
+| ---------- | ----------- |
+| 201        | 2024-01-02  |
+| 202        | 2024-01-02  |
+| 203        | 2024-01-02  |
+
+**Step 2 — Candidate returns within (0, 30] days after first_date**
 
 ```sql
--- 🧾 Step 2: Calculate Daily Retention
-SELECT 
-    transaction_date,
-    COUNT(seller_id) AS total,
-    SUM(CASE WHEN DATEDIFF(transaction_date, prev_date) <= 30 THEN 1 ELSE 0 END) AS retained,
-    ROUND(SUM(CASE WHEN DATEDIFF(transaction_date, prev_date) <= 30 THEN 1 ELSE 0 END) / COUNT(seller_id), 2) AS rate
-FROM 
-    prev_txn
-GROUP BY 
-    transaction_date;
+cand_returns AS (
+  SELECT
+    f.seller_id,
+    f.first_date,
+    t.transaction_date AS return_date
+  FROM first_txn f
+  LEFT JOIN transactions t
+    ON t.seller_id = f.seller_id
+   AND t.transaction_date >  f.first_date
+   AND t.transaction_date <= date_add(f.first_date, 30)
+)
+SELECT * FROM cand_returns ORDER BY seller_id, return_date;
 ```
 
-| transaction\_date | total | retained | rate |
-| ----------------- | ----- | -------- | ---- |
-| 2024-01-02        | 1     | 0        | 0.00 |
-| 2024-01-05        | 1     | 0        | 0.00 |
-| 2024-01-10        | 1     | 1        | 1.00 |
-| 2024-02-01        | 1     | 0        | 0.00 |
-| 2024-02-03        | 1     | 1        | 1.00 |
-| 2024-03-10        | 1     | 1        | 1.00 |
-| 2024-03-20        | 1     | 0        | 0.00 |
+| seller\_id | first\_date | return\_date |
+| ---------- | ----------- | ------------ |
+| 201        | 2024-01-02  | 2024-01-20   |
+| 201        | 2024-01-02  | 2024-02-02   |
+| 202        | 2024-01-02  | 2024-01-25   |
+| 203        | 2024-01-02  | (NULL)       |
+
+**Step 3 — Collapse to per-seller retained flag (0/1)**
+
+```sql
+flags AS (
+  SELECT
+    seller_id,
+    first_date,
+    CASE WHEN COUNT(return_date) > 0 THEN 1 ELSE 0 END AS retained_30d
+  FROM cand_returns
+  GROUP BY seller_id, first_date
+)
+SELECT * FROM flags ORDER BY seller_id;
+```
+
+| seller\_id | first\_date | retained\_30d |
+| ---------- | ----------- | ------------- |
+| 201        | 2024-01-02  | 1             |
+| 202        | 2024-01-02  | 1             |
+| 203        | 2024-01-02  | 0             |
+
+**Step 4 — Final cohort 30-day retention**
+
+```sql
+SELECT
+  first_date AS cohort_date,
+  COUNT(*) AS cohort_size,
+  SUM(retained_30d) AS retained_30d,
+  ROUND(SUM(retained_30d) * 1.0 / COUNT(*), 2) AS retention_rate_30d
+FROM flags
+GROUP BY first_date
+ORDER BY cohort_date;
+```
+
+| cohort\_date | cohort\_size | retained\_30d | retention\_rate\_30d |
+| ------------ | ------------ | ------------- | -------------------- |
+| 2024-01-02   | 3            | 2             | 0.67                 |
+
+---
 
 **🔄 Summary**
 
