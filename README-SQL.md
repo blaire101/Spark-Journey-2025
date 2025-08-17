@@ -136,7 +136,9 @@ WITH t2_sub_flag AS
 	FROM table1;
 	-- WHERE amount > 30
 )
+```
 
+```sql
 -- Step 2: Group and Filter for Continuous Login Segments
 WITH segments AS 
 (
@@ -263,6 +265,14 @@ HAVING DATEDIFF(MAX(login_date), MIN(login_date)) + 1 >= 3;
 
 ### 5. Average Days Between Transactions
 
+| customer\_id | txn\_date  | txn\_amount |
+| ------------ | ---------- | ----------- |
+| C1           | 2024-01-10 | 20          |
+| C1           | 2024-01-01 | 10          |
+| C1           | 2024-01-05 | 15          |
+| C2           | 2024-01-04 | 7           |
+| C2           | 2024-01-02 | 5           |
+
 ```sql
 -- Step 1: Get previous transaction date
 WITH transaction_date AS (
@@ -273,7 +283,21 @@ WITH transaction_date AS (
     FROM 
         transaction
 )
+```
 
+| customer\_id | txn\_date  | prev\_transaction\_date |
+| ------------ | ---------- | ----------------------- |
+| C1           | 2024-01-01 | NULL                    |
+| C1           | 2024-01-05 | 2024-01-01              |
+| C1           | 2024-01-10 | 2024-01-05              |
+| C2           | 2024-01-02 | NULL                    |
+| C2           | 2024-01-04 | 2024-01-02              |
+
+- “Although the input is unordered, LAG first sorts the records for each customer_id by txn_date, and then takes the previous row.
+- Therefore, the result is still ordered, and prev_transaction_date correctly corresponds to the previous transaction.” ✅
+
+
+```sql
 -- Step 2: Calculate days between transactions
 , date_diff AS (
     SELECT
