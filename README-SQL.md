@@ -329,6 +329,9 @@ GROUP BY customer_id;
 | C2           | 2.0                     |
 
 ### 6. Top 10 Spenders in Last 30 Days
+
+![sql](docs/sql-1.png)
+
 ```sql
 SELECT user_id, SUM(amount) AS total_spend
 FROM transactions
