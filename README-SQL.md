@@ -533,12 +533,6 @@ A simple analogy:
 | 202        | 2024-01-25        | ← return within 30 days ✅ |
 | 203        | 2024-01-02        | ← no return ❌             |
 
-Result Output：
-
-| cohort\_date | cohort\_size | retained\_30d | retention\_rate\_30d |
-| ------------ | ------------ | ------------- | -------------------- |
-| 2024-01-02   | 3            | 2             | 0.67 (≈ 66.7%)       |
-
 **Step 1 - prev\_data, gap_days**
 
 | seller\_id | transaction\_date | prev\_date | gap\_days |
@@ -550,20 +544,7 @@ Result Output：
 | 202        | 2024-01-25        | 2024-01-02 | 23        |
 | 203        | 2024-01-02        | NULL       | NULL      |
 
-**Step 2**
-
-| transaction\_date | total\_active | eligible\_repeaters | retained | rate\_among\_eligible |
-| ----------------- | ------------- | ------------------- | -------- | --------------------- |
-| 2024-01-02        | 3             | 0                   | 0        | NULL                  |
-| 2024-01-20        | 1             | 1                   | 1        | 1.00                  |
-| 2024-01-25        | 1             | 1                   | 1        | 1.00                  |
-| 2024-02-02        | 1             | 1                   | 1        | 1.00                  |
-
 ```sql
-WITH base AS (
-  SELECT DISTINCT seller_id, transaction_date
-  FROM transactions
-),
 prev_txn AS (
   SELECT
     seller_id,
@@ -584,6 +565,18 @@ with_gap AS (
     END AS gap_days
   FROM prev_txn
 ),
+```
+
+**Step 2**
+
+| transaction\_date | total\_active | eligible\_repeaters | retained | rate\_among\_eligible |
+| ----------------- | ------------- | ------------------- | -------- | --------------------- |
+| 2024-01-02        | 3             | 0                   | 0        | NULL                  |
+| 2024-01-20        | 1             | 1                   | 1        | 1.00                  |
+| 2024-01-25        | 1             | 1                   | 1        | 1.00                  |
+| 2024-02-02        | 1             | 1                   | 1        | 1.00                  |
+
+```sql
 daily AS (
   SELECT
     transaction_date,
@@ -612,17 +605,25 @@ We compute **cohort 30-day retention** directly on table **`transactions(seller_
 | seller_id | transaction_date |
 |-----------|------------------|
 | 201       | 2024-01-02 |
-| 201       | 2024-01-20 |  ← return within 30 days ✅
-| 201       | 2024-02-02 |  ← return within 30 days ✅
+| 201       | 2024-01-20 |  ← within 30 days ✅  
+| 201       | 2024-02-02 |  ← 31 days after 01-02 (NOT within 30) ❌  
 | 202       | 2024-01-02 |
-| 202       | 2024-01-25 |  ← return within 30 days ✅
-| 203       | 2024-01-02 |  ← no return ❌
+| 202       | 2024-01-25 |  ← within 30 days ✅  
+| 203       | 2024-01-02 |  ← no return ❌  
+| 204       | 2024-03-01 |
+| 204       | 2024-03-20 |  ← within 30 days ✅  
+| 204       | 2024-05-01 |  ← after 30 days ❌  
 
-**Cohort date of interest:** `2024-01-02` (users 201, 202, 203 joined on this day)
-
----
+Cohorts present: **2024-01-02** (201, 202, 203) and **2024-03-01** (204).
 
 **Step 1 — First transaction per seller (cohort anchor)**
+
+| seller\_id | first\_date |
+| ---------- | ----------- |
+| 201        | 2024-01-02  |
+| 202        | 2024-01-02  |
+| 203        | 2024-01-02  |
+| 204        | 2024-03-01  |
 
 ```sql
 WITH first_txn AS (
@@ -632,18 +633,18 @@ WITH first_txn AS (
   FROM transactions
   GROUP BY seller_id
 )
-SELECT * FROM first_txn ORDER BY seller_id;
 ```
 
-Output：
-
-| seller\_id | first\_date |
-| ---------- | ----------- |
-| 201        | 2024-01-02  |
-| 202        | 2024-01-02  |
-| 203        | 2024-01-02  |
-
 **Step 2 — Candidate returns within (0, 30] days after first_date**
+
+| f.seller\_id | f.first\_date | return\_date |             |
+| ---------- | ----------- | ------------ | ----------- |
+| 201        | 2024-01-02  | 2024-01-20   | ← 18 days ✅ |
+| 202        | 2024-01-02  | 2024-01-25   | ← 23 days ✅ |
+| 203        | 2024-01-02  | (NULL)       | ← no return |
+| 204        | 2024-03-01  | 2024-03-20   | ← 19 days ✅ |
+
+> (Note: 201’s 2024-02-02 is 31 days after 2024-01-02, so it is excluded.)
 
 ```sql
 cand_returns AS (
@@ -660,14 +661,14 @@ cand_returns AS (
 SELECT * FROM cand_returns ORDER BY seller_id, return_date;
 ```
 
-| seller\_id | first\_date | return\_date |
-| ---------- | ----------- | ------------ |
-| 201        | 2024-01-02  | 2024-01-20   |
-| 201        | 2024-01-02  | 2024-02-02   |
-| 202        | 2024-01-02  | 2024-01-25   |
-| 203        | 2024-01-02  | (NULL)       |
-
 **Step 3 — Collapse to per-seller retained flag (0/1)**
+
+| seller\_id | first\_date | retained\_30d |
+| ---------- | ----------- | ------------- |
+| 201        | 2024-01-02  | 1             |
+| 202        | 2024-01-02  | 1             |
+| 203        | 2024-01-02  | 0             |
+| 204        | 2024-03-01  | 1             |
 
 ```sql
 flags AS (
@@ -681,13 +682,12 @@ flags AS (
 SELECT * FROM flags ORDER BY seller_id;
 ```
 
-| seller\_id | first\_date | retained\_30d |
-| ---------- | ----------- | ------------- |
-| 201        | 2024-01-02  | 1             |
-| 202        | 2024-01-02  | 1             |
-| 203        | 2024-01-02  | 0             |
-
 **Step 4 — Final cohort 30-day retention**
+
+| cohort\_date | cohort\_size | retained\_30d | retention\_rate\_30d |
+| ------------ | ------------ | ------------- | -------------------- |
+| 2024-01-02   | 3            | 2             | 0.67                 |
+| 2024-03-01   | 1            | 1             | 1.00                 |
 
 ```sql
 SELECT
@@ -699,10 +699,6 @@ FROM flags
 GROUP BY first_date
 ORDER BY cohort_date;
 ```
-
-| cohort\_date | cohort\_size | retained\_30d | retention\_rate\_30d |
-| ------------ | ------------ | ------------- | -------------------- |
-| 2024-01-02   | 3            | 2             | 0.67                 |
 
 ---
 
