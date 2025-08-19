@@ -75,15 +75,28 @@ flowchart TD
     A["Action<br>(e.g. collect())"]
     A --> Job["Spark Job"]
 
-    Job --> Stage1["Stage 1<br>No shuffle<br>(e.g. map, filter)"]
-    Stage1 --> Stage2["Stage 2<br>After shuffle<br>(e.g. reduceByKey)"]
+    Job --> Stage1["Stage 1<br>Shuffle Map Stage<br>(map... + shuffle write)"]
+    Stage1 --> Stage2["Stage 2<br>Reduce Stage<br>(reduceByKey / aggregation)"]
 
-    Stage1 --> T1["Task 1<br>Partition 0"]
-    Stage1 --> T2["Task 2<br>Partition 1"]
-    Stage1 --> T3["Task 3<br>Partition 2"]
+    %% Stage1 Tasks (3 partitions)
+    Stage1 --> T1["Shuffle Map Task<br>Partition 0"]
+    Stage1 --> T2["Shuffle Map Task<br>Partition 1"]
+    Stage1 --> T3["Shuffle Map Task<br>Partition 2"]
 
-    Stage2 --> T4["Task 1<br>Partition A"]
-    Stage2 --> T5["Task 2<br>Partition B"]
+    %% Stage1 输出 shuffle 文件 (2 files)
+    T1 --> SF0["Shuffle File 0"]
+    T1 --> SF1["Shuffle File 1"]
+    T2 --> SF0
+    T2 --> SF1
+    T3 --> SF0
+    T3 --> SF1
+
+    %% Stage2 Reduce Tasks
+    SF0 --> T4["Reduce Task<br>Partition A"]
+    SF1 --> T5["Reduce Task<br>Partition B"]
+
+    Stage2 --> T4
+    Stage2 --> T5
 
     style A fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
     style Job fill:#bbdefb,stroke:#1565c0,stroke-width:2px
@@ -92,6 +105,8 @@ flowchart TD
     style T1 fill:#fffde7,stroke:#f57f17
     style T2 fill:#fffde7,stroke:#f57f17
     style T3 fill:#fffde7,stroke:#f57f17
+    style SF0 fill:#ffe0b2,stroke:#fb8c00
+    style SF1 fill:#ffe0b2,stroke:#fb8c00
     style T4 fill:#f3e5f5,stroke:#6a1b9a
     style T5 fill:#f3e5f5,stroke:#6a1b9a
 ```
