@@ -153,8 +153,7 @@ flowchart TD
   <img src="docs/spark-wide-dependency.webp" alt="Diagram" width="500">
 </div>
 
-| No. | ❓Question                              | ✅ Answer                                                                                                                                                   | 📘 Notes                                                                                                                                                                   |
-|-----|----------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| No. | ❓Question                              | ✅ Answer                                                                                                                                                   | 📘 Notes                                                                                                    | --- | --- | --- | --- |
 | 1   | What is a Narrow Dependency in Spark?  | A **narrow dependency** means that **each partition** of the parent RDD is used by **at most one partition** of the child RDD.                            | No shuffle is required. Examples include `map`, `filter`, and `union`. These operations allow pipelined execution and are typically faster and more efficient.           |
 | 2   | What is a Wide Dependency in Spark?    | A **wide dependency** means that **multiple partitions** of the parent RDD may be used by **multiple partitions** of the child RDD.                       | This necessitates a shuffle across the cluster, typically seen in operations like `groupBy`, `reduceByKey`, or `join`. It incurs higher overhead and network transfer.   |
 | 3   | Why are Wide Dependencies expensive?   | Because they involve **shuffles**, during which data must be **redistributed** across nodes, leading to **disk I/O**, **network transfer**, and **skew**. | Wide dependencies are often the primary bottleneck. Optimisation may require techniques such as salting, repartitioning, or adaptive execution.                         |
@@ -205,18 +204,18 @@ flowchart TD
 
 🔁 Task Count Comparison
 
-| Stage    | Task Type         | Count | Description                                                             |
-|----------|-------------------|--------|-------------------------------------------------------------------------|
-| Stage 1  | Map Tasks          | 3      | Each processes one original input partition.                           |
-| Stage 1  | Shuffle Map Tasks  | 3      | Same as above; each writes shuffle files for downstream consumption.   |
-| **Stage 2**  | Reduce Tasks       | 2      | **Each fetches its partitioned data from all 3 shuffle files, merges and aggregates.** |
+| Stage   | Task Type | Count | Description 
+| --- | --- | --- | --- |
+| Stage 1 | **Shuffle Map Tasks** | **3** | One task per input partition (P0–P2). Each task executes all narrow transformations (map/flatMap/…) in a pipeline, then buckets records by key and writes **2 shuffle outputs** (for partitions A and B). |
+| Stage 2 | **Reduce Tasks**      | **2** | One task per output partition (A, B). **Each reduce task fetches its partition’s blocks from all 3 shuffle map tasks** (one block per map task), then merges/aggregates to produce the final result.      |
+
 
 ## 4. Data Skew（skewness)
 
 🔥 Data Skew in Spark - *Unbalanced data across partitions*
 
-| Category                      | Optimization Methods                                           |
-|------------------------------|----------------------------------------------------------------|
+| Category | Optimization Methods |
+| --- | --- | 
 | 1️⃣ Skewed Input Files        | Repartitioning, Merging small files, Using more suitable file formats |
 | 2️⃣ Skewed Join Keys          | Broadcast Join, Salting, Adaptive Query Execution (AQE)       |
 | 3️⃣ Skewed Aggregation        | Salting + Two-stage aggregation                               |
