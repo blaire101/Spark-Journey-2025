@@ -17,7 +17,7 @@ Apache Spark (Distributed computing engine)
 | 1 | **What is Apache Spark?** | A distributed computing engine for large-scale data processing. | Supports in-memory computation and APIs in Scala, Python, Java, SQL. |
 | 2 | **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
 | 3 | **What is a DataFrame?** | A distributed table with named columns and typed rows. | Built on RDDs; optimized by Catalyst engine; like a distributed Pandas/DataTable. |
-| 4 | **What is a transformation?** | A lazy operation that returns a new RDD or DataFrame. | Examples: `map()`, `filter()`, `groupBy()`. |
+| 4 | **What is a transformation?** | A lazy operation that returns a new RDD or DataFrame. **Narrow transformations + Wide transformations** | Examples: `map()`, `filter()`, `groupBy()`. |
 | 5 | **What is an action?** | An operation that triggers actual computation and returns results. | Examples: `collect()`, `count()`, `show()`. |
 | 6 | **What is lazy evaluation?** | Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **an action is called**. | Enables optimization and fault tolerance. |
 
@@ -64,9 +64,11 @@ flowchart TB
 
 | No. | Question | Summary |
 | --- | --- | --- |
-| 7 | What is a Spark job? | Triggered by action, consists of stages. |
-| 8 | What is a stage in Spark? | A set of tasks between shuffles. |
-| 9 | What is a task? | Unit of execution on a partition. |
+| 7 | What is a Spark job? | Triggered by action ("collect, take(n), saveAsTextFile(path), show..DF"), Spark creates a job - **<mark>consists of stages</mark>**, |
+| 8 | What is a stage in Spark? | a set of parallel **tasks** that execute the same computation on different **partitions of the data**. <br> **<mark>A set of tasks</mark>** between shuffles. |
+| 9 | What is a task? | **<mark>Unit of execution</mark>** on a partition. |
+
+Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
 
 ```mermaid
 flowchart TD
@@ -106,7 +108,7 @@ flowchart TD
 
 | # | Question | Summary |
 | --- | --- | --- |
-| 10 | What is a shuffle in Spark? | Data redistribution across partitions. |
+| 10 | What is a shuffle in Spark? | Data redistribution across partitions.  |
 | 11 | Why is shuffle expensive? | Disk I/O + network + serialization. |
 | 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
 
