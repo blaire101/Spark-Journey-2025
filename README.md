@@ -72,43 +72,61 @@ Stage division： Spark splits the DAG into stages at shuffle operations (like r
 
 ```mermaid
 flowchart TD
+    %% Action & Job
     A["Action<br>(e.g. collect())"]
     A --> Job["Spark Job"]
 
-    Job --> Stage1["Stage 1<br>Shuffle Map Stage<br>(map... + shuffle write)"]
-    Stage1 --> Stage2["Stage 2<br>Reduce Stage<br>(reduceByKey / aggregation)"]
+    %% Stages
+    Job --> Stage1["Stage 1<br>Shuffle Map Stage"]
+    Stage1 --> Stage2["Stage 2<br>Reduce Stage"]
 
-    %% Stage1 Tasks (3 partitions)
+    %% Stage1 Tasks (3 input partitions)
     Stage1 --> T1["Shuffle Map Task<br>Partition 0"]
     Stage1 --> T2["Shuffle Map Task<br>Partition 1"]
     Stage1 --> T3["Shuffle Map Task<br>Partition 2"]
 
-    %% Stage1 输出 shuffle 文件 (2 files)
-    T1 --> SF0["Shuffle File 0"]
-    T1 --> SF1["Shuffle File 1"]
-    T2 --> SF0
-    T2 --> SF1
-    T3 --> SF0
-    T3 --> SF1
+    %% Task 内部 pipeline (map + shuffle write, 作为 Task 内部说明)
+    T1 --> M1["map operations → shuffle write"]
+    T2 --> M2["map operations → shuffle write"]
+    T3 --> M3["map operations → shuffle write"]
+
+    %% Shuffle 文件 (改为浅灰色)
+    M1 --> SF0["Shuffle File 0"]
+    M1 --> SF1["Shuffle File 1"]
+    M2 --> SF0
+    M2 --> SF1
+    M3 --> SF0
+    M3 --> SF1
 
     %% Stage2 Reduce Tasks
     SF0 --> T4["Reduce Task<br>Partition A"]
     SF1 --> T5["Reduce Task<br>Partition B"]
 
+    %% Reduce task pipeline (说明节点，无色)
+    T4 --> R1["Read Shuffle File 0 → Aggregate"]
+    T5 --> R2["Read Shuffle File 1 → Aggregate"]
+
     Stage2 --> T4
     Stage2 --> T5
 
-    style A fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
-    style Job fill:#bbdefb,stroke:#1565c0,stroke-width:2px
+    %% Stage颜色
     style Stage1 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style Stage2 fill:#fce4ec,stroke:#ad1457,stroke-width:2px
+    style Stage2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+
+    %% Task颜色
     style T1 fill:#fffde7,stroke:#f57f17
     style T2 fill:#fffde7,stroke:#f57f17
     style T3 fill:#fffde7,stroke:#f57f17
-    style SF0 fill:#ffe0b2,stroke:#fb8c00
-    style SF1 fill:#ffe0b2,stroke:#fb8c00
     style T4 fill:#f3e5f5,stroke:#6a1b9a
     style T5 fill:#f3e5f5,stroke:#6a1b9a
+
+    %% Shuffle 文件颜色 (浅灰色)
+    style SF0 fill:#e0e0e0,stroke:#9e9e9e
+    style SF1 fill:#e0e0e0,stroke:#9e9e9e
+
+    %% Action & Job 颜色
+    style A fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
+    style Job fill:#bbdefb,stroke:#1565c0,stroke-width:2px
 ```
 
 | No. | Question | Summary |
