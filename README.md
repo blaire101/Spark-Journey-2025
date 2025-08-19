@@ -60,7 +60,7 @@ flowchart TB
 ---
 ## 🟨 2. Execution Model
 
-📌 **Job → Stage → Task**
+📌 **<mark>Job → Stage → Task</mark>**
 
 | No. | Question | Summary |
 | --- | --- | --- |
