@@ -21,7 +21,7 @@ Apache Spark (Distributed computing engine)
 | 5 | **What is an action?** | An operation that triggers actual computation and returns results. | Examples: `collect()`, `count()`, `show()`. |
 | 6 | **What is lazy evaluation?** | Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **<mark>an action is called</mark>**. | Enables optimization and fault tolerance. |
 
-Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **<mark>an action is called</mark>**.
+Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **an action is called**.
 
 ```mermaid
 flowchart TB
