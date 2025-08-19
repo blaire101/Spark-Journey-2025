@@ -17,7 +17,7 @@ Apache Spark (Distributed computing engine)
 | 1 | **What is Apache Spark?** | A distributed computing engine for large-scale data processing. | Supports in-memory computation and APIs in Scala, Python, Java, SQL. |
 | 2 | **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
 | 3 | **What is a DataFrame?** | A distributed table with named columns and typed rows. | Built on RDDs; optimized by Catalyst engine; like a distributed Pandas/DataTable. |
-| 4 | **What is a transformation?** | A lazy operation that returns a new RDD or DataFrame. **Narrow transformations + Wide transformations** | Examples: `map()`, `filter()`, `groupBy()`. |
+| 4 | **What is a transformation?** | A lazy operation that returns a new RDD or DataFrame. **<mark>Narrow transformations + Wide transformations</mark>** | Examples: `map()`, `filter()`, `groupBy()`. |
 | 5 | **What is an action?** | An operation that triggers actual computation and returns results. | Examples: `collect()`, `count()`, `show()`. |
 | 6 | **What is lazy evaluation?** | Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **an action is called**. | Enables optimization and fault tolerance. |
 
