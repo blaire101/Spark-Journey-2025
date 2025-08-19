@@ -85,12 +85,12 @@ flowchart TD
     Stage1 --> T2["Shuffle Map Task<br>Partition 1"]
     Stage1 --> T3["Shuffle Map Task<br>Partition 2"]
 
-    %% Task 内部 pipeline (map + shuffle write, 作为 Task 内部说明)
+    %% Task 内部 pipeline (map + shuffle write)
     T1 --> M1["map operations → shuffle write"]
     T2 --> M2["map operations → shuffle write"]
     T3 --> M3["map operations → shuffle write"]
 
-    %% Shuffle 文件 (改为浅灰色)
+    %% Shuffle 文件 (浅灰色)
     M1 --> SF0["Shuffle File 0"]
     M1 --> SF1["Shuffle File 1"]
     M2 --> SF0
@@ -98,13 +98,22 @@ flowchart TD
     M3 --> SF0
     M3 --> SF1
 
-    %% Stage2 Reduce Tasks
-    SF0 --> T4["Reduce Task<br>Partition A"]
-    SF1 --> T5["Reduce Task<br>Partition B"]
+    %% AQE 节点 (黄色虚线框，Stage2 reduce task 调整)
+    subgraph AQE["AQE Re-Planning<br>(Coalesce/Skew Split/Join Strategy)"]
+        direction TB
+        AQE_T["Adjust Reduce Tasks"]
+    end
+    SF0 -.-> AQE
+    SF1 -.-> AQE
+    AQE -.-> Stage2
+
+    %% Stage2 Reduce Tasks (调整后)
+    AQE --> T4["Reduce Task<br>Partition A (may split/merge)"]
+    AQE --> T5["Reduce Task<br>Partition B (may split/merge)"]
 
     %% Reduce task pipeline (说明节点，无色)
-    T4 --> R1["Read Shuffle File 0 → Aggregate"]
-    T5 --> R2["Read Shuffle File 1 → Aggregate"]
+    T4 --> R1["Read Shuffle File(s) → Aggregate"]
+    T5 --> R2["Read Shuffle File(s) → Aggregate"]
 
     Stage2 --> T4
     Stage2 --> T5
@@ -119,8 +128,9 @@ flowchart TD
     style T3 fill:#fffde7,stroke:#f57f17
     style T4 fill:#f3e5f5,stroke:#6a1b9a
     style T5 fill:#f3e5f5,stroke:#6a1b9a
+    style AQE_T fill:#fff59d,stroke:#fbc02d,stroke-dasharray:5 5,stroke-width:2px
 
-    %% Shuffle 文件颜色 (浅灰色)
+    %% Shuffle 文件颜色
     style SF0 fill:#e0e0e0,stroke:#9e9e9e
     style SF1 fill:#e0e0e0,stroke:#9e9e9e
 
