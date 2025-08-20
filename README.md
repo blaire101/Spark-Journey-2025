@@ -224,12 +224,12 @@ flowchart TD
 
 🔥 Data Skew in Spark - *Unbalanced data across partitions*
 
-| Category | Optimization Methods |
-| --- | --- | 
-| 1️⃣ Skewed Input Files        | Repartitioning, Merging small files, Using more suitable file formats |
-| 2️⃣ Skewed Join Keys          | Broadcast Join, Salting, Adaptive Query Execution (AQE)       |
-| 3️⃣ Skewed Aggregation        | Salting + Two-stage aggregation                               |
-| 4️⃣ General Tuning & SQL Hints| SQL hints, Repartitioning, Adaptive Query Execution (AQE)     |
+| Category                       | Optimization Methods                                                                                                           | Notes / Best Practices                       | --- | --- | --- | 
+| 1️⃣ Skewed Input Files         | Repartitioning, Merging small files, Using columnar file formats (Parquet/ORC), Increasing `spark.sql.files.maxPartitionBytes` | Avoid too many small files that lead to excessive tasks or file handle pressure; control partition sizes appropriately                               |
+| 2️⃣ Skewed Join Keys           | Broadcast Join, Salting, Adaptive Query Execution (AQE), Map-side join                                                         | For highly skewed join keys, AQE can split large partitions at runtime or broadcast small tables to reduce shuffle                                   |
+| 3️⃣ Skewed Aggregation         | Salting + Two-stage aggregation, AQE coalesce partitions                                                                       | For uneven key distributions in aggregations, pre-salt to scatter keys, then aggregate and remove salt; AQE can automatically split large partitions |
+| 4️⃣ General Tuning & SQL Hints | SQL hints (e.g., `/*+ BROADCAST */`), Repartitioning, AQE (coalesce & skew join), Cache/Checkpoint                             | Overall performance tuning: use hints to guide joins/partitions, cache hotspot data appropriately, adjust parallelism                                |
+
 
 | # | Question | Summary |
 | --- | --- | --- |
