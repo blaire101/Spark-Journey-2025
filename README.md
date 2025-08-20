@@ -70,6 +70,12 @@ flowchart TB
 
 Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
 
+<div align="center">
+  <img src="docs/spark-shuffle-kl-1.jpg alt="Diagram" width="700">
+</div>
+
+---
+
 ```mermaid
 flowchart TD
     %% Action & Job
@@ -163,7 +169,8 @@ flowchart TD
   <img src="docs/spark-wide-dependency.webp" alt="Diagram" width="500">
 </div>
 
-| No. | ❓Question                              | ✅ Answer                                                                                                                                                   | 📘 Notes                                                                                                    | --- | --- | --- | --- |
+| No. | ❓Question   | ✅ Answer| 📘 Notes                                                                                                    
+| --- | --- | --- | --- |
 | 1   | What is a Narrow Dependency in Spark?  | A **narrow dependency** means that **each partition** of the parent RDD is used by **at most one partition** of the child RDD.                            | No shuffle is required. Examples include `map`, `filter`, and `union`. These operations allow pipelined execution and are typically faster and more efficient.           |
 | 2   | What is a Wide Dependency in Spark?    | A **wide dependency** means that **multiple partitions** of the parent RDD may be used by **multiple partitions** of the child RDD.                       | This necessitates a shuffle across the cluster, typically seen in operations like `groupBy`, `reduceByKey`, or `join`. It incurs higher overhead and network transfer.   |
 | 3   | Why are Wide Dependencies expensive?   | Because they involve **shuffles**, during which data must be **redistributed** across nodes, leading to **disk I/O**, **network transfer**, and **skew**. | Wide dependencies are often the primary bottleneck. Optimisation may require techniques such as salting, repartitioning, or adaptive execution.                         |
@@ -224,12 +231,13 @@ flowchart TD
 
 🔥 Data Skew in Spark - *Unbalanced data across partitions*
 
-| Category | Optimization Methods |
-| --- | --- | 
-| 1️⃣ Skewed Input Files        | Repartitioning, Merging small files, Using more suitable file formats |
-| 2️⃣ Skewed Join Keys          | Broadcast Join, Salting, Adaptive Query Execution (AQE)       |
-| 3️⃣ Skewed Aggregation        | Salting + Two-stage aggregation                               |
-| 4️⃣ General Tuning & SQL Hints| SQL hints, Repartitioning, Adaptive Query Execution (AQE)     |
+| Category  | Optimization Methods | Notes / Best Practices                       
+| --- | --- | --- | 
+| 1️⃣ Skewed Input Files         | Repartitioning, **<mark>Merging small files</mark>**, Using columnar file formats (Parquet/ORC), Increasing `spark.sql.files.maxPartitionBytes` | Avoid too many small files that lead to excessive tasks or file handle pressure; control partition sizes appropriately                               |
+| 2️⃣ Skewed Join Keys           | Broadcast Join, **<mark>Salting, Adaptive Query Execution (AQE)</mark>**, Map-side join               | For highly skewed join keys, AQE can split large partitions at runtime or broadcast small tables to reduce shuffle                                   |
+| 3️⃣ Skewed Aggregation         | **<mark>Salting + Two-stage aggregation, AQE coalesce partitions</mark>**                             | For uneven key distributions in aggregations, pre-salt to scatter keys, then aggregate and remove salt; AQE can automatically split large partitions |
+| 4️⃣ General Tuning & SQL Hints | SQL hints (e.g., `/*+ BROADCAST */`), Repartitioning, AQE (coalesce & skew join), Cache/Checkpoint    | Overall performance tuning: use hints to guide joins/partitions, cache hotspot data appropriately, adjust parallelism                                |
+
 
 | # | Question | Summary |
 | --- | --- | --- |
