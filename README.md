@@ -82,12 +82,12 @@ flowchart TB
   <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="700">
 </div>
 
-| No. | Question | Summary |
-| --- | --- | --- |
-| # | **Driver**      | Runs the `main()` function of the application and creates a `SparkContext`. Responsible for scheduling jobs, i.e., distributing tasks to executors. |
-| # | **Worker**      | Manages compute nodes and creates executors, responsible for launching executors or drivers. Receives commands from the cluster manager and reports status. |
-| # | **Executor**    | A component on the worker node that executes tasks. Uses a thread pool to run tasks assigned by the driver. |
-| # | **Cluster Manager** | In Standalone mode, acts as the Master, controlling the entire cluster and monitoring workers. |
+| No. | Component       | What It Does |
+| --- |-----------------|-------------|
+| 1   | **Driver**      | Runs your main application code (`main()`), creates the `SparkContext`, and decides which tasks run where.  <br> Think of it as the “orchestrator” of your Spark job. |
+| 2   | **Worker**      | A machine/node in the cluster that runs executors. It follows the driver’s instructions and reports back its status. |
+| 3   | **Executor**    | Runs the actual tasks on a worker node. Each executor has a pool of threads to process multiple tasks in parallel. |
+| 4   | **Cluster Manager** | Controls the cluster (like the “master controller”). In Standalone mode, it launches workers, monitors them, and helps schedule jobs. |
 
 
 Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
