@@ -169,16 +169,27 @@ flowchart TD
 
 ### 2.2 Spark Component
 
-<div align="center">
-  <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="650">
-</div>
-
 | No. | Component       | What It Does |
 | --- |-----------------|-------------|
-| 1   | **Driver**      | Runs your main application code (`main()`), creates the `SparkContext`, and decides which tasks run where.  <br> Think of it as the “orchestrator” of your Spark job. |
-| 2   | **Worker**      | A machine/node in the cluster that runs executors. It follows the driver’s instructions and reports back its status. |
-| 3   | **Executor**    | Runs the actual tasks on a worker node. Each executor has a pool of threads to process multiple tasks in parallel. |
-| 4   | **Cluster Manager** | Controls the cluster (like the “master controller”). In Standalone mode, it launches workers, monitors them, and helps schedule jobs. |
+| 1 | Client | Acts as the client on the user’s behalf, responsible for submitting applications.
+| 2 | **Driver**      | Runs your main application code (`main()`), creates the `SparkContext` <br> Responsible for the scheduling of jobs, i.e., the distribution of tasks. Think of it as the “orchestrator” of your Spark job. |
+| 3 | **Worker**      | A machine/node in the cluster that runs executors. It follows the driver’s instructions and reports back its status. |
+| 4 | **Executor**    | Runs the actual tasks on a worker node. Each executor has a pool of threads to process multiple tasks in parallel. |
+| 5 | **Cluster Manager** | Controls the cluster (like the “master controller”). In Standalone mode, it launches workers, monitors them, and helps schedule jobs. |
+
+<div align="center">
+  <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="600">
+</div>
+
+| Step | Spark App Process | Description |
+|------|-----------------|-------------|
+| 1    | Client submission | The client submits the Spark application to the cluster. |
+| 2    | Driver launch    | The Master selects a Worker to start the Driver. |
+| 3    | Resource request & RDD graph creation | The Driver requests resources from the Master or resource manager, and converts the application into an RDD graph. |
+| 4    | DAG creation & stage planning | DAGScheduler converts the RDD graph into a DAG of stages and submits it to TaskScheduler. |
+| 5    | Task scheduling  | TaskScheduler sends tasks to Executors for execution. |
+| 6    | Task execution & coordination | Driver serializes tasks along with required files/jars and sends them to Workers. Executors execute tasks on assigned data partitions. Other components coordinate to ensure smooth application execution. |
+
 
 ## 🟧 3. Shuffle & Partitioning
 
