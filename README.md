@@ -93,8 +93,6 @@ Stage division： Spark splits the DAG into stages at shuffle operations (like r
 
 </details>
 
----
-
 ```mermaid
 flowchart TD
     %% Action & Job
