@@ -70,25 +70,13 @@ flowchart TB
 ---
 ## 🟨 2. Execution Model
 
-📌 **<mark>Job → Stage → Task</mark>**
+### 2.1 📌 **<mark>Job → Stage → Task</mark>**
 
 | No. | Question | Summary |
 | --- | --- | --- |
 | 7 | What is a Spark job? | Triggered by action ("collect, take(n), saveAsTextFile(path), show..DF"), Spark creates a job - **<mark>consists of stages</mark>**, |
 | 8 | What is a stage in Spark? | a set of parallel **tasks** that execute the same computation on different **partitions of the data**. <br> **<mark>A set of tasks</mark>** between shuffles. |
 | 9 | What is a task? | **<mark>Unit of execution</mark>** on a partition. |
-
-<div align="center">
-  <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="700">
-</div>
-
-| No. | Component       | What It Does |
-| --- |-----------------|-------------|
-| 1   | **Driver**      | Runs your main application code (`main()`), creates the `SparkContext`, and decides which tasks run where.  <br> Think of it as the “orchestrator” of your Spark job. |
-| 2   | **Worker**      | A machine/node in the cluster that runs executors. It follows the driver’s instructions and reports back its status. |
-| 3   | **Executor**    | Runs the actual tasks on a worker node. Each executor has a pool of threads to process multiple tasks in parallel. |
-| 4   | **Cluster Manager** | Controls the cluster (like the “master controller”). In Standalone mode, it launches workers, monitors them, and helps schedule jobs. |
-
 
 Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
 
@@ -179,6 +167,18 @@ flowchart TD
 | Stage1 | contains narrow transformations (e.g. `map`, `filter`) **and writes shuffle output if followed by a wide transformation** | 👉 Divided into multiple **Tasks**, each processing **one input partition** (e.g. Partition 0, 1, 2), executing all narrow transformations **in parallel**. Shuffle files are written if needed for Stage2. |
 | Stage2 | begins **after Stage 1 completes**, involves **wide transformations** (e.g. `reduceByKey`)                                | 👉 Divided into **Tasks** operating on **shuffled partitions** (e.g. Partition A, B). Tasks run **in parallel**, and once Stage 2 completes, the **final result** is returned to the **Driver**.            |
 
+### 2.2 Spark Component
+
+<div align="center">
+  <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="650">
+</div>
+
+| No. | Component       | What It Does |
+| --- |-----------------|-------------|
+| 1   | **Driver**      | Runs your main application code (`main()`), creates the `SparkContext`, and decides which tasks run where.  <br> Think of it as the “orchestrator” of your Spark job. |
+| 2   | **Worker**      | A machine/node in the cluster that runs executors. It follows the driver’s instructions and reports back its status. |
+| 3   | **Executor**    | Runs the actual tasks on a worker node. Each executor has a pool of threads to process multiple tasks in parallel. |
+| 4   | **Cluster Manager** | Controls the cluster (like the “master controller”). In Standalone mode, it launches workers, monitors them, and helps schedule jobs. |
 
 ## 🟧 3. Shuffle & Partitioning
 
