@@ -77,6 +77,12 @@ flowchart TB
 | 7 | What is a Spark job? | Triggered by action ("collect, take(n), saveAsTextFile(path), show..DF"), Spark creates a job - **<mark>consists of stages</mark>**, |
 | 8 | What is a stage in Spark? | a set of parallel **tasks** that execute the same computation on different **partitions of the data**. <br> **<mark>A set of tasks</mark>** between shuffles. |
 | 9 | What is a task? | **<mark>Unit of execution</mark>** on a partition. |
+| - | - |
+| # | **Driver**      | Runs the `main()` function of the application and creates a `SparkContext`. Responsible for scheduling jobs, i.e., distributing tasks to executors. |
+| # | **Worker**      | Manages compute nodes and creates executors, responsible for launching executors or drivers. Receives commands from the cluster manager and reports status. |
+| # | **Executor**    | A component on the worker node that executes tasks. Uses a thread pool to run tasks assigned by the driver. |
+| # | **Cluster Manager** | In Standalone mode, acts as the Master, controlling the entire cluster and monitoring workers. |
+
 
 Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
 
