@@ -168,7 +168,6 @@ flowchart TD
 | Stage2 | begins **after Stage 1 completes**, involves **wide transformations** (e.g. `reduceByKey`)                                | 👉 Divided into **Tasks** operating on **shuffled partitions** (e.g. Partition A, B). Tasks run **in parallel**, and once Stage 2 completes, the **final result** is returned to the **Driver**.            |
 
 
-   
 ## 🟧 3. Shuffle & Partitioning
 
 📌 **Shuffle = Costly, Wide vs Narrow**
@@ -250,7 +249,7 @@ flowchart TD
 
 | Category  | Optimization Methods | Notes / Best Practices                       
 | --- | --- | --- | 
-| 1️⃣ Skewed Input Files         | Repartitioning, **<mark>Merging small files</mark>**, Using columnar file formats (Parquet/ORC), Increasing `spark.sql.files.maxPartitionBytes` | Avoid too many small files that lead to excessive tasks or file handle pressure; control partition sizes appropriately                               |
+| 1️⃣ Skewed Input Files         | Repartitioning, **<mark>Merging small files</mark>**, Using columnar file formats (Parquet/ORC), Increasing `spark.sql.files.maxPartitionBytes` <br> `spark.sql.files.openCostInBytes` | Avoid too many small files that lead to excessive tasks or file handle pressure; control partition sizes appropriately                               |
 | 2️⃣ Skewed Join Keys           | Broadcast Join, **<mark>Salting, Adaptive Query Execution (AQE)</mark>**, Map-side join               | For highly skewed join keys, AQE can split large partitions at runtime or broadcast small tables to reduce shuffle                                   |
 | 3️⃣ Skewed Aggregation         | **<mark>Salting + Two-stage aggregation, AQE coalesce partitions</mark>**                             | For uneven key distributions in aggregations, pre-salt to scatter keys, then aggregate and remove salt; AQE can automatically split large partitions |
 | 4️⃣ General Tuning & SQL Hints | SQL hints (e.g., `/*+ BROADCAST */`), Repartitioning, AQE (coalesce & skew join), Cache/Checkpoint    | Overall performance tuning: use hints to guide joins/partitions, cache hotspot data appropriately, adjust parallelism                                |
