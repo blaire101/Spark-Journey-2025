@@ -79,7 +79,7 @@ flowchart TB
 | 9 | What is a task? | **<mark>Unit of execution</mark>** on a partition. |
 
 <div align="center">
-  <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="900">
+  <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="700">
 </div>
 
 | No. | Question | Summary |
