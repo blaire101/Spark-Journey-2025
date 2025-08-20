@@ -80,6 +80,9 @@ flowchart TB
 
 Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
 
+<details>
+<summary><strong>Execution Model</strong></summary>
+
 <div align="center">
   <img src="docs/spark-shuffle-kl-2.jpg" alt="Diagram" width="900">
 </div>
@@ -87,6 +90,8 @@ Stage division： Spark splits the DAG into stages at shuffle operations (like r
 <div align="center">
   <img src="docs/spark-shuffle-kl-3.jpg" alt="Diagram" width="900">
 </div>
+
+</details>
 
 ---
 
