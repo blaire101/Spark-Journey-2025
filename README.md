@@ -24,7 +24,7 @@ Apache Spark (Distributed computing engine)
 Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **an action is called**.
 
 <div align="center">
-  <img src="docs/spark-shuffle-kl-1.jpg" alt="Diagram" width="750">
+  <img src="docs/spark-shuffle-kl-1.jpg" alt="Diagram" width="800">
 </div>
 
 <details>
