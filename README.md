@@ -27,6 +27,9 @@ Spark builds a **<mark>logical DAG of transformations</mark>**, which is only ex
   <img src="docs/spark-shuffle-kl-1.jpg" alt="Diagram" width="900">
 </div>
 
+<details>
+<summary><strong>SparkSession</strong></summary>
+
 
 ```mermaid
 flowchart TB
@@ -62,6 +65,8 @@ flowchart TB
     style Driver   fill:#ffffff,stroke:#999,stroke-width:1px,stroke-dasharray:5 5
 ```
 
+</details>
+
 ---
 ## 🟨 2. Execution Model
 
@@ -74,6 +79,14 @@ flowchart TB
 | 9 | What is a task? | **<mark>Unit of execution</mark>** on a partition. |
 
 Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
+
+<div align="center">
+  <img src="docs/spark-shuffle-kl-2.jpg" alt="Diagram" width="900">
+</div>
+
+<div align="center">
+  <img src="docs/spark-shuffle-kl-3.jpg" alt="Diagram" width="900">
+</div>
 
 ---
 
