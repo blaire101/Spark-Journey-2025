@@ -23,6 +23,11 @@ Apache Spark (Distributed computing engine)
 
 Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **an action is called**.
 
+<div align="center">
+  <img src="docs/spark-shuffle-kl-1.jpg" alt="Diagram" width="900">
+</div>
+
+
 ```mermaid
 flowchart TB
     Session["SparkSession"]
@@ -69,10 +74,6 @@ flowchart TB
 | 9 | What is a task? | **<mark>Unit of execution</mark>** on a partition. |
 
 Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
-
-<div align="center">
-  <img src="docs/spark-shuffle-kl-1.jpg" alt="Diagram" width="700">
-</div>
 
 ---
 
