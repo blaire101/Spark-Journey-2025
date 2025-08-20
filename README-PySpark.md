@@ -181,3 +181,147 @@ df.groupBy("Category").sum().explain()
 ---
 
 Happy Spark-ing! ⚡
+
+---
+
+```mermaid
+---
+config:
+  layout: dagre
+---
+flowchart TB
+ subgraph Control["Control"]
+        DA["Driver Application"]
+        SC["SparkContext"]
+        RL["RDD Lineage (map→groupBy)"]
+        DS["DAG Scheduler"]
+        TS["Task Scheduler"]
+        CM["Cluster Manager (master)"]
+  end
+ subgraph Input["Input"]
+    direction TB
+        P0["Partition 0: Beijing"]
+        P1["Partition 1: Shanghai, Harbin"]
+        P2["Partition 2: Beijing, Shenzhen, Singapore, Kuala Lumpur"]
+  end
+ subgraph MapStage["Stage 0: Map + In-Memory Combine"]
+    direction TB
+        MT0["Map Task 0: Beijing=2"]
+        MT1["Map Task 1: Shanghai=1, Harbin=1"]
+        MT2["Map Task 2: Beijing=1, Shenzhen=1, Singapore=1, Kuala Lumpur=1"]
+  end
+ subgraph ExecutorsMap["Executors (Map Stage)"]
+    direction LR
+        EXA["Executor A (Worker1, 2 cores)"]
+        EXB["Executor B (Worker2, 2 cores)"]
+  end
+ subgraph ShuffleBlock["Shuffle Write & Partitions (5)"]
+    direction TB
+        SW["Map outputs for 5 partitions
+        (in-memory combine; output on local disk)"]
+        SP0["0: Beijing"]
+        SP1["1: Shanghai"]
+        SP2["2: Harbin"]
+        SP3["3: Shenzhen"]
+        SP4["4: Singapore & Kuala Lumpur"]
+        SF["Shuffle Fetch\n(from local disk)"]
+  end
+ subgraph ReduceStage["Stage 1: Reduce (Fetch + Final)"]
+    direction TB
+        RT0["Reduce Task 0: Beijing"]
+        RT1["Reduce Task 1: Shanghai"]
+        RT2["Reduce Task 2: Harbin"]
+        RT3["Reduce Task 3: Shenzhen"]
+        RT4["Reduce Task 4: Singapore"]
+        RT5["Reduce Task 5: Kuala Lumpur"]
+  end
+ subgraph Assignment["Executors (Reduce Stage)"]
+    direction LR
+        A1["Executor A runs RT0, RT1, RT2"]
+        A2["Executor B runs RT3, RT4, RT5"]
+  end
+ subgraph OutputFiles["HDFS Output Files (via saveAsTextFile)"]
+        OF0["part-00000"]
+        OF1["part-00001"]
+        OF2["part-00002"]
+        OF3["part-00003"]
+        OF4["part-00004"]
+  end
+ subgraph Output["Driver call collect() - Output"]
+        FO["Local Array: Beijing=3, Shanghai=1,Harbin=1, Shenzhen=1,Singapore=1, Kuala Lumpur=1"]
+  end
+    A1 --> OF0 & OF1 & OF2 & FO
+    A2 --> OF3 & OF4 & FO
+    DA --> SC
+    SC --> RL & DS & TS
+    TS --> CM
+    CM --> P0 & P1 & P2
+    P0 --> MT0
+    P1 --> MT1
+    P2 --> MT2
+    MT0 --> EXA & SW
+    MT1 --> EXA & SW
+    MT2 --> EXB & SW
+    SW --> SP0 & SP1 & SP2 & SP3 & SP4
+    SP0 --> SF
+    SP1 --> SF
+    SP2 --> SF
+    SP3 --> SF
+    SP4 --> SF
+    SF --> RT0 & RT1 & RT2 & RT3 & RT4 & RT5
+    RT0 --> A1
+    RT1 --> A1
+    RT2 --> A1
+    RT3 --> A2
+    RT4 --> A2
+    RT5 --> A2
+    RL --> CFG["Configs:
+    spark.sql.shuffle.partitions=5
+    --num-executors=2
+    --executor-cores=2
+    --executor-memory=4g
+    spark.shuffle.compress=true
+    spark.shuffle.spill.compress=true"]
+    CFG --> Control
+    Control --> n1["Untitled Node"]
+     DA:::control
+     SC:::control
+     RL:::control
+     DS:::control
+     TS:::control
+     CM:::control
+     P0:::input
+     P1:::input
+     P2:::input
+     MT0:::reduce
+     MT1:::reduce
+     MT2:::reduce
+     EXA:::executor
+     EXB:::executor
+     SW:::shuffle
+     SP0:::shuffle
+     SP1:::shuffle
+     SP2:::shuffle
+     SP3:::shuffle
+     SP4:::shuffle
+     SF:::shuffle
+     RT0:::reduce
+     RT1:::reduce
+     RT2:::reduce
+     RT3:::reduce
+     RT4:::reduce
+     RT5:::reduce
+     A1:::assign
+     A2:::assign
+     FO:::output
+     CFG:::config
+    classDef control   fill:#D0E8FF,stroke:#0077CC,stroke-width:1.5px
+    classDef input     fill:#E8F7D4,stroke:#3C763D,stroke-width:1.5px
+    classDef reduce    fill:#FADBD8,stroke:#CC0000,stroke-width:1.5px
+    classDef shuffle   fill:#FFF2CC,stroke:#CCCC00,stroke-width:1.5px
+    classDef assign    fill:#D4EEF7,stroke:#007299,stroke-width:1.5px
+    classDef output    fill:#F0F0F0,stroke:#666666,stroke-width:1.5px
+    classDef config    fill:#FFF7D6,stroke:#CC9900,stroke-width:1.5px
+    classDef executor  fill:#D4EEF7,stroke:#005F73,stroke-width:1.5px
+```
+
