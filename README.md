@@ -100,50 +100,48 @@ flowchart TD
     A --> Job["Spark Job"]
 
     %% Stages
-    Job --> Stage1["Stage 1<br>Shuffle Map Stage"]
-    Stage1 --> Stage2["Stage 2<br>Reduce Stage"]
+    Job --> Stage0["Stage 0<br>Shuffle Map Stage"]
+    Stage0 --> Stage1["Stage 1<br>Reduce Stage"]
 
-    %% Stage1 Tasks (3 input partitions)
-    Stage1 --> T1["Shuffle Map Task<br>Partition 0"]
-    Stage1 --> T2["Shuffle Map Task<br>Partition 1"]
-    Stage1 --> T3["Shuffle Map Task<br>Partition 2"]
+    %% Stage0 Tasks (3 input partitions)
+    Stage0 --> T1["Shuffle Map Task<br>Partition 0"]
+    Stage0 --> T2["Shuffle Map Task<br>Partition 1"]
+    Stage0 --> T3["Shuffle Map Task<br>Partition 2"]
 
     %% Task 内部 pipeline (map + shuffle write)
     T1 --> M1["map operations → shuffle write"]
     T2 --> M2["map operations → shuffle write"]
     T3 --> M3["map operations → shuffle write"]
 
-    %% Shuffle 文件 (浅灰色)
-    M1 --> SF0["Shuffle File 0"]
-    M1 --> SF1["Shuffle File 1"]
-    M2 --> SF0
-    M2 --> SF1
-    M3 --> SF0
-    M3 --> SF1
+    %% Shuffle 文件 (每个MapTask一组，灰色表示data+index)
+    M1 --> SF1["Shuffle File (Map0.data + Map0.index)"]
+    M2 --> SF2["Shuffle File (Map1.data + Map1.index)"]
+    M3 --> SF3["Shuffle File (Map2.data + Map2.index)"]
 
-    %% AQE 节点 (黄色虚线框，Stage2 reduce task 调整)
+    %% AQE 节点 (黄色虚线框，Stage1 reduce task 调整)
     subgraph AQE["AQE Re-Planning<br>(Coalesce/Skew Split/Join Strategy)"]
         direction TB
         AQE_T["Adjust Reduce Tasks"]
     end
-    SF0 -.-> AQE
     SF1 -.-> AQE
-    AQE -.-> Stage2
+    SF2 -.-> AQE
+    SF3 -.-> AQE
+    AQE -.-> Stage1
 
-    %% Stage2 Reduce Tasks (调整后)
+    %% Stage1 Reduce Tasks (调整后)
     AQE --> T4["Reduce Task<br>Partition A (may split/merge)"]
     AQE --> T5["Reduce Task<br>Partition B (may split/merge)"]
 
     %% Reduce task pipeline (说明节点，无色)
-    T4 --> R1["Read Shuffle File(s) → Aggregate"]
-    T5 --> R2["Read Shuffle File(s) → Aggregate"]
+    T4 --> R1["Read slice from all Map shuffle files → Aggregate"]
+    T5 --> R2["Read slice from all Map shuffle files → Aggregate"]
 
-    Stage2 --> T4
-    Stage2 --> T5
+    Stage1 --> T4
+    Stage1 --> T5
 
     %% Stage颜色
+    style Stage0 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
     style Stage1 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    style Stage2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
 
     %% Task颜色
     style T1 fill:#fffde7,stroke:#f57f17
@@ -154,8 +152,9 @@ flowchart TD
     style AQE_T fill:#fff59d,stroke:#fbc02d,stroke-dasharray:5 5,stroke-width:2px
 
     %% Shuffle 文件颜色
-    style SF0 fill:#e0e0e0,stroke:#9e9e9e
     style SF1 fill:#e0e0e0,stroke:#9e9e9e
+    style SF2 fill:#e0e0e0,stroke:#9e9e9e
+    style SF3 fill:#e0e0e0,stroke:#9e9e9e
 
     %% Action & Job 颜色
     style A fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
