@@ -103,20 +103,34 @@ flowchart TD
     Job --> Stage0["Stage 0<br>Shuffle Map Stage"]
     Stage0 --> Stage1["Stage 1<br>Reduce Stage"]
 
-    %% Stage0 Tasks (3 input partitions)
-    Stage0 --> T1["Shuffle Map Task<br>Partition 0"]
-    Stage0 --> T2["Shuffle Map Task<br>Partition 1"]
-    Stage0 --> T3["Shuffle Map Task<br>Partition 2"]
+    %% ===== Map0: Sort-based Shuffle 子图 =====
+    subgraph SB0["Map Task 0 — Sort Shuffle (per-map: single data file + index)"]
+        direction TB
+        T1["Shuffle Map Task<br>Partition 0"]
+        T1 --> M1["map operations → local partitioned sort → write (data + index)"]
+        M1 --> SF1["Shuffle File (Map0.data + Map0.index)"]
+    end
 
-    %% Task 内部 pipeline (map + shuffle write)
-    T1 --> M1["map operations → shuffle write"]
-    T2 --> M2["map operations → shuffle write"]
-    T3 --> M3["map operations → shuffle write"]
+    %% ===== Map1: Sort-based Shuffle 子图 =====
+    subgraph SB1["Map Task 1 — Sort Shuffle (per-map: single data file + index)"]
+        direction TB
+        T2["Shuffle Map Task<br>Partition 1"]
+        T2 --> M2["map operations → local partitioned sort → write (data + index)"]
+        M2 --> SF2["Shuffle File (Map1.data + Map1.index)"]
+    end
 
-    %% Shuffle 文件 (每个MapTask一组，灰色表示data+index)
-    M1 --> SF1["Shuffle File (Map0.data + Map0.index)"]
-    M2 --> SF2["Shuffle File (Map1.data + Map1.index)"]
-    M3 --> SF3["Shuffle File (Map2.data + Map2.index)"]
+    %% ===== Map2: Sort-based Shuffle 子图 =====
+    subgraph SB2["Map Task 2 Sort Shuffle (per-map: single data file + index)"]
+        direction TB
+        T3["Shuffle Map Task<br>Partition 2"]
+        T3 --> M3["map operations → local partitioned sort → write (data + index)"]
+        M3 --> SF3["Shuffle File (Map2.data + Map2.index)"]
+    end
+
+    %% Stage0 指向各 Map 任务（在子图内）
+    Stage0 --> T1
+    Stage0 --> T2
+    Stage0 --> T3
 
     %% AQE 节点 (黄色虚线框，Stage1 reduce task 调整)
     subgraph AQE["AQE Re-Planning<br>(Coalesce/Skew Split/Join Strategy)"]
