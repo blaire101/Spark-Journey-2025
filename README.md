@@ -514,6 +514,13 @@ SET spark.sql.shuffle.partitions = 200;
 - **Spark**: Supports in-memory computation and DAG execution.
 - **MapReduce**: Always writes intermediate data to disk.
 
+| Aspect              | Spark MR Equivalent                          | MapReduce (MR)                               |
+|---------------------|----------------------------------------------|-----------------------------------------------|
+| **Execution Model** | **<mark>DAG of stages</mark>**; in-memory, **<mark>pipelined execution</mark>** | Two fixed stages: Map → Reduce; disk-based    |
+| **Shuffle**         | Sort-based Shuffle with optimizations (AQE, push-based, bypass merge) | Always disk + full sort, heavy I/O            |
+| **Intermediate Data** | Cached in memory (spill to disk only if needed) | Written to disk every stage                 |
+| **Fault Tolerance** | RDD lineage recomputes only lost partitions  | Restart tasks using on-disk data
+
 #### 🔹 (1) In-Memory Advantage:
 
 - Spark can cache data in memory across stages, significantly reducing I/O overhead.
