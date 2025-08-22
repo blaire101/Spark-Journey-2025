@@ -185,7 +185,7 @@ flowchart TD
 | Stage1 | begins **after Stage 0 completes**, involves **wide transformations** (e.g. `reduceByKey`)                                | 👉 Divided into **Tasks** operating on **shuffled partitions** (e.g. Partition A, B). Tasks run **in parallel**, and once Stage 1 completes, the **final result** is returned to the **Driver**.            |
 
 
-| AQE (Adaptive Query Execution) —  Functions    | What It Does    |    Benefit      |
+| AQE  —  Functions    | What It Does - (Adaptive Query Execution)   |    Benefit      |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | **1. Dynamically coalesce shuffle partitions** | Merges many small shuffle partitions into fewer larger ones at runtime                                      | Reduces empty tasks, lowers scheduling overhead   |
 | **2. Handle skewed joins (skew split)**        | Detects skewed partitions (hot keys) and splits them into multiple tasks                                    | Avoids long-tail stragglers, improves parallelism |
