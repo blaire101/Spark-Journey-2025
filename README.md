@@ -107,24 +107,21 @@ flowchart TD
     subgraph SB0["Map Task 0 — Sort Shuffle (per-map: single data file + index)"]
         direction TB
         T1["Shuffle Map Task<br>Partition 0"]
-        T1 --> M1["map operations → local partitioned sort → write (data + index)"]
-        M1 --> SF1["Shuffle File (Map0.data + Map0.index)"]
+        T1 --> SF1["Shuffle File (Map0.data + Map0.index)"]
     end
 
     %% ===== Map1: Sort-based Shuffle 子图 =====
     subgraph SB1["Map Task 1 — Sort Shuffle (per-map: single data file + index)"]
         direction TB
         T2["Shuffle Map Task<br>Partition 1"]
-        T2 --> M2["map operations → local partitioned sort → write (data + index)"]
-        M2 --> SF2["Shuffle File (Map1.data + Map1.index)"]
+        T2 --> SF2["Shuffle File (Map1.data + Map1.index)"]
     end
 
     %% ===== Map2: Sort-based Shuffle 子图 =====
     subgraph SB2["Map Task 2 — Sort Shuffle (per-map: single data file + index)"]
         direction TB
         T3["Shuffle Map Task<br>Partition 2"]
-        T3 --> M3["map operations → local partitioned sort → write (data + index)"]
-        M3 --> SF3["Shuffle File (Map2.data + Map2.index)"]
+        T3 --> SF3["Shuffle File (Map2.data + Map2.index)"]
     end
 
     %% Stage0 指向各 Map 任务（在子图内）
