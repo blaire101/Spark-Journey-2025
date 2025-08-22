@@ -184,6 +184,15 @@ flowchart TD
 | Stage0 | contains narrow transformations (e.g. `map`, `filter`) **and writes shuffle output if followed by a wide transformation** | 👉 Divided into multiple **Tasks**, each processing **one input partition** (e.g. Partition 0, 1, 2), executing all narrow transformations **in parallel**. Shuffle files are written if needed for Stage1. |
 | Stage1 | begins **after Stage 0 completes**, involves **wide transformations** (e.g. `reduceByKey`)                                | 👉 Divided into **Tasks** operating on **shuffled partitions** (e.g. Partition A, B). Tasks run **in parallel**, and once Stage 1 completes, the **final result** is returned to the **Driver**.            |
 
+
+| AQE (Adaptive Query Execution) —  Functions    | What It Does    |    Benefit      |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| **1. Dynamically coalesce shuffle partitions** | Merges many small shuffle partitions into fewer larger ones at runtime                                      | Reduces empty tasks, lowers scheduling overhead   |
+| **2. Handle skewed joins (skew split)**        | Detects skewed partitions (hot keys) and splits them into multiple tasks                                    | Avoids long-tail stragglers, improves parallelism |
+| **3. Switch join strategies at runtime**       | Can change SortMergeJoin → BroadcastHashJoin (or others) if actual stats differ from estimates              | Better performance, avoids unnecessary shuffles   |
+| **4. Improve overall robustness**              | Uses *runtime statistics* (row count, size, distribution) instead of relying only on compile-time estimates | More stable performance even with bad statistics  |
+
+
 ### 2.2 Spark Component
 
 | No. | Component       | What It Does |
