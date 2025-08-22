@@ -120,7 +120,7 @@ flowchart TD
     end
 
     %% ===== Map2: Sort-based Shuffle 子图 =====
-    subgraph SB2["Map Task 2 Sort Shuffle (per-map: single data file + index)"]
+    subgraph SB2["Map Task 2 — Sort Shuffle (per-map: single data file + index)"]
         direction TB
         T3["Shuffle Map Task<br>Partition 2"]
         T3 --> M3["map operations → local partitioned sort → write (data + index)"]
@@ -133,7 +133,7 @@ flowchart TD
     Stage0 --> T3
 
     %% AQE 节点 (黄色虚线框，Stage1 reduce task 调整)
-    subgraph AQE["AQE Re-Planning<br>(Coalesce/Skew Split/Join Strategy)"]
+    subgraph AQE["AQE Re-Planning<br>(Coalesce / Skew Split / Join Strategy)"]
         direction TB
         AQE_T["Adjust Reduce Tasks"]
     end
@@ -143,15 +143,18 @@ flowchart TD
     AQE -.-> Stage1
 
     %% Stage1 Reduce Tasks (调整后)
-    AQE --> T4["Reduce Task<br>Partition A (may split/merge)"]
-    AQE --> T5["Reduce Task<br>Partition B (may split/merge)"]
+    Stage1 --> T4["Reduce Task<br>Partition A"]
+    Stage1 --> T5["Reduce Task<br>Partition B"]
 
-    %% Reduce task pipeline (说明节点，无色)
-    T4 --> R1["Read slice from all Map shuffle files → Aggregate"]
-    T5 --> R2["Read slice from all Map shuffle files → Aggregate"]
-
-    Stage1 --> T4
-    Stage1 --> T5
+    %% 在 Reduce Task 右侧加注释（非流程节点）
+    subgraph G1[ ]
+      direction LR
+      T4 -. note .- NoteT4["Note: reads its slice<br/>from all map shuffle files → aggregate"]
+    end
+    subgraph G2[ ]
+      direction LR
+      T5 -. note .- NoteT5["Note: reads its slice<br/>from all map shuffle files → aggregate"]
+    end
 
     %% Stage颜色
     style Stage0 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
@@ -169,6 +172,10 @@ flowchart TD
     style SF1 fill:#e0e0e0,stroke:#9e9e9e
     style SF2 fill:#e0e0e0,stroke:#9e9e9e
     style SF3 fill:#e0e0e0,stroke:#9e9e9e
+
+    %% Note颜色
+    style NoteT4 fill:#fafafa,stroke:#bdbdbd,stroke-dasharray: 2 2
+    style NoteT5 fill:#fafafa,stroke:#bdbdbd,stroke-dasharray: 2 2
 
     %% Action & Job 颜色
     style A fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
