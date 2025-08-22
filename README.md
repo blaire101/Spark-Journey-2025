@@ -279,8 +279,8 @@ flowchart TD
 
 | Stage   | Task Type | Count | Description 
 | --- | --- | --- | --- |
-| Stage 1 | **Shuffle Map Tasks** | **3** | One task per input partition (P0–P2). Each task executes all narrow transformations (map/flatMap/…) in a pipeline, then buckets records by key and writes **2 shuffle outputs** (for partitions A and B). |
-| Stage 2 | **Reduce Tasks**      | **2** | One task per output partition (A, B). **Each reduce task fetches its partition’s blocks from all 3 shuffle map tasks** (one block per map task), then merges/aggregates to produce the final result.      |
+| Stage 0 | **Shuffle Map Tasks** | **3** | One task per input partition (P0–P2). Each task executes all narrow transformations (map/flatMap/…) in a pipeline, then buckets records by key and writes **2 shuffle outputs** (for partitions A and B). |
+| Stage 1 | **Reduce Tasks**      | **2** | One task per output partition (A, B). **Each reduce task fetches its partition’s blocks from all 3 shuffle map tasks** (one block per map task), then merges/aggregates to produce the final result.      |
 
 
 ## 4. Data Skew（skewness)
@@ -389,7 +389,7 @@ flowchart TD
 
 | Feature                  | AQE (Adaptive Query Execution)          | Salting                                          |
 | ------------------------ | --------------------------------------- | ------------------------------------------------ |
-| **Optimization timing**  | After shuffle (runtime)                 | Before shuffle (logical rewrite)                 |
+| **Optimization timing**  | After shuffle (runtime) <br> **With AQE enabled**, spark.sql.shuffle.partitions is used only as an **<mark>initial value / upper bound</mark>** for the shuffle partitions. AQE will dynamically merge or split them at runtime.                | Before shuffle (logical rewrite)                 |
 | **Implementation**       | Automatic (enable config)               | Manual (modify SQL/ETL)                          |
 | **Skew type handled**    | Join/aggregation skew **after** shuffle <br> 1. AQE does not rewrite data to disk — it only modifies the scheduling metadata. <br> 2. The shuffle files remain exactly the ones written by the map stage. <br> 3. As a result, AQE’s overhead is minimal (it’s just analysis and re-planning), and there’s no need for a disk rewrite. | Join skew or data source skew **before** shuffle |
 | **Intrusiveness**        | No SQL changes required                 | SQL changes required                             |
