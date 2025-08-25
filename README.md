@@ -315,7 +315,7 @@ flowchart TD
 | AQE  —  Functions    | What It Does - (Adaptive Query Execution)   |    Benefit      |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | **1. Dynamically coalesce shuffle partitions** | Merges many small shuffle partitions into fewer larger ones at runtime                                      | Reduces empty tasks, lowers scheduling overhead   |
-| **2. Handle skewed joins (skew split)**        | Detects skewed partitions (hot keys) and splits them into multiple tasks                                    | Avoids long-tail stragglers, improves parallelism |
+| **2. Handle skewed joins (skew split)**        | Detects skewed partitions (hot keys) and splits them into multiple tasks   <br> It will add a <mark>final aggregation step</mark> to merge the intermediate results.                                 | Avoids long-tail stragglers, improves parallelism |
 | **3. Switch join strategies at runtime**       | Can change SortMergeJoin → BroadcastHashJoin (or others) if actual stats differ from estimates              | Better performance, avoids unnecessary shuffles   |
 | **4. Improve overall robustness**              | Uses *runtime statistics* (row count, size, distribution) instead of relying only on compile-time estimates | More stable performance even with bad statistics  |
 
