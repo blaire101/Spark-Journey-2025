@@ -209,6 +209,8 @@ flowchart TD
 | 5    | **TaskScheduler**    | Breaks stages into multiple **tasks** (based on partition count) and assigns them to Executors.                                                           |
 | 6    | **Executors**        | Executors pull data and execute operators. For wide dependencies: Map side writes shuffle files, Reduce side fetches and aggregates.                      |
 | 7    | **Driver (Monitor)** | Driver tracks task execution, retries failed tasks, and returns the final result to the user or writes to storage.                                        |
+<details>
+<summary><strong>Spark App Process</strong></summary>
 
 ```mermaid
 flowchart TD
@@ -220,7 +222,8 @@ flowchart TD
     F --> G["Executors<br/>Execute Tasks<br/>Map writes / Reduce fetches"]
     G --> H["Driver Monitor<br/>Track status, retry, return result"]
 ```
-
+</details>
+  
 ## 🟧 3. Shuffle & Partitioning
 
 📌 **Shuffle = Costly, Wide vs Narrow**
