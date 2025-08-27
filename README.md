@@ -199,16 +199,27 @@ flowchart TD
 <div align="center">
   <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="600">
 </div>
-
-| Step | Spark App Process | Description |
+                                                                                                                              
+| Step | Component - Spark App Process| Description |
 |------|-----------------|-------------|
-| 1    | Client submission | The client submits the Spark application to the cluster. |
-| 2    | Driver launch    | The Master selects a Worker to start the Driver. |
-| 3    | Resource request & RDD graph creation | The Driver requests resources from the Master or resource manager, and converts the application into an RDD graph. |
-| 4    | DAG creation & stage planning | DAGScheduler converts the RDD graph into a DAG of stages and submits it to TaskScheduler. |
-| 5    | Task scheduling  | TaskScheduler sends tasks to Executors for execution. |
-| 6    | Task execution & coordination | Driver serializes tasks along with required files/jars and sends them to Workers. Executors execute tasks on assigned data partitions. Other components coordinate to ensure smooth application execution. |
+| 1    | **Client**           | User submits the Spark application via **spark-submit / Notebook**.                                                                                       |
+| 2    | **Driver**           | Cluster manager (Standalone / YARN / K8s) allocates resources and launches the Driver on a Worker. The Driver parses code and maintains **SparkContext**. |
+| 3    | **Logical Plan**     | Driver builds **RDD/DataFrame lineage** from user code, forming a logical execution plan.                                                                 |
+| 4    | **DAGScheduler**     | Translates the logical plan into a **DAG of stages**. Splits stages at shuffle boundaries; each stage contains narrow dependencies.                       |
+| 5    | **TaskScheduler**    | Breaks stages into multiple **tasks** (based on partition count) and assigns them to Executors.                                                           |
+| 6    | **Executors**        | Executors pull data and execute operators. For wide dependencies: Map side writes shuffle files, Reduce side fetches and aggregates.                      |
+| 7    | **Driver (Monitor)** | Driver tracks task execution, retries failed tasks, and returns the final result to the user or writes to storage.                                        |
 
+```mermaid
+flowchart TD
+    A["Client<br/>spark-submit or Notebook"] --> B["Cluster Manager<br/>Standalone / YARN / K8s"]
+    B --> C["Driver<br/>Parse code + SparkContext"]
+    C --> D["Logical Plan<br/>RDD/DataFrame Lineage"]
+    D --> E["DAGScheduler<br/>Split into Stages at shuffle"]
+    E --> F["TaskScheduler<br/>Assign Tasks to Executors"]
+    F --> G["Executors<br/>Execute Tasks<br/>Map writes / Reduce fetches"]
+    G --> H["Driver Monitor<br/>Track status, retry, return result"]
+```
 
 ## 🟧 3. Shuffle & Partitioning
 
