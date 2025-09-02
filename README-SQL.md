@@ -381,6 +381,9 @@ segments AS (
 SELECT * FROM segments;
 ```
 
+- WHERE: Filters rows <mark>before GROUP BY</mark>, applied to the original rows.
+- HAVING: Filters groups <mark>after GROUP BY</mark>, applied to the aggregated results.
+
 | user\_id | flag\_date | cnt | start\_date | end\_date  |
 | -------- | ---------- | --- | ----------- | ---------- |
 | A        | 2024-12-31 | 3   | 2025-01-01  | 2025-01-03 |
