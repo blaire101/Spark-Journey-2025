@@ -210,16 +210,17 @@ flowchart TD
 <div align="center">
   <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="600">
 </div>
-                                                                                                                              
-| Step | Component - Spark App Process| Description |
-|------|-----------------|-------------|
-| 1    | **Client**           | User submits the Spark application via **spark-submit / Notebook**.                                                                                       |
-| 2    | **Driver**           | Cluster manager (Standalone / YARN / K8s) allocates resources and launches the Driver on a Worker. The Driver parses code and maintains **SparkContext**. |
-| 3    | **Logical Plan**     | Driver builds **RDD/DataFrame lineage** from user code, forming a logical execution plan.                                                                 |
-| 4    | **DAGScheduler**     | Translates the logical plan into a **DAG of stages**. Splits stages at shuffle boundaries; each stage contains narrow dependencies.                       |
-| 5    | **TaskScheduler**    | Breaks stages into multiple **tasks** (based on partition count) and assigns them to Executors.                                                           |
-| 6    | **Executors**        | Executors pull data and execute operators. For wide dependencies: Map side writes shuffle files, Reduce side fetches and aggregates.                      |
-| 7    | **Driver (Monitor)** | Driver tracks task execution, retries failed tasks, and returns the final result to the user or writes to storage.                                        |
+                                                                                                                
+| Step | Component - Spark App Process | Description |
+|------|-------------------------------|-------------|
+| 1    | <mark>**Client**</mark>       | User submits the Spark application via <mark>**spark-submit / Notebook**</mark>. Application JAR/py files are sent to the cluster. |
+| 2    | <mark>**Driver**</mark>       | <mark>**Cluster Manager (Standalone / YARN / K8s)**</mark> allocates resources and launches the Driver (on client node or worker, depending on deploy mode). The Driver initializes <mark>**SparkContext**</mark> and parses the code. |
+| 3    | <mark>**Logical Plan**</mark> | Driver builds <mark>**RDD lineage / DataFrame Logical Plan**</mark> from user code. For DataFrames, the <mark>**Catalyst Optimizer**</mark> produces an optimized logical plan, then a physical plan. |
+| 4    | <mark>**DAGScheduler**</mark> | Converts the logical/physical plan into a <mark>**DAG of stages**</mark>. Splits at <mark>**shuffle boundaries**</mark>. Each stage contains <mark>**narrow dependencies**</mark>. |
+| 5    | <mark>**TaskScheduler**</mark> | Breaks each stage into multiple <mark>**tasks**</mark> (based on partition count) and assigns them to <mark>**Executors**</mark>. |
+| 6    | <mark>**Executors**</mark>    | Executors pull data and execute operators. For wide dependencies: <mark>**map side writes shuffle files**</mark>, <mark>**reduce side fetches & aggregates**</mark>. |
+| 7    | <mark>**Driver (Monitor)**</mark> | Driver tracks <mark>**task execution**</mark>, retries failed tasks, and collects results. Final output is returned to the user or written to <mark>**storage**</mark>. |
+
 <details>
 <summary><strong>Spark App Process</strong></summary>
 
