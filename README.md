@@ -210,16 +210,17 @@ flowchart TD
 <div align="center">
   <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="600">
 </div>
-                                                                                                                
+
 | Step | Component - Spark App Process | Description |
 |------|-------------------------------|-------------|
 | 1    | <mark>**Client**</mark>       | User submits the Spark application via <mark>**spark-submit / Notebook**</mark>. Application JAR/py files are sent to the cluster. |
 | 2    | <mark>**Driver**</mark>       | <mark>**Cluster Manager (Standalone / YARN / K8s)**</mark> allocates resources and launches the Driver (on client node or worker, depending on deploy mode). The Driver initializes <mark>**SparkContext**</mark> and parses the code. |
-| 3    | <mark>**Logical Plan**</mark> | Driver builds <mark>**RDD lineage / DataFrame Logical Plan**</mark> from user code. For DataFrames, the <mark>**Catalyst Optimizer**</mark> produces an optimized logical plan, then a physical plan. |
-| 4    | <mark>**DAGScheduler**</mark> | Converts the logical/physical plan into a <mark>**DAG of stages**</mark>. Splits at <mark>**shuffle boundaries**</mark>. Each stage contains <mark>**narrow dependencies**</mark>. |
-| 5    | <mark>**TaskScheduler**</mark> | Breaks each stage into multiple <mark>**tasks**</mark> (based on partition count) and assigns them to <mark>**Executors**</mark>. |
-| 6    | <mark>**Executors**</mark>    | Executors pull data and execute operators. For wide dependencies: <mark>**map side writes shuffle files**</mark>, <mark>**reduce side fetches & aggregates**</mark>. |
-| 7    | <mark>**Driver (Monitor)**</mark> | Driver tracks <mark>**task execution**</mark>, retries failed tasks, and collects results. Final output is returned to the user or written to <mark>**storage**</mark>. |
+| 3    | <mark>**DAG of Transformations**</mark> | User-defined operations (`map`, `filter`, `join`, etc.) are recorded as a <mark>**logical DAG of transformations (lineage)**</mark>. This DAG is built lazily and not executed until an action is called. |
+| 4    | <mark>**Logical / Physical Plan**</mark> | For DataFrames, Spark SQL uses the <mark>**Catalyst Optimizer**</mark> to transform the logical plan into an optimized logical plan, then into a physical plan. |
+| 5    | <mark>**DAGScheduler**</mark> | Converts the transformations/physical plan into a <mark>**DAG of stages**</mark>. Splits at <mark>**shuffle boundaries**</mark>. Each stage contains <mark>**narrow dependencies**</mark>. |
+| 6    | <mark>**TaskScheduler**</mark> | Breaks each stage into multiple <mark>**tasks**</mark> (based on partition count) and assigns them to <mark>**Executors**</mark>. |
+| 7    | <mark>**Executors**</mark>    | Executors pull data and execute operators. For wide dependencies: <mark>**map side writes shuffle files**</mark>, <mark>**reduce side fetches & aggregates**</mark>. |
+| 8    | <mark>**Driver (Monitor)**</mark> | Driver tracks <mark>**task execution**</mark>, retries failed tasks, and collects results. Final output is returned to the user or written to <mark>**storage**</mark>. |
 
 <details>
 <summary><strong>Spark App Process</strong></summary>
