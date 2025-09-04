@@ -211,17 +211,6 @@ flowchart TD
   <img src="docs/spark-introduce-03.jpeg" alt="Diagram" width="600">
 </div>
 
-| Step | Component - Spark App Process | Description |
-|------|-------------------------------|-------------|
-| 1    | <mark>**Client**</mark>       | User submits the Spark application via <mark>**spark-submit / Notebook**</mark>. Application JAR/py files are sent to the cluster. |
-| 2    | <mark>**Driver**</mark>       | <mark>**Cluster Manager (Standalone / YARN / K8s)**</mark> allocates resources and launches the Driver (on client node or worker, depending on deploy mode). The Driver initializes <mark>**SparkContext**</mark> and parses the code. |
-| 3    | <mark>**DAG of Transformations**</mark> | User-defined operations (`map`, `filter`, `join`, etc.) are recorded as a <mark>**logical DAG of transformations (lineage)**</mark>. This DAG is built lazily and not executed until an action is called. |
-| 4    | <mark>**Logical / Physical Plan**</mark> | For DataFrames, Spark SQL uses the <mark>**Catalyst Optimizer**</mark> to transform the logical plan into an optimized logical plan, then into a physical plan. |
-| 5    | <mark>**DAGScheduler**</mark> | Converts the transformations/physical plan into a <mark>**DAG of stages**</mark>. Splits at <mark>**shuffle boundaries**</mark>. Each stage contains <mark>**narrow dependencies**</mark>. |
-| 6    | <mark>**TaskScheduler**</mark> | Breaks each stage into multiple <mark>**tasks**</mark> (based on partition count) and assigns them to <mark>**Executors**</mark>. |
-| 7    | <mark>**Executors**</mark>    | Executors pull data and execute operators. For wide dependencies: <mark>**map side writes shuffle files**</mark>, <mark>**reduce side fetches & aggregates**</mark>. |
-| 8    | <mark>**Driver (Monitor)**</mark> | Driver tracks <mark>**task execution**</mark>, retries failed tasks, and collects results. Final output is returned to the user or written to <mark>**storage**</mark>. |
-
 <details>
 <summary><strong>Spark App Process</strong></summary>
 
@@ -236,36 +225,17 @@ flowchart TD
     G --> H["Driver Monitor<br/>Track status, retry, return result"]
 ```
 
-```mermaid
-flowchart TD
-    A[Client submits app - spark-submit or Notebook] --> B[Cluster Manager - Standalone / YARN / K8s]
-    B --> C[Driver starts - creates SparkContext]
-    C --> D[DAG of Transformations - logical lineage]
-    D --> E[Action called]
-    E --> F[DAGScheduler - split into DAG of Stages at shuffle boundaries]
-    F --> G[TaskScheduler - create Tasks by partition]
-    G --> H[Executors - execute tasks, shuffle read and write]
-    H --> I[Driver monitors and aggregates results]
-    I --> J[Return to user or write to storage]
-
-    %% assign classes
-    class A submit;
-    class B,C driver;
-    class D plan;
-    class E,F schedule;
-    class G task;
-    class H exec;
-    class I,J result;
-
-    %% color definitions
-    classDef submit  fill:#d1e7ff,stroke:#1e3a8a,stroke-width:1px,color:#0b2545;
-    classDef driver  fill:#fef3c7,stroke:#92400e,stroke-width:1px,color:#78350f;
-    classDef plan    fill:#ede9fe,stroke:#5b21b6,stroke-width:1px,color:#3b0764;
-    classDef schedule fill:#e0f2fe,stroke:#0369a1,stroke-width:1px,color:#0c4a6e;
-    classDef task    fill:#dcfce7,stroke:#166534,stroke-width:1px,color:#064e3b;
-    classDef exec    fill:#fee2e2,stroke:#b91c1c,stroke-width:1px,color:#7f1d1d;
-    classDef result  fill:#f1f5f9,stroke:#334155,stroke-width:1px,color:#0f172a;
-```
+| Step | Keyword / Component              | Description |
+|------|----------------------------------|-------------|
+| 1    | <mark>**Client Application Submit**</mark>  | User submits the application via <mark>**spark-submit / Notebook**</mark>. |
+| 2    | <mark>**Cluster Manager Allocation**</mark> | <mark>**Standalone / YARN / K8s**</mark> allocates resources and launches the Driver. |
+| 3    | <mark>**Driver and SparkContext**</mark>    | Driver starts, creates <mark>**SparkContext**</mark>, and parses the user program. |
+| 4    | <mark>**DAG of Transformations**</mark>     | User-defined operations (map, filter, join, etc.) are recorded lazily as <mark>**lineage**</mark>. |
+| 5    | <mark>**Action Trigger Execution**</mark>   | An <mark>**action**</mark> (collect, count, save) triggers execution of the DAG. |
+| 6    | <mark>**DAGScheduler Planning**</mark>      | Converts the transformations DAG into a <mark>**DAG of Stages**</mark>, splitting at <mark>**shuffle boundaries**</mark>. |
+| 7    | <mark>**TaskScheduler Dispatch**</mark>     | Breaks each stage into multiple <mark>**tasks**</mark> (by partition) and schedules them on <mark>**Executors**</mark>. |
+| 8    | <mark>**Executors Execution**</mark>        | Executors run <mark>**tasks**</mark>, perform <mark>**shuffle read/write**</mark>, and return results. |
+| 9    | <mark>**Driver Monitoring & Result**</mark> | Driver monitors <mark>**task execution**</mark>, retries failures, aggregates results, and returns the final <mark>**output**</mark> to the user or storage. |
 
 </details>
   
