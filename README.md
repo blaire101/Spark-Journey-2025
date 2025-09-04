@@ -235,6 +235,38 @@ flowchart TD
     F --> G["Executors<br/>Execute Tasks<br/>Map writes / Reduce fetches"]
     G --> H["Driver Monitor<br/>Track status, retry, return result"]
 ```
+
+```mermaid
+flowchart TD
+    A[Client submits app - spark-submit or Notebook] --> B[Cluster Manager - Standalone / YARN / K8s]
+    B --> C[Driver starts - creates SparkContext]
+    C --> D[DAG of Transformations - logical lineage]
+    D --> E[Action called]
+    E --> F[DAGScheduler - split into DAG of Stages at shuffle boundaries]
+    F --> G[TaskScheduler - create Tasks by partition]
+    G --> H[Executors - execute tasks, shuffle read and write]
+    H --> I[Driver monitors and aggregates results]
+    I --> J[Return to user or write to storage]
+
+    %% assign classes
+    class A submit;
+    class B,C driver;
+    class D plan;
+    class E,F schedule;
+    class G task;
+    class H exec;
+    class I,J result;
+
+    %% color definitions
+    classDef submit  fill:#d1e7ff,stroke:#1e3a8a,stroke-width:1px,color:#0b2545;
+    classDef driver  fill:#fef3c7,stroke:#92400e,stroke-width:1px,color:#78350f;
+    classDef plan    fill:#ede9fe,stroke:#5b21b6,stroke-width:1px,color:#3b0764;
+    classDef schedule fill:#e0f2fe,stroke:#0369a1,stroke-width:1px,color:#0c4a6e;
+    classDef task    fill:#dcfce7,stroke:#166534,stroke-width:1px,color:#064e3b;
+    classDef exec    fill:#fee2e2,stroke:#b91c1c,stroke-width:1px,color:#7f1d1d;
+    classDef result  fill:#f1f5f9,stroke:#334155,stroke-width:1px,color:#0f172a;
+```
+
 </details>
   
 ## 🟧 3. Shuffle & Partitioning
@@ -430,7 +462,6 @@ flowchart TD
 | **Skew type handled**    | Join/aggregation skew **after** shuffle <br> 1. AQE does not rewrite data to disk — it only modifies the scheduling metadata. <br> 2. The shuffle files remain exactly the ones written by the map stage. <br> 3. As a result, AQE’s overhead is minimal (it’s just analysis and re-planning), and there’s no need for a disk rewrite. | Join skew or data source skew **before** shuffle |
 | **Intrusiveness**        | No SQL changes required                 | SQL changes required                             |
 | **Best fit scenario**    | Skew is mild and/or not fixed           | Skewed key is known and severe                   |
-
 
 How Spark chooses (Spark 3.3)
 - Broadcast first: if one side fits autoBroadcastJoinThreshold → BHJ. (You can disable by setting to -1 or force via /*+ BROADCAST(t) */.) 
