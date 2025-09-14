@@ -395,10 +395,10 @@ flowchart TD
 | 3️⃣ Skewed Aggregation         | **<mark>Salting + Two-stage aggregation, AQE coalesce partitions</mark>**                             | For uneven key distributions in aggregations, pre-salt to scatter keys, then aggregate and remove salt; AQE can automatically split large partitions |
 | 4️⃣ General Tuning & SQL Hints | SQL hints (e.g., `/*+ BROADCAST */`), Repartitioning, AQE (coalesce & skew join), Cache/Checkpoint    | Overall performance tuning: use hints to guide joins/partitions, cache hotspot data appropriately, adjust parallelism                                |
 
-
 | # | Question | Summary |
 | --- | --- | --- |
-| 13 | What is data skew? | Unbalanced data across partitions. |
+| 13 | What is data skew? | Unbalanced data across partitions. <br> **What is data skew?**  
+Unbalanced data across partitions.  <br> It often occurs when a few keys have significantly more records than others.  <br> This leads to some tasks running much longer than others, causing **performance bottlenecks** and **OOM errors**.|
 | 14 | What causes it? | Skewed key distribution. |
 | 15 | Why is it bad? | Causes long-running tasks, resource underuse. |
 | 16 | How to detect it? | Spark UI (task duration, skewed keys). |
@@ -412,7 +412,7 @@ flowchart TD
 | 24 | Other methods to handle skew? | Filter hot keys, use approx algorithms, repartition. |
 
 | AQE  —  Functions    | What It Does - (Adaptive Query Execution)   |    Benefit      |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| ------------------------ | --------------------------- | ---------------- |
 | **1. Dynamically coalesce shuffle partitions** | Merges many small shuffle partitions into fewer larger ones at runtime                                      | Reduces empty tasks, lowers scheduling overhead   |
 | **2. Handle skewed joins (skew split)**        | Detects skewed partitions (hot keys) and splits them into multiple tasks   <br> It will add a <mark>final aggregation step</mark> to merge the intermediate results. <br><br> “AQE can automatically **split a large partition into multiple tasks**, so it works well when the partition contains multiple keys. But if a partition is dominated by a single extreme hot key, AQE can only slice the file, not rebalance the key itself. **The key still ends up as one group**, so the fundamental skew problem remains. That’s why in extreme skew cases, we still need manual techniques like salting.”     | Avoids long-tail stragglers, improves parallelism |
 | **3. Switch join strategies at runtime**       | Can change SortMergeJoin → BroadcastHashJoin (or others) if actual stats differ from estimates              | Better performance, avoids unnecessary shuffles   |
@@ -496,7 +496,7 @@ flowchart TD
 ```
 
 | Feature                  | AQE (Adaptive Query Execution)          | Salting                                          |
-| ------------------------ | --------------------------------------- | ------------------------------------------------ |
+| ------------------------ | ----------------------------- | ----------------------------- |
 | **Optimization timing**  | After shuffle (runtime) <br> **With AQE enabled**, spark.sql.shuffle.partitions is used only as an **<mark>initial value / upper bound</mark>** for the shuffle partitions. AQE will dynamically merge or split them at runtime.                | Before shuffle (logical rewrite)                 |
 | **Implementation**       | Automatic (enable config)               | Manual (modify SQL/ETL)                          |
 | **Skew type handled**    | Join/aggregation skew **after** shuffle <br> 1. AQE does not rewrite data to disk — it only modifies the scheduling metadata. <br> 2. The shuffle files remain exactly the ones written by the map stage. <br> 3. As a result, AQE’s overhead is minimal (it’s just analysis and re-planning), and there’s no need for a disk rewrite. | Join skew or data source skew **before** shuffle |
@@ -621,8 +621,8 @@ SET spark.sql.shuffle.partitions = 200;
 - **Spark**: Supports in-memory computation and DAG execution.
 - **MapReduce**: Always writes intermediate data to disk.
 
-| Aspect              | Spark (Closest Feature)                          | MapReduce (MR)                               |
-|---------------------|----------------------------------------------|-----------------------------------------------|
+| Aspect  | Spark (Closest Feature)        | MapReduce (MR)   |
+|---------------------|-----------------------------|----------------------------|
 | **Execution Model** | **<mark>DAG of stages</mark>**; in-memory, **<mark>pipelined execution</mark>** | Two fixed stages: Map → Reduce; disk-based    |
 | **Shuffle**         | Sort-based Shuffle with optimizations (AQE, push-based, bypass merge) | Always disk + full sort, heavy I/O            |
 | **Intermediate Data** | Cached in memory (spill to disk only if needed) | Written to disk every stage                 |
