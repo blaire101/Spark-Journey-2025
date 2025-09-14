@@ -29,10 +29,10 @@ flowchart LR
     B --> C[Tasks sent to Executors]
 ```
 
-1. The **<mark>DAG</mark>** is only executed when you call an **<mark>action</mark>** (e.g., `collect`, `count`, `save`).  
-2. At this point, the **<mark>DAGScheduler</mark>** converts the **<mark>logical DAG</mark>** into a **<mark>DAG of stages</mark>**.  
-3. Each **<mark>stage</mark>** is then further divided into multiple **<mark>tasks</mark>**.  
-4. The **<mark>TaskScheduler</mark>** is responsible for **<mark>scheduling</mark>** these **<mark>tasks</mark>** to **<mark>executors</mark>** and **<mark>monitoring</mark>** their execution.  
+> 1. The **<mark>DAG</mark>** is only executed when you call an **<mark>action</mark>** (e.g., `collect`, `count`, `save`).  
+> 2. At this point, the **<mark>DAGScheduler</mark>** converts the **<mark>logical DAG</mark>** into a **<mark>DAG of stages</mark>**.  
+> 3. Each **<mark>stage</mark>** is then further divided into multiple **<mark>tasks</mark>**.  
+> 4. The **<mark>TaskScheduler</mark>** is responsible for **<mark>scheduling</mark>** these **<mark>tasks</mark>** to **<mark>executors</mark>** and **<mark>monitoring</mark>** their execution.  
 
 <div align="center">
   <img src="docs/spark-shuffle-kl-1.jpg" alt="Diagram" width="800">
