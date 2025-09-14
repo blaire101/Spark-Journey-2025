@@ -10,14 +10,14 @@
 Apache Spark (Distributed computing engine)
 
 ## 🟩 1. Apache Spark Core Concepts
-📌 **RDD, DataFrame, Lazy |  fault tolerance mechanisms** /fɔːlt/ /ˈtɒlərəns/ /ˈmekənɪzəmz/
+📌 **RDD, DataFrame, Lazy evaluation · Fault-tolerance mechanisms** /fɔːlt/ /ˈtɒlərəns/ /ˈmekənɪzəmz/
 
 | No. | ❓Question | ✅ Answer | 📘 Notes |
 | --- | --- | --- | --- |
 | 1 | **What is Apache Spark?** | A distributed computing engine for large-scale data processing. | Supports in-memory computation and APIs in Scala, Python, Java, SQL. |
-| 2 | **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | immutable to enhance the stability of parallel computation and simplify fault tolerance mechanisms;    supports transformations like `map`, `filter`, `reduceByKey`. |
-| 3 | **What is a DataFrame?** | A distributed table with named columns and typed rows. | Built on RDDs; optimized by Catalyst engine; like a distributed Pandas/DataTable. |
-| 4 | **What is a transformation?** | A lazy operation that returns a new RDD or DataFrame. **<mark>Narrow transformations + Wide transformations</mark>** | Examples: `map()`, `filter()`, `groupBy()`. |
+| 2 | **What is an RDD?** | An immutable, partitionable, distributed collection of objects. | Immutability stabilises parallel computation and simplifies fault tolerance.    supports transformations like `map`, `filter`, `reduceByKey`. |
+| 3 | **What is a DataFrame?** | A distributed table with named columns and typed rows. | Built on RDDs; optimized by the Catalyst optimizer; like a distributed Pandas/DataTable. |
+| 4 | **What is a transformation?** | A lazy operation producing a new RDD or DataFrame. **<mark>Narrow transformations + Wide transformations</mark>** | Examples: `map()`, `filter()`, `groupBy()`. |
 | 5 | **What is an action?** | An operation that triggers actual computation and returns results. | Examples: `collect()`, `count()`, `show()`. |
 | 6 | **What is lazy evaluation?** | Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **an action is called**. | Enables optimization and fault tolerance. |
 
@@ -250,7 +250,7 @@ flowchart TD
 | 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
 
 <details>
-<summary><strong>Narrow vs Wise Dependency</strong></summary>
+<summary><strong>Narrow vs Wide Dependency</strong></summary>
 
 <div align="center">
   <img src="docs/spark-wide-dependency.webp" alt="Diagram" width="500">
@@ -295,7 +295,7 @@ flowchart TD
     ShuffleStage -->|Shuffle Read| C0
     ShuffleStage -->|Shuffle Read| C1
 
-    Note1["💡 Shuffle involves:<br>• Disk I/O<br>• Network<br>• Serialization<br><br>❗ Partition count may change!"]
+    Note1["💡 Shuffle involves:<br>• Disk I/O<br>• Network<br>• Serialization<br><br>❗ The number of partitions may change."]
     ShuffleStage -.-> Note1
 
     %% Styling
@@ -551,7 +551,7 @@ SET spark.sql.shuffle.partitions = 200;
 - **Spark**: Supports in-memory computation and DAG execution.
 - **MapReduce**: Always writes intermediate data to disk.
 
-| Aspect              | Spark MR Equivalent                          | MapReduce (MR)                               |
+| Aspect              | Spark (Closest Feature)                          | MapReduce (MR)                               |
 |---------------------|----------------------------------------------|-----------------------------------------------|
 | **Execution Model** | **<mark>DAG of stages</mark>**; in-memory, **<mark>pipelined execution</mark>** | Two fixed stages: Map → Reduce; disk-based    |
 | **Shuffle**         | Sort-based Shuffle with optimizations (AQE, push-based, bypass merge) | Always disk + full sort, heavy I/O            |
