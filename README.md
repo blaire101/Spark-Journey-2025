@@ -51,26 +51,39 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    A[**User Program**<br>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**<br>entry point]
-    B --> C[**Catalyst Optimizer**<br>Logical → Optimized → Physical Plan]
-    C --> X[**DAG of Transformations**<br>RDD Lineage built from user operations]
-    X --> D[**DAGScheduler**<br>splits DAG into Stages]
-    D --> E[**TaskScheduler**<br>schedules Tasks to Executors]
-    E --> F[**Driver**<br>collects results & completes job]
+    A[**User Program**<br>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**]
+    B --> C[**Catalyst Optimizer**<br>Logical → Physical Plan]
+    C --> X[**DAG of Transformations**<br>RDD Lineage]
+    X --> Y[**Action**<br>collect / count / save]
 
-    %% === Color classes ===
-    classDef user fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef context fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef catalyst fill:#bfb,stroke:#333,stroke-width:2px;
-    classDef dag fill:#ffd580,stroke:#333,stroke-width:2px;
-    classDef scheduler fill:#ffb3b3,stroke:#333,stroke-width:2px;
-    classDef driver fill:#d5b3ff,stroke:#333,stroke-width:2px;
+    %% === Color classes (lighter colors) ===
+    classDef user fill:#fce5ff,stroke:#666,stroke-width:1px;
+    classDef context fill:#e6f0ff,stroke:#666,stroke-width:1px;
+    classDef catalyst fill:#e6ffe6,stroke:#666,stroke-width:1px;
+    classDef dag fill:#fff2cc,stroke:#666,stroke-width:1px;
+    classDef action fill:#fff9cc,stroke:#666,stroke-width:1px;
 
     %% === Assign classes ===
     class A user;
     class B context;
     class C catalyst;
     class X dag;
+    class Y action;
+```
+
+```mermaid
+flowchart LR
+    Y[**Action Triggered**] --> D[**DAGScheduler**<br>splits DAG into Stages]
+    D --> E[**TaskScheduler**<br>schedules Tasks to Executors]
+    E --> F[**Driver**<br>collects results and completes job]
+
+    %% === Color classes (stronger colors) ===
+    classDef action fill:#ffe599,stroke:#333,stroke-width:2px;
+    classDef scheduler fill:#ff9999,stroke:#333,stroke-width:2px;
+    classDef driver fill:#d5b3ff,stroke:#333,stroke-width:2px;
+
+    %% === Assign classes ===
+    class Y action;
     class D scheduler;
     class E scheduler;
     class F driver;
