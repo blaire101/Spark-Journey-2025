@@ -25,8 +25,29 @@ Apache Spark (Distributed computing engine)
 
 ```mermaid
 flowchart LR
-    A[Logical DAG of Transformations] --> B[<mark>**DAG of Stages**</mark>]
-    B --> C[Tasks sent to Executors]
+    A[**User Program**<br>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**<br>entry point]
+    B --> C[**Catalyst Optimizer**<br>Logical → Optimized → Physical Plan]
+    C --> X[**DAG of Transformations**<br>RDD Lineage built from user operations]
+    X --> D[**DAGScheduler**<br>splits DAG into Stages]
+    D --> E[**TaskScheduler**<br>schedules Tasks to Executors]
+    E --> F[**Driver**<br>collects results & completes job]
+
+    %% === Color classes ===
+    classDef user fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef context fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef catalyst fill:#bfb,stroke:#333,stroke-width:2px;
+    classDef dag fill:#ffd580,stroke:#333,stroke-width:2px;
+    classDef scheduler fill:#ffb3b3,stroke:#333,stroke-width:2px;
+    classDef driver fill:#d5b3ff,stroke:#333,stroke-width:2px;
+
+    %% === Assign classes ===
+    class A user;
+    class B context;
+    class C catalyst;
+    class X dag;
+    class D scheduler;
+    class E scheduler;
+    class F driver;
 ```
 
 > 1. The **<mark>DAG</mark>** is only executed when you call an **<mark>action</mark>** (e.g., `collect`, `count`, `save`).  
