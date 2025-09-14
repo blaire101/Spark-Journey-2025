@@ -397,8 +397,7 @@ flowchart TD
 
 | # | Question | Summary |
 | --- | --- | --- |
-| 13 | What is data skew? | Unbalanced data across partitions. <br> **What is data skew?**  
-Unbalanced data across partitions.  <br> It often occurs when a few keys have significantly more records than others.  <br> This leads to some tasks running much longer than others, causing **performance bottlenecks** and **OOM errors**.|
+| 13 | **What is data skew?** | **<mark>Unbalanced data across partitions</mark>**. <br> It often occurs when a few keys have significantly more records than others.  <br> This leads to some tasks running much longer than others, causing **performance bottlenecks** and **OOM errors**.|
 | 14 | What causes it? | Skewed key distribution. |
 | 15 | Why is it bad? | Causes long-running tasks, resource underuse. |
 | 16 | How to detect it? | Spark UI (task duration, skewed keys). |
