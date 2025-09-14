@@ -23,30 +23,6 @@ Apache Spark (Distributed computing engine)
 
 - Spark builds a <mark>**logical DAG of transformations**</mark> when you define operations, but it does not execute them immediately.  
 
-**Simple Version:**
-
-```mermaid
-flowchart LR
-    A[**Action**<br>collect / count / save] --> B[**DAGScheduler**<br>DAG → Stages]
-    B --> C[**Stage**<br>split into Tasks]
-    C --> D[**TaskScheduler**<br>Tasks → Executors]
-    D --> E[**Driver**<br>collects Results]
-
-    %% === Color classes ===
-    classDef action fill:#ffd580,stroke:#333,stroke-width:2px;
-    classDef dag fill:#bbf,stroke:#333,stroke-width:2px;
-    classDef stage fill:#bfb,stroke:#333,stroke-width:2px;
-    classDef scheduler fill:#ffb3b3,stroke:#333,stroke-width:2px;
-    classDef driver fill:#d5b3ff,stroke:#333,stroke-width:2px;
-
-    %% === Assign classes ===
-    class A action;
-    class B dag;
-    class C stage;
-    class D scheduler;
-    class E driver;
-```
-
 **Detailed Version:**
 
 ```mermaid
@@ -73,20 +49,24 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    Y[**Action Triggered**] --> D[**DAGScheduler**<br>splits DAG into Stages]
-    D --> E[**TaskScheduler**<br>schedules Tasks to Executors]
-    E --> F[**Driver**<br>collects results and completes job]
+    A[**Action**<br>collect / count / save] --> B[**DAGScheduler**<br>DAG → Stages]
+    B --> C[**Stage**<br>split into Tasks]
+    C --> D[**TaskScheduler**<br>Tasks → Executors]
+    D --> E[**Driver**<br>collects Results]
 
-    %% === Color classes (stronger colors) ===
-    classDef action fill:#ffe599,stroke:#333,stroke-width:2px;
-    classDef scheduler fill:#ff9999,stroke:#333,stroke-width:2px;
+    %% === Color classes ===
+    classDef action fill:#ffd580,stroke:#333,stroke-width:2px;
+    classDef dag fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef stage fill:#bfb,stroke:#333,stroke-width:2px;
+    classDef scheduler fill:#ffb3b3,stroke:#333,stroke-width:2px;
     classDef driver fill:#d5b3ff,stroke:#333,stroke-width:2px;
 
     %% === Assign classes ===
-    class Y action;
+    class A action;
+    class B dag;
+    class C stage;
     class D scheduler;
-    class E scheduler;
-    class F driver;
+    class E driver;
 ```
 
 > 1. The **<mark>DAG</mark>** is only executed when you call an **<mark>action</mark>** (e.g., `collect`, `count`, `save`).  
