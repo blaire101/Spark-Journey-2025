@@ -11,7 +11,7 @@ Apache Spark (Distributed computing engine)
 
 **What is a shuffle in Spark?**  
 
-Data **<mark>redistribution across partitions</mark>**, which may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  
+> Data **<mark>redistribution across partitions</mark>**, which may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  
 This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**.
 
 ## 🟩 1. Apache Spark Core Concepts
@@ -86,7 +86,6 @@ flowchart LR
 <details>
 <summary><strong>SparkSession</strong></summary>
 
-
 ```mermaid
 flowchart TB
     Session["SparkSession"]
@@ -135,19 +134,6 @@ flowchart TB
 | 9 | What is a task? | **<mark>Unit of execution</mark>** on a partition. |
 
 Stage division： Spark splits the DAG into stages at shuffle operations (like reduceByKey, groupBy, join).
-
-<details>
-<summary><strong>Execution Model</strong></summary>
-
-<div align="center">
-  <img src="docs/spark-shuffle-kl-2.jpg" alt="Diagram" width="900">
-</div>
-
-<div align="center">
-  <img src="docs/spark-shuffle-kl-3.jpg" alt="Diagram" width="900">
-</div>
-
-</details>
 
 ```mermaid
 flowchart TD
@@ -293,6 +279,45 @@ flowchart TD
 | 10 | What is a shuffle in Spark? | Data redistribution across partitions. Data **<mark>redistribution across partitions</mark>**, which may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  <br><br> This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**. |
 | 11 | Why is shuffle expensive? | Disk I/O + network + serialization. |
 | 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
+
+```mermaid
+flowchart LR
+    subgraph Node1[Node 1 - Executor A]
+        M1[Map Task 1]
+        M2[Map Task 2]
+        SW1[Shuffle Write]
+    end
+
+    subgraph Node2[Node 2 - Executor B]
+        M3[Map Task 3]
+        SW2[Shuffle Write]
+    end
+
+    subgraph Node3[Node 3 - Executor C]
+        SR1[Shuffle Read]
+        R1[Reduce Task 1]
+    end
+
+    subgraph Node4[Node 4 - Executor D]
+        SR2[Shuffle Read]
+        R2[Reduce Task 2]
+    end
+
+    %% Map → Shuffle Write
+    M1 --> SW1
+    M2 --> SW1
+    M3 --> SW2
+
+    %% Shuffle Write → Shuffle Read (跨节点传输)
+    SW1 -- network transfer --> SR1
+    SW1 -- network transfer --> SR2
+    SW2 -- network transfer --> SR1
+    SW2 -- network transfer --> SR2
+
+    %% Shuffle Read → Reduce
+    SR1 --> R1
+    SR2 --> R2
+```
 
 <details>
 <summary><strong>Narrow vs Wide Dependency</strong></summary>
