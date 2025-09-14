@@ -1,3 +1,8 @@
+**What is a shuffle in Spark?**  
+
+> Data **<mark>redistribution across partitions</mark>**, may involve moving data between **<mark>Executors (nodes)</mark>** over **<mark>network</mark>**.  
+This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**.
+
 ## 📚 Table of Contents
 
 - [Chap 1. Apache Spark Core Concepts](#-1-apache-spark-core-concepts)
@@ -8,11 +13,6 @@
 - [Chap 6. ❓ Spark QA](#6--spark-qa)
 
 Apache Spark (Distributed computing engine)
-
-**What is a shuffle in Spark?**  
-
-> Data **<mark>redistribution across partitions</mark>**, may involve moving data between **<mark>Executors (nodes)</mark>** over **<mark>network</mark>**.  
-This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**.
 
 ## 🟩 1. Apache Spark Core Concepts
 📌 **RDD, DataFrame, Lazy evaluation · Fault-tolerance mechanisms** /fɔːlt/ /ˈtɒlərəns/ /ˈmekənɪzəmz/
