@@ -11,7 +11,7 @@ Apache Spark (Distributed computing engine)
 
 **What is a shuffle in Spark?**  
 
-> Data **<mark>redistribution across partitions</mark>**, which may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  
+> Data **<mark>redistribution across partitions</mark>**, may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  
 This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**.
 
 ## 🟩 1. Apache Spark Core Concepts
