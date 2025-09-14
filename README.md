@@ -9,6 +9,11 @@
 
 Apache Spark (Distributed computing engine)
 
+**What is a shuffle in Spark?**  
+
+Data **<mark>redistribution across partitions</mark>**, which may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  
+This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**.
+
 ## 🟩 1. Apache Spark Core Concepts
 📌 **RDD, DataFrame, Lazy evaluation · Fault-tolerance mechanisms** /fɔːlt/ /ˈtɒlərəns/ /ˈmekənɪzəmz/
 
@@ -285,7 +290,7 @@ flowchart TD
 
 | # | Question | Summary |
 | --- | --- | --- |
-| 10 | What is a shuffle in Spark? | Data redistribution across partitions.  |
+| 10 | What is a shuffle in Spark? | Data redistribution across partitions. Data **<mark>redistribution across partitions</mark>**, which may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  <br><br> This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**. |
 | 11 | Why is shuffle expensive? | Disk I/O + network + serialization. |
 | 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
 
