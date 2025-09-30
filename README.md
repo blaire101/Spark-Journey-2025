@@ -52,6 +52,32 @@ flowchart LR
     class Y action;
 ```
 
+### 1️⃣ User Program → Logical/Physical Plan
+
+1. **User Program (DataFrame / SQL / RDD)**
+
+   * The developer writes Spark code using DataFrames, SQL, or RDD APIs.
+
+2. **SparkSession / SparkContext**
+
+   * Entry point of Spark.
+   * Translates user code into Spark’s internal representations.
+
+3. **Catalyst Optimizer (Logical → Physical Plan)**
+
+   * Spark uses Catalyst to optimize SQL/DataFrame queries.
+   * It creates a **Logical Plan**, applies optimization rules, and produces a **Physical Plan**.
+
+4. **DAG of Transformations (RDD Lineage)**
+
+   * From the physical plan, Spark builds a **Directed Acyclic Graph (DAG)** of transformations.
+   * The DAG represents dependencies between RDDs.
+
+5. **Action (collect / count / save)**
+
+   * When an action is triggered, Spark executes the DAG to actually process the data.
+   * Until an action is called, transformations remain **lazy**.
+
 ```mermaid
 flowchart LR
     A[**Action**<br>collect / count / save] --> B[**DAGScheduler**<br>DAG → Stages]
@@ -73,6 +99,32 @@ flowchart LR
     class D scheduler;
     class E driver;
 ```
+
+### 2️⃣ DAG Execution → Driver Result
+
+1. **Action (collect / count / save)**
+
+   * An action request starts the execution of the DAG.
+
+2. **DAGScheduler (DAG → Stages)**
+
+   * Splits the DAG into **Stages** based on shuffle boundaries.
+   * Each stage contains a set of tasks that can run in parallel.
+
+3. **Stage (split into Tasks)**
+
+   * A stage is further divided into multiple **Tasks**, one per partition.
+
+4. **TaskScheduler (Tasks → Executors)**
+
+   * The TaskScheduler assigns tasks to worker nodes (Executors).
+   * Handles task retries and scheduling policies.
+
+5. **Driver (collects Results)**
+
+   * The Driver program coordinates execution.
+   * Collects results from Executors and returns them to the user program.
+
 
 > 1. The **<mark>DAG</mark>** is only executed when you call an **<mark>action</mark>** (e.g., `collect`, `count`, `save`).  
 > 2. At this point, the **<mark>DAGScheduler</mark>** converts the **<mark>logical DAG</mark>** into a **<mark>DAG of stages</mark>**.  
