@@ -74,8 +74,6 @@ flowchart LR
     style Y fill:#ffffff,stroke:#000000,stroke-width:1px;
 ```
 
-
-
 > Catalyst Optimizer、Logical Plan → Physical Plan、RDD Lineage (Transformation DAG)
 
 1. **User Program (DataFrame / SQL / RDD)**
@@ -124,6 +122,32 @@ flowchart LR
     class C stage;
     class D scheduler;
     class E driver;
+```
+
+```mermaid
+flowchart LR
+    A[**Action**<br/>collect, count, save] 
+      --> B[**DAGScheduler**<br/>Build Scheduling DAG<br/>Split by shuffle boundaries]
+    B --> C[**Stages**<br/>Example:<br/>Stage 1 → Scan and Filter<br/>Stage 2 → Shuffle and Aggregate]
+    C --> D[**Tasks**<br/>Each stage has many tasks<br/>One task corresponds to one partition]
+    D --> E[**TaskScheduler**<br/>Assign tasks to Executors<br/>Handle retries and locality]
+    E --> F[**Driver**<br/>Coordinate execution<br/>Return results to user]
+
+    %% === Color classes ===
+    classDef action fill:#ffd580,stroke:#333,stroke-width:2px;
+    classDef dag fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef stage fill:#bfb,stroke:#333,stroke-width:2px;
+    classDef tasks fill:#fce5ff,stroke:#333,stroke-width:2px;
+    classDef scheduler fill:#ffb3b3,stroke:#333,stroke-width:2px;
+    classDef driver fill:#d5b3ff,stroke:#333,stroke-width:2px;
+
+    %% === Assign classes ===
+    class A action;
+    class B dag;
+    class C stage;
+    class D tasks;
+    class E scheduler;
+    class F driver;
 ```
 
 > Responsible for: actually executing the tasks and running the DAG.
