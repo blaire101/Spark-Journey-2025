@@ -30,7 +30,7 @@ Apache Spark (Distributed computing engine)
 
 **Detailed Version:**
 
-### 1️⃣ Compile phase : User Program → Logical/Physical Plan
+### 1️⃣ Compile phase : User Program → Logical/Physical Plan → RDD DAG
 
 ```mermaid
 flowchart LR
@@ -50,7 +50,7 @@ flowchart LR
     B --> C1
     C4 --> X[**DAG of Transformations**<br/>RDD Lineage]
 
-    X -.-> Y[**Action**<br/>collect / count / save]
+    X -.-> Y[Action]
 
     %% === Color classes ===
     classDef user fill:#fce5ff,stroke:#666,stroke-width:1px;
