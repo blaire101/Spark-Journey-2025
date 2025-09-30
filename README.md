@@ -26,9 +26,7 @@ Apache Spark (Distributed computing engine)
 | 5 | **What is an action?** | An operation that triggers actual computation and returns results. | Examples: `collect()`, `count()`, `show()`. |
 | 6 | **What is lazy evaluation?** | Spark builds a **<mark>logical DAG of transformations</mark>**, which is only executed when **an action is called**. | Enables optimization and fault tolerance. |
 
-- Spark builds a <mark>**logical DAG of transformations**</mark> when you define operations, but it does not execute them immediately.  
-
-**Detailed Version:**
+- Spark builds a <mark>**logical DAG of transformations**</mark> when you define operations, but it does not execute them immediately.
 
 ### 1️⃣ Compile phase : User Program → Logical/Physical Plan → RDD DAG
 
@@ -74,7 +72,28 @@ flowchart LR
     style Y fill:#ffffff,stroke:#000000,stroke-width:1px;
 ```
 
-> Catalyst Optimizer、Logical Plan → Physical Plan、RDD Lineage (Transformation DAG)
+```mermaid
+flowchart LR
+    Z[**User SQL**<br/>Example:<br/>SELECT city, count all<br/>FROM people<br/>WHERE age > 18<br/>GROUP BY city] --> A[**Logical Plan**<br/>Parsed from SQL<br/>Not yet resolved]
+
+    subgraph Catalyst[**Catalyst Optimizer**]
+        A --> B[**Analyzed Logical Plan**<br/>Resolved with metadata<br/>e.g., check schema, validate columns]
+        B --> C[**Optimized Logical Plan**<br/>Catalyst rules applied<br/>e.g., predicate pushdown, column pruning]
+        C --> D[**Physical Plan**<br/>Choose execution operators<br/>e.g., HashAggregate vs SortMergeJoin]
+    end
+
+    classDef user fill:#ffffff,stroke:#000000,stroke-width:1px;
+    classDef logical fill:#e6f0ff,stroke:#333,stroke-width:1px;
+    classDef analyzed fill:#d9f0ff,stroke:#333,stroke-width:1px;
+    classDef optimized fill:#e6ffe6,stroke:#333,stroke-width:1px;
+    classDef physical fill:#fff2cc,stroke:#333,stroke-width:1px;
+
+    class Z user;
+    class A logical;
+    class B analyzed;
+    class C optimized;
+    class D physical;
+```
 
 1. **User Program (DataFrame / SQL / RDD)**
 
