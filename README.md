@@ -45,6 +45,9 @@ flowchart LR
     classDef catalyst fill:#e6ffe6,stroke:#666,stroke-width:1px;
     classDef dag fill:#fff2cc,stroke:#666,stroke-width:1px;
 
+    %% === Make Y node black & white ===
+    style Y fill:#ffffff,stroke:#000000,stroke-width:1px;
+
     %% === Assign classes ===
     class A user;
     class B context;
