@@ -55,6 +55,27 @@ flowchart LR
     class X dag;
 ```
 
+```mermaid
+flowchart LR
+    Z[**User SQL**<br/>Example:<br/>SELECT city, count all<br/>FROM people<br/>WHERE age > 18<br/>GROUP BY city] --> A[**Logical Plan**<br/>• Parsed directly from SQL<br/>• Structure only, no optimization<br/><br/>Example:<br/>- Scan table: people<br/>- Filter: age > 18<br/>- GroupBy: city<br/>- Aggregate: count all
+    ]
+    A --> B[**Optimized Logical Plan**<br/>• Catalyst applies rules<br/>• Push filter below scan - predicate pushdown<br/>• Remove unused columns - column pruning<br/><br/>Example:<br/>- Scan only columns: city, age<br/>- Apply filter before group by
+    ]
+    B --> C[**Physical Plan**<br/>• Choose execution operators<br/>• Decide join/aggregate strategy<br/>• Plan partitioning and shuffles<br/><br/>Example:<br/>- FileScan → Filter → HashAggregate<br/>- If join: SortMergeJoin or BroadcastHashJoin
+    ]
+
+    classDef logical fill:#e6f0ff,stroke:#333,stroke-width:1px;
+    classDef optimized fill:#e6ffe6,stroke:#333,stroke-width:1px;
+    classDef physical fill:#fff2cc,stroke:#333,stroke-width:1px;
+
+    class A logical;
+    class B optimized;
+    class C physical;
+
+    %% 黑白样式
+    style Z fill:#ffffff,stroke:#000000,stroke-width:1px;
+```
+
 ```python
 spark.read.csv("data.csv").filter("age > 18").groupBy("city").count()
 ```
@@ -67,8 +88,8 @@ spark.read.csv("data.csv").filter("age > 18").groupBy("city").count()
 
 2. **SparkSession**
 
-   * Entry point of Spark.
-   * Translates user code into Spark’s internal representations.
+   * Entry point of Spark. <mark>**Translates**</mark> user code into Spark’s internal representations.
+   * SparkSession is the <mark>**bridge**</mark> between the **user world (DataFrame / SQL / RDD APIs)** and **Spark’s internal world (Plans / DAGs / Tasks)**.
 
 3. **Catalyst Optimizer (Logical → Physical Plan)**
 
