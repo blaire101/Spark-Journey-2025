@@ -50,7 +50,7 @@ flowchart LR
     B --> C1
     C4 --> X[**DAG of Transformations**<br/>RDD Lineage]
 
-    X -.-> Y[Action]
+    X -.-> Y[Ac]
 
     %% === Color classes ===
     classDef user fill:#fce5ff,stroke:#666,stroke-width:1px;
