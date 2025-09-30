@@ -37,21 +37,19 @@ flowchart LR
     A[**User Program**<br>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**]
     B --> C[**Catalyst Optimizer**<br>Logical → Physical Plan]
     C --> X[**DAG of Transformations**<br>RDD Lineage]
-    Y[**Action**<br>collect / count / save]
+    X -.-> Y[**Action**<br>collect / count / save]
 
     %% === Color classes (lighter colors) ===
     classDef user fill:#fce5ff,stroke:#666,stroke-width:1px;
     classDef context fill:#e6f0ff,stroke:#666,stroke-width:1px;
     classDef catalyst fill:#e6ffe6,stroke:#666,stroke-width:1px;
     classDef dag fill:#fff2cc,stroke:#666,stroke-width:1px;
-    classDef action fill:#fff9cc,stroke:#666,stroke-width:1px;
 
     %% === Assign classes ===
     class A user;
     class B context;
     class C catalyst;
     class X dag;
-    class Y action;
 ```
 
 > Catalyst Optimizer、Logical Plan → Physical Plan、RDD Lineage (Transformation DAG)
