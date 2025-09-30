@@ -425,6 +425,45 @@ flowchart TD
 | 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
 
 ```mermaid
+flowchart TD
+    subgraph Driver[Driver Program]
+        D1[Driver<br/>Coordinates execution<br/>Schedules stages and tasks]
+    end
+
+    D1 --> W1
+    D1 --> W2
+
+    %% Worker Node A
+    subgraph W1[Worker Node A]
+        direction TB
+        E1[Executor 1<br/>JVM Process]
+        subgraph T1[Tasks in Executor 1]
+            direction TB
+            T1a[Task 1<br/>Partition 0]
+            T1b[Task 2<br/>Partition 1]
+        end
+    end
+
+    %% Worker Node B
+    subgraph W2[Worker Node B]
+        direction TB
+        E2[Executor 2<br/>JVM Process]
+        subgraph T2[Tasks in Executor 2]
+            direction TB
+            T2a[Task 3<br/>Partition 2]
+            T2b[Task 4<br/>Partition 3]
+        end
+
+        E3[Executor 3<br/>JVM Process]
+        subgraph T3[Tasks in Executor 3]
+            direction TB
+            T3a[Task 5<br/>Partition 4]
+            T3b[Task 6<br/>Partition 5]
+        end
+    end
+```
+
+```mermaid
 flowchart LR
     subgraph Node1[Node 1 - Executor A]
         M1[Map Task 1]
