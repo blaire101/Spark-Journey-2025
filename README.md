@@ -97,6 +97,11 @@ flowchart LR
    * From the physical plan, Spark builds a **Directed Acyclic Graph (DAG)** of transformations.
    * The DAG represents dependencies between RDDs.  for example: **map → filter → join**
 
+5. Lazy Execution until Action
+
+   * Transformations are only recorded.
+   * Nothing runs until an Action (e.g., collect, count, save) is triggered.
+     
 ### 2️⃣ Run Phase : DAG Execution → Driver Result
 
 ```mermaid
