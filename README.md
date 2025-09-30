@@ -351,6 +351,27 @@ flowchart TD
 
 > Wide Dependency : A parent partition may be used by multiple child partitions.
 
+```mermaid
+flowchart LR
+    subgraph Static[Without AQE: Static Mode]
+        direction TB
+        A1[Input Data<br/>30 partitions]
+        A2[Shuffle Stage<br/>spark.sql.shuffle.partitions = 20<br/>Fixed number of partitions]
+        A3[Output Data<br/>20 partitions]
+        A1 --> A2 --> A3
+    end
+
+    subgraph Adaptive[With AQE: Adaptive Mode]
+        direction TB
+        B1[Input Data<br/>30 partitions]
+        B2[Shuffle Stage<br/>Initial value = 20<br/>AQE adjusts at runtime]
+        B3[Output Data<br/>Dynamic partitions<br/>e.g., 10 partitions if data is small<br/>or 40 if data is large]
+        B1 --> B2 --> B3
+    end
+
+    Static --> Adaptive
+```
+
 ### 2.2 Spark Component
 
 | No. | Component       | What It Does |
