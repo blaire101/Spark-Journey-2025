@@ -52,7 +52,7 @@ flowchart LR
     class Y action;
 ```
 
-### 1️⃣ User Program → Logical/Physical Plan
+### 1️⃣ User Program → Logical/Physical Plan (Compile phase)
 
 1. **User Program (DataFrame / SQL / RDD)**
 
@@ -68,10 +68,10 @@ flowchart LR
    * Spark uses Catalyst to optimize SQL/DataFrame queries.
    * It creates a **Logical Plan**, applies optimization rules, and produces a **Physical Plan**.
 
-4. **DAG of Transformations (RDD Lineage)**
+4. **DAG of Transformations (RDD DAG - RDD Lineage is Lineage Graph)**
 
    * From the physical plan, Spark builds a **Directed Acyclic Graph (DAG)** of transformations.
-   * The DAG represents dependencies between RDDs.
+   * The DAG represents dependencies between RDDs.  for example: **map → filter → join**
 
 5. **Action (collect / count / save)**
 
@@ -100,13 +100,13 @@ flowchart LR
     class E driver;
 ```
 
-### 2️⃣ DAG Execution → Driver Result
+### 2️⃣ DAG Execution → Driver Result (Run phase)
 
 1. **Action (collect / count / save)**
 
    * An action request starts the execution of the DAG.
 
-2. **DAGScheduler (DAG → Stages)**
+2. **DAGScheduler (DAG → Stages)** <mark>Scheduling DAG</mark> – the actual execution graph of computation tasks.
 
    * Splits the DAG into **Stages** based on shuffle boundaries.
    * Each stage contains a set of tasks that can run in parallel.
