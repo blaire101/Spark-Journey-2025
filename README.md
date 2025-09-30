@@ -55,13 +55,17 @@ flowchart LR
     class X dag;
 ```
 
+```python
+spark.read.csv("data.csv").filter("age > 18").groupBy("city").count()
+```
+
 > Catalyst Optimizer、Logical Plan → Physical Plan、RDD Lineage (Transformation DAG)
 
 1. **User Program (DataFrame / SQL / RDD)**
 
    * The developer writes Spark code using DataFrames, SQL, or RDD APIs.
 
-2. **SparkSession / SparkContext**
+2. **SparkSession**
 
    * Entry point of Spark.
    * Translates user code into Spark’s internal representations.
@@ -69,7 +73,7 @@ flowchart LR
 3. **Catalyst Optimizer (Logical → Physical Plan)**
 
    * Spark uses Catalyst to optimize SQL/DataFrame queries.
-   * It creates a **Logical Plan**, applies optimization rules, and produces a **Physical Plan**.
+   * It creates a **Logical Plan**, applies optimization rules, and produces a **Physical Plan**, 
 
 4. **DAG of Transformations (RDD DAG - RDD Lineage is Lineage Graph)**
 
