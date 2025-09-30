@@ -30,6 +30,8 @@ Apache Spark (Distributed computing engine)
 
 **Detailed Version:**
 
+### 1️⃣ Compile phase : User Program → Logical/Physical Plan
+
 ```mermaid
 flowchart LR
     A[**User Program**<br>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**]
@@ -52,7 +54,7 @@ flowchart LR
     class Y action;
 ```
 
-### 1️⃣ User Program → Logical/Physical Plan (Compile phase)
+> Catalyst Optimizer、Logical Plan → Physical Plan、RDD Lineage (Transformation DAG)
 
 1. **User Program (DataFrame / SQL / RDD)**
 
@@ -78,6 +80,8 @@ flowchart LR
    * When an action is triggered, Spark executes the DAG to actually process the data.
    * Until an action is called, transformations remain **lazy**.
 
+### 2️⃣ Run phase : DAG Execution → Driver Result
+
 ```mermaid
 flowchart LR
     A[**Action**<br>collect / count / save] --> B[**DAGScheduler**<br>DAG → Stages]
@@ -100,7 +104,8 @@ flowchart LR
     class E driver;
 ```
 
-### 2️⃣ DAG Execution → Driver Result (Run phase)
+> Responsible for: actually executing the tasks and running the DAG.
+> Keywords: Action → DAGScheduler → Stages → TaskScheduler → Executors → Driver.
 
 1. **Action (collect / count / save)**
 
