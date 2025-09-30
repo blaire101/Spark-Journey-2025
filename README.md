@@ -37,7 +37,7 @@ flowchart LR
     A[**User Program**<br>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**]
     B --> C[**Catalyst Optimizer**<br>Logical → Physical Plan]
     C --> X[**DAG of Transformations**<br>RDD Lineage]
-    X --> Y[**Action**<br>collect / count / save]
+    Y[**Action**<br>collect / count / save]
 
     %% === Color classes (lighter colors) ===
     classDef user fill:#fce5ff,stroke:#666,stroke-width:1px;
