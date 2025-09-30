@@ -34,13 +34,17 @@ Apache Spark (Distributed computing engine)
 
 ```mermaid
 flowchart LR
-    A[**User Program**<br/>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**]
+    A[**User Program**<br/>DataFrame/SQL / RDD] --> B[**SparkSession**]
 
     %% Catalyst Optimizer subgraph
     subgraph C[**Catalyst Optimizer**]
-        C1[**Logical Plan**<br/>Parsed from SQL] --> C2[**Analyzed Logical Plan**<br/>Resolved with metadata]
-        C2 --> C3[**Optimized Logical Plan**<br/>Catalyst rules: predicate pushdown, column pruning]
-        C3 --> C4[**Physical Plan**<br/>Operators decided: HashAggregate / SortMergeJoin]
+        direction TB
+        C1[**Logical Plan**<br/>Parsed from SQL]
+        C2[**Analyzed Logical Plan**<br/>Resolved with metadata]
+        C3[**Optimized Logical Plan**<br/>Catalyst rules: predicate pushdown, column pruning]
+        C4[**Physical Plan**<br/>Operators decided: HashAggregate / SortMergeJoin]
+
+        C1 --> C2 --> C3 --> C4
     end
 
     B --> C1
