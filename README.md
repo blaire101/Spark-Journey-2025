@@ -34,51 +34,43 @@ Apache Spark (Distributed computing engine)
 
 ```mermaid
 flowchart LR
-    A[**User Program**<br>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**]
-    B --> C[**Catalyst Optimizer**<br>Logical → Physical Plan]
-    C --> X[**DAG of Transformations**<br>RDD Lineage]
-    X -.-> Y[**Action**<br>collect / count / save]
+    A[**User Program**<br/>DataFrame / SQL / RDD] --> B[**SparkSession / SparkContext**]
 
-    %% === Color classes (lighter colors) ===
+    %% Catalyst Optimizer subgraph
+    subgraph C[**Catalyst Optimizer**]
+        C1[**Logical Plan**<br/>Parsed from SQL] --> C2[**Analyzed Logical Plan**<br/>Resolved with metadata]
+        C2 --> C3[**Optimized Logical Plan**<br/>Catalyst rules: predicate pushdown, column pruning]
+        C3 --> C4[**Physical Plan**<br/>Operators decided: HashAggregate / SortMergeJoin]
+    end
+
+    B --> C1
+    C4 --> X[**DAG of Transformations**<br/>RDD Lineage]
+
+    X -.-> Y[**Action**<br/>collect / count / save]
+
+    %% === Color classes ===
     classDef user fill:#fce5ff,stroke:#666,stroke-width:1px;
     classDef context fill:#e6f0ff,stroke:#666,stroke-width:1px;
-    classDef catalyst fill:#e6ffe6,stroke:#666,stroke-width:1px;
-    classDef dag fill:#fff2cc,stroke:#666,stroke-width:1px;
-
-    %% === Make Y node black & white ===
-    style Y fill:#ffffff,stroke:#000000,stroke-width:1px;
-
-    %% === Assign classes ===
-    class A user;
-    class B context;
-    class C catalyst;
-    class X dag;
-```
-
-```mermaid
-flowchart LR
-    Z[**User SQL**<br/>Example:<br/>SELECT city, count all<br/>FROM people<br/>WHERE age > 18<br/>GROUP BY city] --> A[**Logical Plan**<br/>• Parsed directly from SQL<br/>• Structure only, no optimization<br/><br/>Example:<br/>- Scan table: people<br/>- Filter: age > 18<br/>- GroupBy: city<br/>- Aggregate: count all
-    ]
-    A --> B[**Optimized Logical Plan**<br/>• Catalyst applies rules<br/>• Push filter below scan - predicate pushdown<br/>• Remove unused columns - column pruning<br/><br/>Example:<br/>- Scan only columns: city, age<br/>- Apply filter before group by
-    ]
-    B --> C[**Physical Plan**<br/>• Choose execution operators<br/>• Decide join/aggregate strategy<br/>• Plan partitioning and shuffles<br/><br/>Example:<br/>- FileScan → Filter → HashAggregate<br/>- If join: SortMergeJoin or BroadcastHashJoin
-    ]
-
     classDef logical fill:#e6f0ff,stroke:#333,stroke-width:1px;
+    classDef analyzed fill:#d9f0ff,stroke:#333,stroke-width:1px;
     classDef optimized fill:#e6ffe6,stroke:#333,stroke-width:1px;
     classDef physical fill:#fff2cc,stroke:#333,stroke-width:1px;
+    classDef dag fill:#fff2cc,stroke:#666,stroke-width:1px;
 
-    class A logical;
-    class B optimized;
-    class C physical;
+    %% Assign styles
+    class A user;
+    class B context;
+    class C1 logical;
+    class C2 analyzed;
+    class C3 optimized;
+    class C4 physical;
+    class X dag;
 
-    %% 黑白样式
-    style Z fill:#ffffff,stroke:#000000,stroke-width:1px;
+    %% Make Action node black & white
+    style Y fill:#ffffff,stroke:#000000,stroke-width:1px;
 ```
 
-```python
-spark.read.csv("data.csv").filter("age > 18").groupBy("city").count()
-```
+
 
 > Catalyst Optimizer、Logical Plan → Physical Plan、RDD Lineage (Transformation DAG)
 
