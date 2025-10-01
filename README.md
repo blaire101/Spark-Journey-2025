@@ -426,27 +426,6 @@ flowchart TD
 | 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
 
 ```mermaid
-flowchart LR
-    A[In-memory Objects<br/>Rows and Records] 
-        --> B[Serialization<br/>Convert objects to bytes<br/>Examples: Java, Kryo, Tungsten]
-    B --> C[Network and Disk IO<br/>Shuffle write and transfer<br/>Data stored as bytes]
-    C --> D[Deserialization<br/>Convert bytes back to objects<br/>Rebuild JVM objects]
-    D --> E[In-memory Objects<br/>Used by next stage tasks]
-
-    %% Style
-    classDef obj fill:#e6f0ff,stroke:#333,stroke-width:1px;
-    classDef ser fill:#ffe6cc,stroke:#333,stroke-width:1px;
-    classDef io fill:#fff2cc,stroke:#333,stroke-width:1px;
-    classDef deser fill:#ffe6f0,stroke:#333,stroke-width:1px;
-
-    class A obj;
-    class B ser;
-    class C io;
-    class D deser;
-    class E obj;
-```
-
-```mermaid
 flowchart TD
     subgraph Driver[Driver Program]
         D1[Driver<br/>Coordinates execution<br/>Schedules stages and tasks]
@@ -524,6 +503,35 @@ flowchart LR
     SR2 --> R2
 ```
 
+### ✅ Now the flow explains - Serialization :
+
+```mermaid
+flowchart LR
+    A[In-memory Objects<br/>Rows and Records] 
+        --> B[Serialization<br/>Convert objects to bytes<br/>Examples: Java, Kryo, Tungsten]
+    B --> C[Network and Disk IO<br/>Shuffle write and transfer<br/>Data stored as bytes]
+    C --> D[Deserialization<br/>Convert bytes back to objects<br/>Rebuild JVM objects]
+    D --> E[In-memory Objects<br/>Used by next stage tasks]
+
+    %% Style
+    classDef obj fill:#e6f0ff,stroke:#333,stroke-width:1px;
+    classDef ser fill:#ffe6cc,stroke:#333,stroke-width:1px;
+    classDef io fill:#fff2cc,stroke:#333,stroke-width:1px;
+    classDef deser fill:#ffe6f0,stroke:#333,stroke-width:1px;
+
+    class A obj;
+    class B ser;
+    class C io;
+    class D deser;
+    class E obj;
+```
+
+1. **In-memory Objects** → JVM data structures (rows, records).
+2. **Serialization** → Converts objects into bytes, using **Java serialization, Kryo, or Tungsten UnsafeRow**.
+3. **Network and Disk IO** → Bytes written to shuffle files and transferred across Executors.
+4. **Deserialization** → Bytes converted back into JVM objects.
+5. **In-memory Objects** → Data ready for the next stage’s tasks.
+
 <details>
 <summary><strong>Narrow vs Wide Dependency</strong></summary>
 
@@ -585,9 +593,8 @@ flowchart TD
 
 | Stage   | Task Type | Count | Description 
 | --- | --- | --- | --- |
-| Stage 0 | **Shuffle Map Tasks** | **3** | One task per input partition (P0–P2). Each task executes all narrow transformations (map/flatMap/…) in a pipeline, then buckets records by key and writes **2 shuffle outputs** (for partitions A and B). |
-| Stage 1 | **Reduce Tasks**      | **2** | One task per output partition (A, B). **Each reduce task fetches its partition’s blocks from all 3 shuffle map tasks** (one block per map task), then merges/aggregates to produce the final result.      |
-
+| **Stage 1** | **Shuffle Map Tasks** | **3** | One task per input partition (P0–P2). Each task executes all narrow transformations (map/flatMap/…) in a pipeline, then buckets records by key and writes **2 shuffle outputs** (for partitions A and B). |
+| **Stage 2** | **Reduce Tasks**      | **2** | One task per output partition (A, B). **Each reduce task fetches its partition’s blocks from all 3 shuffle map tasks** (one block per map task), then merges/aggregates to produce the final result.      |
 
 ## 4. Data Skew（skewness)
 
