@@ -246,6 +246,7 @@ flowchart TB
 </details>
 
 ---
+
 ## 🟨 2. Execution Model
 
 ### 2.1 📌 **<mark>Job → Stage → Task</mark>**
@@ -417,6 +418,27 @@ flowchart TD
 ## 🟧 3. Shuffle & Partitioning
 
 📌 **Shuffle = Costly, Wide vs Narrow**
+
+```mermaid
+flowchart LR
+    A[In-memory Objects<br/>Rows and Records] 
+        --> B[Serialization<br/>Convert objects to bytes<br/>Examples: Java, Kryo, Tungsten]
+    B --> C[Network and Disk IO<br/>Shuffle write and transfer<br/>Data stored as bytes]
+    C --> D[Deserialization<br/>Convert bytes back to objects<br/>Rebuild JVM objects]
+    D --> E[In-memory Objects<br/>Used by next stage tasks]
+
+    %% Style
+    classDef obj fill:#e6f0ff,stroke:#333,stroke-width:1px;
+    classDef ser fill:#ffe6cc,stroke:#333,stroke-width:1px;
+    classDef io fill:#fff2cc,stroke:#333,stroke-width:1px;
+    classDef deser fill:#ffe6f0,stroke:#333,stroke-width:1px;
+
+    class A obj;
+    class B ser;
+    class C io;
+    class D deser;
+    class E obj;
+```
 
 | # | Question | Summary |
 | --- | --- | --- |
