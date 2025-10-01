@@ -419,6 +419,12 @@ flowchart TD
 
 📌 **Shuffle = Costly, Wide vs Narrow**
 
+| # | Question | Summary |
+| --- | --- | --- |
+| 10 | What is a shuffle in Spark? | Data redistribution across partitions. Data **<mark>redistribution across partitions</mark>**, which may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  <br><br> This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**. |
+| 11 | Why is shuffle expensive? | Disk I/O + network + serialization. |
+| 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
+
 ```mermaid
 flowchart LR
     A[In-memory Objects<br/>Rows and Records] 
@@ -439,12 +445,6 @@ flowchart LR
     class D deser;
     class E obj;
 ```
-
-| # | Question | Summary |
-| --- | --- | --- |
-| 10 | What is a shuffle in Spark? | Data redistribution across partitions. Data **<mark>redistribution across partitions</mark>**, which may involve moving data between **<mark>Executors (nodes)</mark>** over the **<mark>network</mark>**.  <br><br> This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**. |
-| 11 | Why is shuffle expensive? | Disk I/O + network + serialization. |
-| 12 | What is the difference between narrow and wide transformations? | Narrow = no shuffle, Wide = shuffle needed. |
 
 ```mermaid
 flowchart TD
