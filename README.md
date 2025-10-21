@@ -118,6 +118,42 @@ flowchart LR
 
    * Transformations are only recorded.
    * Nothing runs until an Action (e.g., collect, count, save) is triggered.
+
+```python
+from pyspark import SparkContext
+
+sc = SparkContext("local", "LazyEvaluationExample")
+
+# Step 1: Create an RDD (Lazy - no computation yet)
+rdd = sc.parallelize(["Spark is fast", "Big data", "Spark powers analytics"])
+# RDD content (conceptually): ["Spark is fast", "Big data", "Spark powers analytics"]
+
+# Step 2: Transformation: filter (Lazy)
+filtered_rdd = rdd.filter(lambda line: "Spark" in line)
+# Conceptual result (not executed yet): ["Spark is fast", "Spark powers analytics"]
+
+# Step 3: Transformation: map (Lazy)
+mapped_rdd = filtered_rdd.map(lambda line: (line, len(line)))
+# Conceptual result (not executed yet):
+# [
+#   ("Spark is fast", 14),
+#   ("Spark powers analytics", 24)
+# ]
+
+# Step 4: Action: collect() (Triggers execution, returns actual results)
+result = mapped_rdd.collect()
+# Actual result after execution:
+# [
+#   ("Spark is fast", 14),
+#   ("Spark powers analytics", 24)
+# ]
+print(result)
+sc.stop()
+```
+
+> In Spark, transformations like **filter** and **map are lazy** — they are only recorded in the DAG and not executed immediately.  
+> Actual execution happens only when an action like collect is triggered.
+In this example, the **RDD chain is built in steps 1-3**, but **Spark only runs them at step 4**.
      
 ### 2️⃣ Run Phase : DAG Execution → Driver Result
 
