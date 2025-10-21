@@ -119,6 +119,51 @@ flowchart LR
    * Transformations are only recorded.
    * Nothing runs until an Action (e.g., collect, count, save) is triggered.
 
+<details>
+<summary><strong>Spark Code - Lazy Execution until Action</strong></summary>
+
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import length, col
+
+# ✅ Step 0 — Create a SparkSession (Unified entry point in Spark 3.3+)
+spark = SparkSession.builder \
+    .appName("SparkLazyEvaluationDemo") \
+    .master("local[*]") \
+    .getOrCreate()
+
+# ✅ Step 1 — Create initial DataFrame (Lazy; logical plan only, not executed yet)
+df = spark.createDataFrame(
+    [("Spark is fast",), ("Big data",), ("Spark powers analytics",)],
+    ["value"]
+)
+# Conceptual content of df (Spark has not executed anything yet):
+# +-------------------------+
+# | value                   |
+# +-------------------------+
+# | Spark is fast           |
+# | Big data                |
+# | Spark powers analytics  |
+# +-------------------------+
+
+# ✅ Step 2 — Apply transformations (Still lazy; no execution yet)
+df2 = df.filter(col("value").contains("Spark")) \
+        .withColumn("length", length(col("value")))
+# Conceptual content of df2 (still lazy, not executed yet):
+# +-------------------------+--------+
+# | value                   | length |
+# +-------------------------+--------+
+# | Spark is fast           | 14     |
+# | Spark powers analytics  | 24     |
+# +-------------------------+--------+
+
+# ✅ Step 3 — Action: show() triggers actual execution
+df2.show()
+
+# ✅ Step 4 — Stop SparkSession
+spark.stop()
+```
+
 ```python
 from pyspark import SparkContext
 
@@ -151,6 +196,8 @@ print(result)
 sc.stop()
 ```
 
+</details>
+    
 > In Spark, transformations like **filter** and **map are lazy** — they are only recorded in the DAG and not executed immediately.  
 > Actual execution happens only when an action like collect is triggered.
 In this example, the **RDD chain is built in steps 1-3**, but **Spark only runs them at step 4**.
