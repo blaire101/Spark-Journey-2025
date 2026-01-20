@@ -4,6 +4,34 @@ Hive 解决的是“离线 SQL 访问文件”的问题，而 Iceberg 解决的�
 
 我们不是因为 Hive 跑不动才用 Iceberg，而是因为 Hive 的分区和事务模型无法支撑实时写、多引擎和对象存储场景；Iceberg 把事务、版本和元数据下沉到表层，是更可持续的方案。
 
+---
+Spark 两阶段聚合的本质不是“算得更聪明”，而是：
+👉 把“一个 reducer 里维护一个巨大 HashSet”
+👉 拆成“多个 reducer 各自维护很多 小 HashSet”，
+同时让中间结果可排序、可 spill、可回收**，从而不再吃爆 Executor 内存。**
+
+```sql
+COUNT(DISTINCT sender_id)
+GROUP BY institution, country, currency
+-- Spark（HashAggregate）在 reducer 里会：
+每个 group key
+  └── 维护一个 HashSet<sender_id>
+-- 如果出现热点：
+US + Wise + USD
+  └── 400万 sender_id
+      └── 一个 reducer
+          └── 一个 HashSet
+              └── 全在 JVM heap
+```
+
+| 问题              | 原因               |
+| --------------- | ---------------- |
+| HashSet 不能流式    | 必须全部留在内存         |
+| DISTINCT 状态不可合并 | 无法边算边丢           |
+
+
+---
+
 **What is a shuffle in Spark?**  
 
 > Data **<mark>redistribution across partitions</mark>**, may involve moving data between **<mark>Executors (nodes)</mark>** over **<mark>network</mark>**.  
