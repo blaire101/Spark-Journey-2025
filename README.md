@@ -4,6 +4,12 @@ Hive 解决的是“离线 SQL 访问文件”的问题，而 Iceberg 解决的�
 
 我们不是因为 Hive 跑不动才用 Iceberg，而是因为 Hive 的分区和事务模型无法支撑实时写、多引擎和对象存储场景；Iceberg 把事务、版本和元数据下沉到表层，是更可持续的方案。
 
+```
+Partition 1 ─┐
+Partition 2 ─┼→ Shuffle → Task A
+Partition 3 ─┘
+```
+
 ---
 
 Spark 两阶段聚合的本质不是“算得更聪明”，而是：
