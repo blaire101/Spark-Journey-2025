@@ -1,8 +1,4 @@
-Hive 解决的是“离线 SQL 访问文件”的问题，而 Iceberg 解决的是“表的生命周期管理”；当数据开始需要并发写、增量更新和多引擎访问时，用 Iceberg 可以显著降低长期运维和数据风险。
-
-技术味更重一点的版本
-
-我们不是因为 Hive 跑不动才用 Iceberg，而是因为 Hive 的分区和事务模型无法支撑实时写、多引擎和对象存储场景；Iceberg 把事务、版本和元数据下沉到表层，是更可持续的方案。
+> We moved from Hive to Iceberg not because Hive was slow, but because Hive's partition model can't handle concurrent writes, incremental updates, or multi-engine access — Iceberg handles all of that at the table level. We also migrated storage from HDFS to JuiceFS, which significantly reduced storage costs 
 
 ```
 Partition 1 ─┐
