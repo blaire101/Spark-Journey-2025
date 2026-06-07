@@ -27,12 +27,6 @@ US + Wise + USD
               └── 全在 JVM heap
 ```
 
-| 问题              | 原因               |
-| --------------- | ---------------- |
-| HashSet 不能流式    | 必须全部留在内存         |
-| DISTINCT 状态不可合并 | 无法边算边丢           |
-
-
 ---
 
 **What is a shuffle in Spark?**  
