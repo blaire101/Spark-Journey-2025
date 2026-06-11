@@ -1,3 +1,5 @@
+### Hive vs Iceberg
+
 > We moved from Hive to Iceberg not because Hive was slow, but because Hive's partition model can't handle concurrent writes, incremental updates, or multi-engine access — Iceberg handles all of that at the table level. We also migrated storage from HDFS to JuiceFS, which significantly reduced storage costs 
 
 ```
@@ -5,27 +7,55 @@ Partition 1 ─┐
 Partition 2 ─┼→ Shuffle → Task A
 Partition 3 ─┘
 ```
+**Your question:** Explain the essence of Spark two-stage aggregation in English.
+
+The essence of two-stage aggregation is **not** "computing smarter" — it's about **memory architecture**.
+
+**The Problem — Single-stage HashAggregate:**
+
+```
+COUNT(DISTINCT sender_id)
+GROUP BY institution, country, currency
+```
+
+Spark's HashAggregate maintains **one HashSet per group key** in the reducer:
+
+```
+US + Wise + USD
+  └── 4M sender_ids
+      └── one reducer
+          └── one giant HashSet
+              └── all in JVM heap
+              └── OOM risk
+```
+
+For a hot key like `US+Wise+USD` with 4M records, one reducer holds one massive HashSet — all in memory, not spillable. **This blows up the executor.**
 
 ---
 
-Spark 两阶段聚合的本质不是“算得更聪明”，而是：
-- 👉 把“一个 reducer 里维护一个巨大 HashSet”
-- 👉 拆成“多个 reducer 各自维护很多 小 HashSet”，
-> 同时让中间结果可排序、可 spill、可回收**，从而不再吃爆 Executor 内存。**
+**The Solution — Two-Stage Aggregation:**
 
-```sql
-COUNT(DISTINCT sender_id)
-GROUP BY institution, country, currency
--- Spark（HashAggregate）在 reducer 里会：
-每个 group key
-  └── 维护一个 HashSet<sender_id>
--- 如果出现热点：
-US + Wise + USD
-  └── 400万 sender_id
-      └── 一个 reducer
-          └── 一个 HashSet
-              └── 全在 JVM heap
-```
+**Stage 1:** Group by `(institution, country, currency, sender_id)`
+- Deduplicate sender_id first
+- Each reducer holds **many small groups** instead of one giant HashSet
+- Intermediate results are **sortable and spillable to disk**
+
+**Stage 2:** Group by `(institution, country, currency)`
+- Simply `COUNT(*)` the deduplicated rows
+- No HashSet needed — just counting
+
+---
+
+**The Key Insight:**
+
+| | Single-stage | Two-stage |
+|---|---|---|
+| Memory model | One giant HashSet | Many small groups |
+| Spillable | No | Yes |
+| OOM risk | High | Low |
+| Speed | Faster (small data) | Stable (large/skewed data) |
+
+> The real benefit is not speed — it's **converting unspillable memory structures into spillable ones**, so Spark can handle skewed keys without crashing.
 
 ---
 
