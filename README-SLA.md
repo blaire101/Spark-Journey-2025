@@ -4,7 +4,7 @@
 
 **S — Situation**
 
-> "At T, we had a critical daily payment report for our remittance business. The Spark job was running 75 minutes and frequently crashing with OOM errors. This was blocking downstream reports and causing SLA breaches."
+> "we had a critical daily payment report for our remittance business. The Spark job was running 75 minutes and frequently crashing with OOM errors. This was blocking downstream reports and causing SLA breaches."
 
 ---
 
