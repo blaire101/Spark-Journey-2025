@@ -54,6 +54,87 @@
 
 **Key numbers — memorize these:**
 
+```sql
+-- Step 0: FX dedup
+WITH fx_dedup AS (
+    SELECT currency, fdate, fx_to_cnh, fx_to_usd
+    FROM (
+        SELECT *, 
+               ROW_NUMBER() OVER (PARTITION BY currency, fdate ORDER BY fdate DESC) AS rn
+        FROM exchange_rates
+        WHERE fdate BETWEEN '20240101' AND '20241231'
+    ) WHERE rn = 1
+),
+
+-- Step 1: add salt + join FX
+base AS (
+    SELECT
+        t.institution,
+        t.sender_country,
+        t.currency,
+        t.sender_id,
+        t.transaction_id,
+        t.amount * fx.fx_to_cnh  AS amt_cnh,
+        t.amount * fx.fx_to_usd  AS amt_usd,
+        CASE
+            WHEN (t.sender_country = 'US' AND t.institution = 'Wise')
+              OR (t.sender_country = 'KR' AND t.institution = 'PandaRemit')
+            THEN (hash(t.sender_id) & 2147483647) % 8
+            ELSE 8
+        END AS salt
+    FROM payment_transactions t
+    JOIN fx_dedup fx ON t.currency = fx.currency AND t.fdate = fx.fdate
+    WHERE t.fdate BETWEEN '20240101' AND '20241231'
+),
+
+-- Step 2a: dedup sender per bucket (no HashSet, fully spillable)
+sender_deduped AS (
+    SELECT DISTINCT institution, sender_country, currency, salt, sender_id
+    FROM base
+),
+
+-- Step 2b: count sender per bucket (no DISTINCT needed)
+sender_per_bucket AS (
+    SELECT institution, sender_country, currency, salt,
+           COUNT(sender_id) AS sender_cnt
+    FROM sender_deduped
+    GROUP BY institution, sender_country, currency, salt
+),
+
+-- Step 2c: sum metrics per bucket
+metrics_per_bucket AS (
+    SELECT institution, sender_country, currency, salt,
+           COUNT(transaction_id)  AS tx_cnt,
+           SUM(amt_cnh)           AS total_cnh,
+           SUM(amt_usd)           AS total_usd
+    FROM base
+    GROUP BY institution, sender_country, currency, salt
+),
+
+-- Step 3: sum across all buckets
+final AS (
+    SELECT
+        m.institution,
+        m.sender_country,
+        m.currency,
+        SUM(m.tx_cnt)      AS tx_count,
+        SUM(s.sender_cnt)  AS sender_count,
+        SUM(m.total_cnh)   AS total_cnh,
+        SUM(m.total_usd)   AS total_usd,
+        ROUND(SUM(m.total_cnh) / NULLIF(SUM(m.tx_cnt), 0), 2) AS avg_txn_cnh,
+        ROUND(SUM(m.total_usd) / NULLIF(SUM(m.tx_cnt), 0), 2) AS avg_txn_usd
+    FROM metrics_per_bucket m
+    JOIN sender_per_bucket s
+        ON  m.institution    = s.institution
+        AND m.sender_country = s.sender_country
+        AND m.currency       = s.currency
+        AND m.salt           = s.salt
+    GROUP BY m.institution, m.sender_country, m.currency
+)
+
+SELECT * FROM final
+```
+
 ```
 75 mins → 13 mins
 4M records → 1 reducer
