@@ -31,8 +31,6 @@ US + Wise + USD
 
 For a hot key like `US+Wise+USD` with 4M records, one reducer holds one massive HashSet — all in memory, not spillable. **This blows up the executor.**
 
----
-
 **The Solution — Two-Stage Aggregation:**
 
 **Stage 1:** Group by `(institution, country, currency, sender_id)`
@@ -57,47 +55,186 @@ For a hot key like `US+Wise+USD` with 4M records, one reducer holds one massive 
 
 > The real benefit is not speed — it's **converting unspillable memory structures into spillable ones**, so Spark can handle skewed keys without crashing.
 
-**Layer 1 — Must Know (always asked):**
+# Spark Interview Quick Reference
 
-| Topic | Key Answer |
+---
+
+## 1. Core Concepts
+
+| Concept | One-Line Answer | Key Points |
+|---|---|---|
+| **What is Spark?** | Distributed computing engine, in-memory, DAG-based, faster than MapReduce | Supports Python, Scala, Java, SQL |
+| **RDD** | Immutable, partitioned, distributed collection. Low-level API | Supports `map`, `filter`, `reduceByKey` |
+| **DataFrame** | Distributed table with schema, optimized by Catalyst | Like distributed Pandas, faster than RDD |
+| **Lazy Evaluation** | Builds DAG of transformations, executes only when action is called | Transformation = lazy, Action = triggers execution |
+| **Transformation** | Lazy operation producing new RDD/DataFrame | `map`, `filter`, `groupBy` |
+| **Action** | Triggers actual computation, returns result | `collect`, `count`, `show`, `save` |
+
+---
+
+## 2. Execution Model
+
+| Concept | One-Line Answer | Key Points |
+|---|---|---|
+| **Job** | Triggered by an action | One action = one job |
+| **Stage** | Set of tasks between shuffle boundaries | Split by wide transformations |
+| **Task** | Unit of execution on one partition | One partition = one task |
+| **DAGScheduler** | Converts DAG into stages | Splits at shuffle boundaries |
+| **TaskScheduler** | Assigns tasks to executors | Handles retries and locality |
+| **Driver** | Coordinates execution, collects results | Runs your `main()` code |
+| **Executor** | Runs tasks on worker nodes | Has thread pool for parallel tasks |
+
+**Memory formula:**
+> Action → Job → Stage → Task → Executor
+
+---
+
+## 3. Catalyst Optimizer
+
+| Step | What Happens |
 |---|---|
-| What is Spark? | Distributed computing engine, in-memory, DAG-based |
-| RDD vs DataFrame | RDD = low-level, DataFrame = optimized with Catalyst |
-| Lazy evaluation | Build DAG first, execute only on action |
-| Shuffle | Data redistribution across partitions, expensive: disk I/O + network + serialization |
-| Narrow vs Wide | Narrow = no shuffle, Wide = shuffle needed |
-| Data skew | Unbalanced partitions, causes OOM and long-tail tasks |
+| **Logical Plan** | Parse SQL/DataFrame into unresolved plan |
+| **Analyzed Plan** | Resolve column names, check schema |
+| **Optimized Plan** | Apply rules: predicate pushdown, column pruning, join reordering |
+| **Physical Plan** | Choose operators: HashAggregate vs SortMergeJoin |
 
 ---
 
-**Layer 2 — Your Real Story (your SLA project):**
+## 4. Shuffle
 
-This is your strongest card. Practice this story:
-
-> "We had a critical-path job running 75 min with frequent OOM. Root cause: `COUNT(DISTINCT sender_id)` on skewed keys — `US+Wise+USD` had 4M records in one reducer, one giant HashSet, not spillable. We applied three fixes: two-stage aggregation to convert HashSet into spillable sorted groups, targeted salting on hot keys with 8 buckets, and AQE for dynamic partition splitting. Result: 75 min → 13 min, OOM resolved."
-
----
-
-**Layer 3 — Nice to Have (if asked deeper):**
-
-- Catalyst Optimizer: Logical → Analyzed → Optimized → Physical Plan
-- AQE: coalesce small partitions, split skewed ones, switch join strategy
-- HashAgg vs SortAgg: HashAgg faster but OOM risk, SortAgg spillable
+| Concept | One-Line Answer | Key Points |
+|---|---|---|
+| **What is shuffle?** | Data redistribution across partitions | Expensive: disk I/O + network + serialization |
+| **Why expensive?** | Data must move across nodes | Serialization + network transfer + disk write |
+| **Narrow transformation** | Each parent partition → one child partition | No shuffle: `map`, `filter`, `union` |
+| **Wide transformation** | Parent partitions → multiple child partitions | Shuffle needed: `groupBy`, `join`, `reduceByKey` |
 
 ---
 
-**Review schedule:**
+## 5. Data Skew
 
-- **Day 1:** Layer 1 — read once, say it out loud
-- **Day 2:** Practice your SLA story 5 times
-- **Day 3:** Layer 3 — read once
-- **Day 4:** Mock interview — answer without notes
+| Skew Type | Cause | Solution |
+|---|---|---|
+| **Input files** | Many small files or one huge file | Repartition, merge small files, use Parquet |
+| **Join keys** | Hot key appears millions of times | Broadcast join, salting, AQE |
+| **Aggregation keys** | Hot key dominates GROUP BY | Two-stage aggregation + salting |
+| **General** | Uneven partition sizes | AQE, tune shuffle partitions |
+
+**Symptoms:**
+| Symptom | Meaning |
+|---|---|
+| One task runs much longer | Data skew |
+| Executor OOM | HashSet explosion on hot key |
+| High shuffle read time | I/O bottleneck, not CPU |
+| GC pauses | Memory pressure |
+
 ---
 
-**What is a shuffle in Spark?**  
+## 6. Two-Stage Aggregation
 
-> Data **<mark>redistribution across partitions</mark>**, may involve moving data between **<mark>Executors (nodes)</mark>** over **<mark>network</mark>**.  
-This makes it an **<mark>expensive operation</mark>** due to **<mark>disk I/O</mark>**, **<mark>network transfer</mark>**, and **<mark>serialization</mark>**.
+| | Single-Stage | Two-Stage |
+|---|---|---|
+| **Memory model** | One giant HashSet per group | Many small spillable groups |
+| **Spillable** | No | Yes |
+| **OOM risk** | High | Low |
+| **Speed** | Faster (small data) | Stable (large/skewed data) |
+
+**Two steps:**
+
+| Stage | SQL | What happens |
+|---|---|---|
+| **Stage 1** | `GROUP BY (key, sender_id)` | Deduplicate sender_id first |
+| **Stage 2** | `GROUP BY (key) → COUNT(*)` | Count deduplicated rows |
+
+**Why it works:**
+> Converts one unspillable giant HashSet → many small spillable sorted groups
+
+---
+
+## 7. Salting
+
+| Step | What happens |
+|---|---|
+| **Identify hot key** | e.g. `US+Wise+USD` with 4M records |
+| **Add salt bucket** | `hash(sender_id) % 8` → buckets 0-7 |
+| **Stage 1** | Each bucket goes to separate reducer |
+| **Stage 2** | Merge results from all buckets |
+
+**Important rule:**
+> Salt must be deterministic based on the distinct key (not random per row), otherwise COUNT(DISTINCT) will be wrong
+
+**Salting vs AQE:**
+
+| | AQE | Salting |
+|---|---|---|
+| **Timing** | After shuffle (runtime) | Before shuffle (logical rewrite) |
+| **Implementation** | Automatic | Manual SQL change |
+| **Best for** | Mild skew | Known extreme hot keys |
+| **Limitation** | Cannot rebalance single extreme hot key | Requires knowing hot keys in advance |
+
+---
+
+## 8. HashAgg vs SortAgg
+
+| | HashAggregate | SortAggregate |
+|---|---|---|
+| **Memory** | High (in-memory HashSet) | Low (disk spillable) |
+| **OOM risk** | High | Low |
+| **Speed** | Faster for small data | Stable for large/skewed data |
+| **Use when** | No skew, small data | Skewed data, large data |
+
+---
+
+## 9. AQE (Adaptive Query Execution)
+
+| Function | What it does | Benefit |
+|---|---|---|
+| **Coalesce partitions** | Merges small shuffle partitions at runtime | Fewer tasks, less overhead |
+| **Skew join split** | Splits large skewed partitions into multiple tasks | Eliminates long-tail tasks |
+| **Switch join strategy** | SortMergeJoin → BroadcastHashJoin at runtime | Better performance |
+
+**AQE limitation:**
+> Can split partitions but cannot rebalance a single extreme hot key. Manual salting still needed for extreme cases.
+
+---
+
+## 10. Join Strategies
+
+| Strategy | When to use | How it works |
+|---|---|---|
+| **BroadcastHashJoin** | Small table < 10MB | Send small table to all executors, no shuffle |
+| **SortMergeJoin** | Both tables large | Sort both sides, merge on key |
+| **ShuffleHashJoin** | One side fits in memory | Hash the smaller side, probe with larger |
+
+---
+
+## 11. Your SLA Story (Most Important)
+
+**Practice this until fluent:**
+
+| Part | What to say |
+|---|---|
+| **Problem** | Critical Spark job running 75 min with frequent OOM errors |
+| **Root cause** | `COUNT(DISTINCT sender_id)` on skewed keys. `US+Wise+USD` had 4M records → one reducer → one giant HashSet → not spillable → OOM |
+| **Fix 1** | Two-stage aggregation: deduplicate sender_id first, then count. Converts unspillable HashSet into spillable sorted groups |
+| **Fix 2** | Targeted salting: split hot keys into 8 buckets using `hash(sender_id) % 8`. Each bucket → separate reducer |
+| **Fix 3** | AQE: enabled dynamic partition splitting and broadcast join optimization |
+| **Result** | 75 min → 13 min. OOM resolved. SLA improved 95% → 99%+ |
+
+---
+
+## 12. Quick Interview Answers
+
+| Question | Answer (say this first) |
+|---|---|
+| What is Spark? | Distributed in-memory computing engine, DAG-based, faster than MapReduce |
+| What is shuffle? | Data redistribution across partitions. Expensive: disk I/O + network + serialization |
+| What is data skew? | Unbalanced data across partitions. Causes OOM and long-tail tasks |
+| How did you solve skew? | Two-stage aggregation + targeted salting + AQE. 75min→13min |
+| What is AQE? | Runtime optimization: coalesces small partitions, splits skewed ones, switches join strategies |
+| HashAgg vs SortAgg? | HashAgg faster but OOM risk. SortAgg spillable, stable for skewed data |
+| What is lazy evaluation? | Transformations build a DAG. Nothing executes until an action is called |
+| What is Catalyst? | Spark's query optimizer. SQL → Logical → Analyzed → Optimized → Physical Plan |
 
 ## 📚 Table of Contents
 
