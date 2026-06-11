@@ -57,6 +57,41 @@ For a hot key like `US+Wise+USD` with 4M records, one reducer holds one massive 
 
 > The real benefit is not speed — it's **converting unspillable memory structures into spillable ones**, so Spark can handle skewed keys without crashing.
 
+**Layer 1 — Must Know (always asked):**
+
+| Topic | Key Answer |
+|---|---|
+| What is Spark? | Distributed computing engine, in-memory, DAG-based |
+| RDD vs DataFrame | RDD = low-level, DataFrame = optimized with Catalyst |
+| Lazy evaluation | Build DAG first, execute only on action |
+| Shuffle | Data redistribution across partitions, expensive: disk I/O + network + serialization |
+| Narrow vs Wide | Narrow = no shuffle, Wide = shuffle needed |
+| Data skew | Unbalanced partitions, causes OOM and long-tail tasks |
+
+---
+
+**Layer 2 — Your Real Story (your SLA project):**
+
+This is your strongest card. Practice this story:
+
+> "We had a critical-path job running 75 min with frequent OOM. Root cause: `COUNT(DISTINCT sender_id)` on skewed keys — `US+Wise+USD` had 4M records in one reducer, one giant HashSet, not spillable. We applied three fixes: two-stage aggregation to convert HashSet into spillable sorted groups, targeted salting on hot keys with 8 buckets, and AQE for dynamic partition splitting. Result: 75 min → 13 min, OOM resolved."
+
+---
+
+**Layer 3 — Nice to Have (if asked deeper):**
+
+- Catalyst Optimizer: Logical → Analyzed → Optimized → Physical Plan
+- AQE: coalesce small partitions, split skewed ones, switch join strategy
+- HashAgg vs SortAgg: HashAgg faster but OOM risk, SortAgg spillable
+
+---
+
+**Review schedule:**
+
+- **Day 1:** Layer 1 — read once, say it out loud
+- **Day 2:** Practice your SLA story 5 times
+- **Day 3:** Layer 3 — read once
+- **Day 4:** Mock interview — answer without notes
 ---
 
 **What is a shuffle in Spark?**  
