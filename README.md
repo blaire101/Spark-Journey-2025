@@ -1,6 +1,6 @@
 ### Hive vs Iceberg
 
-> We moved from Hive to Iceberg not because Hive was slow, but because Hive's partition model can't handle concurrent writes, incremental updates, or multi-engine access — Iceberg handles all of that at the table level. We also migrated storage from HDFS to JuiceFS, which significantly reduced storage costs 
+> We moved from Hive to Iceberg not because Hive was slow, but because Hive's partition model can't handle **concurrent writes, incremental updates, or multi-engine access** — Iceberg handles all of that at the **table level**. We also migrated storage from HDFS to JuiceFS, which significantly reduced storage costs 
 
 ```
 Partition 1 ─┐
