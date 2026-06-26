@@ -1,48 +1,6 @@
-### Hive vs Iceberg
 
-> We moved from Hive to Iceberg not because Hive was slow, but because Hive's partition model can't handle **concurrent writes, incremental updates, or multi-engine access** — Iceberg handles all of that at the **table level**. We also migrated storage from HDFS to JuiceFS, which significantly reduced storage costs 
-
-```
-Partition 1 ─┐
-Partition 2 ─┼→ Shuffle → Task A
-Partition 3 ─┘
-```
-**Your question:** Explain the essence of Spark two-stage aggregation in English.
-
-The essence of two-stage aggregation is **not** "computing smarter" — it's about **memory architecture**.
-
-**The Problem — Single-stage HashAggregate:**
-
-```
-COUNT(DISTINCT sender_id)
-GROUP BY institution, country, currency
-```
-
-Spark's HashAggregate maintains **one HashSet per group key** in the reducer:
-
-```
-US + Wise + USD
-  └── 4M sender_ids
-      └── one reducer
-          └── one giant HashSet
-              └── all in JVM heap
-              └── OOM risk
-```
-
-For a hot key like `US+Wise+USD` with 4M records, one reducer holds one massive HashSet — all in memory, not spillable. **This blows up the executor.**
-
-**The Solution — Two-Stage Aggregation:**
-
-**Stage 1:** Group by `(institution, country, currency, sender_id)`
-- Deduplicate sender_id first
-- Each reducer holds **many small groups** instead of one giant HashSet
-- Intermediate results are **sortable and spillable to disk**
-
-**Stage 2:** Group by `(institution, country, currency)`
-- Simply `COUNT(*)` the deduplicated rows
-- No HashSet needed — just counting
-
----
+<details>
+<summary>💬 Spark basic questions</summary>
 
 **The Key Insight:**
 
@@ -206,24 +164,7 @@ For a hot key like `US+Wise+USD` with 4M records, one reducer holds one massive 
 | **SortMergeJoin** | Both tables large | Sort both sides, merge on key |
 | **ShuffleHashJoin** | One side fits in memory | Hash the smaller side, probe with larger |
 
----
-
-## 11. Your SLA Story (Most Important)
-
-**Practice this until fluent:**
-
-| Part | What to say |
-|---|---|
-| **Problem** | Critical Spark job running 75 min with frequent OOM errors |
-| **Root cause** | `COUNT(DISTINCT sender_id)` on skewed keys. `US+Wise+USD` had 4M records → one reducer → one giant HashSet → not spillable → OOM |
-| **Fix 1** | Two-stage aggregation: deduplicate sender_id first, then count. Converts unspillable HashSet into spillable sorted groups |
-| **Fix 2** | Targeted salting: split hot keys into 8 buckets using `hash(sender_id) % 8`. Each bucket → separate reducer |
-| **Fix 3** | AQE: enabled dynamic partition splitting and broadcast join optimization |
-| **Result** | 75 min → 13 min. OOM resolved. SLA improved 95% → 99%+ |
-
----
-
-## 12. Quick Interview Answers
+## 12. Quick Answers
 
 | Question | Answer (say this first) |
 |---|---|
@@ -236,6 +177,8 @@ For a hot key like `US+Wise+USD` with 4M records, one reducer holds one massive 
 | What is lazy evaluation? | Transformations build a DAG. Nothing executes until an action is called |
 | What is Catalyst? | Spark's query optimizer. SQL → Logical → Analyzed → Optimized → Physical Plan |
 
+</details>
+  
 ## 📚 Table of Contents
 
 - [Chap 1. Apache Spark Core Concepts](#-1-apache-spark-core-concepts)
