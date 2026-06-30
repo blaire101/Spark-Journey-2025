@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LangChain — Agentic AI Engineering Course Outline</title>
+<style>
+:root {
+  --bg:#F8F9FB; --white:#FFFFFF; --border:#E3E6EE;
+  --text:#111827; --dim:#4B5563; --faint:#9CA3AF;
+  --teal:#0891B2; --teal-bg:#ECFEFF; --teal-bd:#A5F3FC;
+  --blue:#2563EB; --blue-bg:#EFF6FF; --blue-bd:#BFDBFE;
+  --green:#059669; --green-bg:#ECFDF5; --green-bd:#6EE7B7;
+  --amber:#D97706; --amber-bg:#FFFBEB; --amber-bd:#FCD34D;
+  --violet:#7C3AED; --violet-bg:#F5F3FF; --violet-bd:#C4B5FD;
+  --red:#DC2626; --red-bg:#FEF2F2; --red-bd:#FCA5A5;
+  --coral:#C2410C; --coral-bg:#FFF7ED; --coral-bd:#FED7AA;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:32px 20px 80px;max-width:880px;margin:0 auto;}
+
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);padding-top:8px;z-index:10;}
+.nav-btn{font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--dim);cursor:pointer;transition:all .15s;}
+.nav-btn:hover{background:var(--text);color:#fff;border-color:var(--text);}
+.nav-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
+
+.page{display:none;} .page.active{display:block;}
+.ph{margin-bottom:24px;}
+.ph-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
+.ph h1{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px;}
+.ph p{font-size:14px;color:var(--dim);}
+
+.course-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+.meta-badge{font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;background:var(--white);border:1px solid var(--border);color:var(--dim);}
+
+.sp{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;border:1px solid var(--teal-bd);background:var(--teal-bg);color:var(--teal);cursor:pointer;margin-top:8px;transition:all .15s;white-space:nowrap;}
+.sp:hover{background:var(--teal);color:#fff;}
+.sp.playing{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+
+.sec{margin-bottom:32px;}
+.sec-title{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-title .dot{width:7px;height:7px;border-radius:50%;}
+
+.block{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;}
+.block p{color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:4px;}
+.block-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.bl-blue{border-left:3px solid var(--blue);background:var(--blue-bg);}
+.bl-teal{border-left:3px solid var(--teal);background:var(--teal-bg);}
+.bl-green{border-left:3px solid var(--green);background:var(--green-bg);}
+.bl-amber{border-left:3px solid var(--amber);background:var(--amber-bg);}
+.bl-violet{border-left:3px solid var(--violet);background:var(--violet-bg);}
+.bl-coral{border-left:3px solid var(--coral);background:var(--coral-bg);}
+
+.notice{font-size:12px;color:var(--dim);background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:7px;padding:9px 14px;margin-bottom:20px;}
+.verify-notice{font-size:12px;color:var(--coral);background:var(--coral-bg);border:1px solid var(--coral-bd);border-radius:7px;padding:9px 14px;margin-bottom:20px;}
+
+.code{background:#1E2433;color:#C8D0E0;font-family:'Menlo','Consolas',monospace;font-size:12.5px;line-height:1.6;border-radius:8px;padding:14px 16px;margin:8px 0;overflow-x:auto;white-space:pre;}
+
+.diagram-box{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 14px 6px;margin-bottom:14px;overflow-x:auto;}
+.diagram-box svg{display:block;min-width:560px;}
+.diagram-caption{font-size:12px;color:var(--faint);text-align:center;margin-top:6px;padding-bottom:8px;}
+
+.tbl-wrap{overflow-x:auto;margin-bottom:14px;}
+table.cmp{width:100%;border-collapse:collapse;font-size:13px;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+table.cmp th{text-align:left;padding:9px 12px;background:var(--bg);border-bottom:2px solid var(--border);font-weight:700;color:var(--text);white-space:nowrap;}
+table.cmp td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--dim);vertical-align:top;}
+table.cmp tr:last-child td{border-bottom:none;}
+table.cmp tr:hover td{background:var(--bg);}
+.mono{font-family:'Menlo','Consolas',monospace;font-size:12px;background:var(--bg);padding:1px 5px;border-radius:4px;color:var(--text);}
+
+.qa-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.qa-top{display:flex;align-items:stretch;min-height:60px;cursor:pointer;user-select:none;}
+.qa-top:hover{background:#FAFBFC;}
+.qa-icon{width:52px;min-width:52px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg);border-right:1px solid var(--border);}
+.qa-q{flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:3px;}
+.qa-q-text{font-size:14px;font-weight:600;line-height:1.35;}
+.qa-tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;display:inline-block;width:fit-content;}
+.qa-chev{padding:0 14px;display:flex;align-items:center;color:var(--faint);font-size:11px;transition:transform .2s;}
+.qa-card.open .qa-chev{transform:rotate(180deg);}
+.qa-body{display:none;border-top:1px solid var(--border);padding:14px 16px 10px;}
+.qa-card.open .qa-body{display:block;}
+
+.t-blue{background:var(--blue-bg);color:var(--blue);}
+.t-teal{background:var(--teal-bg);color:var(--teal);}
+.t-green{background:var(--green-bg);color:var(--green);}
+.t-amber{background:var(--amber-bg);color:var(--amber);}
+.t-violet{background:var(--violet-bg);color:var(--violet);}
+.t-red{background:var(--red-bg);color:var(--red);}
+.t-coral{background:var(--coral-bg);color:var(--coral);}
+
+.timeline{position:relative;padding-left:24px;margin-bottom:14px;}
+.timeline-step{position:relative;padding-bottom:18px;}
+.timeline-step:last-child{padding-bottom:0;}
+.timeline-step::before{content:'';position:absolute;left:-24px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--violet);}
+.timeline-step::after{content:'';position:absolute;left:-20px;top:14px;width:1px;bottom:0;background:var(--border);}
+.timeline-step:last-child::after{display:none;}
+.timeline-week{font-size:12px;font-weight:700;color:var(--violet);margin-bottom:3px;}
+.timeline-desc{font-size:13.5px;color:var(--dim);}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('overview',this)">Overview</button>
+  <button class="nav-btn" onclick="showPage('foundations',this)">Part 1: Foundations</button>
+  <button class="nav-btn" onclick="showPage('rag',this)">Part 2: RAG</button>
+  <button class="nav-btn" onclick="showPage('langgraph',this)">Part 3: LangGraph</button>
+  <button class="nav-btn" onclick="showPage('mcp',this)">Part 4: MCP & Deep Agents</button>
+  <button class="nav-btn" onclick="showPage('primer',this)">Concept Primer</button>
+</div>
+
+<!-- ══ PAGE: OVERVIEW ══ -->
+<div class="page active" id="overview">
+  <div class="ph">
+    <div class="ph-eyebrow">Udemy · Eden Marco</div>
+    <h1>LangChain — Agentic AI Engineering<br>with LangChain &amp; LangGraph</h1>
+    <p>Build AI Agents with LangChain and LangGraph — RAG, Tools, MCP, and Production-Ready Agentic AI Systems (Python)</p>
+  </div>
+
+  <div class="course-meta">
+    <span class="meta-badge">182,669 students</span>
+    <span class="meta-badge">4.6★ (50,825 ratings)</span>
+    <span class="meta-badge">28 sections · 179 lectures</span>
+    <span class="meta-badge">19h 8m total</span>
+    <span class="meta-badge">LangChain v1.2+</span>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio. Click any 🔊 button to hear that paragraph.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">What this course covers</span></div>
+
+    <div class="block bl-blue" id="ov1">
+      <div class="block-title">Course structure at a glance</div>
+      <p>The course moves through four broad arcs: foundational LangChain mechanics including LCEL chains and the evolution of agent architectures, Retrieval Augmented Generation built twice — once naively and once properly with LCEL — then LangGraph for stateful and cyclic agent workflows, and finally Model Context Protocol plus Deep Agents for production-grade autonomous systems.</p>
+      <button class="sp" onclick="speakEl(this,'ov1')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-blue" id="ov2">
+      <div class="block-title">What makes this course unusual</div>
+      <p>Most agent courses teach the high-level create_agent function and stop there. This course deliberately deconstructs that abstraction across three full sections — first building the agent loop manually with LangChain primitives, then stripping LangChain out entirely to write raw JSON schemas, then going back to the original 2022 ReAct prompting technique with regex parsing and no function calling at all. This backward journey through agent history is the course's main differentiator.</p>
+      <button class="sp" onclick="speakEl(this,'ov2')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="verify-notice">⚠️ Accuracy note: Sections 1-10 (Part 1 and Part 2 of this outline) come directly from Udemy's published curriculum with confirmed lecture titles and durations. Sections 11-28 (Part 3 and Part 4) are not published in detail on the course page — that structure is inferred from the course description's explicit topic list and should be verified against the actual course sidebar once enrolled.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Suggested study order</span></div>
+
+    <div class="timeline">
+      <div class="timeline-step">
+        <div class="timeline-week">Week 1 — Sections 1-3</div>
+        <div class="timeline-desc">Get LCEL syntax automatic. Understand Agent vs Chain. Memorize the four-stage ReAct evolution timeline — it recurs conceptually throughout the rest of the course.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-week">Week 2 — Sections 4-6 (the "under the hood" deep dive)</div>
+        <div class="timeline-desc">This is the course's most unusual and valuable stretch. Don't rush it — building the loop by hand, then with raw JSON schemas, then with pure text and regex, is what makes every later abstraction including LangGraph legible.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-week">Week 3 — Sections 7-8 (RAG)</div>
+        <div class="timeline-desc">Build the Documentation Helper project fully — it's the most production-realistic project in the course and exercises async batching, structured tool output, and a real frontend.</div>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-week">Week 4+ — Sections 9-28 (LangGraph, MCP, Deep Agents)</div>
+        <div class="timeline-desc">Verify the actual section breakdown once enrolled. Prioritize LangGraph state and cycles, then memory, then human-in-the-loop, then MCP, then Deep Agents — each builds on the previous one.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: PART 1 FOUNDATIONS ══ -->
+<div class="page" id="foundations">
+  <div class="ph">
+    <div class="ph-eyebrow">Sections 1-6 + Function Calling · Confirmed curriculum</div>
+    <h1>Part 1 — Foundations</h1>
+    <p>LCEL chains, the agent vs chain distinction, and a deliberate four-layer deconstruction of how agents actually work.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Section 2 — The GIST of LangChain (9 lectures · 56min)</span></div>
+
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <tr><th>Lecture</th><th>What it covers</th></tr>
+        <tr><td>What is LangChain?</td><td>6-minute framework overview</td></tr>
+        <tr><td>Project Setup</td><td><span class="mono">uv</span> package manager, <span class="mono">.env</span> for API keys, <span class="mono">.gitignore</span></td></tr>
+        <tr><td>Prompt Templates, ChatModels, Chains</td><td><span class="mono">PromptTemplate</span>, <span class="mono">ChatOpenAI</span>, the pipe operator (LCEL)</td></tr>
+        <tr><td>Building a Chain to Summarize Text</td><td>First real chain: prompt → LLM → output</td></tr>
+        <tr><td>Debugging and Tracing</td><td>Inspecting <span class="mono">AIMessage</span>, token usage, <span class="mono">response_metadata</span></td></tr>
+        <tr><td>Local Models with Ollama</td><td>Swapping <span class="mono">ChatOpenAI</span> → <span class="mono">ChatOllama</span>, model-agnostic design</td></tr>
+        <tr><td>LangSmith Integration</td><td>Tracing dashboard, comparing latency across providers</td></tr>
+        <tr><td>Model Switching: Groq API</td><td>Multi-provider flexibility</td></tr>
+      </table>
+    </div>
+
+    <div class="block bl-blue" id="f1">
+      <div class="block-title">Concept Primer — LCEL, the pipe operator</div>
+      <p>The pipe symbol is the single most important syntax in this course. Reading prompt pipe llm pipe output parser left to right, each step's output becomes the next step's input — exactly like Unix pipes. This is not Python's bitwise OR; LangChain overloads the pipe operator on Runnable objects to mean chain together. Every chain, every agent, every RAG pipeline in this course is built from this one composition pattern.</p>
+      <button class="sp" onclick="speakEl(this,'f1')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Section 3 — The GIST of AI Agents (9 lectures · 57min)</span></div>
+
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <tr><th>Lecture</th><th>What it covers</th></tr>
+        <tr><td>What are AI Agents?</td><td>Agent vs Chain: hard-coded flow vs LLM-decided flow</td></tr>
+        <tr><td>AI Job Search Agent (intro)</td><td>Motivating example using ChatGPT's web search</td></tr>
+        <tr><td>Evolution of ReAct Agents</td><td>Four-stage history — see diagram below</td></tr>
+        <tr><td>Environment Setup</td><td>Tavily search API integration</td></tr>
+        <tr><td>Creating Your First Agent</td><td><span class="mono">@tool</span> decorator, <span class="mono">create_agent()</span></td></tr>
+        <tr><td>From Query to Answer</td><td>Tracing the full ReAct loop in LangSmith</td></tr>
+        <tr><td>Real-World Search with Tavily</td><td>Swapping custom code for official <span class="mono">TavilySearch</span> tool</td></tr>
+        <tr><td>Structured Output with Pydantic</td><td><span class="mono">response_format</span> parameter on <span class="mono">create_agent</span></td></tr>
+        <tr><td>[Theory] Structured Output</td><td><span class="mono">ProviderStrategy</span> vs <span class="mono">ToolStrategy</span></td></tr>
+      </table>
+    </div>
+
+    <div class="block bl-violet" id="f2">
+      <div class="block-title">Concept Primer — Agent vs Chain</div>
+      <p>In a chain, the developer hard-codes the steps: prompt to LLM to parser, done. The LLM has zero control over what happens next. In an agent, the LLM decides the steps, in a loop — should I call a tool, which one, am I done — and that control flow lives inside the model's output, not in your Python code. This distinction is the entire reason agentic AI exists as a separate discipline from LLM application development.</p>
+      <button class="sp" onclick="speakEl(this,'f2')">🔊 Listen</button>
+    </div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 320" role="img">
+<title>The four-stage evolution of ReAct agents in LangChain</title>
+<desc>2022 November ReAct prompting parsed via regex, then tool calling agent with native function calling, then LangGraph ReAct agent rebuilt on LangGraph for durable execution, then LangChain v1 create_agent as a clean high level interface powered by LangGraph underneath</desc>
+<defs>
+  <marker id="re-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .lc-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .lc-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .lc-coral{fill:#FAECE7;stroke:#993C1D;stroke-width:0.5;}
+    .lc-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
+    .lc-purple{fill:#EEEDFE;stroke:#534AB7;stroke-width:0.5;}
+    .lc-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="40" y="20" width="600" height="56" rx="8" class="lc-coral"/>
+<text class="lc-th" x="60" y="42" dominant-baseline="central">2022 Nov — ReAct Prompting</text>
+<text class="lc-ts" x="60" y="62" dominant-baseline="central">text-based Thought/Action/Observation, parsed with regex</text>
+<line x1="340" y1="76" x2="340" y2="100" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#re-arrow)"/>
+
+<rect x="40" y="100" width="600" height="56" rx="8" class="lc-amber"/>
+<text class="lc-th" x="60" y="122" dominant-baseline="central">Tool Calling Agent</text>
+<text class="lc-ts" x="60" y="142" dominant-baseline="central">native function calling — structured JSON, no more regex</text>
+<line x1="340" y1="156" x2="340" y2="180" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#re-arrow)"/>
+
+<rect x="40" y="180" width="600" height="56" rx="8" class="lc-purple"/>
+<text class="lc-th" x="60" y="202" dominant-baseline="central">LangGraph ReAct Agent</text>
+<text class="lc-ts" x="60" y="222" dominant-baseline="central">rebuilt on LangGraph — durable execution, persistence</text>
+<line x1="340" y1="236" x2="340" y2="260" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#re-arrow)"/>
+
+<rect x="40" y="260" width="600" height="56" rx="8" class="lc-teal"/>
+<text class="lc-th" x="60" y="282" dominant-baseline="central">create_agent() — LangChain v1.0+</text>
+<text class="lc-ts" x="60" y="302" dominant-baseline="central">clean high-level API, powered by LangGraph underneath</text>
+</svg>
+      <div class="diagram-caption">Memorize this timeline — it recurs conceptually throughout the rest of the course</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--amber)"></span><span style="color:var(--amber)">Sections 4-6 — Agents Under The Hood (4 layers, 13 lectures · 1h 32min)</span></div>
+
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <tr><th>Layer</th><th>Section</th><th>What it strips away</th></tr>
+        <tr><td>Layer 1</td><td>The ReAct Loop (4 lectures · 30min)</td><td>Removes <span class="mono">create_agent()</span> — manual while-loop with <span class="mono">bind_tools()</span> and "defensive prompting"</td></tr>
+        <tr><td>Layer 2</td><td>Raw Function Calling (3 lectures · 19min)</td><td>Removes LangChain entirely — raw Ollama SDK, hand-written JSON schemas</td></tr>
+        <tr><td>Layer 3</td><td>The ReAct Prompt (6 lectures · 43min)</td><td>Removes function calling itself — original 2022 text prompt + regex parsing</td></tr>
+        <tr><td>—</td><td>Function Calling theory (2 lectures · 9min)</td><td>Formalizes why tool calling beats ReAct prompting</td></tr>
+      </table>
+    </div>
+
+    <div class="block bl-amber" id="f3">
+      <div class="block-title">Concept Primer — Why does the course go backward in time?</div>
+      <p>Most courses teach create_agent and stop. This course teaches it, then deliberately deconstructs it across three sections, oldest technique last. From create_agent, the question is how is this implemented — answered by a manual loop with native tool calling. Then what if tool calling didn't exist — answered by raw JSON schemas with no LangChain. Then what if function calling itself didn't exist — answered by pure text prompting and regex. The pedagogical bet is that once you've built an agent with nothing but text and regex, you understand the problem space at a level no framework tutorial gives you.</p>
+      <button class="sp" onclick="speakEl(this,'f3')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-coral" id="f4">
+      <div class="block-title">Layer 3 detail — stop sequences prevent hallucination</div>
+      <p>When using the original ReAct prompt with no function calling, the LLM is instructed to output Thought, Action, Action Input, and Observation in plain text. Without intervention, the model will hallucinate the Observation step — inventing a tool result before the tool has actually run. The fix is a stop sequence on the newline-Observation token, which halts generation exactly before the model would fabricate that result, letting your code execute the real tool and inject the actual result.</p>
+      <button class="sp" onclick="speakEl(this,'f4')">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: PART 2 RAG ══ -->
+<div class="page" id="rag">
+  <div class="ph">
+    <div class="ph-eyebrow">Sections 7-8 · Confirmed curriculum</div>
+    <h1>Part 2 — RAG</h1>
+    <p>Retrieval Augmented Generation, built twice — once naively, once properly with LCEL — then scaled into a real production project.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">Section 7 — The GIST of RAG (9 lectures · 1h 45min)</span></div>
+
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <tr><th>Lecture</th><th>What it covers</th></tr>
+        <tr><td>Introduction to RAG</td><td>The "stuff everything in the prompt" naive approach and why it fails</td></tr>
+        <tr><td>Introduction to RAG Implementation</td><td>DocumentLoader, TextSplitter, Embeddings, VectorStore — the 4 building blocks</td></tr>
+        <tr><td>Medium Analyzer (project)</td><td>Boilerplate setup</td></tr>
+        <tr><td>Class Review</td><td><span class="mono">TextLoader</span>, <span class="mono">CharacterTextSplitter</span>, <span class="mono">OpenAIEmbeddings</span>, Pinecone</td></tr>
+        <tr><td>Ingestion Implementation</td><td>Load → split → embed → index, end to end</td></tr>
+        <tr><td>Naive Retrieval Implementation</td><td>RAG without LCEL — raw Python functions</td></tr>
+        <tr><td>2-Step RAG</td><td>Rebuilding the same pipeline with LCEL</td></tr>
+        <tr><td>LangChain RAG Documentation</td><td>Instructor's critical take on LangChain's own official RAG docs</td></tr>
+      </table>
+    </div>
+
+    <div class="block bl-green" id="r1">
+      <div class="block-title">Concept Primer — Why RAG still matters with huge context windows</div>
+      <p>A common objection is that modern LLMs have one to two million token context windows, so why bother with retrieval at all. Three reasons remain. First, cost efficiency — retrieving three relevant chunks costs roughly two thousand tokens versus pasting a five hundred page document at four hundred thousand tokens, a two-hundred-times cost difference on every single query. Second, the lost in the middle problem — LLMs are measurably worse at finding facts buried in the middle of a very long context, even when that fact is technically within the window. Third, traceability — RAG lets you show the exact source chunk that grounds an answer, which a four-hundred-thousand-token prompt gives you no way to cite.</p>
+      <button class="sp" onclick="speakEl(this,'r1')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-green" id="r2">
+      <div class="block-title">Concept Primer — naive RAG vs LCEL RAG, why build it twice</div>
+      <p>The naive version uses plain Python functions: retrieve documents, format them into context, build the prompt, call the LLM. It works, but LangSmith shows disconnected traces — the retriever and the LLM appear as two separate, unrelated calls with no unified observability and no built-in streaming. The LCEL version wires the same logic through RunnablePassthrough dot assign, piped into the prompt, the LLM, and an output parser. The output is identical, but LangSmith now shows one coherent step-by-step trace. This is the practical payoff of learning LCEL syntax, not just academic elegance.</p>
+      <button class="sp" onclick="speakEl(this,'r2')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-coral" id="r3">
+      <div class="block-title">The instructor's RAG architecture critique</div>
+      <p>LangChain's official post-v1.0 documentation suggests two patterns. Pattern A is agentic RAG — a ReAct agent equipped with a retrieval tool — but this gives the LLM too much autonomy over when to retrieve, risking jailbreaking, irrelevant answers, and extra latency from redundant tool calls. Pattern B is a two-step chain via middleware injection, criticized as too abstract and fragile across package version updates. The instructor recommends explicit, deterministic control over retrieval, where the developer decides in code when retrieval happens rather than leaving it to the LLM — the Custom RAG Agent with LangGraph pattern covered later in the course.</p>
+      <button class="sp" onclick="speakEl(this,'r3')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">Section 8 — Documentation Assistant (16 lectures · 2h 13min)</span></div>
+
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <tr><th>Lecture</th><th>What it covers</th></tr>
+        <tr><td>Environment Setup</td><td>Pinecone index creation, 1536-dim matching OpenAI embeddings</td></tr>
+        <tr><td>Imports</td><td>SSL/certifi setup, logging, all core RAG imports</td></tr>
+        <tr><td>Tavily Crawling</td><td><span class="mono">TavilyCrawl</span> to scrape an entire doc site automatically</td></tr>
+        <tr><td>TavilyMap, TavilyExtract</td><td>Fine-grained control over crawl depth and extraction</td></tr>
+        <tr><td>Crawling Deep Dive</td><td>500+ URLs, batched + asyncio concurrent processing</td></tr>
+        <tr><td>Chunking</td><td><span class="mono">RecursiveCharacterTextSplitter</span>, 4000 char chunks, 200 overlap</td></tr>
+        <tr><td>Batch Indexing</td><td>Async embedding + indexing at scale, per-batch error handling</td></tr>
+        <tr><td>Retrieval Agent Implementation</td><td><span class="mono">content_and_artifact</span> — dual-channel tool output</td></tr>
+        <tr><td>Run, Debug, Trace</td><td>Distinguishing content (to LLM) vs artifact (to UI)</td></tr>
+        <tr><td>Streamlit Frontend</td><td>Chat UI with session state and history</td></tr>
+        <tr><td>Production + Architecture recap</td><td>Deployment considerations, full pipeline diagram</td></tr>
+      </table>
+    </div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 220" role="img">
+<title>content and artifact dual channel tool output</title>
+<desc>A retrieval tool call returns two channels, content is a serialized string sent back to the LLM to generate the answer, artifact is the raw list of document objects that bypasses the LLM and goes directly to the frontend for rendering citations</desc>
+<defs>
+  <marker id="ca-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .ca-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .ca-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .ca-gray{fill:#F1EFE8;stroke:#888780;stroke-width:0.5;}
+    .ca-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+    .ca-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="260" y="20" width="160" height="50" rx="8" class="ca-gray"/>
+<text class="ca-th" x="340" y="38" text-anchor="middle" dominant-baseline="central">Retrieval tool</text>
+<text class="ca-ts" x="340" y="56" text-anchor="middle" dominant-baseline="central">response_format=</text>
+
+<line x1="280" y1="70" x2="160" y2="100" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ca-arrow)"/>
+<line x1="400" y1="70" x2="520" y2="100" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ca-arrow)"/>
+
+<rect x="60" y="100" width="200" height="56" rx="8" class="ca-teal"/>
+<text class="ca-th" x="160" y="120" text-anchor="middle" dominant-baseline="central">content</text>
+<text class="ca-ts" x="160" y="140" text-anchor="middle" dominant-baseline="central">serialized string</text>
+<line x1="160" y1="156" x2="160" y2="186" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ca-arrow)"/>
+<text class="ca-ts" x="160" y="200" text-anchor="middle">→ back to the LLM</text>
+
+<rect x="420" y="100" width="200" height="56" rx="8" class="ca-amber"/>
+<text class="ca-th" x="520" y="120" text-anchor="middle" dominant-baseline="central">artifact</text>
+<text class="ca-ts" x="520" y="140" text-anchor="middle" dominant-baseline="central">raw Document objects</text>
+<line x1="520" y1="156" x2="520" y2="186" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ca-arrow)"/>
+<text class="ca-ts" x="520" y="200" text-anchor="middle">→ straight to frontend UI</text>
+</svg>
+      <div class="diagram-caption">The most important pattern in Section 8 — keeps LLM context clean while still rendering citations</div>
+    </div>
+
+    <div class="block bl-teal" id="r4">
+      <div class="block-title">Concept Primer — content_and_artifact, why split them</div>
+      <p>A retrieval tool normally returns one thing. This pattern returns two from a single tool call. Content is a serialized string of sources and page content — this goes back to the LLM to generate the answer. Artifact is the raw list of document objects — this does not go to the LLM, it's extracted by application code and shown directly to the user as numbered source citations. Sending raw document objects with all their metadata to the LLM wastes tokens and adds noise, but the frontend needs that metadata to render citations. This pattern provides both without compromise.</p>
+      <button class="sp" onclick="speakEl(this,'r4')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-teal" id="r5">
+      <div class="block-title">Concept Primer — crawling 500+ pages in minutes, not hours</div>
+      <p>A naive approach loops over five hundred URLs and fetches one at a time, producing five hundred sequential round trips and very slow performance. The course approach uses two layers of parallelism. Layer one — TavilyExtract handles a batch of roughly twenty URLs in a single API call rather than twenty separate calls. Layer two — asyncio.gather runs multiple batches concurrently rather than one after another. Five hundred URLs divided by twenty per batch equals twenty-five batches, and running those twenty-five batches concurrently takes minutes rather than hours. This is a real production pattern worth understanding even outside the LangChain context.</p>
+      <button class="sp" onclick="speakEl(this,'r5')">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: PART 3 LANGGRAPH ══ -->
+<div class="page" id="langgraph">
+  <div class="ph">
+    <div class="ph-eyebrow">Sections 9-18 (estimated) · Inferred from course description</div>
+    <h1>Part 3 — LangGraph &amp; Production Agents</h1>
+    <p>Cycles, state, persistence, memory, and human-in-the-loop — the capabilities a linear agent loop can't express.</p>
+  </div>
+
+  <div class="verify-notice">⚠️ This page is inferred from the course description's explicit topic list, not from confirmed lecture titles. Verify exact section order once enrolled.</div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="tbl-wrap">
+    <table class="cmp">
+      <tr><th>Topic</th><th>What to expect</th></tr>
+      <tr><td>Introduction to LangGraph</td><td>Why LangGraph exists: cycles, state, persistence — things linear chains can't do</td></tr>
+      <tr><td>Graphs 101</td><td>Nodes, edges, conditional edges, the <span class="mono">StateGraph</span> object</td></tr>
+      <tr><td>State Management</td><td><span class="mono">TypedDict</span> state schemas, reducers, how state flows between nodes</td></tr>
+      <tr><td>Custom RAG Agent with LangGraph</td><td>The deterministic RAG pattern the instructor praised in Section 7</td></tr>
+      <tr><td>Memory Systems</td><td>Short-term (thread-level) vs long-term (cross-session) persistence</td></tr>
+      <tr><td>Checkpointing</td><td>Resuming a crashed or interrupted agent from its last saved state</td></tr>
+      <tr><td>Human-in-the-loop</td><td><span class="mono">interrupt()</span> patterns — pausing for human approval before a sensitive action</td></tr>
+      <tr><td>Multi-agent orchestration</td><td>Supervisor pattern, sub-graphs, agent handoffs</td></tr>
+    </table>
+  </div>
+
+  <div class="block bl-violet" id="lg1">
+    <div class="block-title">Concept Primer — why LangGraph exists when LangChain already has agents</div>
+    <p>LangChain's create_agent and AgentExecutor run a loop, but it's a linear loop — think, act, observe, repeat until done. It cannot easily express going back three steps if a check fails, pausing to wait for human approval, resuming exactly where execution stopped after a server crash, or running two sub-agents in parallel and merging their results. LangGraph models your agent as an explicit graph — nodes are units of work, edges are transitions that can be conditional, and state flows through the whole graph as a typed object every node can read and update. This is why the ReAct evolution timeline showed LangGraph ReAct Agent as a distinct step — even the simple ReAct loop benefits from running on a graph engine underneath.</p>
+    <button class="sp" onclick="speakEl(this,'lg1')">🔊 Listen</button>
+  </div>
+
+  <div class="block bl-violet" id="lg2">
+    <div class="block-title">Concept Primer — short-term vs long-term memory</div>
+    <p>Short-term memory is thread-level, scoped to one conversation or session — remembering what the user said two messages ago, tied to a thread ID, often stored in-memory or in Redis, and lost when the session ends. Long-term memory is cross-session, scoped across every conversation a user ever has — learned once and applied to every future session, stored in a persistent store such as a vector database or SQL, and never lost unless explicitly deleted. Most memory tutorials only cover short-term. Long-term memory is the harder, more valuable problem — it's what separates a stateless chatbot from a system that actually learns about its user over time.</p>
+    <button class="sp" onclick="speakEl(this,'lg2')">🔊 Listen</button>
+  </div>
+</div>
+
+<!-- ══ PAGE: PART 4 MCP & DEEP AGENTS ══ -->
+<div class="page" id="mcp">
+  <div class="ph">
+    <div class="ph-eyebrow">Sections 19-28 (estimated) · Inferred from course description</div>
+    <h1>Part 4 — MCP, Deep Agents &amp; Production</h1>
+    <p>Standardized tool connections, long-horizon planning agents, and the discipline of managing what's actually in the context window.</p>
+  </div>
+
+  <div class="verify-notice">⚠️ This page is inferred from the course description's explicit topic list, not from confirmed lecture titles. Verify exact section order once enrolled.</div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="tbl-wrap">
+    <table class="cmp">
+      <tr><th>Topic</th><th>What to expect</th></tr>
+      <tr><td>Model Context Protocol (MCP)</td><td>Anthropic's open standard for connecting agents to external tools and data uniformly</td></tr>
+      <tr><td>Building an MCP Server</td><td>Exposing your own tools via the MCP spec</td></tr>
+      <tr><td>Building an MCP Client</td><td>Connecting an agent to a third-party MCP server</td></tr>
+      <tr><td>Deep Agents</td><td>Recursive, long-horizon agents — planning, self-correction, multi-stage execution</td></tr>
+      <tr><td>Context Engineering Theory</td><td>Managing what goes into the context window — beyond prompt engineering</td></tr>
+      <tr><td>Production Considerations</td><td>Error handling, retries, observability, deployment patterns</td></tr>
+    </table>
+  </div>
+
+  <div class="block bl-coral" id="mcp1">
+    <div class="block-title">Concept Primer — MCP in one sentence</div>
+    <p>Before MCP, every agent framework had its own way to define what a tool is and its schema — LangChain tools, OpenAI functions, Anthropic tools, and custom APIs were all different. MCP, the Model Context Protocol, standardizes this. One server can expose tools and data, and any MCP-compatible client — LangChain, Claude Desktop, custom agents — can connect to it the same way, with no custom integration code per framework. Think of it like USB-C for AI agents: one connector standard instead of a different cable for every device.</p>
+    <button class="sp" onclick="speakEl(this,'mcp1')">🔊 Listen</button>
+  </div>
+
+  <div class="block bl-coral" id="mcp2">
+    <div class="block-title">Concept Primer — what makes a Deep Agent different from a regular agent</div>
+    <p>A regular agent runs one loop — think, tool call, observe, repeat, answer — good for tasks completable in a handful of tool calls. A Deep Agent adds planning as an explicit step before execution, producing a multi-step plan to solve the problem. It adds self-correction, reviewing its own output and retrying if wrong. And it adds sub-task delegation, spinning up a sub-agent for a piece of the larger task and merging results back. This matters for genuinely long-horizon tasks like researching a topic and writing a report, where a flat think-act loop tends to lose coherence after ten to fifteen steps. Deep Agents are the architecture pattern for tasks that take many tens of steps to complete correctly.</p>
+    <button class="sp" onclick="speakEl(this,'mcp2')">🔊 Listen</button>
+  </div>
+
+  <div class="block bl-coral" id="mcp3">
+    <div class="block-title">Concept Primer — Context Engineering vs Prompt Engineering</div>
+    <p>Prompt engineering asks how to phrase this one instruction well — scope is a single prompt template, wording, examples, chain-of-thought triggers. Context engineering asks what information should even be in the context window, and in what order — scope is the entire context: system prompt, conversation history, retrieved documents, tool results, memory, and the budget tradeoffs between them. As agents get more capable, context engineering becomes the harder problem — a perfectly worded prompt still fails if the context window is cluttered with irrelevant tool results or stale conversation history crowding out the one fact the model actually needs.</p>
+    <button class="sp" onclick="speakEl(this,'mcp3')">🔊 Listen</button>
+  </div>
+</div>
+
+<!-- ══ PAGE: CONCEPT PRIMER ══ -->
+<div class="page" id="primer">
+  <div class="ph">
+    <div class="ph-eyebrow">Background knowledge</div>
+    <h1>Concept Primer</h1>
+    <p>Cross-cutting concepts the course assumes familiarity with, or introduces quickly without dwelling on.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">🧮</div>
+      <div class="qa-q">
+        <div class="qa-q-text">What are embeddings, in one paragraph?</div>
+        <span class="qa-tag t-blue">Background</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <p id="p1" style="color:var(--dim);font-size:14px;line-height:1.7;">A neural network converts text into a fixed-length vector of numbers — for example 1536 dimensions for OpenAI's text-embedding-3-small — such that semantically similar text produces vectors that are mathematically close together. Similarity between two pieces of text becomes distance between two points in 1536-dimensional space — this is what makes vector search possible.</p>
+      <button class="sp" onclick="speakEl(this,'p1')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">🗂️</div>
+      <div class="qa-q">
+        <div class="qa-q-text">What are vector databases, in one paragraph?</div>
+        <span class="qa-tag t-blue">Background</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <p id="p2" style="color:var(--dim);font-size:14px;line-height:1.7;">A normal database indexes by exact match, such as where id equals 5. A vector database indexes by nearest neighbor — given a query vector, find the K stored vectors closest to it in that high-dimensional space. Pinecone, used throughout this course, along with FAISS and Chroma, all solve this same problem with different tradeoffs around hosting, speed, and cost.</p>
+      <button class="sp" onclick="speakEl(this,'p2')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">🌡️</div>
+      <div class="qa-q">
+        <div class="qa-q-text">Why temperature=0 for factual tasks?</div>
+        <span class="qa-tag t-blue">Background</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <p id="p3" style="color:var(--dim);font-size:14px;line-height:1.7;">LLM output is sampled probabilistically — temperature controls how much randomness is injected into that sampling. Temperature equals zero makes the model always pick the highest-probability next token — maximally deterministic, best for tasks like summarization or structured extraction where you want the same input to reliably produce the same output.</p>
+      <button class="sp" onclick="speakEl(this,'p3')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="block-title" style="margin:24px 0 10px;font-size:13px;color:var(--dim);">Quick reference table</div>
+  <div class="tbl-wrap">
+    <table class="cmp">
+      <tr><th>Term</th><th>One-line definition</th></tr>
+      <tr><td>LCEL</td><td>LangChain Expression Language — the pipe-operator syntax for composing Runnables</td></tr>
+      <tr><td>Runnable</td><td>LangChain's universal interface — anything that can be invoked, streamed, or batched</td></tr>
+      <tr><td>AIMessage</td><td>The wrapper object returned by a chat model, holding content + metadata + tool calls</td></tr>
+      <tr><td>ToolMessage</td><td>The message type representing a tool's result, appended back into the conversation</td></tr>
+      <tr><td>Agent scratchpad</td><td>Text-based memory of prior thought/action/observation cycles, used in raw ReAct prompting</td></tr>
+      <tr><td>Stop sequence</td><td>A token string that halts LLM generation immediately upon being produced</td></tr>
+      <tr><td>Tool calling / function calling</td><td>Native LLM capability to output structured JSON specifying a function and arguments</td></tr>
+      <tr><td>RAG</td><td>Retrieval Augmented Generation — retrieve relevant chunks, then generate grounded in them</td></tr>
+      <tr><td>Chunking</td><td>Splitting a large document into smaller pieces before embedding and indexing</td></tr>
+      <tr><td>StateGraph</td><td>LangGraph's core object — nodes, edges, and a typed state object flowing between them</td></tr>
+      <tr><td>Checkpoint</td><td>A saved snapshot of agent state, enabling resume-after-crash and time travel</td></tr>
+      <tr><td>MCP</td><td>Model Context Protocol — a standardized way for agents to connect to external tools/data</td></tr>
+    </table>
+  </div>
+</div>
+
+<script>
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleQA(card) { card.classList.toggle('open'); }
+
+var _btn=null,_queue=[],_audio=null;
+function _chunk(t,m){var s=t.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[t],c=[],cur='';for(var i=0;i<s.length;i++){if((cur+s[i]).length>m){if(cur)c.push(cur.trim());cur=s[i];}else cur+=s[i];}if(cur.trim())c.push(cur.trim());return c.filter(function(x){return x.length>0;});}
+function _url(t){return 'https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(t)+'&tl=en-US&client=tw-ob';}
+function _stop(){_queue=[];if(_audio){_audio.pause();_audio.src='';_audio=null;}}
+function _play(b){if(!_queue.length){_resetBtn(b);_btn=null;return;}var a=new Audio(_queue.shift());_audio=a;a.onended=function(){_audio=null;_play(b);};a.onerror=function(){_audio=null;_play(b);};a.play().catch(function(){_audio=null;_play(b);});}
+function speakEl(btn,elId){
+  if(_btn===btn){_stop();_resetBtn(btn);_btn=null;return;}
+  if(_btn){_stop();_resetBtn(_btn);_btn=null;}
+  var el=document.getElementById(elId);if(!el)return;
+  var text=el.innerText.replace(/[▶■🔊]\s*(Listen)?\s*/g,'').replace(/\s+/g,' ').trim();
+  if(!text)return;
+  _queue=_chunk(text,190).map(_url);
+  _btn=btn;btn.innerHTML='■ Stop';btn.classList.add('playing');_play(btn);
+}
+function _resetBtn(b){if(!b)return;b.innerHTML='🔊 Listen';b.classList.remove('playing');}
+</script>
+</body>
+</html>
