@@ -194,34 +194,39 @@ table.cmp tr:hover td{background:var(--bg);}
   </div>
 
   <div class="sec">
-    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Step 1 — LangChain Core (Eden Marco)</span></div>
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Step 1 — LangChain Core (DeepLearning.AI, free, ~6-7h)</span></div>
 
     <div class="block bl-blue" id="s1-1">
-      <div class="block-title">Course details</div>
-      <p>LangChain — Agentic AI Engineering with LangChain and LangGraph, taught by Eden Marco, with 182,669 students and a 4.6 star rating. Already enrolled with a discount coupon. Estimated time: about one week of focused study, not the full 19 hours — prioritize specific sections.</p>
+      <div class="block-title">Three free short courses, all co-taught by Harrison Chase</div>
+      <p>Harrison Chase is the co-founder and CEO of LangChain. Starting from zero with limited time, three free short courses on DeepLearning.AI cover the same core concepts as the full paid Udemy course in roughly six to seven hours instead of nineteen — taught directly by the framework's own creator.</p>
       <button class="sp" onclick="speakEl(this,'s1-1')">🔊 Listen</button>
     </div>
 
     <div class="tbl-wrap">
       <table class="cmp">
-        <tr><th>Section</th><th>Why it matters for this JD</th></tr>
-        <tr><td>Section 2 — GIST of LangChain</td><td>LCEL syntax, the pipe operator used everywhere</td></tr>
-        <tr><td>Section 3 — GIST of AI Agents</td><td>Agent vs Chain distinction, the 4-stage ReAct evolution</td></tr>
-        <tr><td>Sections 4-6 — Agents Under The Hood</td><td>Most valuable for interview depth — explains <em>why</em> tool calling works</td></tr>
-        <tr><td>Section 7 — GIST of RAG</td><td>Naive RAG vs LCEL RAG — informs how to design a QA bot</td></tr>
-        <tr><td>Section 8 — Documentation Assistant</td><td>The content_and_artifact pattern — exactly what a data QA bot needs</td></tr>
+        <tr><th>Course</th><th>Time</th><th>What it covers</th></tr>
+        <tr><td>LangChain for LLM Application Development</td><td>1h</td><td>Models, Prompts, Parsers, Memory, Chains, basic Agents</td></tr>
+        <tr><td>Functions, Tools and Agents</td><td>~4h</td><td>Native function calling, tool binding, a capstone customer support agent</td></tr>
+        <tr><td>AI Agents in LangGraph ★</td><td>~1-2h</td><td>State management, human-in-the-loop, persistence — highest priority</td></tr>
       </table>
     </div>
 
     <div class="block bl-teal" id="s1-2">
-      <div class="block-title">Concept Primer — why Section 8's pattern matters for the demo</div>
-      <p>A data QA bot answering which merchant had the highest GMV last week needs to show its work — which table, which SQL, which dbt model. The content and artifact pattern splits a tool's output into two channels: content is the answer text sent back to the language model, while artifact is the raw query results or source table metadata, shown directly to the user and bypassing the model entirely. This is the exact mechanism for building trust in an internal analytics copilot, directly mapping to the JD's language about a trusted, scalable data language.</p>
+      <div class="block-title">Concept Primer — why AI Agents in LangGraph is the single most important course here</div>
+      <p>This is the one course covering LangGraph's state management and multi-step orchestration — the exact gap in earlier versions of this plan. The course builds the same agent twice: once in raw Python with no framework, then again using LangGraph components, making it immediately clear what the framework actually provides — state persistence across steps, the ability to pause for human approval, and resuming execution after a failure. If time only allows one of the three courses, this is the one to take.</p>
       <button class="sp" onclick="speakEl(this,'s1-2')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-violet" id="s1-3">
+      <div class="block-title">Concept Primer — why Functions, Tools and Agents maps directly onto the demo</div>
+      <p>The dbt and BigQuery demo needs an agent that decides when to check the dbt schema versus when to query BigQuery directly — that decision-making is exactly what this course teaches through native function calling and tool binding. Its capstone project, a customer support agent that escalates between tools and a human, is structurally identical to an agent that checks a schema, queries a database, and returns a cited answer.</p>
+      <button class="sp" onclick="speakEl(this,'s1-3')">🔊 Listen</button>
     </div>
   </div>
 
   <div class="sec">
     <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">Step 2 — LlamaIndex (DeepLearning.AI, free)</span></div>
+
 
     <div class="block bl-teal" id="s2-1">
       <div class="block-title">Course details</div>
@@ -389,7 +394,9 @@ agent = create_agent(
   <div class="tbl-wrap">
     <table class="cmp">
       <tr><th>Step</th><th>Resource</th><th>Link</th><th>Time</th><th>Cost</th></tr>
-      <tr><td>1</td><td>LangChain — Eden Marco</td><td class="linkcell"><a href="https://www.udemy.com/course/langchain/?couponCode=MT260629G3" target="_blank">udemy.com/course/langchain</a></td><td>~1 week</td><td>Paid</td></tr>
+      <tr><td>1a</td><td>LangChain for LLM App Dev</td><td class="linkcell"><a href="https://www.deeplearning.ai/courses/langchain" target="_blank">deeplearning.ai/courses/langchain</a></td><td>1h</td><td>Free</td></tr>
+      <tr><td>1b</td><td>Functions, Tools and Agents</td><td class="linkcell"><a href="https://www.deeplearning.ai/short-courses/functions-tools-agents-langchain/" target="_blank">deeplearning.ai/.../functions-tools-agents</a></td><td>~4h</td><td>Free</td></tr>
+      <tr><td>1c</td><td>AI Agents in LangGraph ★</td><td class="linkcell"><a href="https://learn.deeplearning.ai/courses/ai-agents-in-langgraph" target="_blank">learn.deeplearning.ai/.../langgraph</a></td><td>~1-2h</td><td>Free</td></tr>
       <tr><td>2</td><td>LlamaIndex — DeepLearning.AI</td><td class="linkcell"><a href="https://www.deeplearning.ai/courses/building-agentic-rag-with-llamaindex/" target="_blank">deeplearning.ai/courses/...llamaindex</a></td><td>2-3 days</td><td>Free</td></tr>
       <tr><td>2b</td><td>LlamaIndex — Coursera mirror</td><td class="linkcell"><a href="https://www.coursera.org/projects/building-agentic-rag-with-llamaindex" target="_blank">coursera.org/projects/...llamaindex</a></td><td>—</td><td>Free</td></tr>
       <tr><td>3a</td><td>Langfuse docs home</td><td class="linkcell"><a href="https://langfuse.com/docs" target="_blank">langfuse.com/docs</a></td><td>—</td><td>Free</td></tr>
