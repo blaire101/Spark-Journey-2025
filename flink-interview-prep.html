@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flink — Concepts, Real-time/Offline Reconciliation & Interview Prep</title>
+<style>
+:root {
+  --bg:#F8F9FB; --white:#FFFFFF; --border:#E3E6EE;
+  --text:#111827; --dim:#4B5563; --faint:#9CA3AF;
+  --teal:#0891B2; --teal-bg:#ECFEFF; --teal-bd:#A5F3FC;
+  --blue:#2563EB; --blue-bg:#EFF6FF; --blue-bd:#BFDBFE;
+  --green:#059669; --green-bg:#ECFDF5; --green-bd:#6EE7B7;
+  --amber:#D97706; --amber-bg:#FFFBEB; --amber-bd:#FCD34D;
+  --violet:#7C3AED; --violet-bg:#F5F3FF; --violet-bd:#C4B5FD;
+  --red:#DC2626; --red-bg:#FEF2F2; --red-bd:#FCA5A5;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:32px 20px 80px;max-width:880px;margin:0 auto;}
+
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);padding-top:8px;z-index:10;}
+.nav-btn{font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--dim);cursor:pointer;transition:all .15s;}
+.nav-btn:hover{background:var(--text);color:#fff;border-color:var(--text);}
+.nav-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
+
+.page{display:none;} .page.active{display:block;}
+.ph{margin-bottom:24px;}
+.ph-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
+.ph h1{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px;}
+.ph p{font-size:14px;color:var(--dim);}
+
+.sp{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;border:1px solid var(--teal-bd);background:var(--teal-bg);color:var(--teal);cursor:pointer;margin-top:8px;transition:all .15s;white-space:nowrap;}
+.sp:hover{background:var(--teal);color:#fff;}
+.sp.playing{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+
+.sec{margin-bottom:32px;}
+.sec-title{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-title .dot{width:7px;height:7px;border-radius:50%;}
+
+.block{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;}
+.block p{color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:4px;}
+.block-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.bl-blue{border-left:3px solid var(--blue);background:var(--blue-bg);}
+.bl-teal{border-left:3px solid var(--teal);background:var(--teal-bg);}
+.bl-green{border-left:3px solid var(--green);background:var(--green-bg);}
+.bl-amber{border-left:3px solid var(--amber);background:var(--amber-bg);}
+.bl-violet{border-left:3px solid var(--violet);background:var(--violet-bg);}
+.bl-red{border-left:3px solid var(--red);background:var(--red-bg);}
+
+.notice{font-size:12px;color:var(--dim);background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:7px;padding:9px 14px;margin-bottom:20px;}
+
+.code{background:#1E2433;color:#C8D0E0;font-family:'Menlo','Consolas',monospace;font-size:12.5px;line-height:1.6;border-radius:8px;padding:14px 16px;margin:8px 0;overflow-x:auto;white-space:pre;}
+
+.qa-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.qa-top{display:flex;align-items:stretch;min-height:60px;cursor:pointer;user-select:none;}
+.qa-top:hover{background:#FAFBFC;}
+.qa-icon{width:52px;min-width:52px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg);border-right:1px solid var(--border);}
+.qa-q{flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:3px;}
+.qa-q-text{font-size:14px;font-weight:600;line-height:1.35;}
+.qa-tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;display:inline-block;width:fit-content;}
+.qa-chev{padding:0 14px;display:flex;align-items:center;color:var(--faint);font-size:11px;transition:transform .2s;}
+.qa-card.open .qa-chev{transform:rotate(180deg);}
+.qa-body{display:none;border-top:1px solid var(--border);padding:14px 16px 10px;}
+.qa-card.open .qa-body{display:block;}
+.qa-answer{font-size:14px;color:var(--dim);line-height:1.7;}
+.qa-answer p{margin-bottom:8px;}
+.btn-row-qa{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+
+.t-blue{background:var(--blue-bg);color:var(--blue);}
+.t-teal{background:var(--teal-bg);color:var(--teal);}
+.t-green{background:var(--green-bg);color:var(--green);}
+.t-amber{background:var(--amber-bg);color:var(--amber);}
+.t-violet{background:var(--violet-bg);color:var(--violet);}
+.t-red{background:var(--red-bg);color:var(--red);}
+
+.diag{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;}
+.diag-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13.5px;color:var(--dim);}
+.diag-tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 8px;border-radius:4px;flex-shrink:0;}
+
+.problem-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.problem-card.open .problem-body{display:block;}
+.problem-head{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none;}
+.problem-head:hover{background:#FAFBFC;}
+.problem-badge{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:4px;white-space:nowrap;}
+.problem-title{font-size:14px;font-weight:600;flex:1;}
+.problem-chev{font-size:11px;color:var(--faint);transition:transform .2s;}
+.problem-card.open .problem-chev{transform:rotate(180deg);}
+.problem-body{display:none;border-top:1px solid var(--border);padding:14px 16px 10px;}
+.problem-section{margin-bottom:12px;}
+.problem-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px;}
+.problem-text{font-size:13.5px;color:var(--dim);line-height:1.65;}
+
+.diagram-box{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 14px 6px;margin-bottom:14px;overflow-x:auto;}
+.diagram-box svg{display:block;min-width:560px;}
+.diagram-caption{font-size:12px;color:var(--faint);text-align:center;margin-top:6px;padding-bottom:8px;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('mastery',this)">入门到精通 🇨🇳</button>
+  <button class="nav-btn" onclick="showPage('concepts',this)">Core Concepts</button>
+  <button class="nav-btn" onclick="showPage('reconcile',this)">T-1 vs T Reconciliation</button>
+  <button class="nav-btn" onclick="showPage('pitfalls',this)">Pitfalls</button>
+  <button class="nav-btn" onclick="showPage('interview',this)">Interview Q&A</button>
+</div>
+
+<div class="page active" id="mastery">
+  <div class="ph">
+    <div class="ph-eyebrow">Flink 从入门到精通</div>
+    <h1>基础架构 + 进阶调优</h1>
+    <p>从零开始理解 Flink，再到生产环境的状态管理、容错机制和性能调优。</p>
+  </div>
+
+  <div class="notice">需要联网。请用 Chrome 浏览器打开以使用语音功能。</div>
+
+  <!-- ════ 第一部分：基础 ════ -->
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">第一部分 · 基础入门</span></div>
+
+    <div class="block bl-blue" id="m1">
+      <div class="block-title">Flink 是什么</div>
+      <p>Flink 是一个分布式流处理引擎，核心定位是"以流为本"——它把批处理看作流处理的一个特例（有限流），而不是像 Spark 那样把流处理看作批处理的微小切片（微批处理）。这个设计哲学的区别决定了 Flink 在低延迟场景下天然占优势，因为它是真正的逐条事件处理，不需要等待凑够一批数据。</p>
+      <button class="sp" onclick="speakEl(this,'m1')">朗读</button>
+    </div>
+
+    <div class="block bl-blue" id="m2">
+      <div class="block-title">整体架构：JobManager 和 TaskManager</div>
+      <p>Flink 集群分两种角色。JobManager 是大脑，负责接收作业、调度任务、协调 Checkpoint、处理故障恢复——一个集群通常只有一个活跃的 JobManager（配合高可用部署可以有备用）。TaskManager 是干活的工人，真正执行算子逻辑、管理本地状态、和上下游交换数据。每个 TaskManager 有若干个 Slot，决定了它能并行跑多少个子任务。</p>
+      <button class="sp" onclick="speakEl(this,'m2')">朗读</button>
+    </div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 380" role="img">
+<title>Flink 集群架构</title>
+<desc>JobManager 负责调度和协调，多个 TaskManager 并行执行任务，每个 TaskManager 包含多个 Slot</desc>
+<defs>
+  <marker id="arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .fk-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .fk-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .fk-purple{fill:#EEEDFE;stroke:#534AB7;stroke-width:0.5;}
+    .fk-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+    .fk-gray{fill:#F1EFE8;stroke:#888780;stroke-width:0.5;}
+    .fk-arr{stroke:#5C6478;stroke-width:1.2;fill:none;}
+  </style>
+</defs>
+<rect x="240" y="30" width="200" height="56" rx="8" class="fk-purple"/>
+<text class="fk-th" x="340" y="50" text-anchor="middle" dominant-baseline="central">JobManager</text>
+<text class="fk-ts" x="340" y="68" text-anchor="middle" dominant-baseline="central">调度 · 协调 Checkpoint</text>
+
+<line x1="340" y1="86" x2="340" y2="118" class="fk-arr" marker-end="url(#arrow1)"/>
+<text class="fk-ts" x="380" y="102" text-anchor="middle" dominant-baseline="central">分配任务</text>
+
+<rect x="60" y="118" width="560" height="220" rx="16" class="fk-gray"/>
+<text class="fk-th" x="80" y="140" dominant-baseline="central">TaskManager 集群</text>
+
+<rect x="84" y="160" width="160" height="156" rx="10" class="fk-teal"/>
+<text class="fk-th" x="164" y="180" text-anchor="middle" dominant-baseline="central">TaskManager 1</text>
+<rect x="100" y="198" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="164" y="214" text-anchor="middle" dominant-baseline="central">Slot 1</text>
+<rect x="100" y="238" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="164" y="254" text-anchor="middle" dominant-baseline="central">Slot 2</text>
+<rect x="100" y="278" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="164" y="294" text-anchor="middle" dominant-baseline="central">Slot 3</text>
+
+<rect x="260" y="160" width="160" height="156" rx="10" class="fk-teal"/>
+<text class="fk-th" x="340" y="180" text-anchor="middle" dominant-baseline="central">TaskManager 2</text>
+<rect x="276" y="198" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="340" y="214" text-anchor="middle" dominant-baseline="central">Slot 1</text>
+<rect x="276" y="238" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="340" y="254" text-anchor="middle" dominant-baseline="central">Slot 2</text>
+<rect x="276" y="278" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="340" y="294" text-anchor="middle" dominant-baseline="central">Slot 3</text>
+
+<rect x="436" y="160" width="160" height="156" rx="10" class="fk-teal"/>
+<text class="fk-th" x="516" y="180" text-anchor="middle" dominant-baseline="central">TaskManager 3</text>
+<rect x="452" y="198" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="516" y="214" text-anchor="middle" dominant-baseline="central">Slot 1</text>
+<rect x="452" y="238" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="516" y="254" text-anchor="middle" dominant-baseline="central">Slot 2</text>
+<rect x="452" y="278" width="128" height="32" rx="6" fill="none" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="fk-ts" x="516" y="294" text-anchor="middle" dominant-baseline="central">Slot 3</text>
+</svg>
+      <div class="diagram-caption">JobManager 负责调度，TaskManager 实际执行任务，每个 Slot 跑一个并行子任务</div>
+    </div>
+
+    <div class="block bl-blue" id="m3">
+      <div class="block-title">DataStream API vs Table API/SQL</div>
+      <p>DataStream API 是最底层、最灵活的编程接口，用 Java 或 Scala 写，可以精确控制每个算子的行为，适合复杂的自定义逻辑。Table API 和 Flink SQL 是更高层的声明式接口，写法接近标准 SQL，开发效率更高，但底层最终也会被优化成 DataStream 的执行计划。生产环境中，简单的聚合和过滤逻辑优先用 SQL，复杂的状态管理和自定义算子用 DataStream API。</p>
+      <button class="sp" onclick="speakEl(this,'m3')">朗读</button>
+    </div>
+
+    <div class="block bl-blue" id="m4">
+      <div class="block-title">部署模式：Standalone / YARN / Kubernetes</div>
+      <p>Standalone 模式是 Flink 自带的集群管理方式，适合学习和小规模测试，不依赖外部资源调度器。YARN 模式把 Flink 跑在 Hadoop 生态的 YARN 上，是很多传统大数据团队的标准选择，能和 Hive、Spark 共享同一套资源池。Kubernetes 模式是现在的主流趋势，原生支持容器化部署，弹性伸缩能力更强，也更容易和云原生的 CI/CD 流程整合。</p>
+      <button class="sp" onclick="speakEl(this,'m4')">朗读</button>
+    </div>
+
+    <div class="block bl-blue" id="m5">
+      <div class="block-title">作业提交模式：Session / Per-Job / Application</div>
+      <p>Session 模式是先启动一个常驻集群，多个作业共享这一个集群资源，适合频繁提交的小作业，但隔离性差，一个作业的问题可能影响其他作业。Per-Job 模式为每个作业单独启动一个专属集群，作业结束集群也随之销毁，隔离性好但启动开销大。Application 模式是较新的推荐方式，把用户代码打包进集群镜像直接运行，main 方法在集群里执行而不是在客户端，减少了客户端到集群之间的网络传输和单点压力。</p>
+      <button class="sp" onclick="speakEl(this,'m5')">朗读</button>
+    </div>
+
+    <div class="block bl-blue" id="m6">
+      <div class="block-title">基本编程模型：Source → Transformation → Sink</div>
+      <p>任何 Flink 作业的结构都遵循这个三段式：Source 负责接入数据，常见的有 Kafka、文件系统、自定义数据源；Transformation 是中间的处理逻辑，包括 map、filter、keyBy、window、join 等算子；Sink 负责把结果写出去，常见的有 Kafka、数据库、文件系统、打印到控制台。理解这个模型之后，看任何 Flink 代码都能快速定位数据从哪来、怎么变、到哪去。</p>
+      <button class="sp" onclick="speakEl(this,'m6')">朗读</button>
+      <div class="code">// 一个最简单的 Flink 作业：读 Kafka，统计每个用户的点击次数
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+DataStream&lt;ClickEvent&gt; clicks = env
+    .fromSource(kafkaSource, watermarkStrategy, "clicks")   // Source
+    .keyBy(ClickEvent::getUserId)                            // 按用户分组
+    .window(TumblingEventTimeWindows.of(Time.minutes(5)))    // 5分钟滚动窗口
+    .sum("count");                                            // Transformation
+
+clicks.sinkTo(kafkaSink);   // Sink：写回 Kafka
+
+env.execute("user-click-count");</div>
+    </div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 140" role="img">
+<title>Source Transformation Sink 数据流</title>
+<desc>数据从Kafka源经过keyBy分组和窗口聚合处理后写出到Kafka</desc>
+<defs>
+  <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .fk2-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .fk2-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .fk2-coral{fill:#FAECE7;stroke:#993C1D;stroke-width:0.5;}
+    .fk2-purple{fill:#EEEDFE;stroke:#534AB7;stroke-width:0.5;}
+    .fk2-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="20" y="40" width="160" height="56" rx="8" class="fk2-coral"/>
+<text class="fk2-th" x="100" y="60" text-anchor="middle" dominant-baseline="central">Source</text>
+<text class="fk2-ts" x="100" y="78" text-anchor="middle" dominant-baseline="central">Kafka 点击事件流</text>
+
+<line x1="180" y1="68" x2="220" y2="68" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow2)"/>
+
+<rect x="220" y="40" width="240" height="56" rx="8" class="fk2-purple"/>
+<text class="fk2-th" x="340" y="60" text-anchor="middle" dominant-baseline="central">Transformation</text>
+<text class="fk2-ts" x="340" y="78" text-anchor="middle" dominant-baseline="central">keyBy 用户 → 5分钟窗口求和</text>
+
+<line x1="460" y1="68" x2="500" y2="68" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow2)"/>
+
+<rect x="500" y="40" width="160" height="56" rx="8" class="fk2-teal"/>
+<text class="fk2-th" x="580" y="60" text-anchor="middle" dominant-baseline="central">Sink</text>
+<text class="fk2-ts" x="580" y="78" text-anchor="middle" dominant-baseline="central">写回 Kafka</text>
+</svg>
+      <div class="diagram-caption">上面代码对应的数据流：三段式结构在任何 Flink 作业里都适用</div>
+    </div>
+  </div>
+
+  <!-- ════ 第二部分：进阶 ════ -->
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">第二部分 · 进阶调优</span></div>
+
+    <div class="block bl-violet" id="m7">
+      <div class="block-title">状态后端：HashMapStateBackend vs RocksDBStateBackend</div>
+      <p>HashMapStateBackend 把状态完全存在 JVM 堆内存里，读写速度最快，但受限于内存大小，适合状态数据量不大的作业。RocksDBStateBackend 把状态存在本地磁盘的 RocksDB 数据库里，只在内存里保留一部分热数据作为缓存，能支持远超内存容量的超大状态，代价是读写比纯内存模式慢一些。生产环境处理大状态作业——比如需要维护几亿用户的历史行为——几乎都用 RocksDB。</p>
+      <button class="sp" onclick="speakEl(this,'m7')">朗读</button>
+    </div>
+
+    <div class="block bl-violet" id="m8">
+      <div class="block-title">Checkpoint 与 Savepoint 的区别</div>
+      <p>Checkpoint 是 Flink 自动周期性触发的状态快照，专门用于故障自动恢复，文件生命周期由 Flink 自己管理，作业正常运行时旧的 Checkpoint 会被自动清理。Savepoint 是用户手动触发的状态快照，格式更稳定、更适合跨版本兼容，主要用途是有计划的作业升级、调整并行度、或者迁移到新集群——本质上是给运维人员用的"存档点"，不会被自动清理，需要手动管理生命周期。</p>
+      <button class="sp" onclick="speakEl(this,'m8')">朗读</button>
+    </div>
+
+    <div class="block bl-violet" id="m9">
+      <div class="block-title">两阶段提交：端到端 Exactly-Once 的实现原理</div>
+      <p>要做到端到端的精确一次，光靠 Checkpoint 保证内部状态一致还不够，写到外部系统（比如 Kafka）的结果也必须保证不重不漏。Flink 用两阶段提交协议实现这一点：第一阶段，Sink 把数据写成一个"预提交"的事务，绑定到当前的 Checkpoint；第二阶段，只有当这个 Checkpoint 被确认成功完成后，Sink 才会真正提交这个事务，让数据对外可见。如果作业失败重启，所有未完成第二阶段的预提交事务都会被回滚，从而避免重复写入。</p>
+      <button class="sp" onclick="speakEl(this,'m9')">朗读</button>
+    </div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 420" role="img">
+<title>两阶段提交流程</title>
+<desc>第一阶段预提交事务绑定到Checkpoint，第二阶段Checkpoint确认成功后正式提交，失败时自动回滚未完成的事务</desc>
+<defs>
+  <marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .fk3-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .fk3-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .fk3-blue{fill:#E6F1FB;stroke:#185FA5;stroke-width:0.5;}
+    .fk3-purple{fill:#EEEDFE;stroke:#534AB7;stroke-width:0.5;}
+    .fk3-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+    .fk3-gray{fill:#F1EFE8;stroke:#888780;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="40" y="40" width="200" height="56" rx="8" class="fk3-blue"/>
+<text class="fk3-th" x="140" y="60" text-anchor="middle" dominant-baseline="central">Sink 预提交</text>
+<text class="fk3-ts" x="140" y="78" text-anchor="middle" dominant-baseline="central">数据写入未提交事务</text>
+
+<line x1="240" y1="68" x2="280" y2="68" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow3)"/>
+
+<rect x="280" y="40" width="200" height="56" rx="8" class="fk3-purple"/>
+<text class="fk3-th" x="380" y="60" text-anchor="middle" dominant-baseline="central">Checkpoint 触发</text>
+<text class="fk3-ts" x="380" y="78" text-anchor="middle" dominant-baseline="central">barrier 流经全部算子</text>
+
+<line x1="480" y1="68" x2="520" y2="68" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow3)"/>
+
+<rect x="520" y="40" width="120" height="56" rx="8" class="fk3-teal"/>
+<text class="fk3-th" x="580" y="60" text-anchor="middle" dominant-baseline="central">Checkpoint</text>
+<text class="fk3-ts" x="580" y="78" text-anchor="middle" dominant-baseline="central">确认完成</text>
+
+<line x1="580" y1="96" x2="580" y2="140" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow3)"/>
+<line x1="580" y1="140" x2="140" y2="140" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow3)"/>
+<text class="fk3-ts" x="360" y="156" text-anchor="middle" dominant-baseline="central">通知 Sink 正式提交</text>
+
+<rect x="40" y="180" width="200" height="56" rx="8" class="fk3-teal"/>
+<text class="fk3-th" x="140" y="200" text-anchor="middle" dominant-baseline="central">Sink 正式提交</text>
+<text class="fk3-ts" x="140" y="218" text-anchor="middle" dominant-baseline="central">数据对外正式可见</text>
+
+<rect x="40" y="270" width="600" height="120" rx="12" class="fk3-gray"/>
+<text class="fk3-th" x="60" y="294" dominant-baseline="central">失败回滚场景</text>
+<text class="fk3-ts" x="60" y="320" dominant-baseline="central">作业在 Checkpoint 确认前崩溃重启</text>
+<text class="fk3-ts" x="60" y="342" dominant-baseline="central">所有未完成第二阶段的预提交事务自动回滚</text>
+<text class="fk3-ts" x="60" y="364" dominant-baseline="central">外部系统不会看到任何重复或部分写入的数据</text>
+</svg>
+      <div class="diagram-caption">两阶段提交保证：要么完整提交，要么彻底回滚，不会出现中间状态</div>
+    </div>
+
+    <div class="block bl-violet" id="m10">
+      <div class="block-title">并行度调优：parallelism 怎么设置</div>
+      <p>并行度决定一个算子能同时跑多少个并行实例。设置过低，无法充分利用集群资源，吞吐量上不去；设置过高，会产生过多的小任务，增加调度和网络通信开销，也可能导致下游算子来不及处理而产生反压。常见做法是先用 Source 的天然并行度（比如 Kafka 分区数）作为基准，再结合 Flink Web UI 观察各算子的繁忙程度，针对性地给瓶颈算子单独设置更高的并行度，而不是无脑给所有算子设同一个数值。</p>
+      <button class="sp" onclick="speakEl(this,'m10')">朗读</button>
+    </div>
+
+    <div class="block bl-violet" id="m11">
+      <div class="block-title">反压（Backpressure）的产生和定位</div>
+      <p>反压本质是下游处理能力跟不上上游产生数据的速度，Flink 的网络栈会自动把这种压力沿着数据流向上游传导，最终表现为 Source 也被迫减速读取。定位反压要用 Flink Web UI 的反压监控面板，从下游往上游依次排查，第一个显示"高反压"的算子往往才是真正的瓶颈所在——它后面的算子之所以也显示反压，是被它拖累的，不要被表面现象误导而去优化错误的算子。</p>
+      <button class="sp" onclick="speakEl(this,'m11')">朗读</button>
+    </div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 200" role="img">
+<title>反压传导路径</title>
+<desc>下游Sink处理慢导致反压沿数据流方向向上游传导，最终迫使Source减速读取，定位时应从下游往上游排查第一个出现反压的算子</desc>
+<defs>
+  <marker id="arrow4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .fk4-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .fk4-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .fk4-gray{fill:#F1EFE8;stroke:#888780;stroke-width:0.5;}
+    .fk4-red{fill:#FCEBEB;stroke:#A32D2D;stroke-width:1;}
+  </style>
+</defs>
+<rect x="20" y="40" width="140" height="56" rx="8" class="fk4-gray"/>
+<text class="fk4-th" x="90" y="60" text-anchor="middle" dominant-baseline="central">Source</text>
+<text class="fk4-ts" x="90" y="78" text-anchor="middle" dominant-baseline="central">被迫减速读取</text>
+
+<rect x="190" y="40" width="140" height="56" rx="8" class="fk4-gray"/>
+<text class="fk4-th" x="260" y="60" text-anchor="middle" dominant-baseline="central">算子 A</text>
+<text class="fk4-ts" x="260" y="78" text-anchor="middle" dominant-baseline="central">被动反压</text>
+
+<rect x="360" y="40" width="140" height="56" rx="8" class="fk4-gray"/>
+<text class="fk4-th" x="430" y="60" text-anchor="middle" dominant-baseline="central">算子 B</text>
+<text class="fk4-ts" x="430" y="78" text-anchor="middle" dominant-baseline="central">被动反压</text>
+
+<rect x="530" y="40" width="130" height="56" rx="8" class="fk4-red"/>
+<text class="fk4-th" x="595" y="60" text-anchor="middle" dominant-baseline="central">Sink</text>
+<text class="fk4-ts" x="595" y="78" text-anchor="middle" dominant-baseline="central">真正瓶颈</text>
+
+<line x1="160" y1="68" x2="188" y2="68" stroke="#A32D2D" stroke-width="1.2" fill="none" marker-end="url(#arrow4)"/>
+<line x1="330" y1="68" x2="358" y2="68" stroke="#A32D2D" stroke-width="1.2" fill="none" marker-end="url(#arrow4)"/>
+<line x1="500" y1="68" x2="528" y2="68" stroke="#A32D2D" stroke-width="1.2" fill="none" marker-end="url(#arrow4)"/>
+
+<text class="fk4-ts" x="340" y="130" text-anchor="middle">反压沿红色箭头方向向上游传导（与数据流向相反）</text>
+<text class="fk4-ts" x="340" y="150" text-anchor="middle">排查顺序：从右往左找到第一个真正卡住的算子</text>
+<text class="fk4-ts" x="340" y="170" text-anchor="middle">本例中 Sink 才是瓶颈，A 和 B 只是被拖累</text>
+</svg>
+      <div class="diagram-caption">反压排查的关键：被拖累的算子不是问题根源，最下游那个才是</div>
+    </div>
+
+    <div class="block bl-violet" id="m12">
+      <div class="block-title">State TTL：状态过期清理</div>
+      <p>长期运行的流作业如果给每个 key 维护状态却从不清理，状态会无限增长，最终拖垮 Checkpoint 性能甚至撑爆磁盘。State TTL 让你给状态描述符配置一个存活时间，比如 7 天未更新就自动失效清除。需要注意更新策略的选择：OnCreateAndWrite 表示只在创建和写入时刷新过期时间，OnReadAndWrite 表示连读取也会刷新过期时间——选错策略可能导致状态该清的时候没清，或者清得太早影响业务正确性。</p>
+      <button class="sp" onclick="speakEl(this,'m12')">朗读</button>
+    </div>
+
+    <div class="block bl-violet" id="m13">
+      <div class="block-title">增量 Checkpoint：应对大状态作业</div>
+      <p>普通的全量 Checkpoint 每次都要把当前全部状态完整写一遍，状态越大，Checkpoint 耗时越长，甚至可能超过 Checkpoint 间隔导致排队失败。增量 Checkpoint（配合 RocksDB 状态后端使用）只持久化相对上一次 Checkpoint 的增量变化部分，大幅缩短单次 Checkpoint 的耗时，这是处理超大状态作业——比如需要维护几个月用户行为历史的场景——几乎必须开启的优化项。</p>
+      <button class="sp" onclick="speakEl(this,'m13')">朗读</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="page" id="concepts">
+  <div class="ph">
+    <div class="ph-eyebrow">Apache Flink</div>
+    <h1>Core Concepts</h1>
+    <p>The building blocks you need before discussing real-time architecture.</p>
+  </div>
+
+  <div class="notice">Requires internet. Open in Chrome for audio.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Stream processing fundamentals</span></div>
+
+    <div class="block bl-blue" id="c1">
+      <div class="block-title">Stream vs Batch — unified API</div>
+      <p>Flink treats batch as a special case of streaming — a bounded stream. The same DataStream API runs both unbounded real-time streams and bounded historical datasets. This is different from Spark, where batch and streaming are conceptually separate engines bolted together with micro-batching.</p>
+      <button class="sp" onclick="speakEl(this,'c1')">Listen</button>
+    </div>
+
+    <div class="block bl-blue" id="c2">
+      <div class="block-title">Event Time vs Processing Time</div>
+      <p>Event time is the timestamp embedded in the data itself — when the event actually happened. Processing time is when Flink happens to process that event. In distributed systems, events arrive out of order due to network delay, retries, or upstream batching. Using event time with watermarks lets Flink produce correct results regardless of when data physically arrives.</p>
+      <button class="sp" onclick="speakEl(this,'c2')">Listen</button>
+    </div>
+
+    <div class="block bl-blue" id="c3">
+      <div class="block-title">Watermark</div>
+      <p>A watermark is Flink's mechanism for saying "I believe no more events with a timestamp earlier than this will arrive." It is how Flink knows when a time window is safe to close and emit results, without waiting forever for late data. A common pattern is watermark equals max event time seen so far minus a fixed delay, such as 5 minutes, to tolerate some out-of-order arrival.</p>
+      <button class="sp" onclick="speakEl(this,'c3')">Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">State and fault tolerance</span></div>
+
+    <div class="block bl-teal" id="c4">
+      <div class="block-title">State</div>
+      <p>State is data Flink remembers across events — for example, a running sum per user, or the last seen timestamp per key. Flink state is local to each parallel task and stored either in memory or on disk via RocksDB for state too large to fit in memory.</p>
+      <button class="sp" onclick="speakEl(this,'c4')">Listen</button>
+    </div>
+
+    <div class="block bl-teal" id="c5">
+      <div class="block-title">Checkpoint</div>
+      <p>A checkpoint is a consistent snapshot of the entire job's state at a point in time, written to durable storage such as S3 or HDFS. If a task fails, Flink restarts from the last successful checkpoint rather than from scratch. Checkpoints are coordinated using the Chandy-Lamport algorithm via barriers injected into the stream.</p>
+      <button class="sp" onclick="speakEl(this,'c5')">Listen</button>
+    </div>
+
+    <div class="block bl-teal" id="c6">
+      <div class="block-title">Exactly-once semantics</div>
+      <p>Flink achieves exactly-once processing by combining checkpointing with transactional sinks. On recovery, Flink replays events from the last checkpoint and the sink either commits or rolls back the transaction atomically, so duplicate writes are prevented even though the same events may be reprocessed internally.</p>
+      <button class="sp" onclick="speakEl(this,'c6')">Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Windows</span></div>
+
+    <div class="block bl-violet" id="c7">
+      <div class="block-title">Tumbling vs Sliding vs Session windows</div>
+      <p>Tumbling windows are fixed-size, non-overlapping — for example, every 5 minutes. Sliding windows are fixed-size but overlapping, controlled by a window size and a slide interval, useful for moving averages. Session windows group events by activity gaps — a new window starts after a period of inactivity, commonly used for user session analysis.</p>
+      <button class="sp" onclick="speakEl(this,'c7')">Listen</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="reconcile">
+  <div class="ph">
+    <div class="ph-eyebrow">Lambda Architecture in practice</div>
+    <h1>T-1 Offline + T Real-time — what goes wrong</h1>
+    <p>Running batch (T-1) and streaming (T, today) pipelines side by side is the most common Flink production pattern, and the most common source of bugs.</p>
+  </div>
+
+  <div class="notice">Requires internet. Open in Chrome for audio.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Why this pattern exists</span></div>
+
+    <div class="block bl-blue" id="r1">
+      <div class="block-title">The setup</div>
+      <p>Most companies run two parallel pipelines for the same business metric. A T-1 batch job, usually Spark or Hive, runs overnight on yesterday's complete data and produces the authoritative, fully accurate numbers. A T real-time job, usually Flink, processes today's data as it streams in, giving dashboards a live, approximate view before the day closes. The next morning, the T-1 job recalculates and the dashboard switches to the accurate number.</p>
+      <button class="sp" onclick="speakEl(this,'r1')">Listen</button>
+    </div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 360" role="img">
+<title>T-1 offline and T real-time dual pipeline architecture</title>
+<desc>Flink processes today's data continuously into a real-time table while Spark runs a nightly batch job on yesterday's complete data into an authoritative offline table; the serving layer checks a completion flag to decide which table to read</desc>
+<defs>
+  <marker id="arrow5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .fk5-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .fk5-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .fk5-blue{fill:#E6F1FB;stroke:#185FA5;stroke-width:0.5;}
+    .fk5-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
+    .fk5-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+    .fk5-purple{fill:#EEEDFE;stroke:#534AB7;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="40" y="40" width="220" height="56" rx="8" class="fk5-blue"/>
+<text class="fk5-th" x="150" y="60" text-anchor="middle" dominant-baseline="central">Flink real-time T</text>
+<text class="fk5-ts" x="150" y="78" text-anchor="middle" dominant-baseline="central">processes today continuously</text>
+
+<rect x="420" y="40" width="220" height="56" rx="8" class="fk5-amber"/>
+<text class="fk5-th" x="530" y="60" text-anchor="middle" dominant-baseline="central">Spark batch T-1</text>
+<text class="fk5-ts" x="530" y="78" text-anchor="middle" dominant-baseline="central">nightly run on yesterday</text>
+
+<line x1="150" y1="96" x2="150" y2="140" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow5)"/>
+<line x1="530" y1="96" x2="530" y2="140" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow5)"/>
+
+<rect x="40" y="140" width="220" height="56" rx="8" class="fk5-teal"/>
+<text class="fk5-th" x="150" y="160" text-anchor="middle" dominant-baseline="central">Real-time table</text>
+<text class="fk5-ts" x="150" y="178" text-anchor="middle" dominant-baseline="central">today only, incomplete</text>
+
+<rect x="420" y="140" width="220" height="56" rx="8" class="fk5-teal"/>
+<text class="fk5-th" x="530" y="160" text-anchor="middle" dominant-baseline="central">Batch table</text>
+<text class="fk5-ts" x="530" y="178" text-anchor="middle" dominant-baseline="central">authoritative, complete</text>
+
+<line x1="150" y1="196" x2="150" y2="240" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow5)"/>
+<line x1="530" y1="196" x2="530" y2="240" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow5)"/>
+<line x1="150" y1="240" x2="320" y2="240" stroke="#5C6478" stroke-width="0.5" fill="none"/>
+<line x1="530" y1="240" x2="360" y2="240" stroke="#5C6478" stroke-width="0.5" fill="none"/>
+<line x1="340" y1="240" x2="340" y2="270" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#arrow5)"/>
+
+<rect x="200" y="270" width="280" height="56" rx="8" class="fk5-purple"/>
+<text class="fk5-th" x="340" y="290" text-anchor="middle" dominant-baseline="central">Serving layer</text>
+<text class="fk5-ts" x="340" y="308" text-anchor="middle" dominant-baseline="central">checks completion flag · picks table</text>
+</svg>
+      <div class="diagram-caption">Once T-1 completes for a date, serving switches exclusively to the batch table for that date</div>
+    </div>
+
+    <div class="diag">
+      <div class="block-title" style="margin-bottom:12px;">Typical dual pipeline</div>
+      <div class="diag-row"><span class="diag-tag t-amber">T-1</span><span>Spark batch job runs at 1am, reads yesterday's complete data, writes authoritative tables</span></div>
+      <div class="diag-row"><span class="diag-tag t-blue">T</span><span>Flink streaming job runs continuously, processes today's events as they arrive</span></div>
+      <div class="diag-row"><span class="diag-tag t-green">Merge</span><span>Dashboard reads T-1 for past days, T real-time for today only, switches at midnight rollover</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--red)"></span><span style="color:var(--red)">What goes wrong — the core problems</span></div>
+
+    <div class="block bl-red" id="r2">
+      <div class="block-title">Problem 1 — Numbers don't match (caliber mismatch)</div>
+      <p>The single most common production incident. The real-time number for today and the batch number for the same day, computed the next morning, disagree, sometimes by a lot. This happens because the two jobs were written independently and subtly diverge in business logic — different filter conditions, different join keys, different handling of null values, or different definitions of what counts as a valid transaction.</p>
+      <button class="sp" onclick="speakEl(this,'r2')">Listen</button>
+    </div>
+
+    <div class="block bl-red" id="r3">
+      <div class="block-title">Problem 2 — Late-arriving data</div>
+      <p>Real-time pipelines see events as they happen, but some events arrive late — a mobile app that was offline and syncs hours later, a retry from a failed upstream service, or a delayed message in a queue. The Flink job has already closed its time window and emitted a result by the time the late event shows up. The batch job the next day, reading the complete dataset, includes that late event and produces a different, usually higher, number. This is the single biggest source of T-1 versus T discrepancy.</p>
+      <button class="sp" onclick="speakEl(this,'r3')">Listen</button>
+    </div>
+
+    <div class="block bl-red" id="r4">
+      <div class="block-title">Problem 3 — Duplicate counting across the boundary</div>
+      <p>At the moment T-1 data becomes available, typically just after midnight, both the leftover real-time stream for yesterday and the fresh batch job may briefly both be writing to overlapping time ranges. Without a clean cutover mechanism, a transaction near midnight can get counted once by the streaming job and once by the batch job, inflating the metric for a short window.</p>
+      <button class="sp" onclick="speakEl(this,'r4')">Listen</button>
+    </div>
+
+    <div class="block bl-red" id="r5">
+      <div class="block-title">Problem 4 — Upstream data correction</div>
+      <p>Source systems sometimes correct data after the fact — a refunded transaction, a corrected currency conversion rate, a manually fixed data entry error. The batch job re-reads the corrected source data each night, so T-1 numbers can change retroactively. The real-time pipeline already processed and emitted the original, uncorrected value and has no mechanism to retroactively fix it unless explicitly designed to.</p>
+      <button class="sp" onclick="speakEl(this,'r5')">Listen</button>
+    </div>
+
+    <div class="block bl-red" id="r6">
+      <div class="block-title">Problem 5 — Watermark too aggressive or too lenient</div>
+      <p>If the watermark delay is set too short, Flink closes windows before slow events arrive, causing systematic undercounting that the batch job will not reproduce. If the watermark delay is set too long, results lag further behind real time than the business requires, undermining the entire purpose of having a real-time pipeline. Tuning this delay requires understanding the actual distribution of event lateness in production, not guessing.</p>
+      <button class="sp" onclick="speakEl(this,'r6')">Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">How to fix it</span></div>
+
+    <div class="block bl-green" id="r7">
+      <div class="block-title">Fix 1 — Shared business logic</div>
+      <p>The most durable fix is to ensure the filter conditions, join logic, and aggregation rules are written once and shared between the batch and streaming jobs, not reimplemented twice. Some teams achieve this with a shared SQL definition executed through both Spark SQL and Flink SQL, since both support ANSI-like SQL syntax. This eliminates an entire category of caliber mismatch bugs at the source.</p>
+      <button class="sp" onclick="speakEl(this,'r7')">Listen</button>
+    </div>
+
+    <div class="block bl-green" id="r8">
+      <div class="block-title">Fix 2 — Allowed lateness + side output</div>
+      <p>Flink lets you configure allowed lateness on a window — events arriving within this grace period still update the result and re-emit a corrected value. Events arriving after even the allowed lateness window can be routed to a side output stream instead of being silently dropped, so they can be inspected, logged, or merged back into the batch layer.</p>
+      <button class="sp" onclick="speakEl(this,'r8')">Listen</button>
+      <div class="code">DataStream&lt;Event&gt; result = input
+    .keyBy(Event::getUserId)
+    .window(TumblingEventTimeWindows.of(Time.minutes(5)))
+    .allowedLateness(Time.minutes(10))
+    .sideOutputLateData(lateOutputTag)
+    .sum("amount");</div>
+    </div>
+
+    <div class="block bl-green" id="r9">
+      <div class="block-title">Fix 3 — Clean cutover at the day boundary</div>
+      <p>Define an explicit cutover point — the real-time table only ever serves data for the current, incomplete day. The moment the T-1 batch job successfully completes for a given date, the dashboard layer switches that date's source from real-time to batch and never reads real-time data for that date again. This is typically implemented as a metadata flag or partition-ready marker that downstream consumers check before querying.</p>
+      <button class="sp" onclick="speakEl(this,'r9')">Listen</button>
+    </div>
+
+    <div class="block bl-green" id="r10">
+      <div class="block-title">Fix 4 — Automated reconciliation job</div>
+      <p>Run a daily reconciliation check that compares the real-time pipeline's final number for yesterday against the batch pipeline's number for the same day, and alerts if the discrepancy exceeds a defined threshold, for example more than 0.5%. This does not prevent discrepancies but catches them immediately rather than letting them silently erode trust in the dashboards over weeks.</p>
+      <button class="sp" onclick="speakEl(this,'r10')">Listen</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="pitfalls">
+  <div class="ph">
+    <div class="ph-eyebrow">Production Issues</div>
+    <h1>Common Flink pitfalls</h1>
+    <p>Issues that show up once a job runs at real production scale, beyond the reconciliation problems above.</p>
+  </div>
+
+  <div class="notice">Requires internet. Open in Chrome for audio.</div>
+
+  <div class="problem-card" onclick="toggleProb(this)">
+    <div class="problem-head">
+      <span class="problem-badge t-amber">State</span>
+      <span class="problem-title">State size grows unbounded over time</span>
+      <span class="problem-chev">▼</span>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">
+        <div class="problem-label" style="color:var(--amber)">Problem</div>
+        <div class="problem-text" id="p1">Keyed state, such as a per-user counter, keeps growing forever if there is no expiration logic. Over months, RocksDB state can grow to hundreds of gigabytes, slowing checkpoints and eventually causing disk pressure on task managers.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'p1')">Listen</button>
+      </div>
+      <div class="problem-section">
+        <div class="problem-label" style="color:var(--green)">Solution</div>
+        <div class="problem-text" id="p1s">Set a State TTL on the state descriptor so Flink automatically clears entries that haven't been updated within a configured window, for example 7 days for a user active today flag. Combine this with periodic checkpoint size monitoring to catch unexpected growth early.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'p1s')">Listen</button>
+        <div class="code">StateTtlConfig ttlConfig = StateTtlConfig
+    .newBuilder(Time.days(7))
+    .setUpdateType(StateTtlConfig.UpdateType.OnCreateAndWrite)
+    .setStateVisibility(StateTtlConfig.StateVisibility.NeverReturnExpired)
+    .build();</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem-card" onclick="toggleProb(this)">
+    <div class="problem-head">
+      <span class="problem-badge t-red">Backpressure</span>
+      <span class="problem-title">Job slows down, backpressure spreads upstream</span>
+      <span class="problem-chev">▼</span>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">
+        <div class="problem-label" style="color:var(--red)">Problem</div>
+        <div class="problem-text" id="p2">A slow downstream operator, often a sink writing to an external system like a database, cannot keep up with the input rate. Flink's flow control propagates this slowness backward through the entire pipeline, eventually causing the source to throttle reading from Kafka, increasing consumer lag.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'p2')">Listen</button>
+      </div>
+      <div class="problem-section">
+        <div class="problem-label" style="color:var(--green)">Solution</div>
+        <div class="problem-text" id="p2s">Identify the bottleneck operator using Flink's web UI backpressure monitor. Common fixes include increasing parallelism on the slow operator, batching writes to the external sink instead of writing per-record, or switching to an async I/O operator so the sink doesn't block the main processing thread while waiting on network calls.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'p2s')">Listen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem-card" onclick="toggleProb(this)">
+    <div class="problem-head">
+      <span class="problem-badge t-violet">Data skew</span>
+      <span class="problem-title">A few hot keys overload specific subtasks</span>
+      <span class="problem-chev">▼</span>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">
+        <div class="problem-label" style="color:var(--violet)">Problem</div>
+        <div class="problem-text" id="p3">When keyBy is used for partitioning and one key, such as a particularly active merchant, accounts for a disproportionate share of traffic, that key's parallel subtask becomes a bottleneck while other subtasks sit idle. This is the streaming equivalent of the Spark data skew problem.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'p3')">Listen</button>
+      </div>
+      <div class="problem-section">
+        <div class="problem-label" style="color:var(--green)">Solution</div>
+        <div class="problem-text" id="p3s">Apply the same salting technique used in Spark, append a random suffix to the hot key to split it across multiple subtasks for a local pre-aggregation stage, then merge the partial results in a second keyBy on the original key. Flink also supports rebalance and rescale operators to manually redistribute load.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'p3s')">Listen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="problem-card" onclick="toggleProb(this)">
+    <div class="problem-head">
+      <span class="problem-badge t-blue">Checkpoint</span>
+      <span class="problem-title">Checkpoints keep timing out or failing</span>
+      <span class="problem-chev">▼</span>
+    </div>
+    <div class="problem-body">
+      <div class="problem-section">
+        <div class="problem-label" style="color:var(--blue)">Problem</div>
+        <div class="problem-text" id="p4">As state grows large, the time required to snapshot it to durable storage increases. If a checkpoint takes longer than the configured checkpoint interval, checkpoints start queuing up and eventually fail, meaning the job loses its fault-tolerance guarantee.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'p4')">Listen</button>
+      </div>
+      <div class="problem-section">
+        <div class="problem-label" style="color:var(--green)">Solution</div>
+        <div class="problem-text" id="p4s">Switch to incremental checkpoints with RocksDB, which only persist the delta since the last checkpoint instead of the full state, dramatically reducing checkpoint time for large state. Increase the checkpoint interval if sub-second recovery isn't required, and enable unaligned checkpoints so checkpoint barriers don't get stuck behind backpressure.</div>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'p4s')">Listen</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page" id="interview">
+  <div class="ph">
+    <div class="ph-eyebrow">Interview Prep</div>
+    <h1>Common Flink interview questions</h1>
+    <p>Frequently asked in Data Engineer interviews, especially after mentioning T-1/T dual pipelines.</p>
+  </div>
+
+  <div class="notice">Requires internet. Open in Chrome for audio.</div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">⚖️</div>
+      <div class="qa-q">
+        <div class="qa-q-text" id="qq1">Why do real-time and batch numbers for the same day disagree, and how do you fix it?</div>
+        <span class="qa-tag t-red">Reconciliation</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <div class="btn-row-qa">
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq1')">Question</button>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa1ans')">Answer</button>
+      </div>
+      <div class="qa-answer" id="qa1ans">
+        <p>The most common cause is late-arriving data — the streaming job has already closed its window and emitted a result before some events arrive, while the batch job the next morning reads the complete dataset including those late events. The second most common cause is caliber mismatch — the filter conditions or join logic were implemented separately and subtly diverge between the two pipelines. The fix is twofold: use allowed lateness with a side output in Flink to capture late events instead of silently dropping them, and share the core business logic definition between both pipelines, ideally through a single SQL definition executed by both engines, rather than maintaining two independent implementations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">⏱️</div>
+      <div class="qa-q">
+        <div class="qa-q-text" id="qq2">How do you decide the watermark delay?</div>
+        <span class="qa-tag t-blue">Watermark</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <div class="btn-row-qa">
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq2')">Question</button>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa2ans')">Answer</button>
+      </div>
+      <div class="qa-answer" id="qa2ans">
+        <p>It should be based on measured data, not a guess. Look at the historical distribution of event lateness in production, for example what percentage of events arrive within 1 minute, 5 minutes, or 30 minutes of their event time. Choose a delay that covers a high percentile, such as the 99th percentile of lateness, balanced against how much result latency the business can tolerate. A financial dashboard that needs near-real-time numbers might accept a 1-minute delay and handle the remaining late events through allowed lateness and reconciliation; a less time-sensitive metric can use a longer, safer delay.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">🔁</div>
+      <div class="qa-q">
+        <div class="qa-q-text" id="qq3">How does Flink guarantee exactly-once processing end to end?</div>
+        <span class="qa-tag t-teal">Fault tolerance</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <div class="btn-row-qa">
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq3')">Question</button>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa3ans')">Answer</button>
+      </div>
+      <div class="qa-answer" id="qa3ans">
+        <p>Internally, exactly-once state consistency is achieved through periodic checkpoints using the Chandy-Lamport snapshot algorithm. End-to-end exactly-once, meaning the output written to an external sink, additionally requires the sink to support transactions. Flink uses a two-phase commit protocol — the sink pre-commits data tied to a checkpoint, and only fully commits it once that checkpoint is confirmed complete. On failure and restart, any pre-committed but not fully committed transaction is rolled back, so no duplicate or partial writes reach the external system. Kafka, with its transactional producer API, is a common sink that supports this.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">🆚</div>
+      <div class="qa-q">
+        <div class="qa-q-text" id="qq4">Flink vs Spark Structured Streaming — when would you choose Flink?</div>
+        <span class="qa-tag t-violet">Comparison</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <div class="btn-row-qa">
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq4')">Question</button>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa4ans')">Answer</button>
+      </div>
+      <div class="qa-answer" id="qa4ans">
+        <p>Spark Structured Streaming processes data in micro-batches — even at its smallest configurable interval, there is inherent latency because it waits to accumulate a batch before processing. Flink is a true event-at-a-time streaming engine, giving lower end-to-end latency, typically sub-second versus Spark's seconds-level latency. Flink also has a more mature and flexible state and windowing API, including session windows and custom triggers. I would choose Flink when latency requirements are strict, such as fraud detection or real-time alerting, and choose Spark Structured Streaming when the team already has deep Spark expertise and near-real-time, rather than true real-time, is acceptable.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">🧮</div>
+      <div class="qa-q">
+        <div class="qa-q-text" id="qq5">How would you design a system that shows real-time numbers today but switches to accurate batch numbers tomorrow?</div>
+        <span class="qa-tag t-green">System design</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <div class="btn-row-qa">
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq5')">Question</button>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa5ans')">Answer</button>
+      </div>
+      <div class="qa-answer" id="qa5ans">
+        <p>This is the classic Lambda architecture. A Flink job continuously processes today's stream and writes to a real-time serving table, partitioned by date. A nightly Spark batch job processes the complete previous day's data and writes to a separate, authoritative batch table for that same date. The serving layer checks a metadata flag indicating whether the batch job has completed for a given date. If not complete, it reads from the real-time table; once the batch job signals completion, all future reads for that date come exclusively from the batch table, and the real-time table's data for that date can be safely cleaned up. This guarantees every date eventually converges to one authoritative number while still providing live visibility during the day.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">📈</div>
+      <div class="qa-q">
+        <div class="qa-q-text" id="qq6">How do you debug a Flink job that's falling behind (high consumer lag)?</div>
+        <span class="qa-tag t-amber">Debugging</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <div class="btn-row-qa">
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qq6')">Question</button>
+        <button class="sp" onclick="event.stopPropagation();speakEl(this,'qa6ans')">Answer</button>
+      </div>
+      <div class="qa-answer" id="qa6ans">
+        <p>Start with the Flink web UI's backpressure monitor to identify which operator is the bottleneck. Check whether that operator has sufficient parallelism relative to the source's parallelism. Look for data skew using subtask-level metrics — if one subtask is processing far more records than others, a hot key is likely the cause. If the bottleneck is a sink writing to an external system, check whether writes are happening one record at a time instead of batched, and whether the external system itself is the actual constraint rather than Flink.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleQA(card) { card.classList.toggle('open'); }
+function toggleProb(card) { card.classList.toggle('open'); }
+
+var _btn=null,_queue=[],_audio=null;
+function _chunk(t,m){var s=t.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[t],c=[],cur='';for(var i=0;i<s.length;i++){if((cur+s[i]).length>m){if(cur)c.push(cur.trim());cur=s[i];}else cur+=s[i];}if(cur.trim())c.push(cur.trim());return c.filter(function(x){return x.length>0;});}
+function _url(t){return 'https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(t)+'&tl=en-US&client=tw-ob';}
+function _stop(){_queue=[];if(_audio){_audio.pause();_audio.src='';_audio=null;}}
+function _play(b){if(!_queue.length){_resetBtn(b);_btn=null;return;}var a=new Audio(_queue.shift());_audio=a;a.onended=function(){_audio=null;_play(b);};a.onerror=function(){_audio=null;_play(b);};a.play().catch(function(){_audio=null;_play(b);});}
+function speakEl(btn,elId){
+  if(_btn===btn){_stop();_resetBtn(btn);_btn=null;return;}
+  if(_btn){_stop();_resetBtn(_btn);_btn=null;}
+  var el=document.getElementById(elId);if(!el)return;
+  var text=el.innerText.replace(/\s+/g,' ').trim();
+  if(!text)return;
+  _queue=_chunk(text,190).map(_url);
+  _btn=btn;
+  var origLabel=btn.innerHTML;
+  btn.setAttribute('data-label',origLabel);
+  btn.innerHTML='Stop';
+  btn.classList.add('playing');
+  _play(btn);
+}
+function _resetBtn(b){
+  if(!b)return;
+  var origLabel=b.getAttribute('data-label');
+  b.innerHTML=origLabel||'Listen';
+  b.classList.remove('playing');
+}
+</script>
+</body>
+</html>
