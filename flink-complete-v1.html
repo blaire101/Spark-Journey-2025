@@ -118,7 +118,7 @@ table.cmp tr:hover td{background:var(--bg);}
   <div class="ph">
     <div class="ph-eyebrow">For Spark Engineers</div>
     <h1>Spark → Flink Quick Mapping</h1>
-    <p>You already know Spark deeply. Every diagram below shows Spark and Flink side by side so you can map the mechanism directly, not just the vocabulary.</p>
+    <p>You already know Spark deeply. This page maps every Spark concept directly to Flink — skip the from-scratch detour.</p>
   </div>
 
   <div class="notice">Requires internet. Open in Chrome for audio.</div>
@@ -159,82 +159,20 @@ table.cmp tr:hover td{background:var(--bg);}
     </div>
   </div>
 
-  <!-- ════ Chapter 2: Execution Model — side by side ════ -->
+  <!-- ════ Chapter 2: Execution Model ════ -->
   <div class="sec">
-    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Chapter 2 · Execution Model, Side by Side</span></div>
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Chapter 2 · Execution Model</span></div>
 
     <div class="block bl-blue" id="map-2">
-      <div class="block-title">Same shape, different trigger</div>
-      <p>Both follow the same five-step skeleton: trigger → plan → split → run → collect. The diagram below puts the two pipelines next to each other so you can see exactly where they diverge — Spark stops at the Driver, Flink's JobManager keeps monitoring forever.</p>
+      <div class="block-title">Job → Stage → Task, mapped</div>
+      <p>In Spark, an Action triggers a Job, DAGScheduler splits it into Stages at shuffle boundaries, and each Stage splits into Tasks distributed to Executors. In Flink, <span class="mono">execute()</span> submits a Job, builds an ExecutionGraph, and wherever possible chains adjacent operators into a single Subtask, which is then placed on a TaskManager Slot.</p>
       <button class="sp" onclick="speakEl(this,'map-2')">Listen</button>
     </div>
 
     <div class="diagram-box">
-<svg width="100%" viewBox="0 0 680 360" role="img">
-<title>Spark vs Flink execution model side by side</title>
-<desc>Spark action triggers a job split into stages at shuffle boundaries each stage splits into tasks run on executors and driver collects the result once, Flink execute submits a job built as an execution graph with chained operators run as subtasks on task manager slots and job manager monitors forever</desc>
-<defs>
-  <marker id="ex-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </marker>
-  <style>
-    .ex-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
-    .ex-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
-    .ex-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
-    .ex-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
-  </style>
-</defs>
-<text class="ex-th" x="170" y="20" text-anchor="middle">Spark</text>
-<text class="ex-th" x="510" y="20" text-anchor="middle">Flink</text>
-<line x1="340" y1="16" x2="340" y2="340" stroke="#888780" stroke-width="0.5" stroke-dasharray="3 3" fill="none"/>
-
-<rect x="60" y="36" width="220" height="40" rx="8" class="ex-amber"/>
-<text class="ex-th" x="170" y="56" text-anchor="middle" dominant-baseline="central">Action triggers Job</text>
-<line x1="170" y1="76" x2="170" y2="102" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ex-arrow)"/>
-
-<rect x="60" y="102" width="220" height="40" rx="8" class="ex-amber"/>
-<text class="ex-th" x="170" y="122" text-anchor="middle" dominant-baseline="central">DAGScheduler splits Stages</text>
-<line x1="170" y1="142" x2="170" y2="168" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ex-arrow)"/>
-<text class="ex-ts" x="280" y="156" text-anchor="end">at shuffle</text>
-
-<rect x="60" y="168" width="220" height="40" rx="8" class="ex-amber"/>
-<text class="ex-th" x="170" y="188" text-anchor="middle" dominant-baseline="central">Stage → Tasks</text>
-<line x1="170" y1="208" x2="170" y2="234" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ex-arrow)"/>
-
-<rect x="60" y="234" width="220" height="40" rx="8" class="ex-amber"/>
-<text class="ex-th" x="170" y="254" text-anchor="middle" dominant-baseline="central">Run on Executors</text>
-<line x1="170" y1="274" x2="170" y2="300" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ex-arrow)"/>
-
-<rect x="60" y="300" width="220" height="40" rx="8" class="ex-amber"/>
-<text class="ex-th" x="170" y="320" text-anchor="middle" dominant-baseline="central">Driver collects result</text>
-
-<rect x="400" y="36" width="220" height="40" rx="8" class="ex-teal"/>
-<text class="ex-th" x="510" y="56" text-anchor="middle" dominant-baseline="central">execute() submits Job</text>
-<line x1="510" y1="76" x2="510" y2="102" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ex-arrow)"/>
-
-<rect x="400" y="102" width="220" height="40" rx="8" class="ex-teal"/>
-<text class="ex-th" x="510" y="122" text-anchor="middle" dominant-baseline="central">Build ExecutionGraph</text>
-<line x1="510" y1="142" x2="510" y2="168" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ex-arrow)"/>
-<text class="ex-ts" x="400" y="156" text-anchor="start">chains operators</text>
-
-<rect x="400" y="168" width="220" height="40" rx="8" class="ex-teal"/>
-<text class="ex-th" x="510" y="188" text-anchor="middle" dominant-baseline="central">Operators → Subtasks</text>
-<line x1="510" y1="208" x2="510" y2="234" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ex-arrow)"/>
-
-<rect x="400" y="234" width="220" height="40" rx="8" class="ex-teal"/>
-<text class="ex-th" x="510" y="254" text-anchor="middle" dominant-baseline="central">Run on TaskManager Slots</text>
-<line x1="510" y1="274" x2="510" y2="300" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ex-arrow)"/>
-
-<rect x="400" y="300" width="220" height="40" rx="8" class="ex-teal"/>
-<text class="ex-th" x="510" y="320" text-anchor="middle" dominant-baseline="central">JobManager monitors forever</text>
-</svg>
-      <div class="diagram-caption">Same five-step shape — the last row is where they diverge: Spark's Driver finishes, Flink's JobManager keeps running</div>
-    </div>
-
-    <div class="diagram-box">
 <svg width="100%" viewBox="0 0 680 160" role="img">
-<title>Operator Chaining, Flink only</title>
-<desc>Flink fuses map filter map into a single subtask running on one thread, avoiding serialization overhead between them, Spark has no equivalent inside a single Stage</desc>
+<title>Operator Chaining</title>
+<desc>Flink fuses map filter map into a single subtask running on one thread, avoiding serialization overhead between them</desc>
 <defs>
   <marker id="mp-arrow1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
     <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -248,9 +186,11 @@ table.cmp tr:hover td{background:var(--bg);}
 </defs>
 <rect x="20" y="50" width="100" height="50" rx="8" class="mp1-gray"/>
 <text class="mp1-th" x="70" y="75" text-anchor="middle" dominant-baseline="central">Source</text>
+
 <line x1="120" y1="75" x2="155" y2="75" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#mp-arrow1)"/>
+
 <rect x="155" y="30" width="380" height="90" rx="10" stroke-dasharray="4 3" fill="none" stroke="#0F6E56" stroke-width="1"/>
-<text class="mp1-ts" x="345" y="46" text-anchor="middle">One subtask — Operator Chain (Flink only)</text>
+<text class="mp1-ts" x="345" y="46" text-anchor="middle">One subtask — Operator Chain</text>
 <rect x="180" y="60" width="90" height="40" rx="6" class="mp1-teal"/>
 <text class="mp1-th" x="225" y="80" text-anchor="middle" dominant-baseline="central">map</text>
 <line x1="270" y1="80" x2="295" y2="80" stroke="#5C6478" stroke-width="1" fill="none" marker-end="url(#mp-arrow1)"/>
@@ -259,11 +199,13 @@ table.cmp tr:hover td{background:var(--bg);}
 <line x1="385" y1="80" x2="405" y2="80" stroke="#5C6478" stroke-width="1" fill="none" marker-end="url(#mp-arrow1)"/>
 <rect x="405" y="60" width="90" height="40" rx="6" class="mp1-teal"/>
 <text class="mp1-th" x="450" y="80" text-anchor="middle" dominant-baseline="central">map</text>
+
 <line x1="535" y1="75" x2="570" y2="75" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#mp-arrow1)"/>
+
 <rect x="570" y="50" width="90" height="50" rx="8" class="mp1-gray"/>
 <text class="mp1-th" x="615" y="75" text-anchor="middle" dominant-baseline="central">Sink</text>
 </svg>
-      <div class="diagram-caption">Spark serializes between every operator within a Stage; Flink can chain them into one thread</div>
+      <div class="diagram-caption">Three operators pass data within one thread, no serialization needed — Spark can't do this within a Stage</div>
     </div>
 
     <div class="tbl-wrap">
@@ -287,14 +229,7 @@ table.cmp tr:hover td{background:var(--bg);}
       <button class="sp" onclick="speakEl(this,'map-3')">Listen</button>
     </div>
 
-    <div class="block-title" style="margin:14px 0 6px;font-size:13px;color:var(--dim);">3.1 Creating a table — Spark vs Flink</div>
-    <div class="tbl-wrap">
-      <table class="cmp">
-        <tr><th>Spark</th><th>Flink SQL</th></tr>
-        <tr><td><span class="mono">df = spark.read.format("kafka").option(...).load()</span><br><span style="color:var(--faint)">runs once, returns a static snapshot</span></td>
-        <td><span class="mono">CREATE TABLE ... WITH ('connector'='kafka', ...)</span><br><span style="color:var(--faint)">declares a continuous source, never "loads" once</span></td></tr>
-      </table>
-    </div>
+    <div class="block-title" style="margin:14px 0 6px;font-size:13px;color:var(--dim);">3.1 Creating a table (replaces spark.read)</div>
     <div class="code">CREATE TABLE orders (
     order_id    STRING,
     user_id     STRING,
@@ -314,7 +249,7 @@ table.cmp tr:hover td{background:var(--bg);}
       <button class="sp" onclick="speakEl(this,'map-31')">Listen</button>
     </div>
 
-    <div class="block-title" style="margin:14px 0 6px;font-size:13px;color:var(--dim);">3.2 Streaming aggregation — Spark vs Flink</div>
+    <div class="block-title" style="margin:14px 0 6px;font-size:13px;color:var(--dim);">3.2 Streaming aggregation (the query you'll write every day)</div>
     <div class="code">-- Spark equivalent runs once on a static dataset:
 -- df.groupBy("user_id").agg(sum("amount"))
 -- This Flink query runs continuously, re-emitting as new orders arrive
@@ -328,49 +263,6 @@ FROM orders
 GROUP BY
     user_id,
     TUMBLE(order_time, INTERVAL '5' MINUTE);</div>
-
-    <div class="diagram-box">
-<svg width="100%" viewBox="0 0 680 180" role="img">
-<title>Spark batch aggregation vs Flink continuous aggregation</title>
-<desc>Spark groupBy runs once over a complete static dataset and produces one final result, Flink groupBy with TUMBLE window runs continuously and re-emits a new result every time a window closes</desc>
-<defs>
-  <marker id="agg-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </marker>
-  <style>
-    .agg-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
-    .agg-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
-    .agg-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
-    .agg-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
-  </style>
-</defs>
-<text class="agg-th" x="170" y="20" text-anchor="middle">Spark — runs once</text>
-<rect x="40" y="40" width="260" height="40" rx="6" class="agg-amber"/>
-<text class="agg-ts" x="170" y="60" text-anchor="middle" dominant-baseline="central">complete static dataset</text>
-<line x1="170" y1="80" x2="170" y2="106" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#agg-arrow)"/>
-<rect x="40" y="106" width="260" height="40" rx="6" class="agg-amber"/>
-<text class="agg-th" x="170" y="126" text-anchor="middle" dominant-baseline="central">one final result</text>
-
-<text class="agg-th" x="510" y="20" text-anchor="middle">Flink — runs forever</text>
-<rect x="380" y="40" width="80" height="36" rx="6" class="agg-teal"/>
-<text class="agg-ts" x="420" y="58" text-anchor="middle" dominant-baseline="central">window 1</text>
-<line x1="420" y1="76" x2="420" y2="98" stroke="#5C6478" stroke-width="1" fill="none" marker-end="url(#agg-arrow)"/>
-<text class="agg-ts" x="420" y="112" text-anchor="middle">result 1</text>
-
-<rect x="470" y="40" width="80" height="36" rx="6" class="agg-teal"/>
-<text class="agg-ts" x="510" y="58" text-anchor="middle" dominant-baseline="central">window 2</text>
-<line x1="510" y1="76" x2="510" y2="98" stroke="#5C6478" stroke-width="1" fill="none" marker-end="url(#agg-arrow)"/>
-<text class="agg-ts" x="510" y="112" text-anchor="middle">result 2</text>
-
-<rect x="560" y="40" width="80" height="36" rx="6" class="agg-teal"/>
-<text class="agg-ts" x="600" y="58" text-anchor="middle" dominant-baseline="central">window 3</text>
-<line x1="600" y1="76" x2="600" y2="98" stroke="#5C6478" stroke-width="1" fill="none" marker-end="url(#agg-arrow)"/>
-<text class="agg-ts" x="600" y="112" text-anchor="middle">result 3</text>
-
-<text class="agg-ts" x="510" y="140" text-anchor="middle">...continues as new data arrives, never stops</text>
-</svg>
-      <div class="diagram-caption">This is the single biggest behavioral shift: one snapshot vs an endless stream of results</div>
-    </div>
 
     <div class="block bl-amber" id="map-32">
       <div class="block-title">Why you can't GROUP BY user_id without a window</div>
@@ -405,49 +297,6 @@ ON o.user_id = u.user_id;</div>
     </div>
 
     <div class="diagram-box">
-<svg width="100%" viewBox="0 0 680 220" role="img">
-<title>Spark withWatermark vs Flink WATERMARK FOR, side by side</title>
-<desc>Spark withWatermark operates at micro batch granularity producing coarser lateness handling, Flink WATERMARK FOR operates per record with fine grained event time tracking</desc>
-<defs>
-  <style>
-    .wm-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
-    .wm-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
-    .wm-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
-    .wm-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
-  </style>
-</defs>
-<text class="wm-th" x="170" y="20" text-anchor="middle">Spark — per micro-batch</text>
-<rect x="30" y="40" width="60" height="40" rx="4" class="wm-amber"/>
-<rect x="100" y="40" width="60" height="40" rx="4" class="wm-amber"/>
-<rect x="170" y="40" width="60" height="40" rx="4" class="wm-amber"/>
-<rect x="240" y="40" width="60" height="40" rx="4" class="wm-amber"/>
-<text class="wm-ts" x="170" y="100" text-anchor="middle">watermark only checked once per batch boundary</text>
-<text class="wm-ts" x="170" y="118" text-anchor="middle">coarser lateness resolution</text>
-
-<text class="wm-th" x="510" y="20" text-anchor="middle">Flink — per record</text>
-<rect x="380" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="400" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="420" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="440" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="460" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="480" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="500" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="520" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="540" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="560" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="580" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="600" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<rect x="620" y="40" width="14" height="40" rx="2" class="wm-teal"/>
-<text class="wm-ts" x="500" y="100" text-anchor="middle">watermark advances continuously, record by record</text>
-<text class="wm-ts" x="500" y="118" text-anchor="middle">fine-grained, exact event-time tracking</text>
-
-<text class="wm-ts" x="340" y="170" text-anchor="middle">Same goal — knowing when it's safe to close a window —</text>
-<text class="wm-ts" x="340" y="188" text-anchor="middle">but Spark's granularity is the micro-batch, Flink's is the record</text>
-</svg>
-      <div class="diagram-caption">Spark checks lateness once per micro-batch; Flink tracks it continuously, record by record</div>
-    </div>
-
-    <div class="diagram-box">
 <svg width="100%" viewBox="0 0 680 140" role="img">
 <title>Event Time vs Processing Time</title>
 <desc>Event happens at 10:00:00, after network delay Flink receives it at 10:00:07, event time is 10:00:00, processing time is 10:00:07</desc>
@@ -465,11 +314,14 @@ ON o.user_id = u.user_id;</div>
 <rect x="20" y="20" width="170" height="50" rx="8" class="mp2-blue"/>
 <text class="mp2-th" x="105" y="38" text-anchor="middle" dominant-baseline="central">Event happens</text>
 <text class="mp2-ts" x="105" y="56" text-anchor="middle" dominant-baseline="central">10:00:00</text>
+
 <line x1="190" y1="45" x2="240" y2="45" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#mp-arrow2)"/>
 <text class="mp2-ts" x="215" y="32" text-anchor="middle">network delay</text>
+
 <rect x="240" y="20" width="170" height="50" rx="8" class="mp2-amber"/>
 <text class="mp2-th" x="325" y="38" text-anchor="middle" dominant-baseline="central">Flink receives</text>
 <text class="mp2-ts" x="325" y="56" text-anchor="middle" dominant-baseline="central">10:00:07</text>
+
 <text class="mp2-ts" x="20" y="105">Event Time = 10:00:00 — when the event actually happened, usually what you want</text>
 <text class="mp2-ts" x="20" y="125">Processing Time = 10:00:07 — the wall-clock moment Flink processes the record</text>
 </svg>
@@ -513,20 +365,27 @@ ON o.user_id = u.user_id;</div>
 </defs>
 <line x1="40" y1="60" x2="640" y2="60" stroke="#5C6478" stroke-width="1" fill="none" marker-end="url(#mp-arrow-al)"/>
 <text class="al-ts" x="640" y="44" text-anchor="end">time</text>
+
 <rect x="40" y="80" width="200" height="36" rx="6" class="al-teal"/>
 <text class="al-th" x="140" y="98" text-anchor="middle" dominant-baseline="central">window: 0 - 5 min</text>
+
 <line x1="240" y1="60" x2="240" y2="40" stroke="#534AB7" stroke-width="1" fill="none"/>
 <text class="al-ts" x="240" y="30" text-anchor="middle">5 min</text>
+
 <rect x="240" y="80" width="40" height="36" rx="6" class="al-amber"/>
 <text class="al-ts" x="260" y="128" text-anchor="middle">watermark fires</text>
+
 <line x1="280" y1="60" x2="280" y2="40" stroke="#534AB7" stroke-width="1" fill="none"/>
 <text class="al-ts" x="280" y="30" text-anchor="middle">5:05</text>
 <text class="al-ts" x="310" y="98" text-anchor="start" dominant-baseline="central">first result emitted</text>
+
 <rect x="280" y="140" width="200" height="36" rx="6" class="al-purple"/>
 <text class="al-th" x="380" y="158" text-anchor="middle" dominant-baseline="central">allowed lateness window</text>
+
 <line x1="480" y1="60" x2="480" y2="40" stroke="#534AB7" stroke-width="1" fill="none"/>
 <text class="al-ts" x="480" y="30" text-anchor="middle">5:15</text>
 <text class="al-ts" x="380" y="190" text-anchor="middle">late events here still update + re-emit corrected result</text>
+
 <rect x="480" y="80" width="160" height="36" rx="6" class="al-coral"/>
 <text class="al-th" x="560" y="98" text-anchor="middle" dominant-baseline="central">side output</text>
 <text class="al-ts" x="560" y="128" text-anchor="middle">events past 5:15 routed here, not dropped</text>
@@ -561,7 +420,7 @@ ON o.user_id = u.user_id;</div>
     .mp3-purple{fill:#EEEDFE;stroke:#534AB7;stroke-width:0.5;}
   </style>
 </defs>
-<text class="mp3-ts" x="20" y="22">TUMBLE — fixed, no overlap (both engines)</text>
+<text class="mp3-ts" x="20" y="22">TUMBLE — fixed, no overlap</text>
 <rect x="20" y="30" width="120" height="36" rx="6" class="mp3-teal"/>
 <text class="mp3-th" x="80" y="48" text-anchor="middle" dominant-baseline="central">0-5min</text>
 <rect x="148" y="30" width="120" height="36" rx="6" class="mp3-teal"/>
@@ -569,13 +428,13 @@ ON o.user_id = u.user_id;</div>
 <rect x="276" y="30" width="120" height="36" rx="6" class="mp3-teal"/>
 <text class="mp3-th" x="336" y="48" text-anchor="middle" dominant-baseline="central">10-15min</text>
 
-<text class="mp3-ts" x="20" y="92">HOP — overlapping (both engines)</text>
+<text class="mp3-ts" x="20" y="92">HOP — overlapping</text>
 <rect x="20" y="100" width="220" height="30" rx="6" class="mp3-purple" opacity="0.9"/>
 <text class="mp3-th" x="130" y="115" text-anchor="middle" dominant-baseline="central">0-10min</text>
 <rect x="148" y="100" width="220" height="30" rx="6" class="mp3-purple" opacity="0.6"/>
 <text class="mp3-th" x="258" y="115" text-anchor="middle" dominant-baseline="central" fill="#3C3489">5-15min</text>
 </svg>
-      <div class="diagram-caption">HOP emits every 5 minutes, each covering 10 minutes of data — windows overlap each other. Same mechanics in Spark and Flink, only the keyword differs</div>
+      <div class="diagram-caption">HOP emits every 5 minutes, each covering 10 minutes of data — windows overlap each other</div>
     </div>
 
     <div class="code">-- Tumbling — fixed 5-minute buckets
@@ -589,54 +448,14 @@ FROM orders
 GROUP BY user_id, HOP(order_time, INTERVAL '5' MINUTE, INTERVAL '10' MINUTE);</div>
   </div>
 
-  <!-- ════ Chapter 6: State & Fault Tolerance — side by side ════ -->
+  <!-- ════ Chapter 6: State & Fault Tolerance ════ -->
   <div class="sec">
-    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Chapter 6 · State & Fault Tolerance, Side by Side</span></div>
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Chapter 6 · State & Fault Tolerance</span></div>
 
     <div class="block bl-blue" id="map-6">
       <div class="block-title">Where Spark and Flink diverge architecturally the most</div>
       <p>Spark Structured Streaming's state is a thin layer on top of micro-batches. Flink's state is the engine's core — any keyed operator can hold state by default, not as a special API.</p>
       <button class="sp" onclick="speakEl(this,'map-6')">Listen</button>
-    </div>
-
-    <div class="diagram-box">
-<svg width="100%" viewBox="0 0 680 240" role="img">
-<title>Spark checkpoint vs Flink checkpoint side by side</title>
-<desc>Spark structured streaming records offset progress at micro batch boundaries giving at least once or idempotent exactly once, Flink uses barrier based distributed snapshots with two phase commit sinks giving true end to end exactly once</desc>
-<defs>
-  <marker id="ck-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </marker>
-  <style>
-    .ck-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
-    .ck-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
-    .ck-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
-    .ck-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
-  </style>
-</defs>
-<text class="ck-th" x="170" y="20" text-anchor="middle">Spark</text>
-<text class="ck-th" x="510" y="20" text-anchor="middle">Flink</text>
-<line x1="340" y1="16" x2="340" y2="230" stroke="#888780" stroke-width="0.5" stroke-dasharray="3 3" fill="none"/>
-
-<rect x="50" y="46" width="240" height="56" rx="8" class="ck-amber"/>
-<text class="ck-th" x="170" y="66" text-anchor="middle" dominant-baseline="central">Micro-batch boundary</text>
-<text class="ck-ts" x="170" y="84" text-anchor="middle" dominant-baseline="central">records offset progress</text>
-<line x1="170" y1="102" x2="170" y2="128" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ck-arrow)"/>
-<rect x="50" y="128" width="240" height="56" rx="8" class="ck-amber"/>
-<text class="ck-th" x="170" y="148" text-anchor="middle" dominant-baseline="central">checkpointLocation</text>
-<text class="ck-ts" x="170" y="166" text-anchor="middle" dominant-baseline="central">resume from saved offset</text>
-<text class="ck-ts" x="170" y="214" text-anchor="middle">at-least-once, or exactly-once only if sink is idempotent</text>
-
-<rect x="390" y="46" width="240" height="56" rx="8" class="ck-teal"/>
-<text class="ck-th" x="510" y="66" text-anchor="middle" dominant-baseline="central">Barrier injected per-record</text>
-<text class="ck-ts" x="510" y="84" text-anchor="middle" dominant-baseline="central">snapshots distributed state</text>
-<line x1="510" y1="102" x2="510" y2="128" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ck-arrow)"/>
-<rect x="390" y="128" width="240" height="56" rx="8" class="ck-teal"/>
-<text class="ck-th" x="510" y="148" text-anchor="middle" dominant-baseline="central">Sink two-phase commit</text>
-<text class="ck-ts" x="510" y="166" text-anchor="middle" dominant-baseline="central">pre-commit then confirm</text>
-<text class="ck-ts" x="510" y="214" text-anchor="middle">true end-to-end exactly-once, sink need not be idempotent</text>
-</svg>
-      <div class="diagram-caption">Spark restarts a batch from a saved offset; Flink restores the actual distributed state of every operator</div>
     </div>
 
     <div class="tbl-wrap">
@@ -651,7 +470,7 @@ GROUP BY user_id, HOP(order_time, INTERVAL '5' MINUTE, INTERVAL '10' MINUTE);</d
 
     <div class="diagram-box">
 <svg width="100%" viewBox="0 0 680 280" role="img">
-<title>Checkpoint barrier flowing through operators (Flink only)</title>
+<title>Checkpoint barrier flowing through operators</title>
 <desc>JobManager injects a barrier at the source which flows downstream through each operator, each operator snapshots its own state when the barrier passes, barriers reach the sink and the checkpoint is confirmed complete</desc>
 <defs>
   <marker id="cb-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -708,7 +527,7 @@ GROUP BY user_id, HOP(order_time, INTERVAL '5' MINUTE, INTERVAL '10' MINUTE);</d
 
     <div class="diagram-box">
 <svg width="100%" viewBox="0 0 680 160" role="img">
-<title>Two-phase commit guarantees exactly-once (Flink only)</title>
+<title>Two-phase commit guarantees exactly-once</title>
 <desc>Sink pre-commits a transaction tied to a checkpoint, the checkpoint is confirmed complete, then the sink fully commits making data visible, if the job crashes before checkpoint confirmation the pre-commit is automatically rolled back</desc>
 <defs>
   <marker id="mp-arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -919,244 +738,28 @@ GROUP BY merchant_id;</div>
     </div>
   </div>
 
-  <!-- ════ Chapter 10: 3-Week Learning Plan, fully expanded ════ -->
+  <!-- ════ Chapter 10: Quick Answers + Learning Path ════ -->
   <div class="sec">
-    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">Chapter 10 · 3-Week Learning Plan (Detailed)</span></div>
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">Chapter 10 · Quick Answers</span></div>
 
-    <div class="block bl-green" id="map-10-intro">
-      <div class="block-title">Why three weeks, not three days</div>
-      <p>You already know Spark, so this isn't learning distributed systems from zero — it's relabeling concepts you already understand and absorbing the handful that are genuinely new. The plan below breaks that work into three focused weeks, each with concrete deliverables, not just reading.</p>
-      <button class="sp" onclick="speakEl(this,'map-10-intro')">Listen</button>
-    </div>
-
-    <!-- WEEK 1 -->
-    <div class="block-title" style="margin:20px 0 10px;font-size:15px;color:var(--blue);">Week 1 — Concept Mapping, No Code Yet</div>
-
-    <div class="diagram-box">
-<svg width="100%" viewBox="0 0 680 200" role="img">
-<title>Week 1 plan</title>
-<desc>Day one to two read the concept mapping table, day three to four trace JobManager TaskManager versus Driver Executor correspondence, day five test yourself by explaining five Flink terms from memory in Spark terms</desc>
-<defs>
-  <marker id="w1-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </marker>
-  <style>
-    .w1-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
-    .w1-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
-    .w1-blue{fill:#E6F1FB;stroke:#185FA5;stroke-width:0.5;}
-  </style>
-</defs>
-<rect x="20" y="40" width="190" height="64" rx="8" class="w1-blue"/>
-<text class="w1-th" x="115" y="58" text-anchor="middle" dominant-baseline="central">Day 1-2</text>
-<text class="w1-ts" x="115" y="76" text-anchor="middle" dominant-baseline="central">Read concept</text>
-<text class="w1-ts" x="115" y="92" text-anchor="middle" dominant-baseline="central">mapping table (Ch.1)</text>
-
-<line x1="210" y1="72" x2="245" y2="72" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#w1-arrow)"/>
-
-<rect x="245" y="40" width="190" height="64" rx="8" class="w1-blue"/>
-<text class="w1-th" x="340" y="58" text-anchor="middle" dominant-baseline="central">Day 3-4</text>
-<text class="w1-ts" x="340" y="76" text-anchor="middle" dominant-baseline="central">Trace JobManager/TaskManager</text>
-<text class="w1-ts" x="340" y="92" text-anchor="middle" dominant-baseline="central">↔ Driver/Executor</text>
-
-<line x1="435" y1="72" x2="470" y2="72" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#w1-arrow)"/>
-
-<rect x="470" y="40" width="190" height="64" rx="8" class="w1-blue"/>
-<text class="w1-th" x="565" y="58" text-anchor="middle" dominant-baseline="central">Day 5</text>
-<text class="w1-ts" x="565" y="76" text-anchor="middle" dominant-baseline="central">Self-test: explain 5 Flink</text>
-<text class="w1-ts" x="565" y="92" text-anchor="middle" dominant-baseline="central">terms from memory</text>
-
-<text class="w1-ts" x="340" y="150" text-anchor="middle">Goal: stop translating Flink → Spark in your head. It should feel automatic by Friday.</text>
-</svg>
-      <div class="diagram-caption">No coding this week — this is purely re-labeling what you already understand</div>
-    </div>
-
-    <div class="block bl-blue" id="map-w1-1">
-      <div class="block-title">Day 1-2: Read the concept mapping table</div>
-      <p>Go through Chapter 1 line by line. For each row, don't just read it — say the Spark term out loud, then say its Flink equivalent, then say the one key difference. This active recall is what makes it stick, not passive reading.</p>
-      <button class="sp" onclick="speakEl(this,'map-w1-1')">Listen</button>
-    </div>
-
-    <div class="block bl-blue" id="map-w1-2">
-      <div class="block-title">Day 3-4: Trace the JobManager/TaskManager correspondence</div>
-      <p>This is the one mapping worth drilling specifically, because it's the foundation everything else sits on. Open the Spark vs Flink execution model diagram in Chapter 2 and trace it with your finger: Spark's Driver becomes Flink's JobManager, Spark's Executor becomes Flink's TaskManager, Spark's Task becomes Flink's Subtask. Notice the one place they diverge — Spark's Driver collects a result and finishes; Flink's JobManager keeps monitoring forever, because the job never really "finishes."</p>
-      <button class="sp" onclick="speakEl(this,'map-w1-2')">Listen</button>
-    </div>
-
-    <div class="block bl-blue" id="map-w1-3">
-      <div class="block-title">Day 5: Self-test</div>
-      <p>Without looking at the table, write down five Flink terms and explain each one purely in Spark terms — what it maps to and the one key difference. If you can do this fluently for Watermark, Checkpoint, keyBy, TaskManager, and Slot, week one is done. If any of them feel shaky, that's the one to re-read before moving on.</p>
-      <button class="sp" onclick="speakEl(this,'map-w1-3')">Listen</button>
-    </div>
-
-    <!-- WEEK 1-2 OVERLAP: Flink SQL -->
-    <div class="block-title" style="margin:24px 0 10px;font-size:15px;color:var(--teal);">Week 1-2 (overlapping) — Flink SQL Hands-On</div>
-
-    <div class="diagram-box">
-<svg width="100%" viewBox="0 0 680 200" role="img">
-<title>Week 1 to 2 Flink SQL plan</title>
-<desc>Pick 2 to 3 existing Spark SQL jobs, rewrite each as Flink SQL one at a time covering create table watermark aggregation and temporal join, write down every syntax error encountered as the real notes</desc>
-<defs>
-  <marker id="w2-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </marker>
-  <style>
-    .w2-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
-    .w2-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
-    .w2-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
-  </style>
-</defs>
-<rect x="20" y="30" width="640" height="48" rx="8" class="w2-teal"/>
-<text class="w2-th" x="340" y="54" text-anchor="middle" dominant-baseline="central">Pick 2-3 real Spark SQL jobs from your current work</text>
-
-<line x1="340" y1="78" x2="340" y2="104" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#w2-arrow)"/>
-
-<rect x="20" y="104" width="640" height="48" rx="8" class="w2-teal"/>
-<text class="w2-th" x="340" y="128" text-anchor="middle" dominant-baseline="central">Rewrite each as Flink SQL — table def, watermark, agg, join</text>
-
-<line x1="340" y1="152" x2="340" y2="178" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#w2-arrow)"/>
-
-<text class="w2-ts" x="340" y="190" text-anchor="middle">Every syntax error you hit is the actual note worth keeping</text>
-</svg>
-      <div class="diagram-caption">Learning by rewriting real jobs beats learning from a tutorial — the errors teach you what the docs don't</div>
-    </div>
-
-    <div class="block bl-teal" id="map-w2-1">
-      <div class="block-title">Pick 2-3 real jobs, not toy examples</div>
-      <p>Go back to your actual Spark SQL work — pick something with a GROUP BY, something with a JOIN, and ideally something with a window function if you have one. Rewriting jobs you already understand deeply is far more effective than following a generic tutorial, because you already know what correct output should look like.</p>
-      <button class="sp" onclick="speakEl(this,'map-w2-1')">Listen</button>
-    </div>
-
-    <div class="block bl-teal" id="map-w2-2">
-      <div class="block-title">Rewrite in this order — table definition, then aggregation, then join</div>
-      <p>Start with CREATE TABLE — get comfortable writing the WATERMARK clause until it feels natural, not foreign. Then rewrite a simple GROUP BY as a TUMBLE window aggregation. Save the temporal table join for last, since FOR SYSTEM_TIME AS OF is the one piece of syntax with literally no Spark precedent — give yourself room to sit with it.</p>
-      <button class="sp" onclick="speakEl(this,'map-w2-2')">Listen</button>
-    </div>
-
-    <div class="block bl-teal" id="map-w2-3">
-      <div class="block-title">Keep a running list of every error</div>
-      <p>Every time Flink SQL rejects your query or produces unexpected results, write down what you expected from Spark muscle memory versus what Flink actually requires. This list — not the polished syntax reference — is what you'll actually remember a month from now.</p>
-      <button class="sp" onclick="speakEl(this,'map-w2-3')">Listen</button>
-    </div>
-
-    <!-- WEEK 2: Watermark deep dive -->
-    <div class="block-title" style="margin:24px 0 10px;font-size:15px;color:var(--red);">Week 2 — Watermark Deep Dive (the hard part)</div>
-
-    <div class="diagram-box">
-<svg width="100%" viewBox="0 0 680 220" role="img">
-<title>Week 2 Watermark deep dive plan</title>
-<desc>Pick one familiar business metric, work through how late data should be handled if computed in real time, design the watermark delay and allowed lateness configuration, then verify understanding against the T-1 versus T reconciliation chapter</desc>
-<defs>
-  <marker id="w3-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </marker>
-  <style>
-    .w3-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
-    .w3-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
-    .w3-red{fill:#FCEBEB;stroke:#A32D2D;stroke-width:0.5;}
-  </style>
-</defs>
-<rect x="20" y="20" width="640" height="44" rx="8" class="w3-red"/>
-<text class="w3-th" x="340" y="42" text-anchor="middle" dominant-baseline="central">1. Pick one familiar business metric (e.g. daily active merchants)</text>
-
-<line x1="340" y1="64" x2="340" y2="90" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#w3-arrow)"/>
-
-<rect x="20" y="90" width="640" height="44" rx="8" class="w3-red"/>
-<text class="w3-th" x="340" y="112" text-anchor="middle" dominant-baseline="central">2. Ask: how should I handle data that arrives 10 min late?</text>
-
-<line x1="340" y1="134" x2="340" y2="160" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#w3-arrow)"/>
-
-<rect x="20" y="160" width="640" height="44" rx="8" class="w3-red"/>
-<text class="w3-th" x="340" y="182" text-anchor="middle" dominant-baseline="central">3. Design the watermark delay + allowed lateness for it</text>
-</svg>
-      <div class="diagram-caption">This one exercise, done properly, teaches you the hardest part of Flink — everything else is syntax</div>
-    </div>
-
-    <div class="block bl-red" id="map-w3-1">
-      <div class="block-title">Step 1: pick a metric you actually understand</div>
-      <p>Choose something from your real work — daily active merchants, cross-border settlement totals, anything where you already know the data's actual lateness behavior. A metric you're guessing about teaches you nothing about Watermark; a metric you know intimately makes the exercise concrete.</p>
-      <button class="sp" onclick="speakEl(this,'map-w3-1')">Listen</button>
-    </div>
-
-    <div class="block bl-red" id="map-w3-2">
-      <div class="block-title">Step 2: think through the late-data question explicitly</div>
-      <p>Ask yourself: if this metric were computed in real time with Flink, what happens to a transaction that arrives 10 minutes after its event time? Does the dashboard need to show a corrected number, or is a one-time approximate value acceptable? This question, worked through honestly for one real metric, is what separates someone who has read about Watermark from someone who actually understands it.</p>
-      <button class="sp" onclick="speakEl(this,'map-w3-2')">Listen</button>
-    </div>
-
-    <div class="block bl-red" id="map-w3-3">
-      <div class="block-title">Step 3: design the actual configuration</div>
-      <p>Write the WATERMARK FOR clause with a specific delay you can justify, and decide whether you need allowedLateness with a side output. Then go back to Chapter 9 (T-1 + T Reconciliation) and verify your design against the four issues listed there — late data, double counting, midnight cutover, watermark tuning. If your design handles all four, you've internalized the hardest part of Flink.</p>
-      <button class="sp" onclick="speakEl(this,'map-w3-3')">Listen</button>
-    </div>
-
-    <!-- WEEK 3: Connectors + production -->
-    <div class="block-title" style="margin:24px 0 10px;font-size:15px;color:var(--amber);">Week 3 — Connectors & Production Patterns</div>
-
-    <div class="diagram-box">
-<svg width="100%" viewBox="0 0 680 200" role="img">
-<title>Week 3 plan</title>
-<desc>Memorize connector configuration as a reference, skew and two-stage aggregation just need new syntax since the concepts already exist, finish by reading the pitfalls and interview pages</desc>
-<defs>
-  <marker id="w4-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-  </marker>
-  <style>
-    .w4-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
-    .w4-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
-    .w4-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
-  </style>
-</defs>
-<rect x="20" y="40" width="200" height="64" rx="8" class="w4-amber"/>
-<text class="w4-th" x="120" y="58" text-anchor="middle" dominant-baseline="central">Connectors (Ch.7)</text>
-<text class="w4-ts" x="120" y="76" text-anchor="middle" dominant-baseline="central">use as a reference,</text>
-<text class="w4-ts" x="120" y="92" text-anchor="middle" dominant-baseline="central">don't memorize cold</text>
-
-<line x1="220" y1="72" x2="250" y2="72" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#w4-arrow)"/>
-
-<rect x="250" y="40" width="200" height="64" rx="8" class="w4-amber"/>
-<text class="w4-th" x="350" y="58" text-anchor="middle" dominant-baseline="central">Skew + 2-stage agg</text>
-<text class="w4-ts" x="350" y="76" text-anchor="middle" dominant-baseline="central">(Ch.8) — already know it,</text>
-<text class="w4-ts" x="350" y="92" text-anchor="middle" dominant-baseline="central">just new syntax</text>
-
-<line x1="450" y1="72" x2="480" y2="72" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#w4-arrow)"/>
-
-<rect x="480" y="40" width="180" height="64" rx="8" class="w4-amber"/>
-<text class="w4-th" x="570" y="58" text-anchor="middle" dominant-baseline="central">Pitfalls + Interview</text>
-<text class="w4-ts" x="570" y="76" text-anchor="middle" dominant-baseline="central">pages — production</text>
-<text class="w4-ts" x="570" y="92" text-anchor="middle" dominant-baseline="central">readiness check</text>
-
-<text class="w4-ts" x="340" y="150" text-anchor="middle">By end of week 3 you should be able to debug a real Flink job, not just write one</text>
-</svg>
-      <div class="diagram-caption">Week 3 is the lightest week — most of this content is your existing Spark knowledge with new keywords</div>
-    </div>
-
-    <div class="block bl-amber" id="map-w4-1">
-      <div class="block-title">Connector configuration — treat it as a lookup table</div>
-      <p>Don't try to memorize every connector option cold. Bookmark Chapter 7 and treat it the way you'd treat any config reference — look it up when you're writing a CREATE TABLE statement for a new source or sink. Repetition through actual use will make the common ones (bootstrap.servers, scan.startup.mode, sink.buffer-flush) stick naturally.</p>
-      <button class="sp" onclick="speakEl(this,'map-w4-1')">Listen</button>
-    </div>
-
-    <div class="block bl-amber" id="map-w4-2">
-      <div class="block-title">Skew and two-stage aggregation — confirm, don't relearn</div>
-      <p>Read Chapter 8 once to confirm the salting pattern translates cleanly to Flink SQL, and to internalize the one real gap — no AQE-style runtime replanning. You already lived through this exact problem at Tencent; the goal here is just mapping your existing mental model onto the new syntax, not learning the concept from scratch.</p>
-      <button class="sp" onclick="speakEl(this,'map-w4-2')">Listen</button>
-    </div>
-
-    <div class="block bl-amber" id="map-w4-3">
-      <div class="block-title">Finish with the Pitfalls and Interview pages</div>
-      <p>These two pages (separate tabs above) cover state TTL, backpressure debugging, checkpoint timeouts, and the production failure modes you'll actually hit. Reading them at the end of week 3, after you've written real Flink SQL, will land very differently than reading them cold on day one — the concepts will already have a place to attach to.</p>
-      <button class="sp" onclick="speakEl(this,'map-w4-3')">Listen</button>
-    </div>
-
-    <div class="block-title" style="margin:24px 0 6px;font-size:13px;color:var(--dim);">Three-week summary</div>
     <div class="tbl-wrap">
       <table class="cmp">
-        <tr><th>Week</th><th>Focus</th><th>Deliverable</th></tr>
-        <tr><td>1</td><td>Concept mapping, no code</td><td>Explain 5 Flink terms from memory in Spark terms</td></tr>
-        <tr><td>1-2</td><td>Flink SQL hands-on</td><td>2-3 real Spark SQL jobs rewritten in Flink SQL</td></tr>
-        <tr><td>2</td><td>Watermark deep dive</td><td>A designed watermark + allowed lateness config for one real metric, verified against the T-1/T checklist</td></tr>
-        <tr><td>3</td><td>Connectors + production patterns</td><td>Can configure a new source/sink from the reference, and debug skew/backpressure on a real job</td></tr>
+        <tr><th>Question</th><th>Answer (say this first)</th></tr>
+        <tr><td>What is Flink?</td><td>True streaming engine, event-at-a-time, treats batch as a bounded stream — opposite of Spark's batch-first, micro-batch streaming</td></tr>
+        <tr><td>Flink vs Spark Structured Streaming?</td><td>Flink = true streaming, sub-second latency. Spark = micro-batch, seconds-level latency. Choose Flink when latency matters</td></tr>
+        <tr><td>What is a Watermark?</td><td>Signal saying "no earlier events expected" — how Flink knows when to close a window safely</td></tr>
+        <tr><td>How does Flink achieve exactly-once?</td><td>Checkpoint (Chandy-Lamport snapshots) + two-phase commit on the sink</td></tr>
+        <tr><td>What's the Flink equivalent of groupBy?</td><td>keyBy + window — without a window, keyBy on an unbounded stream accumulates state forever</td></tr>
+        <tr><td>How do you handle skew in Flink?</td><td>Same as Spark: salting + two-stage aggregation. No AQE-style runtime replanning exists</td></tr>
+        <tr><td>Checkpoint vs Savepoint?</td><td>Checkpoint = automatic, for failure recovery. Savepoint = manual, for planned upgrades/migrations — Spark has no equivalent</td></tr>
+        <tr><td>What's a temporal table join?</td><td>FOR SYSTEM_TIME AS OF — joins a stream to a dimension table's value as of event time, not current time. No Spark equivalent</td></tr>
       </table>
+    </div>
+
+    <div class="block bl-green" id="map-10">
+      <div class="block-title">Suggested learning path, given you already know Spark</div>
+      <p>Week one, don't write code yet — read the concept mapping table, mentally swap every Spark term for its Flink name, and confirm the JobManager/TaskManager versus Driver/Executor correspondence. Weeks one and two, jump straight into Flink SQL and write five to ten queries for real scenarios — ideally rewriting your existing Spark SQL jobs into Flink SQL, since the syntax problems you hit along the way are exactly the notes worth keeping. Week two, dedicate a solid block to Watermark — it's the one genuinely hard part. Pick a familiar business metric and work through how late data should be handled if computed in real time with Flink; once that's solved, the hardest part of Flink is behind you. Week three, connector configuration and production issues — skew and two-stage aggregation are already in your toolkit, you just need the new syntax.</p>
+      <button class="sp" onclick="speakEl(this,'map-10')">Listen</button>
     </div>
   </div>
 
