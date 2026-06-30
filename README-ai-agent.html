@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Learning Plan — Analytics Engineering Manager Prep</title>
+<style>
+:root {
+  --bg:#F8F9FB; --white:#FFFFFF; --border:#E3E6EE;
+  --text:#111827; --dim:#4B5563; --faint:#9CA3AF;
+  --teal:#0891B2; --teal-bg:#ECFEFF; --teal-bd:#A5F3FC;
+  --blue:#2563EB; --blue-bg:#EFF6FF; --blue-bd:#BFDBFE;
+  --green:#059669; --green-bg:#ECFDF5; --green-bd:#6EE7B7;
+  --amber:#D97706; --amber-bg:#FFFBEB; --amber-bd:#FCD34D;
+  --violet:#7C3AED; --violet-bg:#F5F3FF; --violet-bd:#C4B5FD;
+  --red:#DC2626; --red-bg:#FEF2F2; --red-bd:#FCA5A5;
+  --coral:#C2410C; --coral-bg:#FFF7ED; --coral-bd:#FED7AA;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:32px 20px 80px;max-width:880px;margin:0 auto;}
+
+.nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);padding-top:8px;z-index:10;}
+.nav-btn{font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--dim);cursor:pointer;transition:all .15s;}
+.nav-btn:hover{background:var(--text);color:#fff;border-color:var(--text);}
+.nav-btn.active{background:var(--text);color:#fff;border-color:var(--text);}
+
+.page{display:none;} .page.active{display:block;}
+.ph{margin-bottom:24px;}
+.ph-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;}
+.ph h1{font-size:24px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px;}
+.ph p{font-size:14px;color:var(--dim);}
+
+.sp{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;border:1px solid var(--teal-bd);background:var(--teal-bg);color:var(--teal);cursor:pointer;margin-top:8px;transition:all .15s;white-space:nowrap;}
+.sp:hover{background:var(--teal);color:#fff;}
+.sp.playing{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+
+.sec{margin-bottom:32px;}
+.sec-title{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-title .dot{width:7px;height:7px;border-radius:50%;}
+
+.block{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:10px;}
+.block p{color:var(--dim);font-size:14px;line-height:1.7;margin-bottom:4px;}
+.block-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.bl-blue{border-left:3px solid var(--blue);background:var(--blue-bg);}
+.bl-teal{border-left:3px solid var(--teal);background:var(--teal-bg);}
+.bl-green{border-left:3px solid var(--green);background:var(--green-bg);}
+.bl-amber{border-left:3px solid var(--amber);background:var(--amber-bg);}
+.bl-violet{border-left:3px solid var(--violet);background:var(--violet-bg);}
+.bl-coral{border-left:3px solid var(--coral);background:var(--coral-bg);}
+
+.notice{font-size:12px;color:var(--dim);background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:7px;padding:9px 14px;margin-bottom:20px;}
+
+.code{background:#1E2433;color:#C8D0E0;font-family:'Menlo','Consolas',monospace;font-size:12.5px;line-height:1.6;border-radius:8px;padding:14px 16px;margin:8px 0;overflow-x:auto;white-space:pre;}
+
+.diagram-box{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 14px 6px;margin-bottom:14px;overflow-x:auto;}
+.diagram-box svg{display:block;min-width:560px;}
+.diagram-caption{font-size:12px;color:var(--faint);text-align:center;margin-top:6px;padding-bottom:8px;}
+
+.tbl-wrap{overflow-x:auto;margin-bottom:14px;}
+table.cmp{width:100%;border-collapse:collapse;font-size:13px;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+table.cmp th{text-align:left;padding:9px 12px;background:var(--bg);border-bottom:2px solid var(--border);font-weight:700;color:var(--text);white-space:nowrap;}
+table.cmp td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--dim);vertical-align:top;}
+table.cmp tr:last-child td{border-bottom:none;}
+table.cmp tr:hover td{background:var(--bg);}
+.mono{font-family:'Menlo','Consolas',monospace;font-size:12px;background:var(--bg);padding:1px 5px;border-radius:4px;color:var(--text);}
+.linkcell a{color:var(--blue);text-decoration:none;word-break:break-all;}
+.linkcell a:hover{text-decoration:underline;}
+
+.qa-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.qa-top{display:flex;align-items:stretch;min-height:60px;cursor:pointer;user-select:none;}
+.qa-top:hover{background:#FAFBFC;}
+.qa-icon{width:52px;min-width:52px;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg);border-right:1px solid var(--border);}
+.qa-q{flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:3px;}
+.qa-q-text{font-size:14px;font-weight:600;line-height:1.35;}
+.qa-tag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:4px;display:inline-block;width:fit-content;}
+.qa-chev{padding:0 14px;display:flex;align-items:center;color:var(--faint);font-size:11px;transition:transform .2s;}
+.qa-card.open .qa-chev{transform:rotate(180deg);}
+.qa-body{display:none;border-top:1px solid var(--border);padding:14px 16px 10px;}
+.qa-card.open .qa-body{display:block;}
+
+.t-blue{background:var(--blue-bg);color:var(--blue);}
+.t-teal{background:var(--teal-bg);color:var(--teal);}
+.t-green{background:var(--green-bg);color:var(--green);}
+.t-amber{background:var(--amber-bg);color:var(--amber);}
+.t-violet{background:var(--violet-bg);color:var(--violet);}
+.t-red{background:var(--red-bg);color:var(--red);}
+.t-coral{background:var(--coral-bg);color:var(--coral);}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('overview',this)">Overview</button>
+  <button class="nav-btn" onclick="showPage('steps',this)">4-Step Path</button>
+  <button class="nav-btn" onclick="showPage('demo',this)">Demo Architecture</button>
+  <button class="nav-btn" onclick="showPage('resources',this)">All Links</button>
+  <button class="nav-btn" onclick="showPage('interview',this)">Interview Prep</button>
+</div>
+
+<!-- ══ PAGE: OVERVIEW ══ -->
+<div class="page active" id="overview">
+  <div class="ph">
+    <div class="ph-eyebrow">Targeting: Analytics Engineering Manager (AI &amp; Agentic Analytics) · foodpanda</div>
+    <h1>AI Agent Learning Plan</h1>
+    <p>Be able to demo a working "natural language → dbt/BigQuery → answer" agent, and speak fluently about the production stack the JD names explicitly.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio. Click any 🔊 button to hear that paragraph.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Decoding the JD</span></div>
+
+    <div class="block bl-blue" id="ov1">
+      <div class="block-title">This is a player-coach role, not a pure AI engineering role</div>
+      <p>The job description requires five-plus years of analytics engineering experience with dbt and BigQuery as the floor — without this you don't pass screening. Three-plus years of leadership and mentoring experience is also required. The AI layer — internal copilots, workflow agents, intelligent data QA bots — is explicitly called out as a differentiator, not the core requirement. This shapes the entire learning strategy.</p>
+      <button class="sp" onclick="speakEl(this,'ov1')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-coral" id="ov2">
+      <div class="block-title">Critical detail: the JD names LlamaIndex and ADK, not LangChain</div>
+      <p>The technology stack section explicitly lists dbt, BigQuery, LlamaIndex, ADK, and n8n. LangChain is never mentioned. Despite this, LangChain remains the right starting point because the underlying concepts — agent loops, tool calling, retrieval augmented generation — are framework-agnostic, and LangChain has the most systematic teaching material available. The strategy is to build conceptual depth with LangChain, then spend a small amount of time mapping that knowledge onto LlamaIndex's different API syntax.</p>
+      <button class="sp" onclick="speakEl(this,'ov2')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Why LangChain first, even though the JD says LlamaIndex</span></div>
+
+    <div class="block bl-violet" id="ov3">
+      <div class="block-title">The three frameworks compared</div>
+      <p>LangChain is chain-composition-centric — its mental model is piping together a prompt, a language model, and an output parser. LlamaIndex is index-centric — its mental model is building an index over your data and querying it intelligently, which arguably fits a JD centered on a structured semantic layer even better. ADK is Google's Agent Development Kit, native to Google's ecosystem with comparatively less learning material available, optional unless an interview specifically asks about it.</p>
+      <button class="sp" onclick="speakEl(this,'ov3')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-violet" id="ov4">
+      <div class="block-title">What stays the same across all three frameworks</div>
+      <p>The agent loop of thinking, acting, observing, and repeating is identical regardless of framework. Tool calling and function calling work the same way. Retrieval augmented generation always follows the same four building blocks — a document loader, a text splitter, an embedding model, and a vector store. Multi-step reasoning and state management follow the same patterns. Learning these concepts once, deeply, with the best-documented framework, then porting that understanding to a different API surface is far more efficient than learning a less-documented framework from scratch.</p>
+      <button class="sp" onclick="speakEl(this,'ov4')">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: 4-STEP PATH ══ -->
+<div class="page" id="steps">
+  <div class="ph">
+    <div class="ph-eyebrow">Execution plan</div>
+    <h1>The Four-Step Path</h1>
+    <p>From core concepts to a working demo, in roughly two weeks of part-time study.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 200" role="img">
+<title>Four step learning path</title>
+<desc>Step 1 LangChain core about one week, step 2 LlamaIndex two to three days, step 3 observability one to two days minimum or eighteen point five hours optional, step 4 build the dbt BigQuery demo stitching it together</desc>
+<defs>
+  <marker id="fs-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .fs-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .fs-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .fs-blue{fill:#E6F1FB;stroke:#185FA5;stroke-width:0.5;}
+    .fs-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+    .fs-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
+    .fs-green{fill:#ECFDF5;stroke:#059669;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="20" y="60" width="140" height="80" rx="8" class="fs-blue"/>
+<text class="fs-th" x="90" y="84" text-anchor="middle" dominant-baseline="central">Step 1</text>
+<text class="fs-ts" x="90" y="102" text-anchor="middle" dominant-baseline="central">LangChain Core</text>
+<text class="fs-ts" x="90" y="120" text-anchor="middle" dominant-baseline="central">~1 week</text>
+<line x1="160" y1="100" x2="190" y2="100" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#fs-arrow)"/>
+
+<rect x="190" y="60" width="140" height="80" rx="8" class="fs-teal"/>
+<text class="fs-th" x="260" y="84" text-anchor="middle" dominant-baseline="central">Step 2</text>
+<text class="fs-ts" x="260" y="102" text-anchor="middle" dominant-baseline="central">LlamaIndex</text>
+<text class="fs-ts" x="260" y="120" text-anchor="middle" dominant-baseline="central">2-3 days, free</text>
+<line x1="330" y1="100" x2="360" y2="100" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#fs-arrow)"/>
+
+<rect x="360" y="60" width="140" height="80" rx="8" class="fs-amber"/>
+<text class="fs-th" x="430" y="84" text-anchor="middle" dominant-baseline="central">Step 3</text>
+<text class="fs-ts" x="430" y="102" text-anchor="middle" dominant-baseline="central">Observability</text>
+<text class="fs-ts" x="430" y="120" text-anchor="middle" dominant-baseline="central">1-2d docs / 18.5h course</text>
+<line x1="500" y1="100" x2="530" y2="100" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#fs-arrow)"/>
+
+<rect x="530" y="60" width="140" height="80" rx="8" class="fs-green"/>
+<text class="fs-th" x="600" y="84" text-anchor="middle" dominant-baseline="central">Step 4</text>
+<text class="fs-ts" x="600" y="102" text-anchor="middle" dominant-baseline="central">Build Demo</text>
+<text class="fs-ts" x="600" y="120" text-anchor="middle" dominant-baseline="central">dbt + BigQuery</text>
+</svg>
+    <div class="diagram-caption">Roughly two weeks part-time, front-loaded with the most reusable concepts</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Step 1 — LangChain Core (Eden Marco)</span></div>
+
+    <div class="block bl-blue" id="s1-1">
+      <div class="block-title">Course details</div>
+      <p>LangChain — Agentic AI Engineering with LangChain and LangGraph, taught by Eden Marco, with 182,669 students and a 4.6 star rating. Already enrolled with a discount coupon. Estimated time: about one week of focused study, not the full 19 hours — prioritize specific sections.</p>
+      <button class="sp" onclick="speakEl(this,'s1-1')">🔊 Listen</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table class="cmp">
+        <tr><th>Section</th><th>Why it matters for this JD</th></tr>
+        <tr><td>Section 2 — GIST of LangChain</td><td>LCEL syntax, the pipe operator used everywhere</td></tr>
+        <tr><td>Section 3 — GIST of AI Agents</td><td>Agent vs Chain distinction, the 4-stage ReAct evolution</td></tr>
+        <tr><td>Sections 4-6 — Agents Under The Hood</td><td>Most valuable for interview depth — explains <em>why</em> tool calling works</td></tr>
+        <tr><td>Section 7 — GIST of RAG</td><td>Naive RAG vs LCEL RAG — informs how to design a QA bot</td></tr>
+        <tr><td>Section 8 — Documentation Assistant</td><td>The content_and_artifact pattern — exactly what a data QA bot needs</td></tr>
+      </table>
+    </div>
+
+    <div class="block bl-teal" id="s1-2">
+      <div class="block-title">Concept Primer — why Section 8's pattern matters for the demo</div>
+      <p>A data QA bot answering which merchant had the highest GMV last week needs to show its work — which table, which SQL, which dbt model. The content and artifact pattern splits a tool's output into two channels: content is the answer text sent back to the language model, while artifact is the raw query results or source table metadata, shown directly to the user and bypassing the model entirely. This is the exact mechanism for building trust in an internal analytics copilot, directly mapping to the JD's language about a trusted, scalable data language.</p>
+      <button class="sp" onclick="speakEl(this,'s1-2')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">Step 2 — LlamaIndex (DeepLearning.AI, free)</span></div>
+
+    <div class="block bl-teal" id="s2-1">
+      <div class="block-title">Course details</div>
+      <p>Building Agentic RAG with LlamaIndex, taught by Jerry Liu, co-founder and CEO of LlamaIndex. Free, roughly one to two hours of video content. Covers four progressively complex patterns: a router that picks between query engines, tool calling where the model infers arguments, a research agent doing multi-step reasoning, and a multi-document agent extending to several documents at once.</p>
+      <button class="sp" onclick="speakEl(this,'s2-1')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-violet" id="s2-2">
+      <div class="block-title">Concept Primer — LangChain vs LlamaIndex, the one-sentence answer</div>
+      <p>LangChain is chain-composition-centric, piping together a prompt, a language model, and a parser. LlamaIndex is index-centric, building an index over data and querying it intelligently. For a JD that explicitly wants natural-language querying of dbt models and BigQuery tables, LlamaIndex's index-first mental model arguably maps more naturally to indexing the semantic layer and letting an agent query it, compared to LangChain's chain-first model. This is worth stating explicitly in an interview — it demonstrates understanding of why the JD might prefer LlamaIndex for this specific use case, not just surface familiarity with the name.</p>
+      <button class="sp" onclick="speakEl(this,'s2-2')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--amber)"></span><span style="color:var(--amber)">Step 3 — Observability (Langfuse / Phoenix)</span></div>
+
+    <div class="block bl-amber" id="s3-1">
+      <div class="block-title">Fast path — Langfuse docs only, one to two days</div>
+      <p>Read the observability overview page to understand the core concepts of trace, span, generation, and session, then the get started guide to see the observe decorator and the LangChain callback handler in action. No deployment required — reading the code examples is sufficient for interview-level fluency.</p>
+      <button class="sp" onclick="speakEl(this,'s3-1')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-coral" id="s3-2">
+      <div class="block-title">Concept Primer — Langfuse's five-object data model</div>
+      <p>A trace represents one end-to-end request, one complete user interaction. Inside a trace, a span is a unit of work with duration, such as a retrieval step or a tool call. A generation is a specific kind of span representing one language model call, carrying the model name, prompt, completion, token counts, and cost. An event is a point-in-time marker with no duration. A session groups multiple traces belonging to one multi-turn conversation. A score is a quality signal — numeric, boolean, or categorical — attached to a trace, observation, or session. This five-object model is the entire mental model behind LLM observability, and it applies whether the tool is Langfuse, Phoenix, or anything else in this category.</p>
+      <button class="sp" onclick="speakEl(this,'s3-2')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-amber" id="s3-3">
+      <div class="block-title">Deep path — full course, optional, 18.5 hours</div>
+      <p>AI Engineer Production Track: Deploy LLMs and Agents at Scale, taught by Ed Donner and Ligency, rated 4.7 stars across 3,240 ratings. The course description explicitly covers deploying AI to AWS, GCP, Azure, and Vercel with MLOps, Bedrock, SageMaker, RAG, Agents, and MCP — scalable, secure, and observable. This is a full course on the production layer rather than just documentation, offering hands-on deployment and monitoring experience worth discussing in depth — higher-signal for a manager-level role that needs to set best practices for a team, not just ship individual demos.</p>
+      <button class="sp" onclick="speakEl(this,'s3-3')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">Step 4 — Build the Demo</span></div>
+
+    <div class="block bl-green" id="s4-1">
+      <div class="block-title">No course teaches this exact combination</div>
+      <p>The natural-language-to-dbt-to-BigQuery agent is a custom stitching job using the LangChain BigQuery integration as a reference. The core idea: use LangChain's database tooling to connect to BigQuery, let the language model generate SQL from a natural language question, execute it, and return the result. See the Demo Architecture tab for the full diagram and skeleton code.</p>
+      <button class="sp" onclick="speakEl(this,'s4-1')">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAGE: DEMO ARCHITECTURE ══ -->
+<div class="page" id="demo">
+  <div class="ph">
+    <div class="ph-eyebrow">Step 4 detail</div>
+    <h1>Demo Architecture</h1>
+    <p>Natural language → dbt schema → BigQuery → cited answer, wrapped in Langfuse tracing.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 320" role="img">
+<title>Natural language to dbt BigQuery agent demo architecture</title>
+<desc>A natural language question goes into an agent which has two tools, one reads dbt model schema, the other queries BigQuery, the agent loops between checking schema and running SQL then returns an answer with cited source table, every step is wrapped by Langfuse observe decorator producing a trace</desc>
+<defs>
+  <marker id="dq-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .dq-th{font-family:-apple-system,sans-serif;font-size:14px;font-weight:600;fill:#1E2433;}
+    .dq-ts{font-family:-apple-system,sans-serif;font-size:12px;fill:#5A6478;}
+    .dq-gray{fill:#F1EFE8;stroke:#888780;stroke-width:0.5;}
+    .dq-purple{fill:#EEEDFE;stroke:#534AB7;stroke-width:0.5;}
+    .dq-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+    .dq-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
+    .dq-green{fill:#ECFDF5;stroke:#059669;stroke-width:0.5;}
+    .dq-coral{fill:#FAECE7;stroke:#993C1D;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="60" y="20" width="560" height="50" rx="8" class="dq-gray"/>
+<text class="dq-th" x="340" y="40" text-anchor="middle" dominant-baseline="central">"Which merchant had highest GMV last week?"</text>
+<text class="dq-ts" x="340" y="58" text-anchor="middle" dominant-baseline="central">natural language question</text>
+<line x1="340" y1="70" x2="340" y2="96" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#dq-arrow)"/>
+
+<rect x="220" y="96" width="240" height="56" rx="8" class="dq-purple"/>
+<text class="dq-th" x="340" y="118" text-anchor="middle" dominant-baseline="central">Agent</text>
+<text class="dq-ts" x="340" y="136" text-anchor="middle" dominant-baseline="central">create_agent + tools</text>
+
+<line x1="220" y1="124" x2="140" y2="124" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#dq-arrow)"/>
+<line x1="460" y1="124" x2="540" y2="124" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#dq-arrow)"/>
+
+<rect x="20" y="98" width="120" height="52" rx="8" class="dq-teal"/>
+<text class="dq-th" x="80" y="116" text-anchor="middle" dominant-baseline="central">get_dbt_</text>
+<text class="dq-th" x="80" y="132" text-anchor="middle" dominant-baseline="central">model_schema</text>
+
+<rect x="540" y="98" width="120" height="52" rx="8" class="dq-amber"/>
+<text class="dq-th" x="600" y="116" text-anchor="middle" dominant-baseline="central">query_</text>
+<text class="dq-th" x="600" y="132" text-anchor="middle" dominant-baseline="central">bigquery</text>
+
+<line x1="140" y1="150" x2="220" y2="150" stroke="#888780" stroke-width="0.5" fill="none"/>
+<line x1="460" y1="150" x2="540" y2="150" stroke="#888780" stroke-width="0.5" fill="none"/>
+<line x1="340" y1="152" x2="340" y2="178" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#dq-arrow)"/>
+
+<rect x="160" y="178" width="360" height="56" rx="8" class="dq-green"/>
+<text class="dq-th" x="340" y="200" text-anchor="middle" dominant-baseline="central">Answer + cited source table</text>
+<text class="dq-ts" x="340" y="218" text-anchor="middle" dominant-baseline="central">content_and_artifact pattern</text>
+
+<line x1="340" y1="234" x2="340" y2="260" stroke="#534AB7" stroke-width="1" stroke-dasharray="4 3" fill="none" marker-end="url(#dq-arrow)"/>
+
+<rect x="220" y="260" width="240" height="44" rx="8" class="dq-coral"/>
+<text class="dq-th" x="340" y="276" text-anchor="middle" dominant-baseline="central">Langfuse trace</text>
+<text class="dq-ts" x="340" y="292" text-anchor="middle" dominant-baseline="central">@observe() wraps every step</text>
+</svg>
+    <div class="diagram-caption">Every box on this diagram is a concept covered in Steps 1-3 — the demo is the synthesis, not new material</div>
+  </div>
+
+  <div class="block bl-blue" id="d1">
+    <div class="block-title">Reference documentation</div>
+    <p>LangChain's BigQuery tool integration documents the core mechanism — using LangChain's SQLDatabase tooling to connect to BigQuery, letting the language model generate SQL from a natural language question, executing it, and returning the result. If the link has moved, search for LangChain BigQuery tool integration.</p>
+    <button class="sp" onclick="speakEl(this,'d1')">🔊 Listen</button>
+  </div>
+
+  <div class="block-title" style="margin:14px 0 6px;font-size:13px;color:var(--dim);">Skeleton code</div>
+  <div class="code">from langchain.tools import tool
+from langchain.agents import create_agent
+from google.cloud import bigquery
+
+@tool
+def query_bigquery(sql: str) -> str:
+    """Execute a SQL query against BigQuery and return results."""
+    client = bigquery.Client()
+    return str(client.query(sql).to_dataframe())
+
+@tool
+def get_dbt_model_schema(model_name: str) -> str:
+    """Read the schema definition for a dbt model."""
+    # parse schema.yml or manifest.json
+    ...
+
+agent = create_agent(
+    model=llm,
+    tools=[query_bigquery, get_dbt_model_schema]
+)
+
+# "which merchant had highest GMV last week"
+# → agent checks schema to understand fields
+# → generates SQL
+# → queries BigQuery
+# → returns answer</div>
+
+  <div class="block bl-green" id="d2">
+    <div class="block-title">Why this demo is the right one for this specific JD</div>
+    <p>The job description states, almost verbatim, that the role involves building internal copilots, workflow agents, and intelligent data QA bots. This demo is one of those three things — a data QA bot bridging natural language and the actual dbt plus BigQuery stack explicitly named in the job description's technology list. Wrapping both tools with Langfuse's observe decorator means even a single trace screenshot in a portfolio demonstrates understanding of both halves of the JD — building the agent and monitoring it.</p>
+    <button class="sp" onclick="speakEl(this,'d2')">🔊 Listen</button>
+  </div>
+</div>
+
+<!-- ══ PAGE: ALL LINKS ══ -->
+<div class="page" id="resources">
+  <div class="ph">
+    <div class="ph-eyebrow">Reference</div>
+    <h1>Full Resource Table</h1>
+    <p>Every link, in execution order, with time and cost.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="tbl-wrap">
+    <table class="cmp">
+      <tr><th>Step</th><th>Resource</th><th>Link</th><th>Time</th><th>Cost</th></tr>
+      <tr><td>1</td><td>LangChain — Eden Marco</td><td class="linkcell"><a href="https://www.udemy.com/course/langchain/?couponCode=MT260629G3" target="_blank">udemy.com/course/langchain</a></td><td>~1 week</td><td>Paid</td></tr>
+      <tr><td>2</td><td>LlamaIndex — DeepLearning.AI</td><td class="linkcell"><a href="https://www.deeplearning.ai/courses/building-agentic-rag-with-llamaindex/" target="_blank">deeplearning.ai/courses/...llamaindex</a></td><td>2-3 days</td><td>Free</td></tr>
+      <tr><td>2b</td><td>LlamaIndex — Coursera mirror</td><td class="linkcell"><a href="https://www.coursera.org/projects/building-agentic-rag-with-llamaindex" target="_blank">coursera.org/projects/...llamaindex</a></td><td>—</td><td>Free</td></tr>
+      <tr><td>3a</td><td>Langfuse docs home</td><td class="linkcell"><a href="https://langfuse.com/docs" target="_blank">langfuse.com/docs</a></td><td>—</td><td>Free</td></tr>
+      <tr><td>3b</td><td>Langfuse observability overview</td><td class="linkcell"><a href="https://langfuse.com/docs/observability/overview" target="_blank">langfuse.com/docs/observability/overview</a></td><td>30 min</td><td>Free</td></tr>
+      <tr><td>3c</td><td>Langfuse get started guide</td><td class="linkcell"><a href="https://langfuse.com/docs/observability/get-started" target="_blank">langfuse.com/docs/observability/get-started</a></td><td>1-2 days</td><td>Free</td></tr>
+      <tr><td>3d</td><td>Langfuse GitHub</td><td class="linkcell"><a href="https://github.com/langfuse/langfuse" target="_blank">github.com/langfuse/langfuse</a></td><td>—</td><td>Free</td></tr>
+      <tr><td>3e</td><td>AI Engineer Production Track (optional)</td><td class="linkcell">Search Udemy: "AI Engineer Production Track Ed Donner"</td><td>18.5h</td><td>Paid</td></tr>
+      <tr><td>4</td><td>LangChain BigQuery integration</td><td class="linkcell"><a href="https://python.langchain.com/docs/integrations/tools/google_bigquery/" target="_blank">python.langchain.com/.../google_bigquery</a></td><td>—</td><td>Free</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══ PAGE: INTERVIEW PREP ══ -->
+<div class="page" id="interview">
+  <div class="ph">
+    <div class="ph-eyebrow">After completing the path above</div>
+    <h1>Interview Talking Points</h1>
+    <p>Ready-made answers for the questions this preparation path is built to answer.</p>
+  </div>
+
+  <div class="notice">🔊 Requires internet. Open in Chrome for audio.</div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">🔀</div>
+      <div class="qa-q">
+        <div class="qa-q-text">Why LangChain if our stack is LlamaIndex?</div>
+        <span class="qa-tag t-blue">Framework choice</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <p id="i1" style="color:var(--dim);font-size:14px;line-height:1.7;">Agent architecture concepts — tool calling, RAG, multi-step reasoning — are framework-agnostic. I built the foundation with LangChain because the teaching material is the most systematic available, then mapped that onto LlamaIndex's index-centric API, which I'd argue fits your use case even better since you're querying a structured semantic layer.</p>
+      <button class="sp" onclick="speakEl(this,'i1')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">📊</div>
+      <div class="qa-q">
+        <div class="qa-q-text">How do you monitor an LLM application in production?</div>
+        <span class="qa-tag t-amber">Observability</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <p id="i2" style="color:var(--dim);font-size:14px;line-height:1.7;">I'd instrument it with Langfuse — wrap each agent step with the observe decorator, track traces per user session, and watch cost, latency, and quality scores on a dashboard. The five-object model — trace, span, generation, session, score — covers everything from a single LLM call to a multi-turn conversation.</p>
+      <button class="sp" onclick="speakEl(this,'i2')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">🛠️</div>
+      <div class="qa-q">
+        <div class="qa-q-text">Walk me through a project you'd build for this role.</div>
+        <span class="qa-tag t-green">Demo walkthrough</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <p id="i3" style="color:var(--dim);font-size:14px;line-height:1.7;">I'd walk through the dbt and BigQuery demo: natural language goes in, the agent checks the dbt schema to understand available fields, generates SQL, queries BigQuery, and returns a cited answer pointing to the source table — directly mirroring the JD's language about internal copilots, workflow agents, and intelligent data QA bots.</p>
+      <button class="sp" onclick="speakEl(this,'i3')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="qa-card" onclick="toggleQA(this)">
+    <div class="qa-top">
+      <div class="qa-icon">✅</div>
+      <div class="qa-q">
+        <div class="qa-q-text">How would you evaluate whether an agent's answer is correct?</div>
+        <span class="qa-tag t-violet">Evaluation</span>
+      </div>
+      <div class="qa-chev">▼</div>
+    </div>
+    <div class="qa-body">
+      <p id="i4" style="color:var(--dim);font-size:14px;line-height:1.7;">I'd reference Langfuse's score object — LLM-as-judge evaluation, heuristic functions, or human annotation, attached to a trace and tracked over time. This lets you separate correctness evaluation from raw performance monitoring, while keeping both in the same observability platform.</p>
+      <button class="sp" onclick="speakEl(this,'i4')">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleQA(card) { card.classList.toggle('open'); }
+
+var _btn=null,_queue=[],_audio=null;
+function _chunk(t,m){var s=t.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[t],c=[],cur='';for(var i=0;i<s.length;i++){if((cur+s[i]).length>m){if(cur)c.push(cur.trim());cur=s[i];}else cur+=s[i];}if(cur.trim())c.push(cur.trim());return c.filter(function(x){return x.length>0;});}
+function _url(t){return 'https://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(t)+'&tl=en-US&client=tw-ob';}
+function _stop(){_queue=[];if(_audio){_audio.pause();_audio.src='';_audio=null;}}
+function _play(b){if(!_queue.length){_resetBtn(b);_btn=null;return;}var a=new Audio(_queue.shift());_audio=a;a.onended=function(){_audio=null;_play(b);};a.onerror=function(){_audio=null;_play(b);};a.play().catch(function(){_audio=null;_play(b);});}
+function speakEl(btn,elId){
+  if(_btn===btn){_stop();_resetBtn(btn);_btn=null;return;}
+  if(_btn){_stop();_resetBtn(_btn);_btn=null;}
+  var el=document.getElementById(elId);if(!el)return;
+  var text=el.innerText.replace(/[▶■🔊]\s*(Listen)?\s*/g,'').replace(/\s+/g,' ').trim();
+  if(!text)return;
+  _queue=_chunk(text,190).map(_url);
+  _btn=btn;btn.innerHTML='■ Stop';btn.classList.add('playing');_play(btn);
+}
+function _resetBtn(b){if(!b)return;b.innerHTML='🔊 Listen';b.classList.remove('playing');}
+</script>
+</body>
+</html>
