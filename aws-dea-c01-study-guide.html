@@ -135,6 +135,7 @@ table.t tr:hover td{background:var(--bg);}
   <button class="nav-btn" onclick="showPage('d3',this)">P3 Data Operations &amp; Support (22%)</button>
   <button class="nav-btn" onclick="showPage('d4',this)">P4 Data Security &amp; Governance (18%)</button>
   <button class="nav-btn" onclick="showPage('quiz',this)">🧪 Practice Quiz</button>
+  <button class="nav-btn" onclick="showPage('tdguide',this)">🎯 Tutorials Dojo Guide</button>
   <button class="nav-btn" onclick="showPage('links',this)">🔗 Resources</button>
 </div>
 
@@ -1163,6 +1164,97 @@ table.t tr:hover td{background:var(--bg);}
       <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Store in AWS Secrets Manager with automatic rotation enabled and CloudTrail logging</div>
     </div>
     <div class="quiz-explain">✅ <strong>D is correct.</strong> AWS Secrets Manager is purpose-built for credential storage with automatic rotation (Lambda rotator function), versioning, and CloudTrail logging of every access. Lambda environment variables (A) can be encrypted but offer no automatic rotation. SSM Parameter Store (B) supports SecureString but automatic rotation requires custom Lambda setup and is less feature-rich than Secrets Manager for database credentials. Hard-coding (C) is never acceptable.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: TUTORIALS DOJO GUIDE
+═══════════════════════════════════════════════════ -->
+<div class="page" id="tdguide">
+  <div class="ph">
+    <h2>How to Find Tutorials Dojo DEA-C01 Practice Questions (2026)</h2>
+    <p>Step-by-step guide — how many questions, where to get them, and whether to pay.</p>
+  </div>
+
+  <div class="notice">🔊 Uses Chrome's built-in male voice at a slower, natural pace.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Quick answer</span></div>
+    <div class="block bl-blue" id="td0">
+      <div class="block-title">How many questions, and is it paid?</div>
+      <p>Tutorials Dojo's DEA-C01 practice exam bank has roughly 177 questions, organized into two full 65-question simulation tests plus section-based practice by domain. It is a paid product, typically priced between 10 and 15 US dollars, with frequent sale discounts. A free 20-question sampler exists if you want to test the question style before paying anything.</p>
+      <button class="sp" onclick="speakEl(this,'td0')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">Step-by-step: how to find and buy</span></div>
+
+    <div class="block bl-green" id="td1">
+      <div class="block-title">Step 1 — Try the free 20-question sampler first</div>
+      <p>Before spending anything, search "FREE AWS Certified Data Engineer Associate Practice Exam Sampler Tutorials Dojo" or go directly to the Tutorials Dojo portal. This sampler has 20 real-style questions in Timed and Review mode, completely free, no credit card required. Use this to judge whether the question style and difficulty match what you need before committing to the paid version.</p>
+      <button class="sp" onclick="speakEl(this,'td1')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-green" id="td2">
+      <div class="block-title">Step 2 — Decide which platform to buy from: Udemy or the Tutorials Dojo portal</div>
+      <p>The same author, Jon Bonso, sells the identical question bank in two places. The Tutorials Dojo portal at portal.tutorialsdojo.com is the native platform with the fullest feature set — progress tracking, cheat sheets, and flashcards — but access is typically limited to 12 months per purchase. The Udemy listing has the same questions and often goes on sale for less than the portal price, and Udemy purchases are yours permanently with no expiry. For most people, Udemy is the better value unless you specifically want the portal's extra tracking features.</p>
+      <button class="sp" onclick="speakEl(this,'td2')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-green" id="td3">
+      <div class="block-title">Step 3 — Search the exact product name to avoid buying the wrong exam</div>
+      <p>Search precisely for "AWS Certified Data Engineer Associate DEA-C01 Practice Exam Tutorials Dojo" — the exam code DEA-C01 is essential in your search, since Tutorials Dojo sells practice exams for dozens of different AWS certifications, and it's easy to accidentally click into a Solutions Architect or Data Analytics practice exam instead.</p>
+      <button class="sp" onclick="speakEl(this,'td3')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-green" id="td4">
+      <div class="block-title">Step 4 — Check for an active coupon before paying full price</div>
+      <p>Tutorials Dojo and Udemy both run frequent sales — Udemy in particular almost always has some discount active. Before completing checkout, search "Tutorials Dojo DEA-C01 coupon" or "Udemy AWS Data Engineer practice exam coupon" for the current month, since full price is rarely necessary.</p>
+      <button class="sp" onclick="speakEl(this,'td4')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-green" id="td5">
+      <div class="block-title">Step 5 — Use the five practice modes in the right order</div>
+      <p>Once purchased, don't jump straight to the timed final test. Start with Section-Based Tests to practice one domain at a time while you're still learning that domain. Move to Review Mode once you've covered all four domains, so you can see explanations immediately after each question. Only attempt Timed Mode and the randomized Final Test once you're consistently scoring well in review mode — this mirrors the real 130-minute time pressure and gives you the most honest readiness signal.</p>
+      <button class="sp" onclick="speakEl(this,'td5')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-amber" id="td6">
+      <div class="block-title">Step 6 — Know what score to aim for before booking the real exam</div>
+      <p>Multiple users who passed reported reaching consistent scores of 90 percent or higher on Tutorials Dojo's randomized Final Test, completing all 65 questions in 11 to 13 minutes, before they felt ready for the real exam. Real exam question overlap with Tutorials Dojo is commonly reported between 50 and 60 percent — meaning the practice tests build your conceptual foundation, but you should not expect to memorize your way to a pass.</p>
+      <button class="sp" onclick="speakEl(this,'td6')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Direct links</span></div>
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>Resource</th><th>Link</th><th>Cost</th></tr>
+        <tr><td>Free 20-question sampler</td><td><a class="lnk" href="https://portal.tutorialsdojo.com/courses/free-aws-certified-data-engineer-associate-practice-exam-sampler/" target="_blank">portal.tutorialsdojo.com — free sampler</a></td><td>Free</td></tr>
+        <tr><td>Tutorials Dojo portal (full 177Q bank)</td><td><a class="lnk" href="https://portal.tutorialsdojo.com/courses/aws-certified-data-engineer-associate-practice-exam-dea-c01/" target="_blank">portal.tutorialsdojo.com — DEA-C01 practice exam</a></td><td>Paid · 12-month access</td></tr>
+        <tr><td>Udemy version (same questions)</td><td><a class="lnk" href="https://www.udemy.com/course/aws-data-engineer-associate-dea-c01-practice-exam/?couponCode=MT260629G3" target="_blank">udemy.com — DEA-C01 practice exam (coupon applied)</a></td><td>Paid · Lifetime access</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--red)"></span><span style="color:var(--red)">Other question banks worth knowing about</span></div>
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>Provider</th><th>Question count</th><th>Notes</th></tr>
+        <tr><td>Tutorials Dojo</td><td>~177 questions</td><td>2 full tests + section-based — most recommended, highest realism</td></tr>
+        <tr><td>Whizlabs</td><td>~130 questions</td><td>2 full tests — cheaper, slightly lower question quality</td></tr>
+        <tr><td>ExamTopics</td><td>~152 questions</td><td>36 free, rest behind paywall/CAPTCHA — verify answers independently</td></tr>
+        <tr><td>Udemy (other authors)</td><td>65–195 questions</td><td>Varies widely by course — check reviews before buying</td></tr>
+      </table>
+    </div>
+    <div class="block bl-red" id="td7">
+      <div class="block-title">Why use more than one source</div>
+      <p>Multiple candidates who passed reported deliberately mixing Tutorials Dojo with at least one other bank, such as Whizlabs or ExamTopics, specifically to avoid over-fitting to one company's question-writing style. Each provider's writers have habits and phrasing patterns; practicing across sources builds more transferable understanding rather than pattern-matching to one bank's format.</p>
+      <button class="sp" onclick="speakEl(this,'td7')">🔊 Listen</button>
+    </div>
   </div>
 </div>
 
