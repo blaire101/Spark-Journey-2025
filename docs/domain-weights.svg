@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="290" viewBox="0 0 700 290" role="img">
+<title>DEA-C01 Domain Weights Bar Chart</title>
+<desc>Domain 1 Data Ingestion and Transformation 34 percent, Domain 2 Data Store Management 26 percent, Domain 3 Data Operations and Support 22 percent, Domain 4 Data Security and Governance 18 percent</desc>
+<defs>
+  <style>
+    .dw-lb{font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;fill:#1E2433;}
+    .dw-pct{font-family:-apple-system,sans-serif;font-size:14px;font-weight:700;fill:#1E2433;}
+    .dw-note{font-family:-apple-system,sans-serif;font-size:11px;fill:#185FA5;font-weight:600;}
+  </style>
+</defs>
+<rect x="0" y="0" width="700" height="290" fill="#FFFFFF"/>
+
+
+<!-- Row 1 -->
+<text class="dw-lb" x="10" y="26">P1 — Data Ingestion &amp; Transformation</text>
+<rect x="10" y="34" width="536" height="30" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="dw-pct" x="556" y="53">34%</text>
+<text class="dw-note" x="600" y="53">← biggest weight</text>
+
+<!-- Row 2 -->
+<text class="dw-lb" x="10" y="94">P2 — Data Store Management</text>
+<rect x="10" y="102" width="410" height="30" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="dw-pct" x="430" y="121">26%</text>
+
+<!-- Row 3 -->
+<text class="dw-lb" x="10" y="162">P3 — Data Operations &amp; Support</text>
+<rect x="10" y="170" width="347" height="30" rx="6" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="dw-pct" x="367" y="189">22%</text>
+
+<!-- Row 4 -->
+<text class="dw-lb" x="10" y="230">P4 — Data Security &amp; Governance</text>
+<rect x="10" y="238" width="284" height="30" rx="6" fill="#F5F3FF" stroke="#534AB7" stroke-width="0.5"/>
+<text class="dw-pct" x="304" y="257">18%</text>
+
+<text class="dw-note" x="10" y="284" fill="#5A6478" font-weight="400">Bar length is proportional to exam weight — P1 alone is nearly 1 in 3 questions</text>
+</svg>

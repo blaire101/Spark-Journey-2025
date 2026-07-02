@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="220" viewBox="0 0 700 220" role="img">
+<title>Workload shape to data store mapping</title>
+<desc>Four workload shapes mapped to services, structured SQL analytics maps to Redshift, key value at massive scale maps to DynamoDB, relational transactional maps to RDS Aurora, streaming continuous maps to Kinesis or MSK</desc>
+<defs>
+  <style>
+    .ws-th{font-family:-apple-system,sans-serif;font-size:12.5px;font-weight:700;fill:#1E2433;}
+    .ws-ts{font-family:-apple-system,sans-serif;font-size:10.5px;fill:#5A6478;}
+  </style>
+</defs>
+<rect x="0" y="0" width="700" height="220" fill="#FFFFFF"/>
+
+<rect x="10" y="20" width="330" height="80" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="ws-th" x="30" y="44">📊 SQL analytics, BI dashboards</text>
+<text class="ws-ts" x="30" y="64">Large scans, aggregations, joins</text>
+<text class="ws-ts" x="30" y="80">→ Amazon Redshift</text>
+
+<rect x="360" y="20" width="330" height="80" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="ws-th" x="380" y="44">⚡ Key-value, massive scale</text>
+<text class="ws-ts" x="380" y="64">Single-digit ms lookups by key</text>
+<text class="ws-ts" x="380" y="80">→ Amazon DynamoDB</text>
+
+<rect x="10" y="112" width="330" height="80" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="ws-th" x="30" y="136">🏦 Relational, transactional (OLTP)</text>
+<text class="ws-ts" x="30" y="156">ACID transactions, foreign keys</text>
+<text class="ws-ts" x="30" y="172">→ RDS or Aurora</text>
+
+<rect x="360" y="112" width="330" height="80" rx="8" fill="#F5F3FF" stroke="#534AB7" stroke-width="0.5"/>
+<text class="ws-th" x="380" y="136">🌊 Continuous streaming data</text>
+<text class="ws-ts" x="380" y="156">Real-time ingestion, replay</text>
+<text class="ws-ts" x="380" y="172">→ Kinesis Data Streams or MSK</text>
+</svg>

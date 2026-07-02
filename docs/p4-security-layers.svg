@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="160" viewBox="0 0 680 160" role="img">
+<title>Security layers from identity to encryption</title>
+<desc>Four layers: IAM for authentication, Lake Formation for authorisation, KMS for encryption, CloudTrail for audit</desc>
+<defs>
+  <style>
+    .s4-th{font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;fill:#1E2433;}
+    .s4-ts{font-family:-apple-system,sans-serif;font-size:11px;fill:#5A6478;}
+    .s4-violet{fill:#F5F3FF;stroke:#534AB7;stroke-width:0.5;}
+    .s4-blue{fill:#E6F1FB;stroke:#185FA5;stroke-width:0.5;}
+    .s4-green{fill:#ECFDF5;stroke:#059669;stroke-width:0.5;}
+    .s4-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="0" y="0" width="680" height="160" fill="#FFFFFF"/>
+
+<rect x="20"  y="30" width="148" height="100" rx="8" class="s4-violet"/>
+<text class="s4-th" x="94" y="58" text-anchor="middle" dominant-baseline="central">Authentication</text>
+<text class="s4-ts" x="94" y="78" text-anchor="middle" dominant-baseline="central">IAM Roles &amp; Policies</text>
+<text class="s4-ts" x="94" y="94" text-anchor="middle" dominant-baseline="central">Secrets Manager</text>
+<text class="s4-ts" x="94" y="110" text-anchor="middle" dominant-baseline="central">VPC Security Groups</text>
+
+<rect x="178" y="30" width="148" height="100" rx="8" class="s4-blue"/>
+<text class="s4-th" x="252" y="58" text-anchor="middle" dominant-baseline="central">Authorisation</text>
+<text class="s4-ts" x="252" y="78" text-anchor="middle" dominant-baseline="central">Lake Formation</text>
+<text class="s4-ts" x="252" y="94" text-anchor="middle" dominant-baseline="central">RBAC / ABAC</text>
+<text class="s4-ts" x="252" y="110" text-anchor="middle" dominant-baseline="central">Least privilege IAM</text>
+
+<rect x="336" y="30" width="148" height="100" rx="8" class="s4-green"/>
+<text class="s4-th" x="410" y="58" text-anchor="middle" dominant-baseline="central">Encryption</text>
+<text class="s4-ts" x="410" y="78" text-anchor="middle" dominant-baseline="central">AWS KMS</text>
+<text class="s4-ts" x="410" y="94" text-anchor="middle" dominant-baseline="central">TLS in transit</text>
+<text class="s4-ts" x="410" y="110" text-anchor="middle" dominant-baseline="central">Data masking / PII</text>
+
+<rect x="494" y="30" width="166" height="100" rx="8" class="s4-amber"/>
+<text class="s4-th" x="577" y="58" text-anchor="middle" dominant-baseline="central">Audit &amp; Governance</text>
+<text class="s4-ts" x="577" y="78" text-anchor="middle" dominant-baseline="central">CloudTrail / CloudTrail Lake</text>
+<text class="s4-ts" x="577" y="94" text-anchor="middle" dominant-baseline="central">Amazon Macie</text>
+<text class="s4-ts" x="577" y="110" text-anchor="middle" dominant-baseline="central">AWS Config</text>
+</svg>

@@ -147,7 +147,7 @@ table.t tr:hover td{background:var(--bg);}
     <p>Everything you need to know before you start studying.</p>
   </div>
 
-  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome. Click any 🔊 button to hear that section.</div>
+  <div class="notice">🔊 Uses Chrome's built-in male voice at a slower, natural pace. Click any 🔊 button to hear that section.</div>
 
   <!-- Domain Weights Diagram -->
   <div class="diagram-box">
@@ -291,7 +291,7 @@ table.t tr:hover td{background:var(--bg);}
     <h2>Domain 1 — Data Ingestion &amp; Transformation</h2>
     <p><strong>34% of exam</strong> — the heaviest domain. Covers streaming, batch ingestion, ETL, orchestration, and programming concepts.</p>
   </div>
-  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome.</div>
+  <div class="notice">🔊 Uses Chrome's built-in male voice at a slower, natural pace.</div>
 
   <div class="diagram-box">
 <svg width="100%" viewBox="0 0 680 180" role="img">
@@ -505,7 +505,7 @@ table.t tr:hover td{background:var(--bg);}
     <h2>Domain 2 — Data Store Management</h2>
     <p><strong>26% of exam</strong> — choosing the right data store, cataloging, lifecycle management, and data modelling.</p>
   </div>
-  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome.</div>
+  <div class="notice">🔊 Uses Chrome's built-in male voice at a slower, natural pace.</div>
 
   <div class="sec">
     <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Task 2.1 — Choose the Right Data Store</span></div>
@@ -669,7 +669,7 @@ table.t tr:hover td{background:var(--bg);}
     <h2>Domain 3 — Data Operations and Support</h2>
     <p><strong>22% of exam</strong> — automation, analysis, monitoring, and data quality.</p>
   </div>
-  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome.</div>
+  <div class="notice">🔊 Uses Chrome's built-in male voice at a slower, natural pace.</div>
 
   <div class="sec">
     <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Task 3.1 — Automate Data Processing</span></div>
@@ -779,7 +779,7 @@ table.t tr:hover td{background:var(--bg);}
     <h2>Domain 4 — Data Security and Governance</h2>
     <p><strong>18% of exam</strong> — authentication, authorisation, encryption, audit, and privacy.</p>
   </div>
-  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome.</div>
+  <div class="notice">🔊 Uses Chrome's built-in male voice at a slower, natural pace.</div>
 
   <div class="diagram-box">
 <svg width="100%" viewBox="0 0 680 160" role="img">
@@ -1357,13 +1357,30 @@ function resetQuiz() {
   sb.textContent = '';
 }
 
-/* ── TTS: browser-native voice, prefers a natural US male voice ── */
+/* ── TTS: browser-native voice, prefers Edge's neural "Online (Natural)" voices ── */
 var _btn=null, _voice=null, _queue=[];
 
 function _pickVoice(){
   var voices = window.speechSynthesis.getVoices();
   if(!voices.length) return null;
-  var malePrefs = ['Google US English Male','Microsoft David','Microsoft Guy','Microsoft Andrew','Microsoft Christopher','Alex','Daniel','Fred','Aaron','Eric','Guy','Tom','Justin','Matthew','Christopher','Ryan'];
+  // Priority 1: Edge neural male "Online (Natural)" voices — cloud neural TTS, sounds genuinely human
+  // Priority 1: Edge neural male voices (harmless to keep — activates automatically if ever opened in Edge)
+  var naturalMale = ['Guy Online (Natural)','Andrew Online (Natural)','Davis Online (Natural)','Christopher Online (Natural)','Eric Online (Natural)','Jason Online (Natural)','Tony Online (Natural)','Brian Online (Natural)','Roger Online (Natural)'];
+  for(var p=0;p<naturalMale.length;p++){
+    for(var i=0;i<voices.length;i++){ if(voices[i].name.indexOf(naturalMale[p])!==-1) return voices[i]; }
+  }
+  // Priority 2: any Edge neural "(Natural)" English voice, any gender — still far more natural than default voices
+  for(var i=0;i<voices.length;i++){
+    if(voices[i].name.indexOf('(Natural)')!==-1 && voices[i].lang.indexOf('en')===0) return voices[i];
+  }
+  // Priority 3: macOS/iOS premium/enhanced voices (also neural-quality when downloaded)
+  // Priority 2: best-quality male voices actually available in Chrome (Mac's "Alex" is well-regarded; Windows ships David/Mark)
+  var chromeGoodMale = ['Alex','Google UK English Male','Microsoft David Desktop','Microsoft David','Microsoft Mark','Daniel','Fred'];
+  for(var p=0;p<chromeGoodMale.length;p++){
+    for(var i=0;i<voices.length;i++){ if(voices[i].name.indexOf(chromeGoodMale[p])!==-1) return voices[i]; }
+  }
+  // Priority 4: classic named male system voices (non-neural fallback)
+  var malePrefs = ['Microsoft David','Microsoft Guy','Microsoft Andrew','Microsoft Christopher','Alex','Daniel','Fred','Aaron','Eric','Guy','Tom','Justin','Matthew','Ryan'];
   for(var p=0;p<malePrefs.length;p++){
     for(var i=0;i<voices.length;i++){
       if(voices[i].name.indexOf(malePrefs[p])!==-1 && voices[i].lang.indexOf('en')===0) return voices[i];
@@ -1386,8 +1403,8 @@ function _speakNext(btn){
   var u = new SpeechSynthesisUtterance(text);
   if(_voice) u.voice = _voice;
   u.lang = 'en-US';
-  u.rate = 0.98;
-  u.pitch = (_voice && /female|zira|samantha|susan|karen|victoria|tessa|moira|fiona|siri/i.test(_voice.name)) ? 1 : 0.9;
+  u.rate = 0.85;
+  u.pitch = 1;
   u.onend = function(){ _speakNext(btn); };
   u.onerror = function(){ _speakNext(btn); };
   window.speechSynthesis.speak(u);

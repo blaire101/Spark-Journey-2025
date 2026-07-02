@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="220" viewBox="0 0 700 220" role="img">
+<title>Monitoring stack three layers</title>
+<desc>Bottom layer CloudTrail records every API call, middle layer CloudWatch Logs stores application output queried by Logs Insights, top layer OpenSearch and Managed Grafana for log analytics at scale and dashboards</desc>
+<defs>
+  <marker id="ms-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .ms-th{font-family:-apple-system,sans-serif;font-size:12.5px;font-weight:700;fill:#1E2433;}
+    .ms-ts{font-family:-apple-system,sans-serif;font-size:10.5px;fill:#5A6478;}
+  </style>
+</defs>
+<rect x="0" y="0" width="700" height="220" fill="#FFFFFF"/>
+
+<rect x="20" y="150" width="660" height="54" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="ms-th" x="40" y="172">Layer 1 — CloudTrail</text>
+<text class="ms-ts" x="40" y="190">Records every AWS API call: who, what, when, from where — for audit, not app performance</text>
+
+<line x1="350" y1="150" x2="350" y2="130" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ms-arrow)"/>
+
+<rect x="20" y="78" width="660" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="ms-th" x="40" y="100">Layer 2 — CloudWatch Logs + Logs Insights</text>
+<text class="ms-ts" x="40" y="118">Application log storage — Lambda, Glue, EMR logs flow here; Insights runs queries against them</text>
+
+<line x1="350" y1="78" x2="350" y2="58" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ms-arrow)"/>
+
+<rect x="20" y="6" width="660" height="54" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="ms-th" x="40" y="28">Layer 3 — OpenSearch + Managed Grafana</text>
+<text class="ms-ts" x="40" y="46">Full-text search, complex aggregations at massive log volume; Grafana visualises on dashboards</text>
+</svg>
