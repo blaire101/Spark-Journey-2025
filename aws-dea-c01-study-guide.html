@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS DEA-C01 — Complete Study Guide</title>
+<style>
+:root{
+  --bg:#F8F9FB;--white:#FFFFFF;--border:#E3E6EE;
+  --text:#111827;--dim:#4B5563;--faint:#9CA3AF;
+  --teal:#0891B2;--teal-bg:#ECFEFF;--teal-bd:#A5F3FC;
+  --blue:#2563EB;--blue-bg:#EFF6FF;--blue-bd:#BFDBFE;
+  --green:#059669;--green-bg:#ECFDF5;--green-bd:#6EE7B7;
+  --amber:#D97706;--amber-bg:#FFFBEB;--amber-bd:#FCD34D;
+  --violet:#7C3AED;--violet-bg:#F5F3FF;--violet-bd:#C4B5FD;
+  --red:#DC2626;--red-bg:#FEF2F2;--red-bd:#FCA5A5;
+  --orange:#EA580C;--orange-bg:#FFF7ED;--orange-bd:#FED7AA;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.7;padding:0 0 80px;}
+
+/* ── TOP HEADER ── */
+.top-header{background:linear-gradient(135deg,#1a1f36 0%,#232b5e 60%,#1e3a6e 100%);color:#fff;padding:28px 24px 24px;text-align:center;}
+.top-header h1{font-size:22px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;}
+.top-header p{font-size:13px;opacity:.8;}
+.badge-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px;}
+.hbadge{font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);}
+
+/* ── NAV ── */
+.nav{display:flex;gap:0;overflow-x:auto;background:var(--white);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:20;}
+.nav-btn{font-size:12px;font-weight:600;padding:12px 16px;border:none;background:transparent;color:var(--dim);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;}
+.nav-btn:hover{color:var(--text);background:var(--bg);}
+.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue);background:var(--white);}
+
+/* ── PAGES ── */
+.page{display:none;max-width:900px;margin:0 auto;padding:28px 20px;}
+.page.active{display:block;}
+.ph{margin-bottom:20px;}
+.ph h2{font-size:20px;font-weight:700;margin-bottom:4px;}
+.ph p{font-size:13.5px;color:var(--dim);}
+
+/* ── SPEAK ── */
+.sp{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;border:1px solid var(--teal-bd);background:var(--teal-bg);color:var(--teal);cursor:pointer;margin-top:8px;transition:all .15s;white-space:nowrap;}
+.sp:hover{background:var(--teal);color:#fff;}
+.sp.playing{background:var(--red-bg);color:var(--red);border-color:var(--red-bd);}
+
+/* ── BLOCKS ── */
+.sec{margin-bottom:28px;}
+.sec-title{font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sec-title .dot{width:7px;height:7px;border-radius:50%;}
+.block{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.block p,.block li{color:var(--dim);font-size:14px;line-height:1.7;}
+.block ul{padding-left:18px;}
+.block-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.bl-blue{border-left:3px solid var(--blue);background:var(--blue-bg);}
+.bl-teal{border-left:3px solid var(--teal);background:var(--teal-bg);}
+.bl-green{border-left:3px solid var(--green);background:var(--green-bg);}
+.bl-amber{border-left:3px solid var(--amber);background:var(--amber-bg);}
+.bl-violet{border-left:3px solid var(--violet);background:var(--violet-bg);}
+.bl-orange{border-left:3px solid var(--orange);background:var(--orange-bg);}
+.bl-red{border-left:3px solid var(--red);background:var(--red-bg);}
+.notice{font-size:12px;color:var(--dim);background:var(--teal-bg);border:1px solid var(--teal-bd);border-radius:7px;padding:9px 14px;margin-bottom:20px;}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;margin-bottom:12px;}
+table.t{width:100%;border-collapse:collapse;font-size:13px;background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+table.t th{text-align:left;padding:9px 12px;background:var(--bg);border-bottom:2px solid var(--border);font-weight:700;color:var(--text);}
+table.t td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--dim);vertical-align:top;}
+table.t tr:last-child td{border-bottom:none;}
+table.t tr:hover td{background:var(--bg);}
+.mono{font-family:'Menlo','Consolas',monospace;font-size:12px;background:var(--bg);padding:1px 5px;border-radius:4px;color:var(--text);}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin:1px;cursor:default;}
+.tag-blue{background:var(--blue-bg);color:var(--blue);}
+.tag-teal{background:var(--teal-bg);color:var(--teal);}
+.tag-green{background:var(--green-bg);color:var(--green);}
+.tag-amber{background:var(--amber-bg);color:var(--amber);}
+.tag-violet{background:var(--violet-bg);color:var(--violet);}
+.tag-orange{background:var(--orange-bg);color:var(--orange);}
+.tag-red{background:var(--red-bg);color:var(--red);}
+
+/* ── DOMAIN PIE SVG ── */
+.diagram-box{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px 14px 8px;margin-bottom:14px;overflow-x:auto;}
+.diagram-box svg{display:block;}
+.diagram-caption{font-size:12px;color:var(--faint);text-align:center;margin-top:6px;padding-bottom:6px;}
+
+/* ── QUIZ ── */
+.quiz-card{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:16px;overflow:hidden;}
+.quiz-num{font-size:11px;font-weight:700;color:var(--faint);padding:12px 16px 0;}
+.quiz-q{font-size:14px;font-weight:600;color:var(--text);padding:6px 16px 12px;line-height:1.5;}
+.quiz-domain{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin:0 16px 10px;display:inline-block;}
+.quiz-options{border-top:1px solid var(--border);}
+.quiz-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 16px;cursor:pointer;transition:background .12s;font-size:13.5px;color:var(--dim);border-bottom:1px solid var(--border);}
+.quiz-opt:last-child{border-bottom:none;}
+.quiz-opt:hover{background:var(--bg);}
+.quiz-opt.correct{background:var(--green-bg);color:var(--green);}
+.quiz-opt.wrong{background:var(--red-bg);color:var(--red);}
+.quiz-opt.revealed{background:var(--blue-bg);color:var(--blue);}
+.opt-letter{font-weight:700;min-width:18px;}
+.quiz-explain{display:none;padding:12px 16px;background:#FAFBFC;border-top:1px solid var(--border);font-size:13.5px;color:var(--dim);line-height:1.65;}
+.quiz-explain.show{display:block;}
+.quiz-score{background:var(--violet-bg);border:1px solid var(--violet-bd);border-radius:8px;padding:12px 16px;text-align:center;margin-bottom:16px;font-size:14px;font-weight:600;color:var(--violet);display:none;}
+.quiz-score.show{display:block;}
+
+/* ── LINKS PAGE ── */
+.link-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px;}
+.link-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.link-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.link-desc{font-size:13px;color:var(--dim);}
+.link-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:8px;}
+.lnk{color:var(--blue);text-decoration:none;}
+.lnk:hover{text-decoration:underline;}
+
+/* ── PROGRESS BAR ── */
+.prog-bar{height:8px;border-radius:4px;background:var(--border);margin:4px 0 8px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:4px;transition:width .6s ease;}
+</style>
+</head>
+<body>
+
+<div class="top-header">
+  <h1>AWS Certified Data Engineer – Associate</h1>
+  <p>DEA-C01 · Complete Study Guide + Practice Questions</p>
+  <div class="badge-row">
+    <span class="hbadge">Pass Score: 720/1000</span>
+    <span class="hbadge">65 Questions (50 scored)</span>
+    <span class="hbadge">4 Domains</span>
+    <span class="hbadge">v1.1 — Dec 2025</span>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('overview',this)">📊 Overview</button>
+  <button class="nav-btn" onclick="showPage('d1',this)">P1 Data Ingestion &amp; Transformation (34%)</button>
+  <button class="nav-btn" onclick="showPage('d2',this)">P2 Data Store Management (26%)</button>
+  <button class="nav-btn" onclick="showPage('d3',this)">P3 Data Operations &amp; Support (22%)</button>
+  <button class="nav-btn" onclick="showPage('d4',this)">P4 Data Security &amp; Governance (18%)</button>
+  <button class="nav-btn" onclick="showPage('quiz',this)">🧪 Practice Quiz</button>
+  <button class="nav-btn" onclick="showPage('links',this)">🔗 Resources</button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: OVERVIEW
+═══════════════════════════════════════════════════ -->
+<div class="page active" id="overview">
+  <div class="ph">
+    <h2>Exam At a Glance</h2>
+    <p>Everything you need to know before you start studying.</p>
+  </div>
+
+  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome. Click any 🔊 button to hear that section.</div>
+
+  <!-- Domain Weights Diagram -->
+  <div class="diagram-box">
+<svg width="100%" viewBox="0 0 700 290" role="img">
+<title>DEA-C01 Domain Weights Bar Chart</title>
+<desc>Domain 1 Data Ingestion and Transformation 34 percent, Domain 2 Data Store Management 26 percent, Domain 3 Data Operations and Support 22 percent, Domain 4 Data Security and Governance 18 percent</desc>
+<defs>
+  <style>
+    .dw-lb{font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;fill:#1E2433;}
+    .dw-pct{font-family:-apple-system,sans-serif;font-size:14px;font-weight:700;fill:#1E2433;}
+    .dw-note{font-family:-apple-system,sans-serif;font-size:11px;fill:#185FA5;font-weight:600;}
+  </style>
+</defs>
+
+<!-- Row 1 -->
+<text class="dw-lb" x="10" y="26">P1 — Data Ingestion &amp; Transformation</text>
+<rect x="10" y="34" width="536" height="30" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="dw-pct" x="556" y="53">34%</text>
+<text class="dw-note" x="600" y="53">← biggest weight</text>
+
+<!-- Row 2 -->
+<text class="dw-lb" x="10" y="94">P2 — Data Store Management</text>
+<rect x="10" y="102" width="410" height="30" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="dw-pct" x="430" y="121">26%</text>
+
+<!-- Row 3 -->
+<text class="dw-lb" x="10" y="162">P3 — Data Operations &amp; Support</text>
+<rect x="10" y="170" width="347" height="30" rx="6" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="dw-pct" x="367" y="189">22%</text>
+
+<!-- Row 4 -->
+<text class="dw-lb" x="10" y="230">P4 — Data Security &amp; Governance</text>
+<rect x="10" y="238" width="284" height="30" rx="6" fill="#F5F3FF" stroke="#534AB7" stroke-width="0.5"/>
+<text class="dw-pct" x="304" y="257">18%</text>
+
+<text class="dw-note" x="10" y="284" fill="#5A6478" font-weight="400">Bar length is proportional to exam weight — P1 alone is nearly 1 in 3 questions</text>
+</svg>
+    <div class="diagram-caption">34% of exam is Domain 1 — allocate at least half your study time there</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Exam facts</span></div>
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>Item</th><th>Detail</th></tr>
+        <tr><td>Target experience</td><td>2-3 years data engineering + 1-2 years AWS hands-on</td></tr>
+        <tr><td>Questions</td><td>65 total — 50 scored, 15 unscored (you can't tell which)</td></tr>
+        <tr><td>Score range</td><td>100–1000, pass at 720</td></tr>
+        <tr><td>Question types</td><td>Multiple choice (1 answer) and Multiple response (2+ answers)</td></tr>
+        <tr><td>Duration</td><td>130 minutes</td></tr>
+        <tr><td>Price</td><td>USD 150</td></tr>
+        <tr><td>Out of scope</td><td>ML model training, language-specific syntax, business conclusions from data</td></tr>
+      </table>
+    </div>
+
+    <div class="block bl-amber" id="ov1">
+      <div class="block-title">⚡ Exam version: v1.1 (December 2025)</div>
+      <p>Version 1.1 adds new topics not in v1.0 — watch for these in your study. New additions include Apache Iceberg open table format, HNSW and IVF vector index types for semantic search, Amazon Bedrock knowledge bases, Amazon SageMaker Catalog for business metadata, and LLM integration patterns in data pipelines.</p>
+      <button class="sp" onclick="speakEl(this,'ov1')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Recommended 6-week study plan</span></div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 700 200" role="img">
+<title>6-week study plan timeline</title>
+<desc>Week 1 Domain 1 Kinesis Glue Lambda, Week 2 Domain 1 continued and Domain 2, Week 3 Domain 2 continued and Domain 3, Week 4 Domain 4 Security, Week 5 New v1.1 topics, Week 6 Practice exams</desc>
+<defs>
+  <style>
+    .sp-th{font-family:-apple-system,sans-serif;font-size:12px;font-weight:700;fill:#1E2433;}
+    .sp-ts{font-family:-apple-system,sans-serif;font-size:10px;fill:#5A6478;}
+  </style>
+</defs>
+<rect x="8" y="30" width="106" height="74" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="sp-th" x="61" y="50" text-anchor="middle">Week 1</text>
+<text class="sp-ts" x="61" y="68" text-anchor="middle">P1: Kinesis</text>
+<text class="sp-ts" x="61" y="82" text-anchor="middle">Glue · Lambda</text>
+
+<rect x="120" y="30" width="106" height="74" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="sp-th" x="173" y="50" text-anchor="middle">Week 2</text>
+<text class="sp-ts" x="173" y="68" text-anchor="middle">P1 cont. + P2</text>
+<text class="sp-ts" x="173" y="82" text-anchor="middle">Redshift · DDB</text>
+
+<rect x="232" y="30" width="106" height="74" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="sp-th" x="285" y="50" text-anchor="middle">Week 3</text>
+<text class="sp-ts" x="285" y="68" text-anchor="middle">P2 cont. + P3</text>
+<text class="sp-ts" x="285" y="82" text-anchor="middle">Athena · CW</text>
+
+<rect x="344" y="30" width="106" height="74" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="sp-th" x="397" y="50" text-anchor="middle">Week 4</text>
+<text class="sp-ts" x="397" y="68" text-anchor="middle">P4: IAM · KMS</text>
+<text class="sp-ts" x="397" y="82" text-anchor="middle">Macie · Trail</text>
+
+<rect x="456" y="30" width="106" height="74" rx="8" fill="#F5F3FF" stroke="#534AB7" stroke-width="0.5"/>
+<text class="sp-th" x="509" y="50" text-anchor="middle">Week 5</text>
+<text class="sp-ts" x="509" y="68" text-anchor="middle">v1.1 New:</text>
+<text class="sp-ts" x="509" y="82" text-anchor="middle">Bedrock · Iceberg</text>
+
+<rect x="568" y="30" width="124" height="74" rx="8" fill="#ECFDF5" stroke="#059669" stroke-width="0.5"/>
+<text class="sp-th" x="630" y="50" text-anchor="middle">Week 6</text>
+<text class="sp-ts" x="630" y="68" text-anchor="middle">Practice exams</text>
+<text class="sp-ts" x="630" y="82" text-anchor="middle">+ weak spots</text>
+
+<text class="sp-ts" x="350" y="130" text-anchor="middle">Domain 1 deserves the most time — if studying part-time, stretch Weeks 1-2 into 3 weeks</text>
+</svg>
+      <div class="diagram-caption">Spread Domain 1 across at least 2 full weeks — it's 34% of the exam</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">In-scope services quick reference</span></div>
+    <div class="block" id="ov2">
+      <div class="block-title">Analytics &amp; Streaming</div>
+      <p>
+        <span class="tag tag-blue">Athena</span><span class="tag tag-blue">EMR</span><span class="tag tag-blue">Glue</span><span class="tag tag-blue">Glue DataBrew</span><span class="tag tag-blue">Lake Formation</span><span class="tag tag-blue">Kinesis Data Firehose</span><span class="tag tag-blue">Kinesis Data Streams</span><span class="tag tag-blue">Managed Flink</span><span class="tag tag-blue">MSK</span><span class="tag tag-blue">OpenSearch</span><span class="tag tag-blue">QuickSight</span>
+      </p>
+      <div class="block-title" style="margin-top:10px;">Database &amp; Storage</div>
+      <p>
+        <span class="tag tag-teal">DynamoDB</span><span class="tag tag-teal">RDS</span><span class="tag tag-teal">Aurora</span><span class="tag tag-teal">Redshift</span><span class="tag tag-teal">DocumentDB</span><span class="tag tag-teal">MemoryDB</span><span class="tag tag-teal">Neptune</span><span class="tag tag-teal">Keyspaces</span><span class="tag tag-teal">S3</span><span class="tag tag-teal">S3 Tables</span><span class="tag tag-teal">S3 Glacier</span>
+      </p>
+      <div class="block-title" style="margin-top:10px;">Security &amp; Governance</div>
+      <p>
+        <span class="tag tag-violet">IAM</span><span class="tag tag-violet">KMS</span><span class="tag tag-violet">Macie</span><span class="tag tag-violet">Secrets Manager</span><span class="tag tag-violet">CloudTrail</span><span class="tag tag-violet">Lake Formation</span><span class="tag tag-violet">VPC / PrivateLink</span>
+      </p>
+      <div class="block-title" style="margin-top:10px;">New in v1.1 ⭐</div>
+      <p>
+        <span class="tag tag-orange">Amazon Bedrock</span><span class="tag tag-orange">SageMaker AI</span><span class="tag tag-orange">Amazon Kendra</span><span class="tag tag-orange">SageMaker Catalog</span>
+      </p>
+      <button class="sp" onclick="speakEl(this,'ov2')">🔊 Listen</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: DOMAIN 1
+═══════════════════════════════════════════════════ -->
+<div class="page" id="d1">
+  <div class="ph">
+    <h2>Domain 1 — Data Ingestion &amp; Transformation</h2>
+    <p><strong>34% of exam</strong> — the heaviest domain. Covers streaming, batch ingestion, ETL, orchestration, and programming concepts.</p>
+  </div>
+  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome.</div>
+
+  <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 180" role="img">
+<title>Domain 1 pipeline overview</title>
+<desc>Source data flows through streaming or batch ingestion into transform and process step then through orchestration layer to sink destinations</desc>
+<defs>
+  <marker id="d1-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .d1-th{font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;fill:#1E2433;}
+    .d1-ts{font-family:-apple-system,sans-serif;font-size:11px;fill:#5A6478;}
+    .d1-blue{fill:#E6F1FB;stroke:#185FA5;stroke-width:0.5;}
+    .d1-teal{fill:#E1F5EE;stroke:#0F6E56;stroke-width:0.5;}
+    .d1-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
+    .d1-green{fill:#ECFDF5;stroke:#059669;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="20" y="50" width="110" height="80" rx="8" class="d1-blue"/>
+<text class="d1-th" x="75" y="80" text-anchor="middle" dominant-baseline="central">Sources</text>
+<text class="d1-ts" x="75" y="98" text-anchor="middle" dominant-baseline="central">S3 · Kinesis</text>
+<text class="d1-ts" x="75" y="114" text-anchor="middle" dominant-baseline="central">MSK · RDS · DDB</text>
+
+<line x1="130" y1="90" x2="165" y2="90" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#d1-arrow)"/>
+
+<rect x="165" y="50" width="120" height="80" rx="8" class="d1-amber"/>
+<text class="d1-th" x="225" y="75" text-anchor="middle" dominant-baseline="central">Ingest</text>
+<text class="d1-ts" x="225" y="93" text-anchor="middle" dominant-baseline="central">Kinesis · MSK</text>
+<text class="d1-ts" x="225" y="109" text-anchor="middle" dominant-baseline="central">AppFlow · DMS</text>
+
+<line x1="285" y1="90" x2="320" y2="90" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#d1-arrow)"/>
+
+<rect x="320" y="50" width="120" height="80" rx="8" class="d1-teal"/>
+<text class="d1-th" x="380" y="75" text-anchor="middle" dominant-baseline="central">Transform</text>
+<text class="d1-ts" x="380" y="93" text-anchor="middle" dominant-baseline="central">Glue · EMR</text>
+<text class="d1-ts" x="380" y="109" text-anchor="middle" dominant-baseline="central">Lambda · Redshift</text>
+
+<line x1="440" y1="90" x2="475" y2="90" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#d1-arrow)"/>
+
+<rect x="475" y="50" width="120" height="80" rx="8" class="d1-blue"/>
+<text class="d1-th" x="535" y="75" text-anchor="middle" dominant-baseline="central">Orchestrate</text>
+<text class="d1-ts" x="535" y="93" text-anchor="middle" dominant-baseline="central">Step Functions</text>
+<text class="d1-ts" x="535" y="109" text-anchor="middle" dominant-baseline="central">MWAA · Glue</text>
+
+<line x1="595" y1="90" x2="630" y2="90" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#d1-arrow)"/>
+
+<rect x="630" y="65" width="40" height="50" rx="8" class="d1-green"/>
+<text class="d1-ts" x="650" y="90" text-anchor="middle" dominant-baseline="central">Sink</text>
+</svg>
+    <div class="diagram-caption">Domain 1 covers everything in this pipeline — ingestion through orchestration</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Task 1.1 — Perform Data Ingestion</span></div>
+
+    <div class="block bl-blue" id="d1t1">
+      <div class="block-title">Streaming vs Batch — when to use what</div>
+      <p><strong>Streaming sources</strong> deliver data continuously in real time: Kinesis Data Streams for custom real-time applications, MSK (Managed Streaming for Apache Kafka) for Kafka-native workloads, DynamoDB Streams for capturing table changes, and AWS DMS for continuous database replication. <strong>Batch sources</strong> process data in scheduled intervals: S3 for file-based loads, Glue for large ETL, EMR for distributed processing, AppFlow for SaaS connectors, and Lambda for lightweight event-driven triggers.</p>
+      <button class="sp" onclick="speakEl(this,'d1t1')">🔊 Listen</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>Scenario</th><th>Service to use</th><th>Why</th></tr>
+        <tr><td>Real-time clickstream from mobile app</td><td>Kinesis Data Streams</td><td>Sub-second latency, consumer fan-out</td></tr>
+        <tr><td>Existing Kafka workload on-prem</td><td>Amazon MSK</td><td>Managed Kafka, no migration of producer code</td></tr>
+        <tr><td>Trigger ETL when a file lands in S3</td><td>S3 Event Notifications + Lambda</td><td>EventBridge or direct Lambda trigger</td></tr>
+        <tr><td>Replicate RDS to S3 continuously</td><td>AWS DMS (CDC mode)</td><td>Change Data Capture, near-real-time</td></tr>
+        <tr><td>SaaS data (Salesforce → S3)</td><td>Amazon AppFlow</td><td>No-code connector, scheduled or event-triggered</td></tr>
+      </table>
+    </div>
+
+    <div class="block bl-teal" id="d1t1b">
+      <div class="block-title">Key concepts to know for exam</div>
+      <ul>
+        <li><strong>Fan-in / fan-out:</strong> fan-in aggregates multiple streams into one consumer; fan-out distributes one stream to multiple consumers (Kinesis Enhanced Fan-Out)</li>
+        <li><strong>Stateful vs stateless:</strong> stateful transactions maintain context across events (session data); stateless treat each event independently</li>
+        <li><strong>Replayability:</strong> Kinesis retains records for 24h–365 days, allowing replay; SQS does not natively support ordered replay</li>
+        <li><strong>Throttling:</strong> when hitting DynamoDB or RDS rate limits, use exponential backoff, SQS as buffer, or Kinesis Firehose to absorb spikes</li>
+      </ul>
+      <button class="sp" onclick="speakEl(this,'d1t1b')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">Task 1.2 — Transform and Process Data</span></div>
+
+    <div class="block bl-teal" id="d1t2">
+      <div class="block-title">Choosing the right transformation service</div>
+      <p><strong>AWS Glue</strong> is the primary ETL service — serverless, scales automatically, supports PySpark, and integrates natively with S3, Redshift, and the Glue Data Catalog. <strong>Amazon EMR</strong> is for large-scale distributed processing where you need full Spark/Hadoop control or cost optimisation at very high scale. <strong>Lambda</strong> handles lightweight, event-driven transformations under 15 minutes. <strong>Redshift</strong> does in-warehouse transformations using SQL when data is already loaded.</p>
+      <button class="sp" onclick="speakEl(this,'d1t2')">🔊 Listen</button>
+    </div>
+
+    <div class="block bl-amber" id="d1t2b">
+      <div class="block-title">⭐ NEW v1.1 — LLM Integration in Data Pipelines</div>
+      <p>The exam now tests LLM integration in data processing. Key patterns: using Amazon Bedrock to classify or enrich records as part of a Glue ETL job, calling Bedrock inference APIs from Lambda for per-record enrichment, and using Bedrock knowledge bases for semantic search over processed documents. This is a genuinely new topic — don't skip it.</p>
+      <button class="sp" onclick="speakEl(this,'d1t2b')">🔊 Listen</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>Format conversion</th><th>Tool</th><th>Key benefit</th></tr>
+        <tr><td>CSV → Parquet</td><td>Glue ETL job</td><td>Columnar format reduces Athena query cost by ~80%</td></tr>
+        <tr><td>JSON → Avro</td><td>Glue or Kafka Streams</td><td>Schema evolution support</td></tr>
+        <tr><td>Unstructured → structured</td><td>Lambda + Bedrock</td><td>LLM extraction of fields</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Task 1.3 — Orchestrate Data Pipelines</span></div>
+
+    <div class="block bl-violet" id="d1t3">
+      <div class="block-title">Orchestration tools comparison</div>
+      <p><strong>AWS Step Functions</strong> is a visual state machine — use it when you need complex branching, error handling, and retry logic across multiple AWS services with full execution history. <strong>Amazon MWAA</strong> (Managed Apache Airflow) is for teams already using Airflow DAGs or needing rich scheduling, dependency management, and Python-based workflow definition. <strong>AWS Glue Workflows</strong> is simpler and cheaper — use it when the entire pipeline lives in Glue. <strong>EventBridge</strong> is for event-driven triggers, not full orchestration.</p>
+      <button class="sp" onclick="speakEl(this,'d1t3')">🔊 Listen</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>Tool</th><th>Best for</th><th>Avoid when</th></tr>
+        <tr><td>Step Functions</td><td>Multi-service workflows with complex branching</td><td>Need Python-native DAG syntax</td></tr>
+        <tr><td>MWAA</td><td>Existing Airflow users, rich scheduling</td><td>Simple single-service pipelines</td></tr>
+        <tr><td>Glue Workflows</td><td>Glue-only pipelines</td><td>Need cross-service orchestration</td></tr>
+        <tr><td>EventBridge</td><td>Event-driven triggers (time-based, S3 events)</td><td>Complex dependency chains</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--orange)"></span><span style="color:var(--orange)">Task 1.4 — Apply Programming Concepts</span></div>
+    <div class="block bl-orange" id="d1t4">
+      <div class="block-title">What the exam actually tests here</div>
+      <p>The exam doesn't ask you to write code — it tests your understanding of concepts. Know that Lambda concurrency limits need to be configured to prevent throttling under burst load, and that reserved concurrency sets a hard cap per function. Understand IaC: CloudFormation deploys templates declaratively, CDK generates CloudFormation using Python or TypeScript, and SAM is CloudFormation simplified for serverless functions. CI/CD for data pipelines typically means CodePipeline triggering Glue job deployment or Lambda updates. Distributed computing concepts: understand what a DAG is (Directed Acyclic Graph — Airflow, Step Functions) and why it prevents circular dependencies.</p>
+      <button class="sp" onclick="speakEl(this,'d1t4')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--red)"></span><span style="color:var(--red)">Decision tree — which ingestion path?</span></div>
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 700 260" role="img">
+<title>Ingestion decision tree</title>
+<desc>Start by asking if data arrives continuously, if yes and its custom real time use Kinesis Data Streams, if yes and its existing Kafka use MSK, if no and its a file landing in S3 use S3 event notification with Lambda or Glue, if no and its a SaaS application use AppFlow, if no and its a database use DMS with change data capture</desc>
+<defs>
+  <marker id="dt-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .dt-th{font-family:-apple-system,sans-serif;font-size:12px;font-weight:700;fill:#1E2433;}
+    .dt-ts{font-family:-apple-system,sans-serif;font-size:10.5px;fill:#5A6478;}
+  </style>
+</defs>
+<rect x="270" y="10" width="160" height="42" rx="8" fill="#F1EFE8" stroke="#888780" stroke-width="0.5"/>
+<text class="dt-th" x="350" y="35" text-anchor="middle">Does data arrive continuously?</text>
+
+<line x1="310" y1="52" x2="150" y2="80" stroke="#5C6478" stroke-width="1" fill="none" marker-end="url(#dt-arrow)"/>
+<text class="dt-ts" x="200" y="65" text-anchor="middle" fill="#059669" font-weight="700">YES</text>
+<line x1="390" y1="52" x2="550" y2="80" stroke="#5C6478" stroke-width="1" fill="none" marker-end="url(#dt-arrow)"/>
+<text class="dt-ts" x="500" y="65" text-anchor="middle" fill="#A32D2D" font-weight="700">NO</text>
+
+<rect x="20" y="84" width="180" height="46" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="dt-th" x="110" y="102" text-anchor="middle">Custom real-time app</text>
+<text class="dt-ts" x="110" y="118" text-anchor="middle">→ Kinesis Data Streams</text>
+
+<rect x="215" y="84" width="180" height="46" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="dt-th" x="305" y="102" text-anchor="middle">Existing Kafka workload</text>
+<text class="dt-ts" x="305" y="118" text-anchor="middle">→ Amazon MSK</text>
+
+<rect x="410" y="84" width="130" height="46" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="dt-th" x="475" y="102" text-anchor="middle">File in S3</text>
+<text class="dt-ts" x="475" y="118" text-anchor="middle">→ S3 Event + Lambda</text>
+
+<rect x="550" y="84" width="140" height="46" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="dt-th" x="620" y="102" text-anchor="middle">SaaS (Salesforce etc.)</text>
+<text class="dt-ts" x="620" y="118" text-anchor="middle">→ Amazon AppFlow</text>
+
+<rect x="410" y="146" width="280" height="46" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="dt-th" x="550" y="164" text-anchor="middle">Existing database, need CDC</text>
+<text class="dt-ts" x="550" y="180" text-anchor="middle">→ AWS DMS (Change Data Capture mode)</text>
+
+<text class="dt-ts" x="10" y="230" fill="#5A6478">This decision tree covers the majority of Task 1.1 exam scenarios — memorise this shape, not just the service names</text>
+</svg>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">⚡ P1 Cheat Sheet — fast recall table</span></div>
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>If you see...</th><th>Pick...</th></tr>
+        <tr><td>"real-time", "sub-second", "clickstream"</td><td>Kinesis Data Streams</td></tr>
+        <tr><td>"Kafka", "on-prem streaming"</td><td>Amazon MSK</td></tr>
+        <tr><td>"serverless ETL", "PySpark", "no cluster"</td><td>AWS Glue</td></tr>
+        <tr><td>"full Spark control", "Hadoop", "huge scale"</td><td>Amazon EMR</td></tr>
+        <tr><td>"complex branching", "retry logic", "state machine"</td><td>Step Functions</td></tr>
+        <tr><td>"existing Airflow DAGs"</td><td>Amazon MWAA</td></tr>
+        <tr><td>"no-code SaaS connector"</td><td>Amazon AppFlow</td></tr>
+        <tr><td>"LLM enrichment", "sentiment", "classify text"</td><td>Amazon Bedrock ⭐v1.1</td></tr>
+        <tr><td>"CSV to Parquet", "reduce Athena cost"</td><td>Glue ETL job with Parquet + Snappy</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: DOMAIN 2
+═══════════════════════════════════════════════════ -->
+<div class="page" id="d2">
+  <div class="ph">
+    <h2>Domain 2 — Data Store Management</h2>
+    <p><strong>26% of exam</strong> — choosing the right data store, cataloging, lifecycle management, and data modelling.</p>
+  </div>
+  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Task 2.1 — Choose the Right Data Store</span></div>
+
+    <div class="block bl-blue" id="d2t1">
+      <div class="block-title">Service selection — the most-tested skill in this domain</div>
+      <p>The exam will give you a scenario and ask you to pick the correct AWS data service. The core decision tree: if you need a <strong>data warehouse with SQL analytics</strong>, use Redshift. If you need <strong>NoSQL with single-digit millisecond latency</strong> at any scale, use DynamoDB. If you're building a <strong>data lake</strong>, use Lake Formation on top of S3. If you need <strong>relational OLTP</strong>, use RDS or Aurora. If you need <strong>real-time stream storage</strong>, use Kinesis Data Streams or MSK. For <strong>caching</strong>, use MemoryDB for Redis.</p>
+      <button class="sp" onclick="speakEl(this,'d2t1')">🔊 Listen</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>Use case</th><th>Service</th><th>Key differentiator</th></tr>
+        <tr><td>Data warehouse / analytics</td><td>Amazon Redshift</td><td>MPP columnar, RA3 nodes, Spectrum for S3</td></tr>
+        <tr><td>Big data distributed processing</td><td>Amazon EMR</td><td>Full Spark/Hadoop control, spot instances</td></tr>
+        <tr><td>Data lake management</td><td>AWS Lake Formation</td><td>Centralised permissions on top of S3 + Glue Catalog</td></tr>
+        <tr><td>Relational / OLTP</td><td>RDS / Aurora</td><td>Aurora is 5x MySQL / 3x PostgreSQL performance</td></tr>
+        <tr><td>NoSQL key-value (massive scale)</td><td>DynamoDB</td><td>Single-digit ms at any scale, serverless</td></tr>
+        <tr><td>Real-time streaming store</td><td>Kinesis / MSK</td><td>Kinesis for AWS-native; MSK for Kafka compatibility</td></tr>
+        <tr><td>Fast key-value cache</td><td>MemoryDB for Redis</td><td>Durable Redis, microsecond reads</td></tr>
+        <tr><td>Vector similarity search ⭐</td><td>Aurora PostgreSQL + HNSW / IVF</td><td>New in v1.1 — for ML embedding search</td></tr>
+      </table>
+    </div>
+
+    <div class="block bl-orange" id="d2t1b">
+      <div class="block-title">⭐ NEW v1.1 — Apache Iceberg and Vector Indexes</div>
+      <p><strong>Apache Iceberg</strong> is an open table format for data lakes — it provides ACID transactions, schema evolution, and time travel on top of S3 or any object store. The exam may ask why you'd use Iceberg over Hive tables: Iceberg offers row-level updates and deletes (Hive does not), full schema evolution without table rewrites, and partition evolution without data migration. For <strong>vector indexes</strong>, HNSW (Hierarchical Navigable Small World) is approximate nearest-neighbour search optimised for speed, while IVF (Inverted File Index) clusters vectors and searches clusters first, good for very large datasets.</p>
+      <button class="sp" onclick="speakEl(this,'d2t1b')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">Task 2.2 — Data Cataloging Systems</span></div>
+    <div class="block bl-teal" id="d2t2">
+      <div class="block-title">Glue Data Catalog vs Hive Metastore vs SageMaker Catalog</div>
+      <p><strong>AWS Glue Data Catalog</strong> is the primary technical metadata catalog for AWS data services — it stores table schemas, partition information, and connection definitions. It's the backing store for Athena, EMR, and Redshift Spectrum queries. <strong>Glue Crawlers</strong> automatically discover schemas by sampling data in S3, Redshift, or other sources. <strong>Apache Hive Metastore</strong> is the open-source equivalent, used when EMR clusters need to be compatible with on-premises Hadoop environments. <strong>Amazon SageMaker Catalog</strong> is new in v1.1 — it's a business-facing catalog for data discovery, not just technical metadata.</p>
+      <button class="sp" onclick="speakEl(this,'d2t2')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--amber)"></span><span style="color:var(--amber)">Task 2.3 — Manage Data Lifecycle</span></div>
+    <div class="block bl-amber" id="d2t3">
+      <div class="block-title">S3 storage tiers — know the cost vs access tradeoff</div>
+      <p>S3 Standard is for frequently accessed data — highest cost, millisecond retrieval. S3 Standard-IA is for data accessed less than once a month — lower storage cost but a retrieval fee applies. S3 Glacier Instant Retrieval matches Standard-IA pricing but is for quarterly access. S3 Glacier Flexible Retrieval takes minutes to hours — for backups. S3 Glacier Deep Archive is the cheapest at under a dollar per terabyte per month — for data you might never access again, with 12-hour retrieval. Use S3 Lifecycle Policies to automate transitions between tiers based on object age.</p>
+      <button class="sp" onclick="speakEl(this,'d2t3')">🔊 Listen</button>
+    </div>
+
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 100" role="img">
+<title>S3 storage tier cost versus access frequency</title>
+<desc>Moving from left to right, Standard has high cost and frequent access, Standard IA has medium cost and monthly access, Glacier Instant has lower cost and quarterly access, Glacier Flexible has low cost and yearly access, Glacier Deep Archive has lowest cost and rare access</desc>
+<defs>
+  <style>
+    .s3-th{font-family:-apple-system,sans-serif;font-size:12px;font-weight:600;fill:#1E2433;}
+    .s3-ts{font-family:-apple-system,sans-serif;font-size:10px;fill:#5A6478;}
+  </style>
+</defs>
+<rect x="10"  y="20" width="110" height="50" rx="6" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="s3-th" x="65" y="38" text-anchor="middle" dominant-baseline="central">Standard</text>
+<text class="s3-ts" x="65" y="55" text-anchor="middle" dominant-baseline="central">Daily access</text>
+
+<text fill="#9CA3AF" x="126" y="47" font-size="14">→</text>
+
+<rect x="136" y="20" width="116" height="50" rx="6" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="s3-th" x="194" y="38" text-anchor="middle" dominant-baseline="central">Standard-IA</text>
+<text class="s3-ts" x="194" y="55" text-anchor="middle" dominant-baseline="central">Monthly access</text>
+
+<text fill="#9CA3AF" x="258" y="47" font-size="14">→</text>
+
+<rect x="268" y="20" width="116" height="50" rx="6" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="s3-th" x="326" y="38" text-anchor="middle" dominant-baseline="central">Glacier Instant</text>
+<text class="s3-ts" x="326" y="55" text-anchor="middle" dominant-baseline="central">Quarterly</text>
+
+<text fill="#9CA3AF" x="390" y="47" font-size="14">→</text>
+
+<rect x="400" y="20" width="116" height="50" rx="6" fill="#F5F3FF" stroke="#534AB7" stroke-width="0.5"/>
+<text class="s3-th" x="458" y="38" text-anchor="middle" dominant-baseline="central">Glacier Flexible</text>
+<text class="s3-ts" x="458" y="55" text-anchor="middle" dominant-baseline="central">Yearly · mins-hours</text>
+
+<text fill="#9CA3AF" x="522" y="47" font-size="14">→</text>
+
+<rect x="532" y="20" width="138" height="50" rx="6" fill="#FEF2F2" stroke="#A32D2D" stroke-width="0.5"/>
+<text class="s3-th" x="601" y="38" text-anchor="middle" dominant-baseline="central">Deep Archive</text>
+<text class="s3-ts" x="601" y="55" text-anchor="middle" dominant-baseline="central">Rare · 12h retrieval</text>
+
+<text class="s3-ts" x="10" y="90">← Frequent access, higher cost</text>
+<text class="s3-ts" x="680" y="90" text-anchor="end">Rare access, lowest cost →</text>
+</svg>
+      <div class="diagram-caption">Use S3 Lifecycle Policies to automate tier transitions — move objects right as they age</div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Task 2.4 — Data Models and Schema Evolution</span></div>
+    <div class="block bl-violet" id="d2t4">
+      <div class="block-title">Schema migration tools and design patterns</div>
+      <p>For migrating schemas between database engines, <strong>AWS SCT</strong> (Schema Conversion Tool) converts Oracle/SQL Server schemas to Aurora PostgreSQL or MySQL. <strong>AWS DMS Schema Conversion</strong> is the newer managed version integrated into DMS. For Redshift design, always consider distribution keys (determine which node owns which data) and sort keys (control query performance through data ordering). For DynamoDB, partition key design is critical — avoid hot partitions by choosing high-cardinality keys and using write sharding when needed.</p>
+      <button class="sp" onclick="speakEl(this,'d2t4')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--red)"></span><span style="color:var(--red)">Visual — matching workload shape to data store</span></div>
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 700 220" role="img">
+<title>Workload shape to data store mapping</title>
+<desc>Four workload shapes mapped to services, structured SQL analytics maps to Redshift, key value at massive scale maps to DynamoDB, relational transactional maps to RDS Aurora, streaming continuous maps to Kinesis or MSK</desc>
+<defs>
+  <style>
+    .ws-th{font-family:-apple-system,sans-serif;font-size:12.5px;font-weight:700;fill:#1E2433;}
+    .ws-ts{font-family:-apple-system,sans-serif;font-size:10.5px;fill:#5A6478;}
+  </style>
+</defs>
+<rect x="10" y="20" width="330" height="80" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="ws-th" x="30" y="44">📊 SQL analytics, BI dashboards</text>
+<text class="ws-ts" x="30" y="64">Large scans, aggregations, joins</text>
+<text class="ws-ts" x="30" y="80">→ Amazon Redshift</text>
+
+<rect x="360" y="20" width="330" height="80" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="ws-th" x="380" y="44">⚡ Key-value, massive scale</text>
+<text class="ws-ts" x="380" y="64">Single-digit ms lookups by key</text>
+<text class="ws-ts" x="380" y="80">→ Amazon DynamoDB</text>
+
+<rect x="10" y="112" width="330" height="80" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="ws-th" x="30" y="136">🏦 Relational, transactional (OLTP)</text>
+<text class="ws-ts" x="30" y="156">ACID transactions, foreign keys</text>
+<text class="ws-ts" x="30" y="172">→ RDS or Aurora</text>
+
+<rect x="360" y="112" width="330" height="80" rx="8" fill="#F5F3FF" stroke="#534AB7" stroke-width="0.5"/>
+<text class="ws-th" x="380" y="136">🌊 Continuous streaming data</text>
+<text class="ws-ts" x="380" y="156">Real-time ingestion, replay</text>
+<text class="ws-ts" x="380" y="172">→ Kinesis Data Streams or MSK</text>
+</svg>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">⚡ P2 Cheat Sheet — fast recall table</span></div>
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>If you see...</th><th>Pick...</th></tr>
+        <tr><td>"data warehouse", "MPP", "columnar analytics"</td><td>Amazon Redshift</td></tr>
+        <tr><td>"NoSQL", "single-digit ms", "any scale"</td><td>Amazon DynamoDB</td></tr>
+        <tr><td>"ACID on S3", "time travel", "schema evolution"</td><td>Apache Iceberg ⭐v1.1</td></tr>
+        <tr><td>"technical metadata", "auto-discover schema"</td><td>Glue Data Catalog + Crawlers</td></tr>
+        <tr><td>"business catalog", "data discovery for analysts"</td><td>SageMaker Catalog ⭐v1.1</td></tr>
+        <tr><td>"rarely accessed", "cost optimisation"</td><td>S3 Lifecycle → Standard-IA → Glacier</td></tr>
+        <tr><td>"vector similarity", "embedding search"</td><td>Aurora PostgreSQL + HNSW/IVF ⭐v1.1</td></tr>
+        <tr><td>"schema migration between engines"</td><td>AWS SCT / DMS Schema Conversion</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: DOMAIN 3
+═══════════════════════════════════════════════════ -->
+<div class="page" id="d3">
+  <div class="ph">
+    <h2>Domain 3 — Data Operations and Support</h2>
+    <p><strong>22% of exam</strong> — automation, analysis, monitoring, and data quality.</p>
+  </div>
+  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome.</div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Task 3.1 — Automate Data Processing</span></div>
+    <div class="block bl-blue" id="d3t1">
+      <div class="block-title">Automation services comparison</div>
+      <p><strong>AWS Glue DataBrew</strong> is a visual data preparation tool — 250+ built-in transformations, no code required, best for data analysts preparing data for ML or reporting. <strong>Amazon Athena</strong> is serverless SQL against S3 — you pay per query by data scanned, so Parquet columnar format and partitioning dramatically cut costs. <strong>Amazon EventBridge</strong> is the event bus — it routes events between AWS services and third-party SaaS apps, and supports scheduled rules (cron or rate expressions) as a cron replacement for triggering pipelines.</p>
+      <button class="sp" onclick="speakEl(this,'d3t1')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">Task 3.2 — Analyse Data</span></div>
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>Tool</th><th>Best use</th><th>Exam tip</th></tr>
+        <tr><td>Amazon QuickSight</td><td>BI dashboards, SPICE in-memory engine</td><td>SPICE = Super-fast Parallel In-memory Calculation Engine</td></tr>
+        <tr><td>AWS Glue DataBrew</td><td>Visual data profiling, cleaning, no-code</td><td>For data quality rules and anomaly detection</td></tr>
+        <tr><td>Amazon Athena</td><td>Ad-hoc SQL on S3 data</td><td>Partitioning + Parquet = lowest query cost</td></tr>
+        <tr><td>Athena + Spark</td><td>Interactive notebook for ML prep</td><td>No cluster to manage vs EMR</td></tr>
+        <tr><td>SageMaker Data Wrangler</td><td>ML-focused data prep + feature engineering</td><td>Integrates with SageMaker Pipelines</td></tr>
+      </table>
+    </div>
+    <div class="block bl-teal" id="d3t2">
+      <div class="block-title">Redshift (provisioned) vs Athena (serverless) — classic exam tradeoff</div>
+      <p>Choose Redshift when you have a consistent, predictable query load on structured data and need sub-second query performance — you pay for capacity whether or not you use it. Choose Athena when query patterns are ad-hoc or unpredictable — you pay only for the data scanned. The key exam scenario: if a company has a small BI team running occasional reports on S3 data, Athena is cheaper. If they run hundreds of queries per day on a stable data warehouse, Redshift gives better performance per dollar.</p>
+      <button class="sp" onclick="speakEl(this,'d3t2')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--amber)"></span><span style="color:var(--amber)">Task 3.3 — Maintain and Monitor Pipelines</span></div>
+    <div class="block bl-amber" id="d3t3">
+      <div class="block-title">Monitoring stack — three layers</div>
+      <p><strong>CloudTrail</strong> records every AWS API call — who did what, when, from which IP. Use it for auditing and security forensics, not for application performance. <strong>CloudWatch Logs</strong> stores application log output — Lambda logs, Glue job logs, EMR logs all flow here. <strong>CloudWatch Logs Insights</strong> runs queries against those logs using a purpose-built query language. For log analytics at scale across many services and accounts, <strong>Amazon OpenSearch Service</strong> is the solution — use it when you need full-text search, complex aggregations, or sub-second log query response at massive log volume. <strong>Amazon Managed Grafana</strong> visualises metrics and logs from CloudWatch, Prometheus, and other sources on dashboards.</p>
+      <button class="sp" onclick="speakEl(this,'d3t3')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Task 3.4 — Ensure Data Quality</span></div>
+    <div class="block bl-violet" id="d3t4">
+      <div class="block-title">Data quality checks the exam expects you to know</div>
+      <p>Common data quality checks include: checking for empty fields and null values in mandatory columns, detecting type mismatches (a string where a number is expected), identifying duplicates using primary key violations, and measuring completeness (what percentage of expected records arrived). In AWS, <strong>Glue DataBrew</strong> lets you define quality rules visually and run them as part of a recipe job. <strong>Glue Data Quality</strong> (DQDL — Data Quality Definition Language) lets you write rules in code that run during Glue ETL jobs. For sampling techniques: simple random sampling is unbiased; stratified sampling preserves proportions across subgroups, important when checking quality in skewed datasets.</p>
+      <button class="sp" onclick="speakEl(this,'d3t4')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--red)"></span><span style="color:var(--red)">Visual — the monitoring stack, three layers</span></div>
+    <div class="diagram-box">
+<svg width="100%" viewBox="0 0 700 220" role="img">
+<title>Monitoring stack three layers</title>
+<desc>Bottom layer CloudTrail records every API call, middle layer CloudWatch Logs stores application output queried by Logs Insights, top layer OpenSearch and Managed Grafana for log analytics at scale and dashboards</desc>
+<defs>
+  <marker id="ms-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#5C6478" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <style>
+    .ms-th{font-family:-apple-system,sans-serif;font-size:12.5px;font-weight:700;fill:#1E2433;}
+    .ms-ts{font-family:-apple-system,sans-serif;font-size:10.5px;fill:#5A6478;}
+  </style>
+</defs>
+<rect x="20" y="150" width="660" height="54" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+<text class="ms-th" x="40" y="172">Layer 1 — CloudTrail</text>
+<text class="ms-ts" x="40" y="190">Records every AWS API call: who, what, when, from where — for audit, not app performance</text>
+
+<line x1="350" y1="150" x2="350" y2="130" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ms-arrow)"/>
+
+<rect x="20" y="78" width="660" height="54" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+<text class="ms-th" x="40" y="100">Layer 2 — CloudWatch Logs + Logs Insights</text>
+<text class="ms-ts" x="40" y="118">Application log storage — Lambda, Glue, EMR logs flow here; Insights runs queries against them</text>
+
+<line x1="350" y1="78" x2="350" y2="58" stroke="#5C6478" stroke-width="1.2" fill="none" marker-end="url(#ms-arrow)"/>
+
+<rect x="20" y="6" width="660" height="54" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+<text class="ms-th" x="40" y="28">Layer 3 — OpenSearch + Managed Grafana</text>
+<text class="ms-ts" x="40" y="46">Full-text search, complex aggregations at massive log volume; Grafana visualises on dashboards</text>
+</svg>
+    </div>
+    <div class="diagram-caption">Start at CloudTrail (what happened), move up to CloudWatch (application detail), OpenSearch when volume gets too large for Logs Insights alone</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">⚡ P3 Cheat Sheet — fast recall table</span></div>
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>If you see...</th><th>Pick...</th></tr>
+        <tr><td>"visual data prep", "no-code cleaning"</td><td>AWS Glue DataBrew</td></tr>
+        <tr><td>"ad-hoc SQL on S3", "pay per query"</td><td>Amazon Athena</td></tr>
+        <tr><td>"BI dashboards", "SPICE"</td><td>Amazon QuickSight</td></tr>
+        <tr><td>"predictable heavy query load"</td><td>Amazon Redshift (provisioned)</td></tr>
+        <tr><td>"audit every API call"</td><td>AWS CloudTrail</td></tr>
+        <tr><td>"application log errors", "Lambda timeout debug"</td><td>CloudWatch Logs + Logs Insights</td></tr>
+        <tr><td>"log analytics at huge scale"</td><td>Amazon OpenSearch Service</td></tr>
+        <tr><td>"null rate threshold alert"</td><td>Glue DataBrew data quality rules + SNS</td></tr>
+        <tr><td>"skewed dataset sampling"</td><td>Stratified sampling</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: DOMAIN 4
+═══════════════════════════════════════════════════ -->
+<div class="page" id="d4">
+  <div class="ph">
+    <h2>Domain 4 — Data Security and Governance</h2>
+    <p><strong>18% of exam</strong> — authentication, authorisation, encryption, audit, and privacy.</p>
+  </div>
+  <div class="notice">🔊 Uses your browser's built-in voice (natural US male English) — works best in Chrome.</div>
+
+  <div class="diagram-box">
+<svg width="100%" viewBox="0 0 680 160" role="img">
+<title>Security layers from identity to encryption</title>
+<desc>Four layers: IAM for authentication, Lake Formation for authorisation, KMS for encryption, CloudTrail for audit</desc>
+<defs>
+  <style>
+    .s4-th{font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;fill:#1E2433;}
+    .s4-ts{font-family:-apple-system,sans-serif;font-size:11px;fill:#5A6478;}
+    .s4-violet{fill:#F5F3FF;stroke:#534AB7;stroke-width:0.5;}
+    .s4-blue{fill:#E6F1FB;stroke:#185FA5;stroke-width:0.5;}
+    .s4-green{fill:#ECFDF5;stroke:#059669;stroke-width:0.5;}
+    .s4-amber{fill:#FAEEDA;stroke:#854F0B;stroke-width:0.5;}
+  </style>
+</defs>
+<rect x="20"  y="30" width="148" height="100" rx="8" class="s4-violet"/>
+<text class="s4-th" x="94" y="58" text-anchor="middle" dominant-baseline="central">Authentication</text>
+<text class="s4-ts" x="94" y="78" text-anchor="middle" dominant-baseline="central">IAM Roles &amp; Policies</text>
+<text class="s4-ts" x="94" y="94" text-anchor="middle" dominant-baseline="central">Secrets Manager</text>
+<text class="s4-ts" x="94" y="110" text-anchor="middle" dominant-baseline="central">VPC Security Groups</text>
+
+<rect x="178" y="30" width="148" height="100" rx="8" class="s4-blue"/>
+<text class="s4-th" x="252" y="58" text-anchor="middle" dominant-baseline="central">Authorisation</text>
+<text class="s4-ts" x="252" y="78" text-anchor="middle" dominant-baseline="central">Lake Formation</text>
+<text class="s4-ts" x="252" y="94" text-anchor="middle" dominant-baseline="central">RBAC / ABAC</text>
+<text class="s4-ts" x="252" y="110" text-anchor="middle" dominant-baseline="central">Least privilege IAM</text>
+
+<rect x="336" y="30" width="148" height="100" rx="8" class="s4-green"/>
+<text class="s4-th" x="410" y="58" text-anchor="middle" dominant-baseline="central">Encryption</text>
+<text class="s4-ts" x="410" y="78" text-anchor="middle" dominant-baseline="central">AWS KMS</text>
+<text class="s4-ts" x="410" y="94" text-anchor="middle" dominant-baseline="central">TLS in transit</text>
+<text class="s4-ts" x="410" y="110" text-anchor="middle" dominant-baseline="central">Data masking / PII</text>
+
+<rect x="494" y="30" width="166" height="100" rx="8" class="s4-amber"/>
+<text class="s4-th" x="577" y="58" text-anchor="middle" dominant-baseline="central">Audit &amp; Governance</text>
+<text class="s4-ts" x="577" y="78" text-anchor="middle" dominant-baseline="central">CloudTrail / CloudTrail Lake</text>
+<text class="s4-ts" x="577" y="94" text-anchor="middle" dominant-baseline="central">Amazon Macie</text>
+<text class="s4-ts" x="577" y="110" text-anchor="middle" dominant-baseline="central">AWS Config</text>
+</svg>
+    <div class="diagram-caption">Domain 4 = four pillars: authenticate → authorise → encrypt → audit</div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--violet)"></span><span style="color:var(--violet)">Tasks 4.1 & 4.2 — Authentication and Authorisation</span></div>
+    <div class="block bl-violet" id="d4t12">
+      <div class="block-title">IAM roles, policies, and Lake Formation — what to know</div>
+      <p>For the exam, understand the difference between IAM-managed policies (reusable, attached to multiple principals) and inline policies (embedded in a single principal, for permissions that shouldn't be reused). The <strong>principle of least privilege</strong> means granting only the permissions required for a specific task. <strong>AWS Lake Formation</strong> adds a permissions layer on top of S3 and the Glue Data Catalog — instead of complex S3 bucket policies and IAM, you grant column-level, row-level, and table-level permissions through Lake Formation, and it automatically generates the underlying policies. Role-based access control (RBAC) assigns permissions to roles by job function; attribute-based (ABAC) uses tags on both the resource and the principal to determine access dynamically.</p>
+      <button class="sp" onclick="speakEl(this,'d4t12')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">Task 4.3 — Encryption and Masking</span></div>
+    <div class="block bl-green" id="d4t3">
+      <div class="block-title">KMS, TLS, and data masking</div>
+      <p><strong>AWS KMS</strong> manages encryption keys — CMKs (Customer Managed Keys) give you full key rotation control and cross-account encryption capability. S3 encryption options: SSE-S3 (AWS-managed keys, simplest), SSE-KMS (customer control via KMS, enables audit trail and cross-account), SSE-C (customer-provided keys, you manage key material). Encryption in transit means TLS — enforced via S3 bucket policies with a condition on aws:SecureTransport. <strong>Data masking</strong> replaces sensitive values with tokens or hashed values — use it for PII fields (names, emails, credit cards) in non-production environments. <strong>Data anonymisation</strong> is irreversible masking — removes the ability to trace back to the individual.</p>
+      <button class="sp" onclick="speakEl(this,'d4t3')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--amber)"></span><span style="color:var(--amber)">Tasks 4.4 & 4.5 — Audit and Privacy</span></div>
+    <div class="block bl-amber" id="d4t45">
+      <div class="block-title">CloudTrail, Macie, and data governance</div>
+      <p><strong>CloudTrail</strong> records every API call to AWS — who called what API, from which IP, at what time, with what parameters. <strong>CloudTrail Lake</strong> is a newer managed event data store that lets you run SQL queries against CloudTrail logs without setting up Athena or S3 manually. <strong>Amazon Macie</strong> uses machine learning to automatically discover and classify sensitive data (PII) in S3 — it identifies things like passport numbers, credit cards, and health information and raises findings. Combine Macie with Lake Formation column-level security to automatically restrict access to discovered sensitive columns.</p>
+      <button class="sp" onclick="speakEl(this,'d4t45')">🔊 Listen</button>
+    </div>
+    <div class="block bl-orange" id="d4t45b">
+      <div class="block-title">⭐ NEW v1.1 — Governance frameworks and SageMaker Catalog</div>
+      <p>The exam now tests data governance frameworks: understanding that governance covers data quality, data lineage, access control, and compliance — not just technical cataloging. SageMaker Catalog (new in v1.1) is a business-facing metadata catalog that lets data consumers discover and understand datasets without needing technical knowledge of the Glue Data Catalog. It supports projects, domain units, and custom metadata, and integrates with SageMaker Unified Studio for end-to-end data governance in ML workflows.</p>
+      <button class="sp" onclick="speakEl(this,'d4t45b')">🔊 Listen</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">⚡ P4 Cheat Sheet — fast recall table</span></div>
+    <div class="tbl-wrap">
+      <table class="t">
+        <tr><th>If you see...</th><th>Pick...</th></tr>
+        <tr><td>"full control of keys", "custom rotation", "cross-account"</td><td>SSE-KMS with Customer Managed Key</td></tr>
+        <tr><td>"simplest S3 encryption", "no key management"</td><td>SSE-S3</td></tr>
+        <tr><td>"column-level security", "row-level filter"</td><td>AWS Lake Formation</td></tr>
+        <tr><td>"auto-discover PII", "classify sensitive data"</td><td>Amazon Macie</td></tr>
+        <tr><td>"query API history with SQL"</td><td>CloudTrail Lake</td></tr>
+        <tr><td>"rotate DB credentials automatically"</td><td>AWS Secrets Manager</td></tr>
+        <tr><td>"share live data cross-account, no copy"</td><td>Redshift Data Sharing</td></tr>
+        <tr><td>"tags determine access dynamically"</td><td>Attribute-Based Access Control (ABAC)</td></tr>
+        <tr><td>"business-facing governance catalog"</td><td>SageMaker Catalog ⭐v1.1</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: QUIZ
+═══════════════════════════════════════════════════ -->
+<div class="page" id="quiz">
+  <div class="ph">
+    <h2>Practice Quiz</h2>
+    <p>20 exam-style questions across all four domains. Click an option to see if you're right, then read the explanation.</p>
+  </div>
+
+  <div class="quiz-score" id="quiz-score-box"></div>
+  <button onclick="resetQuiz()" style="margin-bottom:16px;font-size:12px;font-weight:600;padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--white);cursor:pointer;">↺ Reset all answers</button>
+
+  <!-- Q1 -->
+  <div class="quiz-card" data-answer="B">
+    <div class="quiz-num">Q1 of 20</div>
+    <div class="quiz-q">A company needs to ingest clickstream data from a mobile app in real time and process it within 500 milliseconds. Which service is the MOST appropriate?</div>
+    <span class="quiz-domain tag-blue tag">Domain 1 — Ingestion</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Amazon SQS with Lambda consumer</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Amazon Kinesis Data Streams with Managed Flink</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>AWS Glue ETL job triggered every minute</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Amazon S3 with EventBridge scheduled rule</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>B is correct.</strong> Kinesis Data Streams provides sub-second latency for real-time streaming, and Managed Flink (formerly Kinesis Data Analytics) processes streams with millisecond latency. SQS (A) adds polling latency. Glue (C) and S3+EventBridge (D) are batch-oriented, not capable of 500ms end-to-end.</div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-card" data-answer="C">
+    <div class="quiz-num">Q2 of 20</div>
+    <div class="quiz-q">A data engineer wants to convert 10TB of JSON files in S3 to Parquet format to reduce Athena query costs. What is the MOST cost-effective approach?</div>
+    <span class="quiz-domain tag-blue tag">Domain 1 — Transform</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Load all files into Redshift, then UNLOAD to S3 as Parquet</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Use EC2 with a custom PySpark script</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Use an AWS Glue ETL job to read JSON and write Parquet with Snappy compression</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Use Lambda to convert each file individually</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>C is correct.</strong> Glue is serverless (no cluster to provision), natively reads JSON from S3 and writes Parquet, and integrates with the Glue Data Catalog for partition management. Lambda (D) has a 15-minute timeout and 10GB memory limit — unsuitable for large files. Redshift (A) adds unnecessary cost. EC2 (B) requires cluster management.</div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-card" data-answer="D">
+    <div class="quiz-num">Q3 of 20</div>
+    <div class="quiz-q">An application uses DynamoDB and needs to process all table changes in real time to update a search index. Which feature enables this?</div>
+    <span class="quiz-domain tag-blue tag">Domain 1 — Ingestion</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>DynamoDB Global Tables</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>DynamoDB Accelerator (DAX)</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>DynamoDB Point-in-Time Recovery</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>DynamoDB Streams with a Lambda trigger</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>D is correct.</strong> DynamoDB Streams captures every item-level modification in near real time as an ordered stream of change records. Lambda can be triggered directly from the stream to process each change — a standard CDC (Change Data Capture) pattern for updating OpenSearch or a cache. Global Tables (A) replicates across regions. DAX (B) is a caching layer. PITR (C) is for backup and recovery.</div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-card" data-answer="B">
+    <div class="quiz-num">Q4 of 20</div>
+    <div class="quiz-q">A company needs a data store that supports ACID transactions, schema evolution without table rewrites, and time travel queries on data stored in S3. Which solution meets ALL requirements?</div>
+    <span class="quiz-domain tag-teal tag">Domain 2 — Data Store</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Amazon Redshift Spectrum with Parquet files</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Amazon S3 with Apache Iceberg table format</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Amazon Athena with standard Hive tables</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>AWS Lake Formation with standard S3 prefixes</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>B is correct.</strong> Apache Iceberg (new in v1.1) provides ACID transactions, schema evolution, partition evolution, and time travel natively on S3. Hive tables (C) do not support row-level updates or time travel. Redshift Spectrum (A) reads external tables but doesn't provide Iceberg capabilities on its own. Lake Formation (D) manages permissions, not storage format features.</div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-card" data-answer="A">
+    <div class="quiz-num">Q5 of 20</div>
+    <div class="quiz-q">A startup runs ad-hoc SQL queries on 500GB of Parquet files in S3. Query frequency is unpredictable — sometimes 10 queries a day, sometimes 100. What is the MOST cost-effective solution?</div>
+    <span class="quiz-domain tag-amber tag">Domain 3 — Operations</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Amazon Athena with partitioned Parquet tables</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Amazon Redshift provisioned cluster (dc2.large)</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Amazon EMR cluster running continuously</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Amazon RDS PostgreSQL with S3 import</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>A is correct.</strong> Athena is pay-per-query-by-data-scanned — $5 per TB scanned. With Parquet (columnar) and partitioning, scanned data is minimised. Redshift provisioned (B) charges continuously regardless of query volume. EMR (C) is expensive at continuous runtime. RDS (D) is for OLTP, not ad-hoc analytics on S3.</div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="quiz-card" data-answer="C">
+    <div class="quiz-num">Q6 of 20</div>
+    <div class="quiz-q">A data team needs to grant column-level access to sensitive PII columns in their data lake so that analysts see masked values while data scientists see raw values. Which service provides this capability natively?</div>
+    <span class="quiz-domain tag-violet tag">Domain 4 — Security</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Amazon S3 bucket policies with condition keys</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>AWS IAM inline policies with resource-level permissions</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>AWS Lake Formation with column-level security and data filters</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Amazon Macie with automatic remediation</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>C is correct.</strong> Lake Formation supports column-level security and data filters (row-level filtering) that apply across Athena, Redshift Spectrum, and EMR queries. S3 bucket policies (A) operate at the object level, not column level. IAM (B) has no column-level awareness. Macie (D) discovers PII but doesn't restrict query access.</div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="quiz-card" data-answer="D">
+    <div class="quiz-num">Q7 of 20</div>
+    <div class="quiz-q">A pipeline ingests 1M records/day from Salesforce into S3. A data engineer wants to schedule this to run every 6 hours without writing any code. Which is the SIMPLEST solution?</div>
+    <span class="quiz-domain tag-blue tag">Domain 1 — Ingestion</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>AWS Glue custom connector with EventBridge trigger</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Lambda function calling Salesforce REST API on a schedule</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>AWS DMS with Salesforce as a source</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Amazon AppFlow with a scheduled flow every 6 hours</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>D is correct.</strong> Amazon AppFlow provides a no-code connector for Salesforce (and 60+ other SaaS platforms), with native scheduling, field mapping, and data validation — no code required. Glue custom connectors (A) require development. Lambda (B) requires code and handling pagination. DMS (C) doesn't natively connect to Salesforce.</div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="quiz-card" data-answer="B">
+    <div class="quiz-num">Q8 of 20</div>
+    <div class="quiz-q">A Glue ETL job is failing intermittently with "out of memory" errors when processing large partitions. What is the BEST fix?</div>
+    <span class="quiz-domain tag-amber tag">Domain 3 — Operations</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Increase the Glue job timeout setting</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Enable Glue job bookmarks and increase the number of DPUs (Data Processing Units)</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Switch from PySpark to Python shell job type</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Convert source files to CSV to reduce read complexity</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>B is correct.</strong> Increasing DPUs allocates more memory (and executors) to the Spark job. Glue job bookmarks track processed data to avoid reprocessing on retry. Timeout (A) addresses time limits, not memory. Python shell (C) has a single-node limit, worse for large data. CSV (D) doesn't reduce memory usage in Spark and is less efficient than Parquet.</div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="quiz-card" data-answer="A">
+    <div class="quiz-num">Q9 of 20</div>
+    <div class="quiz-q">A company must encrypt all data at rest in S3 with keys they fully control, including key rotation schedule and cross-account access. Which encryption option should they use?</div>
+    <span class="quiz-domain tag-violet tag">Domain 4 — Security</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>SSE-KMS with a Customer Managed Key (CMK)</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>SSE-S3 with AWS-managed keys</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>SSE-C with client-provided keys</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Client-side encryption before upload</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>A is correct.</strong> SSE-KMS with a CMK gives full control: custom rotation schedule, IAM and key policy control, cross-account sharing via key policy, and CloudTrail audit of every use. SSE-S3 (B) uses AWS-managed keys with no customer control. SSE-C (C) requires the client to provide keys on every request — operationally complex. Client-side (D) requires managing the encryption layer yourself.</div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="quiz-card" data-answer="C">
+    <div class="quiz-num">Q10 of 20</div>
+    <div class="quiz-q">A data lake stores 5 years of log files in S3. Files older than 90 days are rarely accessed; files older than 1 year are almost never accessed. What lifecycle configuration minimises cost?</div>
+    <span class="quiz-domain tag-teal tag">Domain 2 — Data Store</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Move all files to Glacier Deep Archive immediately</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Keep everything in S3 Standard for simplicity</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Transition to Standard-IA after 90 days, then Glacier Flexible after 365 days</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Move to Intelligent-Tiering after 30 days for all files</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>C is correct.</strong> Standard-IA is appropriate for data accessed less than monthly (90+ days old) at lower storage cost. After 1 year of near-zero access, Glacier Flexible reduces cost further. Deep Archive immediately (A) adds 12-hour retrieval latency even for the first 90 days. S3 Standard (B) is most expensive. Intelligent-Tiering (D) adds a monitoring charge per object — cost-effective only for unpredictable access patterns, not the predictable aging pattern here.</div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="quiz-card" data-answer="D">
+    <div class="quiz-num">Q11 of 20</div>
+    <div class="quiz-q">Which AWS service automatically discovers and classifies sensitive PII data stored in S3 buckets across an AWS account?</div>
+    <span class="quiz-domain tag-violet tag">Domain 4 — Security</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>AWS Config</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>AWS CloudTrail</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Amazon Inspector</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Amazon Macie</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>D is correct.</strong> Amazon Macie uses ML to automatically discover, classify, and protect sensitive data in S3 — it identifies PII like names, credit card numbers, passport numbers, and generates findings. AWS Config (A) tracks resource configuration changes. CloudTrail (B) logs API calls. Inspector (C) scans EC2 and Lambda for software vulnerabilities.</div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="quiz-card" data-answer="B">
+    <div class="quiz-num">Q12 of 20</div>
+    <div class="quiz-q">A team is building a complex data pipeline with branching logic, retry with exponential backoff, and parallel execution across 5 Lambda functions. Which orchestration tool is MOST suitable?</div>
+    <span class="quiz-domain tag-blue tag">Domain 1 — Orchestration</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Amazon EventBridge with multiple rules</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>AWS Step Functions with a Map state and Catch/Retry configuration</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>AWS Glue Workflows with triggers</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Lambda calling Lambda in sequence</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>B is correct.</strong> Step Functions natively supports branching (Choice states), parallel execution (Parallel and Map states), retry with exponential backoff (Retry configuration on Task states), and error handling (Catch). EventBridge (A) is for routing events, not orchestrating complex workflows. Glue Workflows (C) is limited to Glue-native services. Lambda-calling-Lambda (D) creates tightly coupled, hard-to-debug chains with no built-in retry or branching.</div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="quiz-card" data-answer="A">
+    <div class="quiz-num">Q13 of 20</div>
+    <div class="quiz-q">A Glue Crawler has discovered new partitions in S3 but the partitions are not visible in Athena queries. What is the MOST likely cause?</div>
+    <span class="quiz-domain tag-teal tag">Domain 2 — Cataloging</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>The Glue Data Catalog was not updated after the crawler ran</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Athena does not support partitioned tables</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>The S3 bucket is in a different region than Athena</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Parquet files require a schema registry to be queried</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>A is correct.</strong> Athena reads metadata from the Glue Data Catalog. If the Crawler completed but the catalog table's partition metadata was not refreshed (e.g., by running MSCK REPAIR TABLE in Athena or re-running the Crawler successfully), new partitions won't appear. B is false — Athena fully supports partitioned tables. C is false if both are in the same region. D is false — Parquet is natively supported.</div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="quiz-card" data-answer="C">
+    <div class="quiz-num">Q14 of 20</div>
+    <div class="quiz-q">A company's security team needs a complete audit trail of all API calls made to AWS services in the last 90 days, queryable with SQL. Which is the BEST solution?</div>
+    <span class="quiz-domain tag-violet tag">Domain 4 — Audit</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Enable CloudWatch Logs for all services and query with Logs Insights</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Export CloudTrail logs to S3 and query with Athena</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Enable CloudTrail Lake and run SQL queries directly in the console</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Use AWS Config rules to query API call history</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>C is correct.</strong> CloudTrail Lake is a managed event data store that automatically ingests CloudTrail events and makes them queryable with SQL in the same console — no S3 setup, no Athena configuration. It retains logs for up to 7 years. Option B (Athena + S3) works but requires more setup. CloudWatch Logs (A) captures application logs, not all API calls. AWS Config (D) tracks resource configuration changes, not API audit trails.</div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="quiz-card" data-answer="B">
+    <div class="quiz-num">Q15 of 20</div>
+    <div class="quiz-q">A data pipeline needs to enrich each incoming customer record with sentiment analysis of their support ticket text using a large language model. Which architecture is MOST appropriate?</div>
+    <span class="quiz-domain tag-blue tag">Domain 1 — Transform (v1.1)</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Train a custom SageMaker model and call it from Glue</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Call Amazon Bedrock's InvokeModel API from a Lambda function triggered per record</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Use Amazon Comprehend for entity recognition only</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Store raw text in Redshift and use a SQL UDF for analysis</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>B is correct.</strong> Amazon Bedrock provides access to foundation models (Claude, Titan, Llama, etc.) via a simple API call — no model training required. Calling Bedrock's InvokeModel from Lambda per record is a standard LLM enrichment pattern. This is a key v1.1 addition to the exam. Training a custom model (A) is unnecessary when a foundation model suffices. Comprehend (C) does sentiment analysis but doesn't use an LLM and has less flexibility. Redshift UDFs (D) can call external ML services but add complexity.</div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="quiz-card" data-answer="D">
+    <div class="quiz-num">Q16 of 20</div>
+    <div class="quiz-q">A database has a hot partition in DynamoDB — one partition key receives 80% of all writes, causing throttling. What is the BEST mitigation?</div>
+    <span class="quiz-domain tag-teal tag">Domain 2 — Data Store</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Enable DynamoDB Accelerator (DAX)</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Switch to provisioned capacity mode with auto-scaling</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Create a Global Secondary Index on the hot key</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Use write sharding — append a random suffix to the partition key</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>D is correct.</strong> Write sharding distributes writes across multiple physical partitions by appending a random number (e.g., 1-10) to the partition key. This spreads the hot partition's load across 10 partitions. Your application reads from all suffixed versions to reconstruct the full dataset. DAX (A) is a read cache — it doesn't help with write throttling. Auto-scaling (B) reacts after throttling occurs, doesn't eliminate the hot partition. GSI (C) creates a separate index with the same hotness problem.</div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="quiz-card" data-answer="A">
+    <div class="quiz-num">Q17 of 20</div>
+    <div class="quiz-q">A company's Lambda function processes Kinesis records but frequently times out during spikes. What TWO changes would MOST improve throughput? (Select TWO)</div>
+    <span class="quiz-domain tag-blue tag">Domain 1 — Programming</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Increase the Kinesis shard count to add more parallelism</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Increase Lambda reserved concurrency</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Enable Kinesis Enhanced Fan-Out</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Switch Lambda runtime from Python to Java</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>A and B are correct.</strong> Each Kinesis shard has one Lambda consumer by default — more shards means more parallel Lambda invocations, increasing overall throughput. Increasing reserved concurrency ensures Lambda has capacity to scale without being throttled by account-level limits. Enhanced Fan-Out (C) enables multiple consumers to read at full speed, but that's for multiple distinct consumers, not increasing throughput for a single consumer. Changing runtime (D) won't solve a throughput bottleneck.</div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="quiz-card" data-answer="C">
+    <div class="quiz-num">Q18 of 20</div>
+    <div class="quiz-q">A team needs to share a Redshift data warehouse with a partner company in a different AWS account. The partner should only see specific tables and must not be able to copy data to their own S3. Which feature enables this?</div>
+    <span class="quiz-domain tag-violet tag">Domain 4 — Governance</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Export tables to S3 and share the bucket with cross-account permissions</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Create an IAM role in your account that the partner can assume</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Use Redshift Data Sharing with cross-account access and restrict the consumer cluster's IAM permissions</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Use AWS DMS to replicate only the specified tables to the partner's Redshift</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>C is correct.</strong> Redshift Data Sharing lets you share live, read-only access to databases, schemas, tables, and views across AWS accounts — no data movement, no ETL, no copying. Partners query live data in your cluster. You can restrict access at the table or view level. S3 export (A) copies data and doesn't enforce a no-copy restriction. IAM role (B) would give access to the entire cluster. DMS (D) copies data, which violates the no-copy requirement.</div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="quiz-card" data-answer="B">
+    <div class="quiz-num">Q19 of 20</div>
+    <div class="quiz-q">A data quality job in Glue DataBrew finds that 15% of records in a "customer_email" column contain null values. The data engineer wants to be alerted automatically if this null rate exceeds 10% in future runs. What is the BEST approach?</div>
+    <span class="quiz-domain tag-amber tag">Domain 3 — Data Quality</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Set up a CloudWatch alarm on the DataBrew job duration</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Define a DataBrew data quality rule with a threshold and connect to an SNS alert on rule failure</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Write a Lambda function to count nulls after each job</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Enable CloudTrail on the DataBrew job to log null statistics</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>B is correct.</strong> Glue DataBrew supports data quality rules with configurable thresholds (e.g., null rate less than 10%). When a rule fails, the job outcome can trigger an SNS notification via EventBridge. This is a declarative, code-free quality gate. CloudWatch alarm on job duration (A) measures performance, not data quality. A custom Lambda (C) works but is unnecessary when DataBrew natively supports this. CloudTrail (D) logs API calls, not data statistics.</div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="quiz-card" data-answer="D">
+    <div class="quiz-num">Q20 of 20</div>
+    <div class="quiz-q">A company wants to store credentials used by Lambda functions to connect to RDS, with automatic rotation every 30 days and auditable access logs. Which solution BEST meets these requirements?</div>
+    <span class="quiz-domain tag-violet tag">Domain 4 — Security</span>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">A.</span>Store credentials as Lambda environment variables encrypted with KMS</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">B.</span>Store credentials in Systems Manager Parameter Store (Standard)</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">C.</span>Hard-code credentials in the Lambda deployment package</div>
+      <div class="quiz-opt" onclick="answerQ(this)"><span class="opt-letter">D.</span>Store in AWS Secrets Manager with automatic rotation enabled and CloudTrail logging</div>
+    </div>
+    <div class="quiz-explain">✅ <strong>D is correct.</strong> AWS Secrets Manager is purpose-built for credential storage with automatic rotation (Lambda rotator function), versioning, and CloudTrail logging of every access. Lambda environment variables (A) can be encrypted but offer no automatic rotation. SSM Parameter Store (B) supports SecureString but automatic rotation requires custom Lambda setup and is less feature-rich than Secrets Manager for database credentials. Hard-coding (C) is never acceptable.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE: LINKS
+═══════════════════════════════════════════════════ -->
+<div class="page" id="links">
+  <div class="ph">
+    <h2>Study Resources</h2>
+    <p>All official and third-party resources — free and paid — ranked by quality for DEA-C01 prep.</p>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--orange)"></span><span style="color:var(--orange)">Official AWS resources (start here)</span></div>
+
+    <div class="link-card">
+      <div class="link-icon">📋</div>
+      <div>
+        <div class="link-title">AWS Exam Guide (DEA-C01 v1.1) <span class="link-badge tag-orange tag">Official · Free</span></div>
+        <div class="link-desc">The definitive source — lists every tested domain, task statement, and in-scope service. Always download the latest version before your exam.</div>
+        <a class="lnk" href="https://aws.amazon.com/certification/certified-data-engineer-associate/" target="_blank">aws.amazon.com/certification/certified-data-engineer-associate/</a>
+      </div>
+    </div>
+
+    <div class="link-card">
+      <div class="link-icon">🎓</div>
+      <div>
+        <div class="link-title">AWS Skill Builder — Official Practice Questions <span class="link-badge tag-green tag">Free · 20 Qs</span></div>
+        <div class="link-desc">20 free official practice questions closest to real exam style. Start here to calibrate difficulty before buying third-party practice tests.</div>
+        <a class="lnk" href="https://skillbuilder.aws" target="_blank">skillbuilder.aws</a> — search "DEA-C01 Official Practice Question Set"
+      </div>
+    </div>
+
+    <div class="link-card">
+      <div class="link-icon">📚</div>
+      <div>
+        <div class="link-title">AWS Skill Builder — Exam Prep Standard Course <span class="link-badge tag-orange tag">Paid · $29/mo</span></div>
+        <div class="link-desc">Full official exam prep course with labs, flashcards, and 65-question practice exam. Worth the $29 if you want the official teaching path.</div>
+        <a class="lnk" href="https://skillbuilder.aws" target="_blank">skillbuilder.aws</a> — search "Data Engineer Associate Exam Prep"
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--blue)"></span><span style="color:var(--blue)">Top third-party practice tests</span></div>
+
+    <div class="link-card">
+      <div class="link-icon">🧪</div>
+      <div>
+        <div class="link-title">Udemy — DEA-C01 Practice Exams (Jon Bonso / Tutorials Dojo) <span class="link-badge tag-blue tag">Paid · Recommended</span></div>
+        <div class="link-desc">300+ practice questions with detailed explanations, organised by domain. Includes timed exam simulations. Best third-party test for style and explanation quality.</div>
+        <a class="lnk" href="https://www.udemy.com/course/aws-data-engineer-associate-dea-c01-practice-exam/?couponCode=MT260629G3" target="_blank">udemy.com — DEA-C01 Practice Exam (coupon applied)</a>
+      </div>
+    </div>
+
+    <div class="link-card">
+      <div class="link-icon">🎯</div>
+      <div>
+        <div class="link-title">Tutorials Dojo — DEA-C01 Practice Exam Portal <span class="link-badge tag-blue tag">Paid · 300+ Qs</span></div>
+        <div class="link-desc">The native Tutorials Dojo portal — same questions as Udemy but with additional study mode features, per-domain score tracking, and flashcards.</div>
+        <a class="lnk" href="https://portal.tutorialsdojo.com/courses/aws-certified-data-engineer-associate-practice-exam-dea-c01/" target="_blank">portal.tutorialsdojo.com — DEA-C01 Practice Exams</a>
+      </div>
+    </div>
+
+    <div class="link-card">
+      <div class="link-icon">⚡</div>
+      <div>
+        <div class="link-title">Whizlabs — DEA-C01 Practice Tests <span class="link-badge tag-amber tag">Paid · Budget option</span></div>
+        <div class="link-desc">Cheaper than Tutorials Dojo. Question quality is slightly lower, but explanations are decent. Good as supplementary practice after exhausting Tutorials Dojo.</div>
+        <a class="lnk" href="https://www.whizlabs.com/aws-certified-data-engineer/" target="_blank">whizlabs.com/aws-certified-data-engineer/</a>
+      </div>
+    </div>
+
+    <div class="link-card">
+      <div class="link-icon">💬</div>
+      <div>
+        <div class="link-title">ExamTopics — DEA-C01 Community Questions <span class="link-badge tag-green tag">Free · Use with caution</span></div>
+        <div class="link-desc">Community-contributed questions — free but some answers are wrong. Always verify against official AWS documentation. Useful for exposure to more question formats late in prep.</div>
+        <a class="lnk" href="https://www.examtopics.com/exams/amazon/aws-certified-data-engineer-associate/" target="_blank">examtopics.com — DEA-C01 questions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--teal)"></span><span style="color:var(--teal)">AWS Documentation (for deep-dive reference)</span></div>
+
+    <div class="link-card">
+      <div class="link-icon">📖</div>
+      <div>
+        <div class="link-title">Amazon Kinesis Data Streams Developer Guide</div>
+        <a class="lnk" href="https://docs.aws.amazon.com/streams/latest/dev/introduction.html" target="_blank">docs.aws.amazon.com — Kinesis Data Streams</a>
+      </div>
+    </div>
+    <div class="link-card">
+      <div class="link-icon">📖</div>
+      <div>
+        <div class="link-title">AWS Glue Developer Guide</div>
+        <a class="lnk" href="https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html" target="_blank">docs.aws.amazon.com — AWS Glue</a>
+      </div>
+    </div>
+    <div class="link-card">
+      <div class="link-icon">📖</div>
+      <div>
+        <div class="link-title">AWS Lake Formation Developer Guide</div>
+        <a class="lnk" href="https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html" target="_blank">docs.aws.amazon.com — Lake Formation</a>
+      </div>
+    </div>
+    <div class="link-card">
+      <div class="link-icon">📖</div>
+      <div>
+        <div class="link-title">Amazon Redshift Database Developer Guide</div>
+        <a class="lnk" href="https://docs.aws.amazon.com/redshift/latest/dg/welcome.html" target="_blank">docs.aws.amazon.com — Redshift</a>
+      </div>
+    </div>
+    <div class="link-card">
+      <div class="link-icon">📖</div>
+      <div>
+        <div class="link-title">Amazon Bedrock User Guide (new in v1.1)</div>
+        <a class="lnk" href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" target="_blank">docs.aws.amazon.com — Amazon Bedrock</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-title"><span class="dot" style="background:var(--green)"></span><span style="color:var(--green)">Community and extra prep</span></div>
+    <div class="link-card">
+      <div class="link-icon">💬</div>
+      <div>
+        <div class="link-title">r/AWSCertifications — Reddit community</div>
+        <div class="link-desc">Exam experience posts, study tips, and "just passed" breakdowns. Search "DEA-C01" for real exam experience reports.</div>
+        <a class="lnk" href="https://www.reddit.com/r/AWSCertifications/" target="_blank">reddit.com/r/AWSCertifications/</a>
+      </div>
+    </div>
+    <div class="link-card">
+      <div class="link-icon">🔔</div>
+      <div>
+        <div class="link-title">AWS re:Post — official Q&amp;A community</div>
+        <a class="lnk" href="https://repost.aws" target="_blank">repost.aws</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Navigation ── */
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── Quiz engine ── */
+var answered = 0, correct = 0;
+
+function answerQ(optEl) {
+  var card = optEl.closest('.quiz-card');
+  if (card.dataset.done) return;
+  card.dataset.done = 'yes';
+
+  var correctLetter = card.dataset.answer;
+  var opts = card.querySelectorAll('.quiz-opt');
+  var chosen = optEl.querySelector('.opt-letter').textContent.replace('.','').trim();
+
+  opts.forEach(function(o) {
+    var letter = o.querySelector('.opt-letter').textContent.replace('.','').trim();
+    if (letter === correctLetter) o.classList.add('correct');
+    else if (letter === chosen && chosen !== correctLetter) o.classList.add('wrong');
+  });
+
+  card.querySelector('.quiz-explain').classList.add('show');
+  answered++;
+  if (chosen === correctLetter) correct++;
+
+  var scoreBox = document.getElementById('quiz-score-box');
+  scoreBox.classList.add('show');
+  scoreBox.textContent = '✅ ' + correct + ' / ' + answered + ' answered correctly so far';
+}
+
+function resetQuiz() {
+  answered = 0; correct = 0;
+  document.querySelectorAll('.quiz-card').forEach(function(c) {
+    delete c.dataset.done;
+    c.querySelectorAll('.quiz-opt').forEach(function(o) {
+      o.classList.remove('correct','wrong','revealed');
+    });
+    var ex = c.querySelector('.quiz-explain');
+    if (ex) ex.classList.remove('show');
+  });
+  var sb = document.getElementById('quiz-score-box');
+  sb.classList.remove('show');
+  sb.textContent = '';
+}
+
+/* ── TTS: browser-native voice, prefers a natural US male voice ── */
+var _btn=null, _voice=null, _queue=[];
+
+function _pickVoice(){
+  var voices = window.speechSynthesis.getVoices();
+  if(!voices.length) return null;
+  var malePrefs = ['Google US English Male','Microsoft David','Microsoft Guy','Microsoft Andrew','Microsoft Christopher','Alex','Daniel','Fred','Aaron','Eric','Guy','Tom','Justin','Matthew','Christopher','Ryan'];
+  for(var p=0;p<malePrefs.length;p++){
+    for(var i=0;i<voices.length;i++){
+      if(voices[i].name.indexOf(malePrefs[p])!==-1 && voices[i].lang.indexOf('en')===0) return voices[i];
+    }
+  }
+  for(var i=0;i<voices.length;i++){ if(voices[i].lang==='en-US') return voices[i]; }
+  for(var i=0;i<voices.length;i++){ if(voices[i].lang.indexOf('en')===0) return voices[i]; }
+  return voices[0];
+}
+if(window.speechSynthesis){
+  window.speechSynthesis.onvoiceschanged = function(){ _voice = _pickVoice(); };
+  _voice = _pickVoice();
+}
+
+function _chunk(t,m){var s=t.match(/[^.!?]+[.!?]+|[^.!?]+$/g)||[t],c=[],cur='';for(var i=0;i<s.length;i++){if((cur+s[i]).length>m){if(cur)c.push(cur.trim());cur=s[i];}else cur+=s[i];}if(cur.trim())c.push(cur.trim());return c.filter(function(x){return x.length>0;});}
+
+function _speakNext(btn){
+  if(!_queue.length){ _resetBtn(btn); _btn=null; return; }
+  var text = _queue.shift();
+  var u = new SpeechSynthesisUtterance(text);
+  if(_voice) u.voice = _voice;
+  u.lang = 'en-US';
+  u.rate = 0.98;
+  u.pitch = (_voice && /female|zira|samantha|susan|karen|victoria|tessa|moira|fiona|siri/i.test(_voice.name)) ? 1 : 0.9;
+  u.onend = function(){ _speakNext(btn); };
+  u.onerror = function(){ _speakNext(btn); };
+  window.speechSynthesis.speak(u);
+}
+
+function speakEl(btn, elId){
+  if(!window.speechSynthesis){ alert('Speech not supported in this browser — please use Chrome.'); return; }
+  if(_btn===btn){ window.speechSynthesis.cancel(); _queue=[]; _resetBtn(btn); _btn=null; return; }
+  if(_btn){ window.speechSynthesis.cancel(); _queue=[]; _resetBtn(_btn); _btn=null; }
+  var el=document.getElementById(elId); if(!el) return;
+  var text=el.innerText.replace(/[🔊■▶]\s*(Listen)?\s*/g,'').replace(/\s+/g,' ').trim();
+  if(!text) return;
+  if(!_voice) _voice = _pickVoice();
+  _queue = _chunk(text, 200);
+  _btn = btn; btn.innerHTML='■ Stop'; btn.classList.add('playing');
+  _speakNext(btn);
+}
+function _resetBtn(b){ if(!b) return; b.innerHTML='🔊 Listen'; b.classList.remove('playing'); }
+</script>
+</body>
+</html>
