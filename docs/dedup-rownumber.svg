@@ -1,0 +1,64 @@
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <rect width="900" height="420" fill="#fafafa"/>
+  <text x="450" y="35" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">ROW_NUMBER() 流内去重：同一用户今天登录了 3 次</text>
+
+  <!-- 输入表 -->
+  <text x="220" y="70" text-anchor="middle" font-size="13" font-weight="600" fill="#3b6ea5">Kafka 流入的原始事件（乱序到达）</text>
+  <rect x="60" y="85" width="320" height="180" fill="white" stroke="#c9d2dc" stroke-width="1"/>
+  <line x1="60" y1="115" x2="380" y2="115" stroke="#c9d2dc"/>
+  <line x1="60" y1="145" x2="380" y2="145" stroke="#c9d2dc"/>
+  <line x1="60" y1="175" x2="380" y2="175" stroke="#c9d2dc"/>
+  <line x1="60" y1="205" x2="380" y2="205" stroke="#c9d2dc"/>
+  <line x1="60" y1="235" x2="380" y2="235" stroke="#c9d2dc"/>
+  <line x1="220" y1="85" x2="220" y2="265" stroke="#c9d2dc"/>
+
+  <text x="140" y="105" text-anchor="middle" font-size="12" font-weight="600">user_id</text>
+  <text x="300" y="105" text-anchor="middle" font-size="12" font-weight="600">login_time</text>
+
+  <text x="140" y="135" text-anchor="middle" font-size="12">u_1001</text>
+  <text x="300" y="135" text-anchor="middle" font-size="12">09:15:30</text>
+
+  <rect x="62" y="147" width="316" height="28" fill="#fff3cd"/>
+  <text x="140" y="165" text-anchor="middle" font-size="12" font-weight="700">u_1001</text>
+  <text x="300" y="165" text-anchor="middle" font-size="12" font-weight="700">08:02:11 ⭐最早</text>
+
+  <text x="140" y="195" text-anchor="middle" font-size="12">u_1001</text>
+  <text x="300" y="195" text-anchor="middle" font-size="12">14:47:02</text>
+
+  <text x="140" y="225" text-anchor="middle" font-size="12">u_2002</text>
+  <text x="300" y="225" text-anchor="middle" font-size="12">10:00:00</text>
+
+  <text x="140" y="255" text-anchor="middle" font-size="12">u_2002</text>
+  <text x="300" y="255" text-anchor="middle" font-size="12">10:00:00</text>
+
+  <!-- 箭头 -->
+  <path d="M400,175 C 450,175 450,175 500,175" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow2)"/>
+  <text x="450" y="160" text-anchor="middle" font-size="11" fill="#5b6472">PARTITION BY user_id</text>
+  <text x="450" y="200" text-anchor="middle" font-size="11" fill="#5b6472">ORDER BY login_time</text>
+  <defs>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+
+  <!-- 输出表 -->
+  <text x="700" y="70" text-anchor="middle" font-size="13" font-weight="600" fill="#2f9e6e">WHERE rn = 1 之后（每人只留最早一条）</text>
+  <rect x="540" y="85" width="320" height="120" fill="white" stroke="#c9d2dc" stroke-width="1"/>
+  <line x1="540" y1="115" x2="860" y2="115" stroke="#c9d2dc"/>
+  <line x1="540" y1="145" x2="860" y2="145" stroke="#c9d2dc"/>
+  <line x1="540" y1="175" x2="860" y2="175" stroke="#c9d2dc"/>
+  <line x1="700" y1="85" x2="700" y2="205" stroke="#c9d2dc"/>
+
+  <text x="620" y="105" text-anchor="middle" font-size="12" font-weight="600">user_id</text>
+  <text x="780" y="105" text-anchor="middle" font-size="12" font-weight="600">today_first_login_time</text>
+
+  <rect x="542" y="117" width="316" height="28" fill="#d4f4e2"/>
+  <text x="620" y="135" text-anchor="middle" font-size="12" font-weight="700">u_1001</text>
+  <text x="780" y="135" text-anchor="middle" font-size="12" font-weight="700">08:02:11</text>
+
+  <text x="620" y="165" text-anchor="middle" font-size="12">u_2002</text>
+  <text x="780" y="165" text-anchor="middle" font-size="12">10:00:00</text>
+
+  <text x="700" y="240" text-anchor="middle" font-size="12" fill="#c0392b">⚠️ 注意：这不是 append-only 输出，而是会“撤回旧值+发新值”的 changelog 流</text>
+  <text x="700" y="260" text-anchor="middle" font-size="11" fill="#5b6472">（比如先看到 09:15:30，以为它是最早，之后看到 08:02:11 更早，会先 -U 撤回 09:15:30 再 +U 发 08:02:11）</text>
+</svg>

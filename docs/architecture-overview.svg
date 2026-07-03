@@ -1,0 +1,85 @@
+<svg viewBox="0 0 980 560" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="980" height="560" fill="#fafafa"/>
+
+  <!-- MySQL -->
+  <rect x="40" y="40" width="180" height="60" rx="8" fill="#3b6ea5"/>
+  <text x="130" y="65" text-anchor="middle" fill="white" font-size="15" font-weight="600">MySQL 业务库</text>
+  <text x="130" y="85" text-anchor="middle" fill="#dce8f7" font-size="12">login 表 binlog</text>
+
+  <!-- Kafka Topic -->
+  <rect x="380" y="40" width="220" height="70" rx="8" fill="#2f9e6e"/>
+  <text x="490" y="65" text-anchor="middle" fill="white" font-size="15" font-weight="600">Kafka Topic</text>
+  <text x="490" y="85" text-anchor="middle" fill="#dcf5e8" font-size="12">user_login_events</text>
+  <text x="490" y="100" text-anchor="middle" fill="#dcf5e8" font-size="11">(CDC 事件流，唯一数据源)</text>
+
+  <path d="M220,70 L380,70" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="300" y="60" text-anchor="middle" font-size="11" fill="#5b6472">binlog 采集</text>
+
+  <!-- 分叉说明 -->
+  <text x="490" y="140" text-anchor="middle" font-size="13" fill="#c0392b" font-weight="600">
+    ⬇ 同一个 Topic，被两个独立 Consumer Group 各自消费一份 ⬇
+  </text>
+
+  <!-- 左：批处理 T-1 -->
+  <rect x="60" y="180" width="380" height="330" rx="10" fill="#fff" stroke="#3b6ea5" stroke-width="2"/>
+  <text x="250" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#3b6ea5">① T-1 批处理管道（每天凌晨跑一次）</text>
+
+  <rect x="90" y="230" width="320" height="55" rx="6" fill="#eaf1fb"/>
+  <text x="250" y="252" text-anchor="middle" font-size="12" fill="#1f3a5f">Consumer Group A</text>
+  <text x="250" y="270" text-anchor="middle" font-size="11" fill="#1f3a5f">读取"昨天 0 点~24 点"的消息</text>
+
+  <path d="M250,285 L250,310" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="90" y="310" width="320" height="55" rx="6" fill="#eaf1fb"/>
+  <text x="250" y="332" text-anchor="middle" font-size="12" fill="#1f3a5f">ODS 层</text>
+  <text x="250" y="350" text-anchor="middle" font-size="11" fill="#1f3a5f">ods_login_event，按 dt 分区落一份全量</text>
+
+  <path d="M250,365 L250,390" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="90" y="390" width="320" height="55" rx="6" fill="#eaf1fb"/>
+  <text x="250" y="412" text-anchor="middle" font-size="12" fill="#1f3a5f">DWD 聚合</text>
+  <text x="250" y="430" text-anchor="middle" font-size="11" fill="#1f3a5f">按 user_id 取 MIN(login_time)，与老 T-1 表合并</text>
+
+  <path d="M250,445 L250,470" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="90" y="470" width="320" height="35" rx="6" fill="#3b6ea5"/>
+  <text x="250" y="493" text-anchor="middle" font-size="12" fill="white" font-weight="600">dwd_user_first_login_t1（滚动累积表）</text>
+
+  <!-- 右：实时 T -->
+  <rect x="540" y="180" width="380" height="330" rx="10" fill="#fff" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="730" y="210" text-anchor="middle" font-size="14" font-weight="700" fill="#2f9e6e">② Flink 实时管道（今天持续跑）</text>
+
+  <rect x="570" y="230" width="320" height="55" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="252" text-anchor="middle" font-size="12" fill="#155d3a">Consumer Group B</text>
+  <text x="730" y="270" text-anchor="middle" font-size="11" fill="#155d3a">从"今天 0 点"offset 开始消费</text>
+
+  <path d="M730,285 L730,310" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="570" y="310" width="320" height="55" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="332" text-anchor="middle" font-size="12" fill="#155d3a">流内去重</text>
+  <text x="730" y="350" text-anchor="middle" font-size="11" fill="#155d3a">ROW_NUMBER 取每个用户今天最早一条</text>
+
+  <path d="M730,365 L730,390" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="570" y="390" width="320" height="55" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="412" text-anchor="middle" font-size="12" fill="#155d3a">Lookup Join</text>
+  <text x="730" y="430" text-anchor="middle" font-size="11" fill="#155d3a">查左边的 dwd_user_first_login_t1 维表</text>
+
+  <path d="M730,445 L730,470" stroke="#5b6472" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="570" y="470" width="320" height="35" rx="6" fill="#2f9e6e"/>
+  <text x="730" y="493" text-anchor="middle" font-size="12" fill="white" font-weight="600">first_login_result（今天实时可见）</text>
+
+  <!-- 跨图连线：右边查左边 -->
+  <path d="M570,417 C 460,417 460,417 410,417" stroke="#c0392b" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow)"/>
+  <text x="490" y="405" text-anchor="middle" font-size="11" fill="#c0392b">Lookup 查询（T-1 表当维表）</text>
+
+  <!-- 明日闭环 -->
+  <path d="M730,505 C 730,540 250,540 250,505" stroke="#8e44ad" stroke-width="2" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="490" y="555" text-anchor="middle" font-size="12" fill="#8e44ad" font-weight="600">明天凌晨：今天发现的新用户会被①的批处理重新汇总合并回 T-1 表，循环滚动</text>
+</svg>
