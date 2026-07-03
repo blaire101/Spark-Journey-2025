@@ -1,0 +1,56 @@
+<svg viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="ck1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="520" fill="#fafafa"/>
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">统一写入 ClickHouse：两个写入方 + 一个读取方</text>
+
+  <!-- 写入方1: Flink -->
+  <rect x="40" y="60" width="280" height="90" rx="8" fill="#e8f8ef" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="180" y="85" text-anchor="middle" font-size="12" font-weight="700" fill="#155d3a">作业⑤ Flink实时窗口</text>
+  <text x="180" y="105" text-anchor="middle" font-size="11" fill="#155d3a">每个TUMBLE窗口只在</text>
+  <text x="180" y="122" text-anchor="middle" font-size="11" fill="#155d3a">Watermark越过窗口结束线时</text>
+  <text x="180" y="139" text-anchor="middle" font-size="11" fill="#155d3a">触发一次，即"每小时写1条"</text>
+
+  <!-- 写入方2: 离线 -->
+  <rect x="40" y="170" width="280" height="90" rx="8" fill="#eaf1fb" stroke="#3b6ea5" stroke-width="2"/>
+  <text x="180" y="195" text-anchor="middle" font-size="12" font-weight="700" fill="#1f3a5f">作业⑥ 离线校准</text>
+  <text x="180" y="215" text-anchor="middle" font-size="11" fill="#1f3a5f">每天02:00跑一次</text>
+  <text x="180" y="232" text-anchor="middle" font-size="11" fill="#1f3a5f">一次性写入"昨天"24个小时</text>
+  <text x="180" y="249" text-anchor="middle" font-size="11" fill="#1f3a5f">的准确值（24条记录）</text>
+
+  <path d="M320,105 C 400,105 400,200 480,200" stroke="#5b6472" stroke-width="2" marker-end="url(#ck1)"/>
+  <path d="M320,215 L480,215" stroke="#5b6472" stroke-width="2" marker-end="url(#ck1)"/>
+
+  <!-- ClickHouse表 -->
+  <rect x="480" y="150" width="300" height="130" rx="8" fill="#fff3cd" stroke="#e6a817" stroke-width="2"/>
+  <text x="630" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#8a6d1f">ClickHouse表</text>
+  <text x="630" y="193" text-anchor="middle" font-size="11" fill="#8a6d1f">dws_pay_hourly_stats</text>
+  <text x="630" y="212" text-anchor="middle" font-size="10" fill="#8a6d1f">ENGINE = ReplacingMergeTree</text>
+  <text x="630" y="228" text-anchor="middle" font-size="10" fill="#8a6d1f">ORDER BY window_start</text>
+  <text x="630" y="248" text-anchor="middle" font-size="10" fill="#c0392b">同一window_start写两次，</text>
+  <text x="630" y="264" text-anchor="middle" font-size="10" fill="#c0392b">后台merge时只保留最新版本</text>
+
+  <path d="M780,215 C 830,215 830,215 860,215" stroke="#5b6472" stroke-width="2" marker-end="url(#ck1)"/>
+
+  <!-- BI工具 -->
+  <rect x="820" y="150" width="140" height="130" rx="8" fill="#f0e6f7" stroke="#8e44ad" stroke-width="2"/>
+  <text x="890" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#5b2c73">BI 工具</text>
+  <text x="890" y="200" text-anchor="middle" font-size="10" fill="#5b2c73">Grafana /</text>
+  <text x="890" y="216" text-anchor="middle" font-size="10" fill="#5b2c73">Superset /</text>
+  <text x="890" y="232" text-anchor="middle" font-size="10" fill="#5b2c73">自建大盘网页</text>
+  <text x="890" y="255" text-anchor="middle" font-size="9" fill="#5b2c73">JDBC/HTTP连接</text>
+  <text x="890" y="268" text-anchor="middle" font-size="9" fill="#5b2c73">运行SQL查询</text>
+
+  <!-- 说明区 -->
+  <rect x="40" y="310" width="920" height="180" rx="8" fill="white" stroke="#c9d2dc"/>
+  <text x="60" y="335" font-size="13" font-weight="700" fill="#1f2d3d">时间线示例（以2026-07-03 09:00这个小时为例）</text>
+  <text x="60" y="360" font-size="11" fill="#5b6472">10:00左右 —— 作业⑤触发窗口计算，写入 (09:00, 3笔, ¥43000) —— 这是"近似值"（09:55那笔延迟数据没算进去）</text>
+  <text x="60" y="382" font-size="11" fill="#5b6472">当天全天 —— BI工具查询到的都是这条近似值，大盘上显示 ¥43000</text>
+  <text x="60" y="404" font-size="11" fill="#5b6472">次日02:00 —— 作业⑥用完整ODS重算，写入 (09:00, 4笔, ¥55000) —— 这是"准确值"</text>
+  <text x="60" y="426" font-size="11" fill="#5b6472">ReplacingMergeTree后台merge —— 旧的近似值行被清理，只留准确值</text>
+  <text x="60" y="448" font-size="11" fill="#c0392b">⚠️ merge是异步的，不是立刻发生；查询时如果merge还没跑完，需要加 FINAL 关键字强制去重，或用 argMax() 聚合查询</text>
+  <text x="60" y="470" font-size="11" fill="#5b6472">次日之后 —— BI工具查到的09:00这个小时，变成准确值¥55000，大盘自动更新，不需要人工干预</text>
+</svg>
