@@ -52,6 +52,7 @@ WATERMARK FOR pay_time AS pay_time - INTERVAL '5' SECOND
 | Hive | ✅ | ✅ | ✅ | 三种角色都支持 |
 | Filesystem | ✅ | ✅ | ❌ | 读写 CSV/Parquet/ORC，含 HDFS/S3 |
 | Elasticsearch | ❌ | ✅ | ❌ | 只能当 Sink |
+| ClickHouse | ⚠️ | ⚠️ | ⚠️ | 不算 Flink 官方一等公民，通常借用**通用 JDBC connector**（ClickHouse自带JDBC驱动）三种角色都能实现，也有社区专门维护的第三方connector（如 `flink-connector-clickhouse`），本文 Case 2 就是这么接的 |
 | Print / Blackhole / DataGen | 部分支持 | ✅ | ❌ | 调试/测试专用 |
 
 ### 📌 关于 Redis：不算严格意义的"官方支持"
