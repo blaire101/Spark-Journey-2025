@@ -1,4 +1,4 @@
-# Flink SQL 实战：用户首次登录时间检测（初学者精讲版）
+# Flink SQL 实战：用户首次登录时间检测
 
 > 目标读者：Flink 初学者，会基础 SQL，但对 Table API / Dynamic Table / Watermark / Lookup Join 这些概念还比较陌生。
 > 本文按 5 个 Step 讲，每个 Step 都有：**知识点科普 + 示例数据 + 实战 SQL 片段**。
