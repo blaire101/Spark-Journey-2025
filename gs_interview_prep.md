@@ -1,7 +1,7 @@
-# Goldman Sachs Mock Interview Prep
+# Mock Interview Prep
 ## Data, Lakehouse and AI Data Platform Engineer — VP, Singapore
 
-Sorted by frequency reported in GS CoderPad interviews (highest first).
+Sorted by frequency reported in CoderPad interviews (highest first).
 **Approach & Code sections are collapsed by default** — click to reveal after you attempt the problem yourself.
 Each code block includes a runnable example at the bottom.
 
