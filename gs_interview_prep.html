@@ -132,13 +132,16 @@
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="p1">Part 1</button>
+    <button class="tab-btn active" data-tab="cat">📚 Categories</button>
+    <button class="tab-btn" data-tab="p1">Part 1</button>
     <button class="tab-btn" data-tab="p2">Part 2</button>
     <button class="tab-btn" data-tab="p3">Part 3 — Verified</button>
     <button class="tab-btn" data-tab="p4">Part 4 — Speculation &amp; English Practice</button>
   </div>
 
-  <div id="p1" class="tab-panel active"></div>
+  <div id="cat" class="tab-panel active"></div>
+
+  <div id="p1" class="tab-panel"></div>
   <div id="p2" class="tab-panel"></div>
   <div id="p3" class="tab-panel"></div>
   <div id="p4" class="tab-panel"></div>
@@ -237,7 +240,7 @@ function renderQuestionCard(q, idx, prefix) {
   const speakId = `${prefix}-${idx}`;
   const fullText = `${q.t}. ${q.problem} ${q.approach.join('. ')}. ${q.tip}`;
   return `
-    <div class="card">
+    <div class="card" id="card-${speakId}">
       <div class="card-head">
         <div>
           <p class="card-title">${q.t}</p>
@@ -327,15 +330,125 @@ renderPart('p1', part1, 'p1');
 renderPart('p2', part2, 'p2');
 renderPart('p3', part3, 'p3');
 renderPart4();
+renderCategories();
 
-// ---------- Tabs ----------
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab).classList.add('active');
+// ---------- Categories ----------
+const categories = [
+  { emoji: "🗄️", name: "SQL", items: [
+    {label:"2) SQL — Deduplicate & Get Latest Record", tab:"p1", cardId:"p1-1"},
+    {label:"3) SQL — Second Highest Salary per Department", tab:"p1", cardId:"p1-2"},
+    {label:"18) SQL — Running Total (Cumulative Sum)", tab:"p2", cardId:"p2-7"},
+    {label:"19) SQL — Find Duplicate Emails", tab:"p2", cardId:"p2-8"},
+  ]},
+  { emoji: "🔑", name: "HashMap / Grouping / Frequency Counting", items: [
+    {label:"9) Group Anagrams", tab:"p1", cardId:"p1-8"},
+    {label:"10) Two Sum (+ Streaming Follow-up)", tab:"p1", cardId:"p1-9"},
+    {label:"15) Top K Frequent Elements", tab:"p2", cardId:"p2-4"},
+    {label:"23) Two Sum (verified)", tab:"p3", cardId:"p3-2"},
+    {label:"24) Most Frequent IP Address from Logs (verified)", tab:"p3", cardId:"p3-3"},
+    {label:"26) Student with Highest Average Score (verified)", tab:"p3", cardId:"p3-5"},
+  ]},
+  { emoji: "🏗️", name: "Design (Data Structures)", items: [
+    {label:"1) LRU Cache", tab:"p1", cardId:"p1-0"},
+    {label:"17) Design Hit Counter", tab:"p2", cardId:"p2-6"},
+    {label:"28) Design a Calculator (verified)", tab:"p3", cardId:"p3-7"},
+  ]},
+  { emoji: "📚", name: "Stack", items: [
+    {label:"11) Valid Parentheses", tab:"p2", cardId:"p2-0"},
+    {label:"28) Design a Calculator (also stack-based)", tab:"p3", cardId:"p3-7"},
+  ]},
+  { emoji: "🪟", name: "Sliding Window / Two Pointer", items: [
+    {label:"12) Longest Substring Without Repeating Characters", tab:"p2", cardId:"p2-1"},
+    {label:"16) Trapping Rain Water", tab:"p2", cardId:"p2-5"},
+    {label:"22) Trapping Rain Water (verified)", tab:"p3", cardId:"p3-1"},
+  ]},
+  { emoji: "⛰️", name: "Heap", items: [
+    {label:"14) Kth Largest Element in an Array", tab:"p2", cardId:"p2-3"},
+    {label:"15) Top K Frequent Elements", tab:"p2", cardId:"p2-4"},
+  ]},
+  { emoji: "🌳", name: "BFS / DFS / Graph", items: [
+    {label:"4) Binary Tree Level Order Traversal", tab:"p1", cardId:"p1-3"},
+    {label:"5) Number of Islands", tab:"p1", cardId:"p1-4"},
+    {label:"6) Course Schedule", tab:"p1", cardId:"p1-5"},
+    {label:"7) Rotting Oranges", tab:"p1", cardId:"p1-6"},
+    {label:"25) Union-Find — Largest Tree Root (verified)", tab:"p3", cardId:"p3-4"},
+  ]},
+  { emoji: "🧮", name: "Dynamic Programming", items: [
+    {label:"8) Word Break", tab:"p1", cardId:"p1-7"},
+  ]},
+  { emoji: "📊", name: "Sorting / Greedy", items: [
+    {label:"13) Merge Intervals", tab:"p2", cardId:"p2-2"},
+  ]},
+  { emoji: "🔗", name: "Linked List", items: [
+    {label:"20) Merge Two Sorted Lists", tab:"p2", cardId:"p2-9"},
+  ]},
+  { emoji: "🔤", name: "String / Simulation", items: [
+    {label:"21) String Compression (verified)", tab:"p3", cardId:"p3-0"},
+    {label:"27) Robot Final Coordinates (verified)", tab:"p3", cardId:"p3-6"},
+  ]},
+  { emoji: "🔀", name: "Union-Find", items: [
+    {label:"25) Union-Find — Largest Tree Root in a Forest (verified)", tab:"p3", cardId:"p3-4"},
+  ]},
+];
+
+function renderCategories() {
+  const el = document.getElementById('cat');
+  let html = `<div class="intro-note">Study by <b>category</b>, not by number — grouping similar patterns together helps you internalize the underlying technique instead of memorizing 28 isolated problems. Click any item to jump straight to it.</div>`;
+
+  categories.forEach(cat => {
+    html += `<div class="section-title">${cat.emoji} ${cat.name}</div><div class="card">`;
+    cat.items.forEach(item => {
+      html += `
+        <div class="phrase-row">
+          <div class="phrase-text">${item.label}</div>
+          <button class="listen-btn" onclick="jumpTo('${item.tab}', 'card-${item.cardId}')" style="background:var(--surface); border-color:var(--border-strong); color:var(--text-secondary);">
+            Jump →
+          </button>
+        </div>
+      `;
+    });
+    html += `</div>`;
   });
+
+  html += `
+    <div class="section-title">✅ Part 3 — Verified Questions Only</div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text-secondary);">All 8 questions in Part 3 come from real, dated, sourced interview reports (Glassdoor, LeetCode Discuss, Medium). See the Part 3 tab for full detail and sourcing.</p>
+      <button class="listen-btn" onclick="switchTab('p3')" style="margin-top:6px;">Go to Part 3 →</button>
+    </div>
+    <div class="section-title">🔮 Part 4 — Role-Specific Prep (Speculative)</div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text-secondary);">Speculative system design topics, GS's own interview guide notes, and English speaking practice phrases for this specific Lakehouse / AI Data Platform role.</p>
+      <button class="listen-btn" onclick="switchTab('p4')" style="margin-top:6px;">Go to Part 4 →</button>
+    </div>
+  `;
+
+  el.innerHTML = html;
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+
+function jumpTo(tabId, cardId) {
+  switchTab(tabId);
+  setTimeout(() => {
+    const card = document.getElementById(cardId);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      card.style.transition = 'background 0.3s';
+      card.style.background = 'var(--accent-bg)';
+      setTimeout(() => { card.style.background = 'var(--surface)'; }, 1200);
+    }
+  }, 50);
+}
+
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
 });
 
 // ---------- Text-to-Speech ----------
