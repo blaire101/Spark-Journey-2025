@@ -30,6 +30,8 @@ cache.get(2)       # returns -1 (not found)
 - Most recently used = move to front (head)
 - Least recently used = tail, evicted when over capacity
 
+![gs_lc_lru_cache](docs/gs_lc_lru_cache.svg)
+
 ```python
 class Node:
     def __init__(self, key=0, val=0):
@@ -92,8 +94,6 @@ if __name__ == "__main__":
 
 **Memory tip:** HashMap = "where is it", Linked List = "how recently used"
 
-![gs_lc_lru_cache](docs/gs_lc_lru_cache.svg)
-
 </details>
 
 ---
@@ -119,6 +119,8 @@ employee_id | salary | updated_at
 
 - Use `ROW_NUMBER()` window function partitioned by employee, ordered by latest date
 - Filter to row number = 1
+
+![gs_lc_dedup_latest](docs/gs_lc_dedup_latest.svg)
 
 ```sql
 -- Setup (run this first to create test data)
@@ -155,8 +157,6 @@ WHERE rn = 1;
 
 **Memory tip:** PARTITION BY = "group by employee", ROW_NUMBER = "rank within group"
 
-![gs_lc_dedup_latest](docs/gs_lc_dedup_latest.svg)
-
 </details>
 
 ---
@@ -182,6 +182,8 @@ id | name  | department | salary
 
 - Use `DENSE_RANK()` (not ROW_NUMBER) so tied salaries share rank
 - Filter to rank = 2
+
+![gs_lc_second_highest_salary](docs/gs_lc_second_highest_salary.svg)
 
 ```sql
 -- Setup (run this first to create test data)
@@ -219,8 +221,6 @@ WHERE rnk = 2;
 
 **Memory tip:** DENSE_RANK avoids gaps when there are ties -- use it for "Nth highest" problems
 
-![gs_lc_second_highest_salary](docs/gs_lc_second_highest_salary.svg)
-
 </details>
 
 ---
@@ -248,6 +248,8 @@ Output: [[3],[9,20],[15,7]]
 
 - BFS with a queue
 - Process one full level at a time using `len(queue)` as the level size
+
+![gs_lc_level_order](docs/gs_lc_level_order.svg)
 
 ```python
 from collections import deque
@@ -296,8 +298,6 @@ if __name__ == "__main__":
 
 **Memory tip:** `len(queue)` at loop start = size of current level -- process exactly that many before moving to next level
 
-![gs_lc_level_order](docs/gs_lc_level_order.svg)
-
 </details>
 
 ---
@@ -324,6 +324,8 @@ Output: 1
 
 - DFS flood fill: when you find a '1', sink the entire connected island by marking visited cells as '0'
 - Count how many times a new DFS is triggered
+
+![gs_lc_number_of_islands](docs/gs_lc_number_of_islands.svg)
 
 ```python
 def numIslands(grid):
@@ -367,8 +369,6 @@ if __name__ == "__main__":
 
 **Memory tip:** DFS = flood fill the whole island in one go, mark visited as you go so you never recount
 
-![gs_lc_number_of_islands](docs/gs_lc_number_of_islands.svg)
-
 </details>
 
 ---
@@ -390,6 +390,8 @@ Output: False   (cycle: 0 needs 1, 1 needs 0)
 
 - Build a graph; if there's a cycle, it's impossible to finish
 - Use BFS topological sort (Kahn's algorithm): count in-degrees, remove nodes with 0 in-degree layer by layer
+
+![gs_lc_course_schedule](docs/gs_lc_course_schedule.svg)
 
 ```python
 from collections import deque, defaultdict
@@ -424,8 +426,6 @@ if __name__ == "__main__":
 
 **Memory tip:** If you can't process all nodes via topological sort, there's a cycle -> return False
 
-![gs_lc_course_schedule](docs/gs_lc_course_schedule.svg)
-
 </details>
 
 ---
@@ -447,6 +447,8 @@ Output: 4
 
 - Multi-source BFS: seed the queue with ALL rotten oranges at once (they spread simultaneously)
 - Each BFS layer = 1 minute
+
+![gs_lc_rotting_oranges](docs/gs_lc_rotting_oranges.svg)
 
 ```python
 from collections import deque
@@ -493,8 +495,6 @@ if __name__ == "__main__":
 
 **Memory tip:** Multi-source BFS = seed ALL starting points into the queue together, not one at a time
 
-![gs_lc_rotting_oranges](docs/gs_lc_rotting_oranges.svg)
-
 </details>
 
 ---
@@ -516,6 +516,8 @@ Output: True
 
 - `dp[i]` = True if `s[:i]` can be segmented
 - For each position i, check all earlier positions j: if `dp[j]` is True and `s[j:i]` is a valid word, then `dp[i]` = True
+
+![gs_lc_word_break](docs/gs_lc_word_break.svg)
 
 ```python
 def wordBreak(s, wordDict):
@@ -541,8 +543,6 @@ if __name__ == "__main__":
 
 **Memory tip:** `dp[i]` means "can the FIRST i characters be segmented" -- not `s[i]` itself
 
-![gs_lc_word_break](docs/gs_lc_word_break.svg)
-
 </details>
 
 ---
@@ -565,6 +565,8 @@ Output: [["eat","tea","ate"],["tan","nat"],["bat"]]
 - Sort each string's characters -- anagrams produce the same sorted key
 - Group into a hashmap using the sorted string as key
 
+![gs_lc_group_anagrams](docs/gs_lc_group_anagrams.svg)
+
 ```python
 from collections import defaultdict
 
@@ -583,8 +585,6 @@ if __name__ == "__main__":
 ```
 
 **Memory tip:** Anagrams always sort to the same string -- use that as the hashmap key
-
-![gs_lc_group_anagrams](docs/gs_lc_group_anagrams.svg)
 
 </details>
 
@@ -607,6 +607,8 @@ Output: [0,1]   (2 + 7 = 9)
 
 - Use a hashmap: for each number, check if `target - number` was seen before
 - One pass, O(n) time
+
+![gs_lc_two_sum](docs/gs_lc_two_sum.svg)
 
 ```python
 def twoSum(nums, target):
@@ -649,8 +651,6 @@ if __name__ == "__main__":
 ```
 
 **Memory tip:** Streaming = can't sort or index by position -- maintain a running hashmap of counts instead
-
-![gs_lc_two_sum](docs/gs_lc_two_sum.svg)
 
 </details>
 
