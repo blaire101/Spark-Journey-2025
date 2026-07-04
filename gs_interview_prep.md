@@ -1,7 +1,8 @@
 # Mock Interview Prep
+
 ## Data, Lakehouse and AI Data Platform Engineer — VP, Singapore
 
-Sorted by frequency reported in CoderPad interviews (highest first).
+Sorted by frequency reported in GS CoderPad interviews (highest first).
 **Approach & Code sections are collapsed by default** — click to reveal after you attempt the problem yourself.
 Each code block includes a runnable example at the bottom.
 
@@ -14,59 +15,59 @@ Each code block includes a runnable example at the bottom.
 ---
 
 ### 🗄️ SQL
-- [2) SQL — Deduplicate & Get Latest Record](#2-sql-deduplicate-get-latest-record)
-- [3) SQL — Second Highest Salary per Department](#3-sql-second-highest-salary-per-department)
-- [18) SQL — Running Total (Cumulative Sum)](#18-sql-running-total-cumulative-sum)
-- [19) SQL — Find Duplicate Emails](#19-sql-find-duplicate-emails)
+- [2) SQL — Deduplicate & Get Latest Record](#2-sql--deduplicate--get-latest-record)
+- [3) SQL — Second Highest Salary per Department](#3-sql--second-highest-salary-per-department)
+- [18) SQL — Running Total (Cumulative Sum)](#18-sql--running-total-cumulative-sum)
+- [19) SQL — Find Duplicate Emails](#19-sql--find-duplicate-emails)
 
 ### 🔑 HashMap / Grouping / Frequency Counting
-- [9) Group Anagrams](#9-group-anagrams-leetcode-49)
-- [10) Two Sum (+ Streaming Follow-up)](#10-two-sum-follow-up-streaming-data)
-- [15) Top K Frequent Elements](#15-top-k-frequent-elements-leetcode-347)
+- [9) Group Anagrams](#9-group-anagrams--leetcode-49)
+- [10) Two Sum (+ Streaming Follow-up)](#10-two-sum--follow-up-streaming-data)
+- [15) Top K Frequent Elements](#15-top-k-frequent-elements--leetcode-347)
 - [23) Two Sum (verified)](#23-two-sum)
 - [24) Most Frequent IP Address from Logs (verified)](#24-find-most-frequent-ip-address-from-logs)
 - [26) Student with Highest Average Score (verified)](#26-student-with-highest-average-score)
 
 ### 🏗️ Design (Data Structures)
-- [1) LRU Cache](#1-lru-cache-leetcode-146)
-- [17) Design Hit Counter](#17-design-hit-counter-leetcode-362)
+- [1) LRU Cache](#1-lru-cache--leetcode-146)
+- [17) Design Hit Counter](#17-design-hit-counter--leetcode-362)
 - [28) Design a Calculator (verified)](#28-design-a-calculator)
 
 ### 📚 Stack
-- [11) Valid Parentheses](#11-valid-parentheses-leetcode-20)
+- [11) Valid Parentheses](#11-valid-parentheses--leetcode-20)
 - [28) Design a Calculator (also stack-based)](#28-design-a-calculator)
 
 ### 🪟 Sliding Window / Two Pointer
-- [12) Longest Substring Without Repeating Characters](#12-longest-substring-without-repeating-characters-leetcode-3)
-- [16) Trapping Rain Water](#16-trapping-rain-water-leetcode-42)
+- [12) Longest Substring Without Repeating Characters](#12-longest-substring-without-repeating-characters--leetcode-3)
+- [16) Trapping Rain Water](#16-trapping-rain-water--leetcode-42)
 - [22) Trapping Rain Water (verified)](#22-trapping-rain-water)
 
 ### ⛰️ Heap
-- [14) Kth Largest Element in an Array](#14-kth-largest-element-in-an-array-leetcode-215)
-- [15) Top K Frequent Elements](#15-top-k-frequent-elements-leetcode-347)
+- [14) Kth Largest Element in an Array](#14-kth-largest-element-in-an-array--leetcode-215)
+- [15) Top K Frequent Elements](#15-top-k-frequent-elements--leetcode-347)
 
 ### 🌳 BFS / DFS / Graph
-- [4) Binary Tree Level Order Traversal](#4-binary-tree-level-order-traversal-leetcode-102)
-- [5) Number of Islands](#5-number-of-islands-leetcode-200)
-- [6) Course Schedule](#6-course-schedule-leetcode-207)
-- [7) Rotting Oranges](#7-rotting-oranges-leetcode-994)
-- [25) Union-Find — Largest Tree Root (verified)](#25-union-find-largest-tree-root-in-a-forest)
+- [4) Binary Tree Level Order Traversal](#4-binary-tree-level-order-traversal--leetcode-102)
+- [5) Number of Islands](#5-number-of-islands--leetcode-200)
+- [6) Course Schedule](#6-course-schedule--leetcode-207)
+- [7) Rotting Oranges](#7-rotting-oranges--leetcode-994)
+- [25) Union-Find — Largest Tree Root (verified)](#25-union-find--largest-tree-root-in-a-forest)
 
 ### 🧮 Dynamic Programming
-- [8) Word Break](#8-word-break-leetcode-139)
+- [8) Word Break](#8-word-break--leetcode-139)
 
 ### 📊 Sorting / Greedy
-- [13) Merge Intervals](#13-merge-intervals-leetcode-56)
+- [13) Merge Intervals](#13-merge-intervals--leetcode-56)
 
 ### 🔗 Linked List
-- [20) Merge Two Sorted Lists](#20-merge-two-sorted-lists-leetcode-21)
+- [20) Merge Two Sorted Lists](#20-merge-two-sorted-lists--leetcode-21)
 
 ### 🔤 String / Simulation
 - [21) String Compression (verified)](#21-string-compression)
 - [27) Robot Final Coordinates (verified)](#27-robot-final-coordinates-from-a-move-string)
 
 ### 🔀 Union-Find
-- [25) Union-Find — Largest Tree Root in a Forest (verified)](#25-union-find-largest-tree-root-in-a-forest)
+- [25) Union-Find — Largest Tree Root in a Forest (verified)](#25-union-find--largest-tree-root-in-a-forest)
 
 ---
 
@@ -75,7 +76,7 @@ Each code block includes a runnable example at the bottom.
 - [22) Trapping Rain Water](#22-trapping-rain-water)
 - [23) Two Sum](#23-two-sum)
 - [24) Most Frequent IP Address from Logs](#24-find-most-frequent-ip-address-from-logs)
-- [25) Union-Find — Largest Tree Root](#25-union-find-largest-tree-root-in-a-forest)
+- [25) Union-Find — Largest Tree Root](#25-union-find--largest-tree-root-in-a-forest)
 - [26) Student with Highest Average Score](#26-student-with-highest-average-score)
 - [27) Robot Final Coordinates](#27-robot-final-coordinates-from-a-move-string)
 - [28) Design a Calculator](#28-design-a-calculator)
@@ -85,7 +86,7 @@ Each code block includes a runnable example at the bottom.
 - [What GS's own interview guide confirms](#2-what-gss-own-interview-guide-says-to-expect-this-part-is-sourced)
 - [Likely CoderPad-style coding patterns](#3-likely-coderpad-style-coding-patterns-for-this-role-specifically)
 - [Likely system design discussion topics](#4-likely-system-design-discussion-topics-superday-style-not-coderpad)
-- [English discussion practice — key vocabulary](#5-english-discussion-practice-key-vocabulary-to-be-fluent-with)
+- [English discussion practice — key vocabulary](#5-english-discussion-practice--key-vocabulary-to-be-fluent-with)
 - [A structured English self-practice routine](#6-a-structured-english-self-practice-routine)
 
 ---
