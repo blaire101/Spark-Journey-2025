@@ -3,6 +3,7 @@
 
 Sorted by frequency reported in GS CoderPad interviews (highest first).
 **Approach & Code sections are collapsed by default** — click to reveal after you attempt the problem yourself.
+Each code block includes a runnable example at the bottom.
 
 ---
 
@@ -74,6 +75,19 @@ class LRUCache:
             lru = self.tail.prev
             self._remove(lru)
             del self.cache[lru.key]
+
+
+if __name__ == "__main__":
+    cache = LRUCache(2)
+    cache.put(1, 1)
+    cache.put(2, 2)
+    print(cache.get(1))    # 1
+    cache.put(3, 3)        # evicts key 2
+    print(cache.get(2))    # -1
+    cache.put(4, 4)        # evicts key 1
+    print(cache.get(1))    # -1
+    print(cache.get(3))    # 3
+    print(cache.get(4))    # 4
 ```
 
 **Memory tip:** HashMap = "where is it", Linked List = "how recently used"
@@ -105,6 +119,20 @@ employee_id | salary | updated_at
 - Filter to row number = 1
 
 ```sql
+-- Setup (run this first to create test data)
+CREATE TABLE employee_salary_history (
+    employee_id INT,
+    salary INT,
+    updated_at DATE
+);
+
+INSERT INTO employee_salary_history VALUES
+    (1, 5000, '2024-01-01'),
+    (1, 5500, '2024-03-01'),
+    (1, 5500, '2024-03-01'),
+    (2, 6000, '2024-02-01');
+
+-- Solution query
 WITH ranked AS (
     SELECT *,
            ROW_NUMBER() OVER (
@@ -116,6 +144,11 @@ WITH ranked AS (
 SELECT employee_id, salary, updated_at
 FROM ranked
 WHERE rn = 1;
+
+-- Expected output:
+-- employee_id | salary | updated_at
+-- 1           | 5500   | 2024-03-01
+-- 2           | 6000   | 2024-02-01
 ```
 
 **Memory tip:** PARTITION BY = "group by employee", ROW_NUMBER = "rank within group"
@@ -147,6 +180,21 @@ id | name  | department | salary
 - Filter to rank = 2
 
 ```sql
+-- Setup (run this first to create test data)
+CREATE TABLE employees (
+    id INT,
+    name VARCHAR(50),
+    department VARCHAR(50),
+    salary INT
+);
+
+INSERT INTO employees VALUES
+    (1, 'Alice', 'Eng', 9000),
+    (2, 'Bob', 'Eng', 8000),
+    (3, 'Carol', 'Eng', 8000),
+    (4, 'Dave', 'Sales', 7000);
+
+-- Solution query
 WITH ranked AS (
     SELECT *,
            DENSE_RANK() OVER (
@@ -158,6 +206,11 @@ WITH ranked AS (
 SELECT department, name, salary
 FROM ranked
 WHERE rnk = 2;
+
+-- Expected output:
+-- department | name | salary
+-- Eng        | Bob  | 8000
+-- Eng        | Carol| 8000
 ```
 
 **Memory tip:** DENSE_RANK avoids gaps when there are ties -- use it for "Nth highest" problems
@@ -218,6 +271,21 @@ def levelOrder(root):
         result.append(level)
 
     return result
+
+
+if __name__ == "__main__":
+    #     3
+    #    / \
+    #   9  20
+    #     /  \
+    #    15   7
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+
+    print(levelOrder(root))   # [[3], [9, 20], [15, 7]]
 ```
 
 **Memory tip:** `len(queue)` at loop start = size of current level -- process exactly that many before moving to next level
@@ -269,6 +337,24 @@ def numIslands(grid):
                 dfs(i, j)
                 count += 1
     return count
+
+
+if __name__ == "__main__":
+    grid1 = [
+        list("11110"),
+        list("11010"),
+        list("11000"),
+        list("00000"),
+    ]
+    print(numIslands(grid1))   # 1
+
+    grid2 = [
+        list("11000"),
+        list("11000"),
+        list("00100"),
+        list("00011"),
+    ]
+    print(numIslands(grid2))   # 3
 ```
 
 **Memory tip:** DFS = flood fill the whole island in one go, mark visited as you go so you never recount
@@ -318,6 +404,12 @@ def canFinish(numCourses, prerequisites):
                 queue.append(neighbor)
 
     return completed == numCourses
+
+
+if __name__ == "__main__":
+    print(canFinish(2, [[1, 0]]))          # True
+    print(canFinish(2, [[1, 0], [0, 1]]))  # False
+    print(canFinish(4, [[1,0],[2,0],[3,1],[3,2]]))  # True
 ```
 
 **Memory tip:** If you can't process all nodes via topological sort, there's a cycle -> return False
@@ -374,6 +466,17 @@ def orangesRotting(grid):
                     queue.append((nr, nc))
 
     return minutes if fresh == 0 else -1
+
+
+if __name__ == "__main__":
+    grid1 = [[2,1,1],[1,1,0],[0,1,1]]
+    print(orangesRotting(grid1))   # 4
+
+    grid2 = [[2,1,1],[0,1,1],[1,0,1]]
+    print(orangesRotting(grid2))   # -1 (bottom-left orange unreachable)
+
+    grid3 = [[0,2]]
+    print(orangesRotting(grid3))   # 0 (no fresh oranges)
 ```
 
 **Memory tip:** Multi-source BFS = seed ALL starting points into the queue together, not one at a time
@@ -414,6 +517,12 @@ def wordBreak(s, wordDict):
                 break
 
     return dp[n]
+
+
+if __name__ == "__main__":
+    print(wordBreak("leetcode", ["leet", "code"]))          # True
+    print(wordBreak("applepenapple", ["apple", "pen"]))      # True
+    print(wordBreak("catsandog", ["cats","dog","sand","and","cat"]))  # False
 ```
 
 **Memory tip:** `dp[i]` means "can the FIRST i characters be segmented" -- not `s[i]` itself
@@ -449,6 +558,12 @@ def groupAnagrams(strs):
         key = ''.join(sorted(s))
         groups[key].append(s)
     return list(groups.values())
+
+
+if __name__ == "__main__":
+    result = groupAnagrams(["eat","tea","tan","ate","nat","bat"])
+    print(result)
+    # [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]
 ```
 
 **Memory tip:** Anagrams always sort to the same string -- use that as the hashmap key
@@ -484,12 +599,10 @@ def twoSum(nums, target):
             return [seen[complement], i]
         seen[num] = i
     return []
-```
 
-**Follow-up: What if data is streaming (unknown length, arrives one at a time)?**
 
-```python
 class TwoSumStream:
+    """Follow-up: what if data is streaming (unknown length, arrives one at a time)?"""
     def __init__(self):
         self.seen = {}
 
@@ -503,6 +616,18 @@ class TwoSumStream:
                 if complement != num or self.seen[num] > 1:
                     return True
         return False
+
+
+if __name__ == "__main__":
+    print(twoSum([2, 7, 11, 15], 9))   # [0, 1]
+    print(twoSum([3, 2, 4], 6))        # [1, 2]
+
+    stream = TwoSumStream()
+    stream.add(1)
+    stream.add(3)
+    stream.add(5)
+    print(stream.find(4))   # True  (1 + 3)
+    print(stream.find(7))   # False
 ```
 
 **Memory tip:** Streaming = can't sort or index by position -- maintain a running hashmap of counts instead
@@ -538,3 +663,5 @@ class TwoSumStream:
 ---
 
 **Note on collapsible sections:** `<details>/<summary>` tags render as collapsible blocks on GitHub, GitLab, and most modern markdown viewers (Obsidian, Notion import, VS Code preview). If your viewer doesn't support HTML tags in markdown, the Approach sections will just show as plain expanded text instead.
+
+**Note on running the code:** Each Python snippet includes an `if __name__ == "__main__":` block with test cases -- copy the whole block (including the function/class above it) into CoderPad Sandbox and run directly. SQL snippets include `CREATE TABLE` + `INSERT` setup so you can run them standalone in any SQL sandbox (e.g. sqliteonline.com, or Postgres/MySQL playground).
