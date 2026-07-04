@@ -251,6 +251,8 @@ Output: [[3],[9,20],[15,7]]
 
 ![gs_lc_level_order](docs/gs_lc_level_order.svg)
 
+![Number of Islands DFS - Case 2](gs_lc_number_of_islands_case2.gif)
+ 
 ```python
 from collections import deque
 
