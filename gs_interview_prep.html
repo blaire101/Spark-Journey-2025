@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>GS Interview Prep — 4 Parts with English Read-Aloud</title>
+<title>Finance Firm Interview Prep — 4 Parts with English Read-Aloud</title>
 <style>
   :root {
     --bg: #FAFAF9;
@@ -116,7 +116,7 @@
 <body>
 <div class="app">
   <header>
-    <h1>Goldman Sachs Interview Prep — 4 Parts</h1>
+    <h1>Interview Prep — 4 Parts</h1>
     <p>Data Engineering, Lakehouse &amp; AI Data Platform Engineer, VP — with English read-aloud practice</p>
   </header>
 
@@ -152,7 +152,7 @@
 
 const part1 = [
   {t:"1) LRU Cache — LeetCode 146", tag:"general", problem:"Design a data structure that supports get and put in O(1) time. When capacity is exceeded, evict the least recently used item.", sample:"put(1,1); put(2,2); get(1) -> 1; put(3,3) evicts key 2", approach:["HashMap for O(1) key lookup plus a Doubly Linked List for O(1) reordering","Most recently used moves to the front, least recently used sits at the tail"], tip:"HashMap answers WHERE is it. Linked List tracks HOW RECENTLY it was used."},
-  {t:"2) SQL — Deduplicate & Get Latest Record", tag:"general", problem:"An ETL bug caused duplicate rows in a salary history table. Write a query that returns only the most recent salary per employee.", sample:"ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY updated_at DESC)", approach:["Use ROW_NUMBER partitioned by employee, ordered by latest date","Filter to row number equals one"], tip:"This exact pattern is explicitly named in Goldman Sachs's own published Data Engineer interview guide."},
+  {t:"2) SQL — Deduplicate & Get Latest Record", tag:"general", problem:"An ETL bug caused duplicate rows in a salary history table. Write a query that returns only the most recent salary per employee.", sample:"ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY updated_at DESC)", approach:["Use ROW_NUMBER partitioned by employee, ordered by latest date","Filter to row number equals one"], tip:"This exact pattern is explicitly named in the company's own published Data Engineer interview guide."},
   {t:"3) SQL — Second Highest Salary per Department", tag:"general", problem:"Find the second highest salary in each department.", sample:"DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC)", approach:["Use DENSE_RANK so tied salaries share the same rank","Filter to rank equals two"], tip:"DENSE_RANK avoids gaps when there are ties. Use it for any Nth highest problem."},
   {t:"4) Binary Tree Level Order Traversal — LeetCode 102", tag:"general", problem:"Given a binary tree, return node values grouped level by level.", sample:"Input tree with root 3, children 9 and 20 -> Output [[3],[9,20],[15,7]]", approach:["Breadth first search with a queue","Process one full level at a time using the current queue length as the level size"], tip:"The queue length at the start of each loop equals the size of the current level."},
   {t:"5) Number of Islands — LeetCode 200", tag:"general", problem:"Given a 2D grid of land and water, count the number of islands.", sample:"11110 / 11010 / 11000 / 00000 -> 1 island", approach:["Depth first search flood fill: when you find land, sink the entire connected island","Count how many times a new depth first search is triggered"], tip:"DFS floods the whole island in one go, marking visited cells so you never recount."},
@@ -169,7 +169,7 @@ const part2 = [
   {t:"13) Merge Intervals — LeetCode 56", tag:"general", problem:"Given a list of intervals, merge all overlapping intervals.", sample:"[[1,3],[2,6],[8,10],[15,18]] -> [[1,6],[8,10],[15,18]]", approach:["Sort intervals by start time first","Walk through them, extending the last merged interval whenever there is overlap"], tip:"Sorting first turns any overlap check into comparing only against the previous interval."},
   {t:"14) Kth Largest Element in an Array — LeetCode 215", tag:"general", problem:"Find the kth largest element in an unsorted array.", sample:"nums 3,2,1,5,6,4 k equals 2 -> answer 5", approach:["Maintain a min heap of size k","The top of the heap at the end is exactly the kth largest"], tip:"A min heap of size k always keeps the k largest values seen so far."},
   {t:"15) Top K Frequent Elements — LeetCode 347", tag:"general", problem:"Given an array, return the k most frequent elements.", sample:"nums 1,1,1,2,2,3 k equals 2 -> answer 1 and 2", approach:["Count frequency with a hashmap first","Then use a heap to extract the top k by frequency"], tip:"Count first with a hashmap, then rank with a heap — this two step combo shows up constantly."},
-  {t:"16) Trapping Rain Water — LeetCode 42", tag:"verified", problem:"Given an elevation map, compute how much rainwater it can trap after raining.", sample:"height 0,1,0,2,1,0,1,3,2,1,2,1 -> answer 6", approach:["Water trapped at a position equals the shorter of the two tallest walls on either side, minus the current height","Precompute the tallest wall to the left and to the right of every position"], tip:"This is one of the most frequently reported Goldman Sachs interview questions across multiple independent sources."},
+  {t:"16) Trapping Rain Water — LeetCode 42", tag:"verified", problem:"Given an elevation map, compute how much rainwater it can trap after raining.", sample:"height 0,1,0,2,1,0,1,3,2,1,2,1 -> answer 6", approach:["Water trapped at a position equals the shorter of the two tallest walls on either side, minus the current height","Precompute the tallest wall to the left and to the right of every position"], tip:"This is one of the most frequently reported interview questions at this firm across multiple independent sources."},
   {t:"17) Design Hit Counter — LeetCode 362", tag:"general", problem:"Design a hit counter that counts hits received in the past three hundred seconds.", sample:"hit at 1,2,3 then getHits at 4 returns 3", approach:["Use a queue to store timestamps of hits","On a query, pop all timestamps older than the window before counting"], tip:"This is a sliding window over TIME instead of over an array."},
   {t:"18) SQL — Running Total (Cumulative Sum)", tag:"general", problem:"Given daily transaction amounts, compute a running cumulative total ordered by date.", sample:"SUM(amount) OVER (ORDER BY date)", approach:["A window function with ORDER BY but no PARTITION BY treats the whole table as one running window"], tip:"This is the standard pattern for any cumulative metric."},
   {t:"19) SQL — Find Duplicate Emails", tag:"general", problem:"Find all emails that appear more than once in a table.", sample:"GROUP BY email HAVING COUNT(*) greater than 1", approach:["GROUP BY collapses rows with the same email together","HAVING filters groups AFTER aggregation, which WHERE cannot do"], tip:"WHERE filters rows before grouping. HAVING filters groups after aggregation."},
@@ -177,14 +177,14 @@ const part2 = [
 ];
 
 const part3 = [
-  {t:"21) String Compression", src:"Medium — My Interview Experience at Goldman Sachs", problem:"Compress a string by replacing consecutive repeated characters with the character followed by its count.", sample:"aaabbcbbb -> a3b2c1b3", approach:["Walk through the string counting consecutive repeats","When the character changes, append character plus count to the result"], tip:"Loop one past the end of the string so the very last group still gets flushed into the result."},
-  {t:"22) Trapping Rain Water", src:"Multiple independent GS interview reports, including a rephrased version called Snowpack", problem:"Given an elevation map, compute how much rainwater it can trap.", sample:"height 0,1,0,2,1,0,1,3,2,1,2,1 -> answer 6", approach:["Precompute the tallest wall to the left and right of every position","Water at each position equals the shorter wall minus the height there"], tip:"Reported as one of the MOST frequently mentioned Goldman Sachs CoderPad questions."},
+  {t:"21) String Compression", src:"Medium — My Interview Experience at a Major Investment Bank", problem:"Compress a string by replacing consecutive repeated characters with the character followed by its count.", sample:"aaabbcbbb -> a3b2c1b3", approach:["Walk through the string counting consecutive repeats","When the character changes, append character plus count to the result"], tip:"Loop one past the end of the string so the very last group still gets flushed into the result."},
+  {t:"22) Trapping Rain Water", src:"Multiple independent interview reports, including a rephrased version called Snowpack", problem:"Given an elevation map, compute how much rainwater it can trap.", sample:"height 0,1,0,2,1,0,1,3,2,1,2,1 -> answer 6", approach:["Precompute the tallest wall to the left and right of every position","Water at each position equals the shorter wall minus the height there"], tip:"Reported as one of the MOST frequently mentioned CoderPad questions at this firm."},
   {t:"23) Two Sum", src:"LeetCode Discuss, Data Engineer round; Medium interview report", problem:"Find two numbers in an array that add up to a target value.", sample:"nums 2,7,11,15 target 9 -> indices 0 and 1", approach:["Use a hashmap and check for the complement as you go"], tip:"Reported as a common OPENER question before a harder second question follows."},
   {t:"24) Most Frequent IP Address from Logs", src:"LeetCode Discuss — Software Engineer Associate round", problem:"Given a list of log entries, find the IP address that appears most frequently.", sample:"logs with repeated IPs -> the one with the highest count", approach:["Count occurrences with a hashmap","Track the running maximum while iterating, no second pass needed"], tip:"Interviewer explicitly said no heap needed here, just plain counting."},
   {t:"25) Union-Find — Largest Tree Root in a Forest", src:"LeetCode Discuss — Software Engineer Associate, round two", problem:"Given a child to parent hashmap representing a forest, find the root of the tree with the most nodes.", sample:"child to parent mapping -> root with the most descendants, smallest root wins ties", approach:["Follow the child to parent chain up to the root for every node","Count how many nodes map to each root"], tip:"This is a lightweight version of Union-Find since the structure is already fully given."},
   {t:"26) Student with Highest Average Score", src:"LeetCode Discuss — Data Engineer round, July 2020", problem:"Given name and score pairs, find the student with the highest average score, floored to the nearest integer.", sample:"Bob, Mike, Jason, Jessica scores -> Jessica has the highest single score average", approach:["Group scores by student name","Compute the floored average per student, then take the maximum"], tip:"This is essentially a GROUP BY and AVERAGE operation done in plain Python instead of SQL."},
   {t:"27) Robot Final Coordinates from a Move String", src:"Same July 2020 Data Engineer report, second question", problem:"Given a string of up, down, left, right moves, compute the final coordinates starting from the origin.", sample:"moves U U U D U L R -> final position", approach:["Map each direction letter to a coordinate delta","Walk through the string applying each delta to a running position"], tip:"Interviewer asked the candidate to add extra test cases afterward — propose edge cases yourself."},
-  {t:"28) Design a Calculator", src:"Glassdoor — Goldman Sachs Superday, June 2026, Dallas", problem:"Design a basic calculator evaluating an expression with plus, minus, multiply, and divide, respecting precedence.", sample:"3 plus 2 times 2 -> answer 7", approach:["Use a stack to handle operator precedence","For multiply and divide, pop and apply immediately; for plus and minus, push the signed value"], tip:"Interviewer explicitly asked candidates to check all edge cases and discuss time and space complexity."},
+  {t:"28) Design a Calculator", src:"Glassdoor — Superday round, June 2026, Dallas", problem:"Design a basic calculator evaluating an expression with plus, minus, multiply, and divide, respecting precedence.", sample:"3 plus 2 times 2 -> answer 7", approach:["Use a stack to handle operator precedence","For multiply and divide, pop and apply immediately; for plus and minus, push the signed value"], tip:"Interviewer explicitly asked candidates to check all edge cases and discuss time and space complexity."},
 ];
 
 const part4Sections = [
@@ -197,9 +197,9 @@ const part4Sections = [
     ]
   },
   {
-    heading: "What GS's own interview guide confirms",
+    heading: "What the company's own interview guide confirms",
     paras: [
-      "Goldman Sachs's published Data Engineer interview guide states that technical rounds cover CoderPad, SQL, distributed systems, and system design evaluations.",
+      "The company's published Data Engineer interview guide states that technical rounds cover CoderPad, SQL, distributed systems, and system design evaluations.",
       "It explicitly gives this example: How would you write a query to return the most recent salary for each employee after an ETL error inserted duplicates.",
       "This confirms the SQL deduplication pattern from Part 1 is a genuinely endorsed example question type."
     ]
@@ -232,7 +232,7 @@ const practiceRoutine = [
 
 function tagLabel(tag) {
   if (tag === "verified") return '<span class="tag verified">Confirmed pattern</span>';
-  if (tag === "general") return '<span class="tag general">General pattern — not GS-confirmed</span>';
+  if (tag === "general") return '<span class="tag general">General pattern — not confirmed for this specific firm</span>';
   return '<span class="tag speculative">Speculative</span>';
 }
 
@@ -247,7 +247,7 @@ function renderQuestionCard(q, idx, prefix) {
           ${q.tag ? tagLabel(q.tag) : ''}
           ${q.src ? `<div class="source-note">Source: ${q.src}</div>` : ''}
         </div>
-        <button class="listen-btn" data-text="${encodeURIComponent(fullText)}" onclick="toggleSpeak(this)">
+        <button class="listen-btn" data-text="${encodeURIComponent(fullText)}" data-action="speak">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
           Listen
         </button>
@@ -294,8 +294,8 @@ const summaryPart2 = [
 
 const summaryPart3 = [
   ["21","String Compression","Two-pointer counting","Count consecutive repeats, flush char+count on change"],
-  ["22","Trapping Rain Water","Precompute L/R max","Same technique as #16 — confirmed via multiple GS reports"],
-  ["23","Two Sum","HashMap complement lookup","Same technique as #10 — confirmed GS opener question"],
+  ["22","Trapping Rain Water","Precompute L/R max","Same technique as #16 — confirmed via multiple interview reports"],
+  ["23","Two Sum","HashMap complement lookup","Same technique as #10 — confirmed as a common opener question"],
   ["24","Most Frequent IP","HashMap counting","Track running max count while iterating, no second pass"],
   ["25","Union-Find Largest Tree","Follow child→parent chain","Count nodes per root, sorted iteration breaks ties smallest-first"],
   ["26","Highest Average Student","HashMap group + average","Group scores by name, floor the average, take the max"],
@@ -344,12 +344,12 @@ function renderPart(containerId, arr, prefix) {
 
 function renderPart4() {
   const el = document.getElementById('p4');
-  let html = `<div class="intro-note">Everything in this tab is <b>educated speculation</b>, based on Goldman Sachs's own published interview guide and role-specific keywords. It is not a leaked question bank — use it to shape your study plan and English speaking practice.</div>`;
+  let html = `<div class="intro-note">Everything in this tab is <b>educated speculation</b>, based on the company's own published interview guide and role-specific keywords. It is not a leaked question bank — use it to shape your study plan and English speaking practice.</div>`;
 
   html += renderSummaryTable(
     [
       ["1","Why Lakehouse/AI Platform matters","Concept framing","Lakehouse blends lake flexibility with warehouse guarantees"],
-      ["2","GS's own guide (sourced)","SQL dedup pattern","Confirms the ROW_NUMBER dedup question type is GS-endorsed"],
+      ["2","Company's own guide (sourced)","SQL dedup pattern","Confirms the ROW_NUMBER dedup question type is company-endorsed"],
       ["3","Likely CoderPad patterns","SQL + HashMap + schema design","Grounded in confirmed patterns plus the Data Engineer angle"],
       ["4","System design topics","Lambda/Kappa, feature stores","Practice explaining trade-offs out loud in English"],
       ["5","English vocabulary","Spoken fluency practice","Key phrases: idempotency, backfilling, schema drift"],
@@ -362,7 +362,7 @@ function renderPart4() {
     const fullText = sec.heading + ". " + sec.paras.join(' ');
     html += `
       <div class="section-title">${sec.heading}
-        <button class="listen-btn" style="margin-left:10px; vertical-align:middle;" data-text="${encodeURIComponent(fullText)}" onclick="toggleSpeak(this)">
+        <button class="listen-btn" style="margin-left:10px; vertical-align:middle;" data-text="${encodeURIComponent(fullText)}" data-action="speak">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
           Listen
         </button>
@@ -382,7 +382,7 @@ function renderPart4() {
           <span class="concept-label">${p.concept}</span>
           "${p.phrase}"
         </div>
-        <button class="listen-btn" data-text="${encodeURIComponent(p.phrase)}" onclick="toggleSpeak(this)">
+        <button class="listen-btn" data-text="${encodeURIComponent(p.phrase)}" data-action="speak">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
           Listen
         </button>
@@ -396,7 +396,7 @@ function renderPart4() {
     html += `
       <div class="phrase-row">
         <div class="phrase-text">${i+1}. ${step}</div>
-        <button class="listen-btn" data-text="${encodeURIComponent(step)}" onclick="toggleSpeak(this)">
+        <button class="listen-btn" data-text="${encodeURIComponent(step)}" data-action="speak">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
           Listen
         </button>
@@ -405,7 +405,7 @@ function renderPart4() {
   });
   html += `</div>`;
 
-  html += `<div class="honest-note">⚠️ Honest note: no source can guarantee what YOUR specific interview will ask. Goldman Sachs explicitly rotates questions and asks candidates not to redistribute them after the interview.</div>`;
+  html += `<div class="honest-note">⚠️ Honest note: no source can guarantee what YOUR specific interview will ask. This firm explicitly rotates questions and asks candidates not to redistribute them after the interview.</div>`;
 
   el.innerHTML = html;
 }
@@ -479,14 +479,25 @@ function renderCategories() {
   let html = `<div class="intro-note">Study by <b>category</b>, not by number — grouping similar patterns together helps you internalize the underlying technique instead of memorizing 28 isolated problems. Click any item to jump straight to it.</div>`;
 
   categories.forEach(cat => {
-    html += `<div class="section-title">${cat.emoji} ${cat.name}</div><div class="card">`;
+    html += `<div class="section-title">${cat.emoji} ${cat.name}
+      <button class="listen-btn" data-action="speak" data-text="${encodeURIComponent(cat.name)}" style="margin-left:8px; vertical-align:middle;">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        Listen
+      </button>
+    </div><div class="card">`;
     cat.items.forEach(item => {
       html += `
         <div class="phrase-row">
           <div class="phrase-text">${item.label}</div>
-          <button class="listen-btn" onclick="jumpTo('${item.tab}', 'card-${item.cardId}')" style="background:var(--surface); border-color:var(--border-strong); color:var(--text-secondary);">
-            Jump →
-          </button>
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button class="listen-btn" data-action="speak" data-text="${encodeURIComponent(item.label)}">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+              Listen
+            </button>
+            <button class="listen-btn" data-action="jump" data-jump-tab="${item.tab}" data-jump-card="card-${item.cardId}" style="background:var(--surface); border-color:var(--border-strong); color:var(--text-secondary);">
+              Jump →
+            </button>
+          </div>
         </div>
       `;
     });
@@ -497,12 +508,12 @@ function renderCategories() {
     <div class="section-title">✅ Part 3 — Verified Questions Only</div>
     <div class="card">
       <p style="font-size:13px;color:var(--text-secondary);">All 8 questions in Part 3 come from real, dated, sourced interview reports (Glassdoor, LeetCode Discuss, Medium). See the Part 3 tab for full detail and sourcing.</p>
-      <button class="listen-btn" onclick="switchTab('p3')" style="margin-top:6px;">Go to Part 3 →</button>
+      <button class="listen-btn" data-action="goto" data-goto-tab="p3" style="margin-top:6px;">Go to Part 3 →</button>
     </div>
     <div class="section-title">🔮 Part 4 — Role-Specific Prep (Speculative)</div>
     <div class="card">
-      <p style="font-size:13px;color:var(--text-secondary);">Speculative system design topics, GS's own interview guide notes, and English speaking practice phrases for this specific Lakehouse / AI Data Platform role.</p>
-      <button class="listen-btn" onclick="switchTab('p4')" style="margin-top:6px;">Go to Part 4 →</button>
+      <p style="font-size:13px;color:var(--text-secondary);">Speculative system design topics, the company's own interview guide notes, and English speaking practice phrases for this specific Lakehouse / AI Data Platform role.</p>
+      <button class="listen-btn" data-action="goto" data-goto-tab="p4" style="margin-top:6px;">Go to Part 4 →</button>
     </div>
   `;
 
@@ -538,6 +549,24 @@ function jumpTo(tabId, cardId) {
 
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// ---------- Global event delegation for data-action buttons ----------
+// Using delegation instead of inline onclick="" avoids any environment-specific
+// restrictions on inline event handler attributes, and is more robust overall.
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+
+  const action = btn.dataset.action;
+
+  if (action === 'speak') {
+    toggleSpeak(btn);
+  } else if (action === 'jump') {
+    jumpTo(btn.dataset.jumpTab, btn.dataset.jumpCard);
+  } else if (action === 'goto') {
+    switchTab(btn.dataset.gotoTab);
+  }
 });
 
 // ---------- Text-to-Speech ----------
