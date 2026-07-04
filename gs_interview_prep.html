@@ -330,7 +330,6 @@ renderPart('p1', part1, 'p1');
 renderPart('p2', part2, 'p2');
 renderPart('p3', part3, 'p3');
 renderPart4();
-renderCategories();
 
 // ---------- Categories ----------
 const categories = [
@@ -425,6 +424,8 @@ function renderCategories() {
 
   el.innerHTML = html;
 }
+
+renderCategories();
 
 function switchTab(tabId) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
