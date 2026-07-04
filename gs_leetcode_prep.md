@@ -419,6 +419,35 @@ def canFinish(numCourses, prerequisites):
 
     return completed == numCourses
 
+/*
+Initial: in_degree = [0, 1, 1, 2]   queue = [0]
+
+--- Iteration 1 ---
+node = 0, completed = 1
+graph[0] = [1, 2]
+  neighbor=1: in_degree[1] = 1-1 = 0  -> add 1 to queue
+  neighbor=2: in_degree[2] = 1-1 = 0  -> add 2 to queue
+queue = [1, 2]
+
+--- Iteration 2 ---
+node = 1, completed = 2
+graph[1] = [3]
+  neighbor=3: in_degree[3] = 2-1 = 1  -> not 0 yet, don't add
+queue = [2]
+
+--- Iteration 3 ---
+node = 2, completed = 3
+graph[2] = [3]
+  neighbor=3: in_degree[3] = 1-1 = 0  -> add 3 to queue
+queue = [3]
+
+--- Iteration 4 ---
+node = 3, completed = 4
+graph[3] = []  (no neighbors)
+queue = []
+
+Loop ends. completed = 4 == numCourses = 4  ->  return True ✓
+*/
 
 if __name__ == "__main__":
     print(canFinish(2, [[1, 0]]))          # True
