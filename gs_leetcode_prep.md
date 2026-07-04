@@ -251,8 +251,6 @@ Output: [[3],[9,20],[15,7]]
 
 ![gs_lc_level_order](docs/gs_lc_level_order.svg)
 
-![Number of Islands DFS - Case 2](docs/gs_lc_number_of_islands_case2.gif)
- 
 ```python
 from collections import deque
 
@@ -328,6 +326,10 @@ Output: 1
 - Count how many times a new DFS is triggered
 
 ![gs_lc_number_of_islands](docs/gs_lc_number_of_islands.svg)
+
+**Animated trace (test case 2 — 3 separate islands):**
+
+![Number of Islands DFS animation](docs/gs_lc_number_of_islands_case2.gif)
 
 ```python
 def numIslands(grid):
@@ -419,35 +421,6 @@ def canFinish(numCourses, prerequisites):
 
     return completed == numCourses
 
-/*
-Initial: in_degree = [0, 1, 1, 2]   queue = [0]
-
---- Iteration 1 ---
-node = 0, completed = 1
-graph[0] = [1, 2]
-  neighbor=1: in_degree[1] = 1-1 = 0  -> add 1 to queue
-  neighbor=2: in_degree[2] = 1-1 = 0  -> add 2 to queue
-queue = [1, 2]
-
---- Iteration 2 ---
-node = 1, completed = 2
-graph[1] = [3]
-  neighbor=3: in_degree[3] = 2-1 = 1  -> not 0 yet, don't add
-queue = [2]
-
---- Iteration 3 ---
-node = 2, completed = 3
-graph[2] = [3]
-  neighbor=3: in_degree[3] = 1-1 = 0  -> add 3 to queue
-queue = [3]
-
---- Iteration 4 ---
-node = 3, completed = 4
-graph[3] = []  (no neighbors)
-queue = []
-
-Loop ends. completed = 4 == numCourses = 4  ->  return True ✓
-*/
 
 if __name__ == "__main__":
     print(canFinish(2, [[1, 0]]))          # True
@@ -716,3 +689,552 @@ if __name__ == "__main__":
 **Note on collapsible sections:** `<details>/<summary>` tags render as collapsible blocks on GitHub, GitLab, and most modern markdown viewers (Obsidian, Notion import, VS Code preview). If your viewer doesn't support HTML tags in markdown, the Approach sections will just show as plain expanded text instead.
 
 **Note on running the code:** Each Python snippet includes an `if __name__ == "__main__":` block with test cases -- copy the whole block (including the function/class above it) into CoderPad Sandbox and run directly. SQL snippets include `CREATE TABLE` + `INSERT` setup so you can run them standalone in any SQL sandbox (e.g. sqliteonline.com, or Postgres/MySQL playground).
+
+
+---
+---
+
+# Part 2 — 10 More High-Frequency GS Questions
+
+---
+
+## 11) Valid Parentheses — LeetCode 20
+**Frequency: Very High (classic stack warmup, frequently used as an easy opener)**
+
+**Problem**
+Given a string containing `(){}[]`, determine if the brackets are validly matched and nested.
+
+**Sample**
+```
+Input: s = "{[()]}"
+Output: True
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_valid_parentheses](docs/gs_lc_valid_parentheses.svg)
+
+- Use a stack: push opening brackets, pop and match on closing brackets
+- If a closing bracket doesn't match the top of the stack, or the stack is empty when you need to pop, it's invalid
+- At the end, the stack must be empty
+
+```python
+def isValid(s: str) -> bool:
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+
+    for ch in s:
+        if ch in '([{':
+            stack.append(ch)
+        else:
+            if not stack or stack.pop() != pairs[ch]:
+                return False
+
+    return len(stack) == 0
+
+
+if __name__ == "__main__":
+    print(isValid("{[()]}"))    # True
+    print(isValid("(]"))        # False
+    print(isValid("([)]"))      # False
+    print(isValid("()[]{}"))    # True
+```
+
+**Memory tip:** Stack = "last opened, first closed" — exactly how brackets nest
+
+</details>
+
+---
+
+## 12) Longest Substring Without Repeating Characters — LeetCode 3
+**Frequency: Very High (extremely common sliding window problem)**
+
+**Problem**
+Given a string, find the length of the longest substring without repeating characters.
+
+**Sample**
+```
+Input: s = "abcabcbb"
+Output: 3   ("abc")
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_longest_substring](docs/gs_lc_longest_substring.svg)
+
+- Sliding window with two pointers (`left`, `right`)
+- Use a set (or hashmap) to track characters currently in the window
+- When you hit a duplicate, shrink from the left until the duplicate is removed
+
+```python
+def lengthOfLongestSubstring(s: str) -> int:
+    seen = set()
+    left = 0
+    max_len = 0
+
+    for right in range(len(s)):
+        while s[right] in seen:
+            seen.remove(s[left])
+            left += 1
+        seen.add(s[right])
+        max_len = max(max_len, right - left + 1)
+
+    return max_len
+
+
+if __name__ == "__main__":
+    print(lengthOfLongestSubstring("abcabcbb"))  # 3
+    print(lengthOfLongestSubstring("bbbbb"))     # 1
+    print(lengthOfLongestSubstring("pwwkew"))    # 3
+```
+
+**Memory tip:** Right pointer explores, left pointer cleans up — the window only ever grows or shrinks, never resets
+
+</details>
+
+---
+
+## 13) Merge Intervals — LeetCode 56
+**Frequency: High (common for scheduling / calendar-style problems)**
+
+**Problem**
+Given a list of intervals, merge all overlapping intervals.
+
+**Sample**
+```
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_merge_intervals](docs/gs_lc_merge_intervals.svg)
+
+- Sort intervals by start time
+- Walk through them: if the current interval overlaps with the last merged one, extend the end; otherwise start a new merged interval
+
+```python
+def merge(intervals):
+    intervals.sort(key=lambda x: x[0])
+    merged = [intervals[0]]
+
+    for start, end in intervals[1:]:
+        last_end = merged[-1][1]
+        if start <= last_end:
+            merged[-1][1] = max(last_end, end)
+        else:
+            merged.append([start, end])
+
+    return merged
+
+
+if __name__ == "__main__":
+    print(merge([[1,3],[2,6],[8,10],[15,18]]))   # [[1,6],[8,10],[15,18]]
+    print(merge([[1,4],[4,5]]))                   # [[1,5]]
+    print(merge([[1,4],[0,4]]))                   # [[0,4]]
+```
+
+**Memory tip:** Sorting first turns "any overlap" into "only check the previous interval" — you never need to look back further than one step
+
+</details>
+
+---
+
+## 14) Kth Largest Element in an Array — LeetCode 215
+**Frequency: High (classic heap problem, common for data-heavy roles)**
+
+**Problem**
+Find the kth largest element in an unsorted array.
+
+**Sample**
+```
+Input: nums = [3,2,1,5,6,4], k = 2
+Output: 5
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_kth_largest](docs/gs_lc_kth_largest.svg)
+
+- Maintain a min-heap of size k
+- Push every number in; if heap size exceeds k, pop the smallest
+- At the end, the top of the heap is the kth largest
+
+```python
+import heapq
+
+def findKthLargest(nums, k):
+    heap = []
+    for num in nums:
+        heapq.heappush(heap, num)
+        if len(heap) > k:
+            heapq.heappop(heap)
+    return heap[0]
+
+
+if __name__ == "__main__":
+    print(findKthLargest([3,2,1,5,6,4], 2))         # 5
+    print(findKthLargest([3,2,3,1,2,4,5,5,6], 4))    # 4
+```
+
+**Memory tip:** Min-heap of size k always keeps the "k largest seen so far" — the smallest of those k is exactly the kth largest overall
+
+</details>
+
+---
+
+## 15) Top K Frequent Elements — LeetCode 347
+**Frequency: High (HashMap + Heap combo, common data engineering pattern)**
+
+**Problem**
+Given an array, return the k most frequent elements.
+
+**Sample**
+```
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1, 2]
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_top_k_frequent](docs/gs_lc_top_k_frequent.svg)
+
+- Count frequency of each number using a hashmap
+- Use a heap (or `Counter.most_common`) to extract the top k by frequency
+
+```python
+from collections import Counter
+import heapq
+
+def topKFrequent(nums, k):
+    freq = Counter(nums)
+    return heapq.nlargest(k, freq.keys(), key=freq.get)
+
+
+if __name__ == "__main__":
+    print(topKFrequent([1,1,1,2,2,3], 2))     # [1, 2]
+    print(topKFrequent([1], 1))                # [1]
+```
+
+**Memory tip:** Two-step pattern — first count with a hashmap, then rank with a heap. This combo shows up constantly in interviews
+
+</details>
+
+---
+
+## 16) Trapping Rain Water — LeetCode 42
+**Frequency: Medium-High (classic two-pointer / precompute problem, reported by GS candidates)**
+
+**Problem**
+Given an elevation map, compute how much rainwater it can trap after raining.
+
+**Sample**
+```
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_trapping_rain_water](docs/gs_lc_trapping_rain_water.svg)
+
+- Water trapped at position `i` = `min(left_max[i], right_max[i]) - height[i]`
+- Precompute `left_max` (tallest bar to the left, inclusive) and `right_max` (tallest bar to the right, inclusive)
+- Sum up the water trapped at each position
+
+```python
+def trap(height):
+    if not height:
+        return 0
+    n = len(height)
+    left_max = [0] * n
+    right_max = [0] * n
+
+    left_max[0] = height[0]
+    for i in range(1, n):
+        left_max[i] = max(left_max[i-1], height[i])
+
+    right_max[n-1] = height[n-1]
+    for i in range(n-2, -1, -1):
+        right_max[i] = max(right_max[i+1], height[i])
+
+    return sum(min(left_max[i], right_max[i]) - height[i] for i in range(n))
+
+
+if __name__ == "__main__":
+    print(trap([0,1,0,2,1,0,1,3,2,1,2,1]))   # 6
+    print(trap([4,2,0,3,2,5]))                # 9
+```
+
+**Memory tip:** Water at any position is capped by the SHORTER of the two tallest walls on either side — you can never hold more water than your shortest boundary allows
+
+</details>
+
+---
+
+## 17) Design Hit Counter — LeetCode 362
+**Frequency: Medium (common design question for streaming/monitoring systems — relevant to data platform roles)**
+
+**Problem**
+Design a hit counter that counts hits received in the past 300 seconds. `hit(timestamp)` records a hit, `getHits(timestamp)` returns hits in the last 300 seconds.
+
+**Sample**
+```
+counter.hit(1)
+counter.hit(2)
+counter.hit(3)
+counter.getHits(4)    # 3
+counter.hit(300)
+counter.getHits(300)  # 4
+counter.getHits(301)  # 3  (hit at t=1 expired)
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_design_hit_counter](docs/gs_lc_design_hit_counter.svg)
+
+- Use a queue to store timestamps of hits
+- On `getHits(timestamp)`, pop all timestamps older than `timestamp - 300` from the front before counting
+
+```python
+from collections import deque
+
+class HitCounter:
+    def __init__(self):
+        self.hits = deque()
+
+    def hit(self, timestamp: int) -> None:
+        self.hits.append(timestamp)
+
+    def getHits(self, timestamp: int) -> int:
+        while self.hits and self.hits[0] <= timestamp - 300:
+            self.hits.popleft()
+        return len(self.hits)
+
+
+if __name__ == "__main__":
+    counter = HitCounter()
+    counter.hit(1)
+    counter.hit(2)
+    counter.hit(3)
+    print(counter.getHits(4))    # 3
+    counter.hit(300)
+    print(counter.getHits(300))  # 4
+    print(counter.getHits(301))  # 3
+```
+
+**Memory tip:** This is a sliding window over TIME instead of over an array — old timestamps naturally "expire" out the front of the queue
+
+</details>
+
+---
+
+## 18) SQL — Running Total (Cumulative Sum)
+**Frequency: High (very common in Data Engineer / analytics interviews)**
+
+**Problem**
+Given a table of daily transaction amounts, compute a running (cumulative) total ordered by date.
+
+**Sample**
+```
+Table: transactions
+date       | amount
+2024-01-01 | 100
+2024-01-02 | 150
+2024-01-03 | 200
+2024-01-04 | 50
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_sql_running_total](docs/gs_lc_sql_running_total.svg)
+
+- Use `SUM() OVER (ORDER BY date)` as a window function
+- Each row's running total = sum of its own amount plus everything before it
+
+```sql
+-- Setup (run this first to create test data)
+CREATE TABLE transactions (
+    date DATE,
+    amount INT
+);
+
+INSERT INTO transactions VALUES
+    ('2024-01-01', 100),
+    ('2024-01-02', 150),
+    ('2024-01-03', 200),
+    ('2024-01-04', 50);
+
+-- Solution query
+SELECT
+    date,
+    amount,
+    SUM(amount) OVER (ORDER BY date) AS running_total
+FROM transactions;
+
+-- Expected output:
+-- date       | amount | running_total
+-- 2024-01-01 | 100    | 100
+-- 2024-01-02 | 150    | 250
+-- 2024-01-03 | 200    | 450
+-- 2024-01-04 | 50     | 500
+```
+
+**Memory tip:** `SUM() OVER (ORDER BY ...)` without a `PARTITION BY` treats the whole table as one running window — this is the go-to pattern for cumulative metrics
+
+</details>
+
+---
+
+## 19) SQL — Find Duplicate Emails
+**Frequency: High (LeetCode 182 — a GS-reported SQL classic)**
+
+**Problem**
+Given a `Person` table, find all emails that appear more than once.
+
+**Sample**
+```
+Table: Person
+id | email
+1  | a@x.com
+2  | c@x.com
+3  | a@x.com
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_sql_duplicate_emails](docs/gs_lc_sql_duplicate_emails.svg)
+
+- `GROUP BY email` collapses rows with the same email together
+- `HAVING COUNT(*) > 1` filters to only groups that appeared more than once
+
+```sql
+-- Setup (run this first to create test data)
+CREATE TABLE Person (
+    id INT,
+    email VARCHAR(100)
+);
+
+INSERT INTO Person VALUES
+    (1, 'a@x.com'),
+    (2, 'c@x.com'),
+    (3, 'a@x.com');
+
+-- Solution query
+SELECT email
+FROM Person
+GROUP BY email
+HAVING COUNT(*) > 1;
+
+-- Expected output:
+-- email
+-- a@x.com
+```
+
+**Memory tip:** `WHERE` filters rows BEFORE grouping, `HAVING` filters groups AFTER aggregation — duplicate detection always needs `HAVING` because "count > 1" only exists after grouping
+
+</details>
+
+---
+
+## 20) Merge Two Sorted Lists — LeetCode 21
+**Frequency: Medium (foundational linked list problem, often a warmup before harder list questions)**
+
+**Problem**
+Merge two sorted linked lists into one sorted linked list.
+
+**Sample**
+```
+Input: l1 = [1,2,4], l2 = [1,3,4]
+Output: [1,1,2,3,4,4]
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+![gs_lc_merge_two_sorted_lists](docs/gs_lc_merge_two_sorted_lists.svg)
+
+- Use a dummy head node to simplify edge cases
+- Compare the current nodes of both lists, attach the smaller one, advance that pointer
+- Attach whatever remains once one list is exhausted
+
+```python
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def mergeTwoLists(l1, l2):
+    dummy = ListNode()
+    tail = dummy
+
+    while l1 and l2:
+        if l1.val <= l2.val:
+            tail.next = l1
+            l1 = l1.next
+        else:
+            tail.next = l2
+            l2 = l2.next
+        tail = tail.next
+
+    tail.next = l1 if l1 else l2
+    return dummy.next
+
+
+def build_list(vals):
+    dummy = ListNode()
+    tail = dummy
+    for v in vals:
+        tail.next = ListNode(v)
+        tail = tail.next
+    return dummy.next
+
+def list_to_array(node):
+    result = []
+    while node:
+        result.append(node.val)
+        node = node.next
+    return result
+
+
+if __name__ == "__main__":
+    l1 = build_list([1,2,4])
+    l2 = build_list([1,3,4])
+    merged = mergeTwoLists(l1, l2)
+    print(list_to_array(merged))   # [1, 1, 2, 3, 4, 4]
+
+    l1 = build_list([])
+    l2 = build_list([0])
+    merged = mergeTwoLists(l1, l2)
+    print(list_to_array(merged))   # [0]
+```
+
+**Memory tip:** The dummy head trick avoids special-casing "what if the merged list is empty at the start" — you always have a valid `tail` to attach to
+
+</details>
+
+---
+
+## Summary Table — Part 2
+
+| # | Question | Category | GS Frequency |
+|---|----------|----------|---------------|
+| 11 | Valid Parentheses | Stack | Very High |
+| 12 | Longest Substring Without Repeating Chars | Sliding Window | Very High |
+| 13 | Merge Intervals | Sorting/Greedy | High |
+| 14 | Kth Largest Element | Heap | High |
+| 15 | Top K Frequent Elements | HashMap + Heap | High |
+| 16 | Trapping Rain Water | Two Pointer/Precompute | Medium-High |
+| 17 | Design Hit Counter | Design/Sliding Window | Medium |
+| 18 | SQL Running Total | SQL Window Function | High |
+| 19 | SQL Find Duplicate Emails | SQL GROUP BY/HAVING | High |
+| 20 | Merge Two Sorted Lists | Linked List | Medium |
