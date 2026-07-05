@@ -1718,6 +1718,8 @@ Output: 7
 - For `*` and `/`: pop the last number, apply the operator immediately with the current number, push the result back
 - Sum everything on the stack at the end
 
+![gs_lc_design_calculator](docs/gc_lc_calculator_stack_idea_reasoning.svg)
+
 ```python
 def calculate(s: str) -> int:
     stack = []
