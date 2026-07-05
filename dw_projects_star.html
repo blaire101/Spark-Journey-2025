@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Warehouse Projects — STAR Format</title>
+<style>
+  :root {
+    --bg:#FAFAF9; --surface:#FFFFFF; --border:#E5E5E3; --border-strong:#D4D4D0;
+    --text-primary:#1A1A18; --text-secondary:#57564F; --text-muted:#8A8985;
+    --accent:#2971A8; --accent-bg:#E8F2FA;
+    --success:#1E7A4C; --success-bg:#E4F5EC;
+    --warning:#9A6B1E; --warning-bg:#FBF0DD;
+    --danger:#B14A3F; --danger-bg:#FBECEA;
+    --purple:#7B4FA0; --purple-bg:#F1E9F7;
+    --radius:10px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.55; }
+  .app { max-width:980px; margin:0 auto; padding:24px 20px 80px; }
+  header h1 { font-size:21px; font-weight:600; margin:0 0 4px; }
+  header p { font-size:13.5px; color:var(--text-secondary); margin:0 0 16px; }
+
+  .voice-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; margin-bottom:18px; font-size:13px; color:var(--text-secondary); }
+  .voice-bar select { font-size:13px; padding:4px 8px; border-radius:6px; border:1px solid var(--border-strong); }
+  .voice-bar input[type=range] { width:100px; }
+
+  .tabs { display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); overflow-x:auto; }
+  .tab-btn { padding:10px 14px; font-size:13px; font-weight:600; color:var(--text-secondary); background:none; border:none; border-bottom:3px solid transparent; cursor:pointer; white-space:nowrap; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .project-header {
+    font-size:13px; color:var(--text-secondary); background:var(--accent-bg);
+    border-radius:var(--radius); padding:12px 16px; margin-bottom:16px;
+  }
+  .project-header b { color:var(--text-primary); }
+
+  .star-banner {
+    display:flex; align-items:center; gap:10px; font-size:13px; font-weight:700;
+    padding:10px 14px; border-radius:var(--radius); margin:20px 0 12px;
+  }
+  .star-banner:first-of-type { margin-top:0; }
+  .star-banner.S { background:var(--purple-bg); color:var(--purple); }
+  .star-banner.T { background:var(--accent-bg); color:var(--accent); }
+  .star-banner.A { background:var(--warning-bg); color:var(--warning); }
+  .star-banner.R { background:var(--success-bg); color:var(--success); }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:12px; }
+  .q-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  .q-title { font-size:14px; font-weight:600; margin:0; }
+  .q-desc { font-size:13.5px; color:var(--text-secondary); margin:4px 0 0; }
+
+  table.datatbl { border-collapse:collapse; font-size:12px; margin:8px 0 4px; width:100%; overflow-x:auto; display:block; }
+  table.datatbl th, table.datatbl td { border:1px solid var(--border); padding:5px 9px; text-align:left; vertical-align:top; }
+  table.datatbl th { background:var(--accent-bg); color:var(--accent); font-weight:600; }
+
+  .flow { font-family:"SF Mono",Menlo,monospace; font-size:12px; background:var(--accent-bg); color:var(--accent); border-radius:8px; padding:8px 12px; margin:8px 0; }
+  .anchor { font-family:"SF Mono",Menlo,monospace; font-size:11.5px; background:#F4F4F2; border-radius:8px; padding:10px 14px; margin:8px 0; white-space:pre; color:var(--text-primary); }
+  .tip { font-size:12px; color:var(--success); background:var(--success-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+
+  .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
+  .listen-btn.speaking { background:var(--accent); color:white; }
+  .listen-btn svg { width:12px; height:12px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Data Warehouse Projects — STAR Format</h1>
+    <p>4 projects, each structured as Situation → Task → Action → Result, with English read-aloud practice</p>
+  </header>
+
+  <div class="voice-bar">
+    <label>🔊 Voice: <select id="voiceSelect"></select></label>
+    <label>Speed: <input type="range" id="rateSlider" min="0.7" max="1.2" step="0.05" value="0.92"></label>
+    <span id="rateLabel">0.92x</span>
+    <button class="listen-btn" id="stopAllBtn" style="margin-left:auto">⏹ Stop</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="amazon">📦 Amazon Collection</button>
+    <button class="tab-btn" data-tab="gov">🛡️ Data Governance</button>
+    <button class="tab-btn" data-tab="reserve">🎯 Reservation Mart</button>
+    <button class="tab-btn" data-tab="toc">🌍 ToC Remittance</button>
+  </div>
+
+  <div id="amazon" class="tab-panel active"></div>
+  <div id="gov" class="tab-panel"></div>
+  <div id="reserve" class="tab-panel"></div>
+  <div id="toc" class="tab-panel"></div>
+</div>
+
+<script>
+const speakIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+function listenBtn(text, big) { return `<button class="listen-btn${big?' big':''}" data-action="speak" data-text="${encodeURIComponent(text)}">${speakIcon}Listen</button>`; }
+function table(headers, rows) {
+  let html = '<table class="datatbl"><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(r => { html += '<tr>' + r.map(c=>`<td>${c}</td>`).join('') + '</tr>'; });
+  html += '</tbody></table>';
+  return html;
+}
+
+// ============================================================
+// PROJECT DATA — each project is an array of STAR cards
+// ============================================================
+
+const projects = {
+
+  amazon: {
+    header: `<b>Amazon Standard Collection</b> — cross-border e-commerce fund collection using a Virtual Account (VA) model`,
+    cards: [
+      {letter:"S", title:"Situation", desc:"Chinese and Hong Kong cross-border sellers operate multiple Amazon stores across different countries. They cannot easily open overseas bank accounts, so they struggle to receive funds, withdraw money, and pay suppliers."},
+      {letter:"T", title:"Task", desc:"Design a data warehouse solution that supports a Virtual Account architecture — giving each merchant a consolidated view while still tracking funds down to the individual store and currency level for compliance."},
+      {letter:"A", title:"Action — the VA hierarchy", desc:"I designed a 3-level virtual account structure so real funds stay pooled, while internal ledgers track every merchant, store, and currency separately.",
+        table: table(["Level","Example","Real bank account?","Purpose"], [
+          ["Real Pool Account","Acct No: 328-999999-USD (JPM HK)","Yes","Provider's safeguarded settlement pool"],
+          ["Merchant Main VA","MVA_12345 (Merchant A)","No — virtual","Merchant A's overall balance"],
+          ["Sub-VA","MVA_12345_US_USD","No — virtual","Linked to Amazon US store"],
+          ["Sub-VA","MVA_12345_EU_EUR","No — virtual","Linked to Amazon EU store"],
+        ]),
+      },
+      {letter:"A", title:"Action — business process modeled", desc:"I modeled the full lifecycle so the warehouse could track a merchant from onboarding through to final payout.",
+        flow:"Merchant Registration & KYC → Store Authorization & Binding → Sub-VA Activation → Amazon Payout → Main VA Settlement → Withdrawal / Supplier Payment"},
+      {letter:"A", title:"Action — subject-oriented tables", desc:"I built three subject tables — Merchant, Store, and Order — each tracking horizontal attributes (like registration channel), a key time funnel (apply, authorize, bind, first settlement), and longitudinal metrics (cumulative and 28-day settlement volume).",
+        table: table(["Subject","Tracks"], [
+          ["Merchant","Registration → KYC → store binding → first settlement → cash-out, plus lifecycle tags (new/retained/lost/recovered)"],
+          ["Store","Store-level funnel and settlement volume, same lifecycle tagging at store granularity"],
+          ["Order","Order-grain view combining inflow (settlement) and outflow (withdrawal/payment) with consistent dimensions"],
+        ]),
+      },
+      {letter:"R", title:"Result", desc:"The design gave full transaction-level traceability per merchant, store, and currency, while actual funds remained inside a single pooled bank account — satisfying regulatory compliance without requiring real overseas accounts per store."},
+    ],
+    anchor: "PROBLEM  -> sellers can't open overseas bank accounts\nMODEL    -> Real Pool Account -> Main VA -> Sub-VA (per store/currency)\nFLOW     -> KYC -> Store Auth -> Sub-VA Activation -> Payout -> Settlement -> Withdrawal\nTABLES   -> Merchant / Store / Order subject tables\nRESULT   -> full traceability, funds stay pooled, compliant"
+  },
+
+  gov: {
+    header: `<b>Data Governance — Data Asset Score</b> — expanding a single-dimension quality check into a 4-dimension scoring framework`,
+    cards: [
+      {letter:"S", title:"Situation", desc:"Rapid growth of the payments business exposed chaos in our Hive and Spark data layer: inconsistent table names, missing comments, unmanaged dependencies, and no visibility into security compliance or cost efficiency. Previously, only Data Quality Checks were used to evaluate data assets."},
+      {letter:"T", title:"Task", desc:"Expand the Data Asset Scoring mechanism from DQC-only into a comprehensive 100-point system that evaluates usability, reliability, compliance, and cost-efficiency together."},
+      {letter:"A", title:"Action — the 4-dimension framework", desc:"I designed a weighted scoring system combining four dimensions into a single 0-100 score per table.",
+        table: table(["Dimension","Weight","What it checks"], [
+          ["Standards","35%","Naming conventions, comments, dependency hygiene"],
+          ["Data Quality Checks","35%","SLA timeliness, DQC rule coverage, alert management"],
+          ["Security","15%","Sensitive-field encryption, owner compliance"],
+          ["Cost","15%","Compute and storage cost efficiency"],
+        ]),
+      },
+      {letter:"A", title:"Action — automation & implementation", desc:"I automated scoring rules via daily SparkSQL jobs, extracting table metadata from the Hive Meta Table and lineage relationships. Security checks used scan results from the data security platform team, and cost checks used daily scans for stale tables. I also built a whitelist mechanism so table owners could apply for temporary exemptions.",
+        table: table(["Enforcement mechanism","Detail"], [
+          ["Naming conventions","Enforced via platform-level constraints in the visual table-creation process"],
+          ["Auto-configured checks","Zero-record checks and primary key uniqueness constraints"],
+          ["Whitelist governance","Prevents exempt tables from impacting the score"],
+          ["Scope exclusion","Temporary tables prefixed temp_, tmp_, or check_ excluded from evaluation"],
+        ]),
+      },
+      {letter:"R", title:"Result", desc:"The average asset score improved from 77 to 86 — moving the table portfolio from the C-plus range up into the B-plus range, meaning assets on average now meet governance criteria across naming standards, DQC coverage, security, and cost controls."},
+    ],
+    anchor: "PROBLEM  -> only DQC used, chaos in naming/dependencies/security/cost\nFRAMEWORK -> Standards 35% + DQC 35% + Security 15% + Cost 15%\nAUTOMATION -> daily SparkSQL jobs, Hive Meta + lineage extraction\nGOVERNANCE -> whitelist exemptions, naming enforced at platform level\nRESULT    -> 77 -> 86 (C+ to B+ range)"
+  },
+
+  reserve: {
+    header: `<b>Reservation Attribution Data Mart</b> — built from scratch at Xiaomi to track pre-launch product reservations`,
+    cards: [
+      {letter:"S", title:"Situation", desc:"Users could reserve a product before its official launch, but there was no way to track whether they actually purchased it afterwards, or to specifically target users who reserved but never converted."},
+      {letter:"T", title:"Task", desc:"Design a full-snapshot reservation attribution data mart from scratch, at the grain of User by Campaign by Product by Site, to track pre-launch conversion and power CRM remarketing."},
+      {letter:"A", title:"Action — design decisions", desc:"I made five key design choices to shape this table from the ground up.",
+        table: table(["Decision","What I chose","Why"], [
+          ["Business process","Pre-launch reservation event","Core business action to track"],
+          ["Grain","User x Campaign x Product x Site","Most granular level needed for analysis"],
+          ["Fact","reserve_flag = 1","User reserved the product"],
+          ["Dimensions","Campaign, Product, Site, UTM/channel","Needed for multi-dimensional analysis"],
+          ["Table type","Full snapshot","Need daily state of all reservations"],
+        ]),
+      },
+      {letter:"A", title:"Action — the technical challenge", desc:"There was no direct foreign key between the reservation table and the order table. I solved this using Spark non-equi time-window joins, matching each reservation to orders placed within the campaign's launch window."},
+      {letter:"A", title:"Action — downstream value", desc:"I pre-computed a tag_reserved_not_paid field directly in the data mart, so it feeds straight into CRM campaigns with no extra join required. Analysts run a simple COUNT DISTINCT on user ID for conversion metrics."},
+      {letter:"R", title:"Result", desc:"Data latency dropped from T-plus-1-day to T-plus-1-hour, enabling same-day campaign post-analysis instead of waiting until the next day. The unconverted-user targeting contributed to a 0.2 percentage point improvement in conversion."},
+    ],
+    anchor: "PROBLEM  -> no way to track reservation -> purchase\nGRAIN    -> User x Campaign x Product x Site\nCHALLENGE -> no FK -> non-equi time-window join\nOUTPUT   -> tag_reserved_not_paid -> CRM push\nRESULT   -> T+1 day -> T+1 hour, +0.2pp conversion"
+  },
+
+  toc: {
+    header: `<b>ToC Global Remittances to China</b> — partnering with overseas remittance providers to bring foreign currency into China`,
+    cards: [
+      {letter:"S", title:"Situation", desc:"We partnered with overseas remittance providers, such as Panda Remit and Wise, to bring foreign currency into China. In cross-border inbound remittance, user orders are recorded individually one at a time, but actual fund settlements arrive in batches — creating a reconciliation gap."},
+      {letter:"T", title:"Task", desc:"Build a subject-oriented analysis model covering sending institutions, orders, and users, while ensuring every batched fund settlement could be accurately matched to valid user orders for regulatory reconciliation under Hong Kong MSO, MAS MPI, and SAFE-PBoC oversight."},
+      {letter:"A", title:"Action — business process modeled", desc:"I modeled the full flow from partner onboarding through to final payment collection by the recipient.",
+        flow:"Partner Onboarding → Institution Funding → Currency Exchange → Remittance Service → Payment Collection"},
+      {letter:"A", title:"Action — three subject analyses", desc:"I built three parallel subject-area analyses to serve different stakeholders.",
+        table: table(["Subject","What it covers"], [
+          ["Sending Institution","Countries, currencies, transaction and user volumes, fees, FX income — feeding profit and transaction reports"],
+          ["Orders","A 3-stage lifecycle funnel: provider order, account opening process, complete fund receipt — measuring conversion and bottlenecks"],
+          ["Users","Basic info, behavior, lifecycle stage, and preferences — powering targeted campaigns"],
+        ]),
+      },
+      {letter:"A", title:"Action — regulatory reconciliation", desc:"I designed the fundin_order_regulation table to match each batched fund settlement, called gather_result_list, against the individual user orders in remit_list — using encrypted recipient identity fields to deduplicate recipients and confirm domestic residency."},
+      {letter:"R", title:"Result", desc:"This ensured full auditability of every fund batch against valid user orders, mitigated AML risk, and enabled accurate compliance reporting across Hong Kong, Singapore, and mainland Chinese regulatory regimes."},
+    ],
+    anchor: "PROBLEM  -> orders are 1-to-1, fund settlements arrive batched\nMODEL    -> Sending Institution + Orders (3-stage funnel) + Users\nRECONCILE -> gather_result_list (batches) <-> remit_list (orders)\nCOMPLIANCE -> HK MSO / MAS MPI / SAFE-PBoC\nRESULT   -> auditability, AML risk mitigated, accurate reporting"
+  },
+
+};
+
+// ============================================================
+// RENDERING
+// ============================================================
+function renderCard(item) {
+  const speakText = `${item.title}. ${item.desc}`;
+  let html = `<div class="star-banner ${item.letter}">${item.letter} — ${item.title}</div>
+    <div class="card">
+      <div class="q-head">
+        <p class="q-title">${item.title}</p>
+        ${listenBtn(speakText)}
+      </div>
+      <p class="q-desc">${item.desc}</p>`;
+  if (item.flow) html += `<div class="flow">${item.flow}</div>`;
+  if (item.table) html += item.table;
+  if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function renderProject(containerId, project) {
+  const el = document.getElementById(containerId);
+  let html = `<div class="project-header">${project.header}</div>`;
+  html += project.cards.map(renderCard).join('');
+  html += `<div class="star-banner" style="background:var(--surface); border:1px solid var(--border-strong); color:var(--text-secondary);">🧠 Memory Anchor
+    ${listenBtn(project.anchor.replace(/\n/g, '. ').replace(/->/g, 'leads to'))}
+  </div>`;
+  html += `<div class="anchor">${project.anchor}</div>`;
+  el.innerHTML = html;
+}
+
+renderProject('amazon', projects.amazon);
+renderProject('gov', projects.gov);
+renderProject('reserve', projects.reserve);
+renderProject('toc', projects.toc);
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+// ============================================================
+// EVENT DELEGATION
+// ============================================================
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="speak"]');
+  if (btn) toggleSpeak(btn);
+});
+
+// ============================================================
+// TEXT-TO-SPEECH
+// ============================================================
+let voices = [];
+let currentBtn = null;
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+function loadVoices() {
+  if (!speechSupported) return;
+  try {
+    voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    const select = document.getElementById('voiceSelect');
+    if (!select) return;
+    select.innerHTML = '';
+    if (voices.length === 0) { select.innerHTML = '<option>Default English voice</option>'; return; }
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Google US English')) opt.selected = true;
+      select.appendChild(opt);
+    });
+  } catch (e) { console.warn('Voice loading failed:', e); }
+}
+try { if (speechSupported) { window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); } } catch (e) { console.warn(e); }
+
+const rateSlider = document.getElementById('rateSlider');
+const rateLabel = document.getElementById('rateLabel');
+if (rateSlider) rateSlider.addEventListener('input', () => { rateLabel.textContent = rateSlider.value + 'x'; });
+
+function toggleSpeak(btn) {
+  if (!speechSupported) { alert('Text-to-speech is not supported in this browser.'); return; }
+  try {
+    const text = decodeURIComponent(btn.dataset.text);
+    if (btn.classList.contains('speaking')) { window.speechSynthesis.cancel(); btn.classList.remove('speaking'); currentBtn = null; return; }
+    window.speechSynthesis.cancel();
+    if (currentBtn) currentBtn.classList.remove('speaking');
+    const utter = new SpeechSynthesisUtterance(text);
+    const voiceIdx = document.getElementById('voiceSelect').value;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+    utter.lang = 'en-US';
+    utter.rate = parseFloat(rateSlider.value);
+    utter.onstart = () => { btn.classList.add('speaking'); currentBtn = btn; };
+    utter.onend = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    utter.onerror = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    window.speechSynthesis.speak(utter);
+  } catch (e) { console.warn('toggleSpeak failed:', e); }
+}
+const stopAllBtn = document.getElementById('stopAllBtn');
+if (stopAllBtn) stopAllBtn.addEventListener('click', () => {
+  if (speechSupported) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  currentBtn = null;
+});
+</script>
+</body>
+</html>
