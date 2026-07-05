@@ -8,6 +8,9 @@ from collections import deque, defaultdict
 from collections import deque # dq = deque()  dq.popleft()  dq.pop()  dq.append(i)  # maintain decreasing values
 from collections import Counter # t = "ABC" need = Counter(t) is Counter({'A': 1, 'B': 1, 'C': 1})
 import heapq
+nums = [3, 1, 5, 2, 8, 4]
+heapq.nlargest(3, nums)    # [8, 5, 4]  largest to smallest
+heapq.nsmallest(3, nums)   # [1, 2, 3]  smallest to largest
 
 # def topKFrequent(nums, k):
 #     freq = Counter(nums)
