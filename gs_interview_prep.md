@@ -1072,12 +1072,25 @@ if __name__ == "__main__":
 ---
 
 ## 17) Design Hit Counter — LeetCode 362
-**Frequency: Medium (common design question for streaming/monitoring systems — relevant to data platform roles)**
-**Source: Loosely related to a confirmed pattern — a 2025 GS Quant Strats OA reported a similar "capacity + time window" data structure design question (see Part 3 note)**
+
+You're tracking website "hits" (visits) over time. At any moment, you need to answer: "how many hits happened in the last 300 seconds?"
 
 **Problem**
 Design a hit counter that counts hits received in the past 300 seconds. `hit(timestamp)` records a hit, `getHits(timestamp)` returns hits in the last 300 seconds.
 
+⭐ Key insight: A queue naturally keeps things in time order — oldest hits at the front, newest hits at the back.
+
+```python
+self.hits = deque()
+```
+
+Every time `hit(timestamp)` is called, you just add the timestamp to the back:
+
+```python
+def hit(self, timestamp: int) -> None:
+    self.hits.append(timestamp)
+```
+            
 **Sample**
 ```
 counter.hit(1)
@@ -1111,6 +1124,10 @@ class HitCounter:
         while self.hits and self.hits[0] <= timestamp - 300:
             self.hits.popleft()
         return len(self.hits)
+
+# Secs:  0  1  2  3  4  5  ...  300  301
+#         ↑  ↑  ↑              ↑
+#        hit hit hit           hit
 
 
 if __name__ == "__main__":
