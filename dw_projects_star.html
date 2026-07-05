@@ -101,6 +101,33 @@ function table(headers, rows) {
   return html;
 }
 
+function flowDiagram(steps) {
+  const boxW = 600, boxH = 46, gap = 34, padTop = 30, padBottom = 20;
+  const totalH = steps.length * (boxH + gap) - gap + padTop + padBottom;
+  const x = 40;
+  let svg = `<svg width="100%" viewBox="0 0 680 ${totalH}" style="max-width:640px; display:block; margin:8px auto;">
+    <defs>
+      <marker id="fmarker" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 Z" fill="#888"/>
+      </marker>
+    </defs>`;
+  steps.forEach((step, i) => {
+    const y = padTop + i * (boxH + gap);
+    const isFirst = i === 0;
+    const isLast = i === steps.length - 1;
+    const fc = isFirst ? 'var(--purple-bg)' : isLast ? 'var(--success-bg)' : 'var(--accent-bg)';
+    const stroke = isFirst ? 'var(--purple)' : isLast ? 'var(--success)' : 'var(--accent)';
+    svg += `<rect x="${x}" y="${y}" width="${boxW}" height="${boxH}" rx="8" fill="${fc}" stroke="${stroke}" stroke-width="1"/>
+      <text x="${x + boxW/2}" y="${y + boxH/2}" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600" fill="${stroke}">${i+1}. ${step}</text>`;
+    if (!isLast) {
+      const ay1 = y + boxH, ay2 = y + boxH + gap;
+      svg += `<line x1="${x + boxW/2}" y1="${ay1}" x2="${x + boxW/2}" y2="${ay2}" stroke="#888" stroke-width="1.5" marker-end="url(#fmarker)"/>`;
+    }
+  });
+  svg += `</svg>`;
+  return svg;
+}
+
 // ============================================================
 // PROJECT DATA — each project is an array of STAR cards
 // ============================================================
@@ -131,6 +158,40 @@ const projects = {
       },
       {letter:"R", title:"Result", desc:"The design gave full transaction-level traceability per merchant, store, and currency, while actual funds remained inside a single pooled bank account — satisfying regulatory compliance without requiring real overseas accounts per store."},
     ],
+    schemas: [
+      {name: "Merchant Subject Table", desc: "Grain: one row per merchant per day.",
+       table: table(["Field","Description"], [
+         ["fdate / fetl_time","Partition date / ETL timestamp"],
+         ["fgid / fspid","Merchant ID / Service provider ID"],
+         ["fregister_channel_source","Registration channel"],
+         ["fcreate_time_register → fcreate_time_kyc_apply → fcreate_time_kyc_info → fcreate_time_store_bind","Key time funnel: registration through store binding"],
+         ["ffirst_settlement_time","Timestamp of first successful settlement"],
+         ["ftotal_settlement_amount_usd / _rmb / _cnt","Cumulative settlement amount (USD/RMB) and count"],
+         ["flast_settlement_amount_usd_28d / _cnt","Rolling 28-day settlement amount and count"],
+         ["fmerchant_lifecycle_tag","New / Retained / Lost / Recovered"],
+       ])},
+      {name: "Store Subject Table", desc: "Grain: one row per store per day.",
+       table: table(["Field","Description"], [
+         ["fdate / fetl_time","Partition date / ETL timestamp"],
+         ["fshop_id / fspid / fgid","Store ID / Provider ID / Merchant ID"],
+         ["fplat_shop_id / fplat_shop_name","Amazon store ID and name"],
+         ["fplatform_id / fsite_id / fcountry_id / fcur_type","Platform, marketplace site, country, currency"],
+         ["fcreate_time_shop_apply → fcreate_time_shop_auth → fcreate_time_shop_bind","Store-level onboarding funnel"],
+         ["ffirst_settlement_time","First successful settlement at store level"],
+         ["ftotal_settlement_amount_usd / _cnh / _cnt","Cumulative store-level settlement metrics"],
+         ["flast_settlement_amount_usd_28d / _cnh_28d / _cnt_28d","Rolling 28-day store-level metrics"],
+       ])},
+      {name: "Order Subject Table", desc: "Grain: one row per transaction (inflow + outflow combined).",
+       table: table(["Field","Description"], [
+         ["fdate / fetl_time","Partition date / ETL timestamp"],
+         ["Ftransaction_scene / Flistid / Ftransaction_time","Transaction type, order ID, timestamp"],
+         ["fgid / fspid / fshop_id","Merchant / Provider / Store dimension keys"],
+         ["Ftransaction_cur_type / Ftransaction_amount","Currency and transaction amount"],
+         ["Ftransaction_amount_usd / _cnh","Amount converted to USD / CNH"],
+         ["fbuy_type / fpayee_id / fpayee_type / fsell_type","Outflow-only: withdrawal or supplier payment details"],
+         ["fcompany_subject_type / transaction_category / payee_account_category","Payee classification for outflow transactions"],
+       ])},
+    ],
     anchor: "PROBLEM  -> sellers can't open overseas bank accounts\nMODEL    -> Real Pool Account -> Main VA -> Sub-VA (per store/currency)\nFLOW     -> KYC -> Store Auth -> Sub-VA Activation -> Payout -> Settlement -> Withdrawal\nTABLES   -> Merchant / Store / Order subject tables\nRESULT   -> full traceability, funds stay pooled, compliant"
   },
 
@@ -157,6 +218,20 @@ const projects = {
       },
       {letter:"R", title:"Result", desc:"The average asset score improved from 77 to 86 — moving the table portfolio from the C-plus range up into the B-plus range, meaning assets on average now meet governance criteria across naming standards, DQC coverage, security, and cost controls."},
     ],
+    schemas: [
+      {name: "Data Asset Score Table", desc: "Grain: one row per table per day — the consolidated output of all 4 scoring dimensions.",
+       table: table(["Field","Description"], [
+         ["fdate / fetl_time","Partition date / ETL timestamp"],
+         ["ftable_name / fowner / fbusiness","Table name, owner, and business domain"],
+         ["fstd_score","Standards score (35% weight)"],
+         ["fdqc_score","Data quality score (35% weight)"],
+         ["fsecu_score","Security score (15% weight)"],
+         ["fcost_score","Cost score (15% weight)"],
+         ["ftotal_score","Weighted total (0-100)"],
+         ["fscore_time","Scoring run timestamp"],
+         ["fexempt_flag","Whitelist exemption flag (Y/N)"],
+       ])},
+    ],
     anchor: "PROBLEM  -> only DQC used, chaos in naming/dependencies/security/cost\nFRAMEWORK -> Standards 35% + DQC 35% + Security 15% + Cost 15%\nAUTOMATION -> daily SparkSQL jobs, Hive Meta + lineage extraction\nGOVERNANCE -> whitelist exemptions, naming enforced at platform level\nRESULT    -> 77 -> 86 (C+ to B+ range)"
   },
 
@@ -178,6 +253,18 @@ const projects = {
       {letter:"A", title:"Action — downstream value", desc:"I pre-computed a tag_reserved_not_paid field directly in the data mart, so it feeds straight into CRM campaigns with no extra join required. Analysts run a simple COUNT DISTINCT on user ID for conversion metrics."},
       {letter:"R", title:"Result", desc:"Data latency dropped from T-plus-1-day to T-plus-1-hour, enabling same-day campaign post-analysis instead of waiting until the next day. The unconverted-user targeting contributed to a 0.2 percentage point improvement in conversion."},
     ],
+    schemas: [
+      {name: "Reservation Attribution Table", desc: "Grain: one row per (user, campaign, product, site) combination — full daily snapshot.",
+       table: table(["Field","Description"], [
+         ["fdate","Partition date (full snapshot)"],
+         ["user_id / campaign_id / product_id / site_id","Composite grain key"],
+         ["utm_source / channel","Marketing channel / UTM attribution"],
+         ["reserve_flag","1 if the user reserved the product"],
+         ["reserve_time","Timestamp of reservation"],
+         ["order_id / order_time","Matched order (via non-equi time-window join), if converted"],
+         ["tag_reserved_not_paid","Pre-computed flag: reserved but not yet purchased — feeds CRM directly"],
+       ])},
+    ],
     anchor: "PROBLEM  -> no way to track reservation -> purchase\nGRAIN    -> User x Campaign x Product x Site\nCHALLENGE -> no FK -> non-equi time-window join\nOUTPUT   -> tag_reserved_not_paid -> CRM push\nRESULT   -> T+1 day -> T+1 hour, +0.2pp conversion"
   },
 
@@ -198,6 +285,19 @@ const projects = {
       {letter:"A", title:"Action — regulatory reconciliation", desc:"I designed the fundin_order_regulation table to match each batched fund settlement, called gather_result_list, against the individual user orders in remit_list — using encrypted recipient identity fields to deduplicate recipients and confirm domestic residency."},
       {letter:"R", title:"Result", desc:"This ensured full auditability of every fund batch against valid user orders, mitigated AML risk, and enabled accurate compliance reporting across Hong Kong, Singapore, and mainland Chinese regulatory regimes."},
     ],
+    schemas: [
+      {name: "fundin_order_regulation", desc: "Grain: one row per remittance order — matches batched fund settlements to individual user orders for regulatory reconciliation.",
+       table: table(["Field","Description"], [
+         ["Flistid","Remittance order ID (primary key)"],
+         ["Forg_id / Forg_name","Sending institution ID / name"],
+         ["Ftran_amt / Ftran_ccy","Remitted amount and currency (fixed as CNY)"],
+         ["Ffund_inflow_time","Fund arrival time in China — core reconciliation field"],
+         ["Fname_cn_fid","Encrypted recipient name"],
+         ["Fcre_type / Fcre_id_fid","Recipient ID type / encrypted ID — used for residency check and dedup"],
+         ["Fpurpose_code","Purpose of remittance (education, salary, family support, etc.)"],
+         ["Fpay_final_time","Final timestamp of remittance success or failure"],
+       ])},
+    ],
     anchor: "PROBLEM  -> orders are 1-to-1, fund settlements arrive batched\nMODEL    -> Sending Institution + Orders (3-stage funnel) + Users\nRECONCILE -> gather_result_list (batches) <-> remit_list (orders)\nCOMPLIANCE -> HK MSO / MAS MPI / SAFE-PBoC\nRESULT   -> auditability, AML risk mitigated, accurate reporting"
   },
 
@@ -215,7 +315,7 @@ function renderCard(item) {
         ${listenBtn(speakText)}
       </div>
       <p class="q-desc">${item.desc}</p>`;
-  if (item.flow) html += `<div class="flow">${item.flow}</div>`;
+  if (item.flow) html += flowDiagram(item.flow.split('→').map(s => s.trim()));
   if (item.table) html += item.table;
   if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
   html += `</div>`;
@@ -226,6 +326,18 @@ function renderProject(containerId, project) {
   const el = document.getElementById(containerId);
   let html = `<div class="project-header">${project.header}</div>`;
   html += project.cards.map(renderCard).join('');
+
+  if (project.schemas) {
+    html += `<div class="star-banner" style="background:var(--surface); border:1px solid var(--border-strong); color:var(--text-secondary);">📐 Table Structure Reference</div>`;
+    project.schemas.forEach(schema => {
+      html += `<div class="card">
+        <p class="q-title" style="margin-bottom:8px;">${schema.name}</p>
+        ${schema.desc ? `<p class="q-desc" style="margin-bottom:8px;">${schema.desc}</p>` : ''}
+        ${schema.table}
+      </div>`;
+    });
+  }
+
   html += `<div class="star-banner" style="background:var(--surface); border:1px solid var(--border-strong); color:var(--text-secondary);">🧠 Memory Anchor
     ${listenBtn(project.anchor.replace(/\n/g, '. ').replace(/->/g, 'leads to'))}
   </div>`;
