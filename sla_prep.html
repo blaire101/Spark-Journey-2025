@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SLA Case Study — English Practice</title>
+<style>
+  :root {
+    --bg:#FAFAF9; --surface:#FFFFFF; --border:#E5E5E3; --border-strong:#D4D4D0;
+    --text-primary:#1A1A18; --text-secondary:#57564F; --text-muted:#8A8985;
+    --accent:#2971A8; --accent-bg:#E8F2FA;
+    --success:#1E7A4C; --success-bg:#E4F5EC;
+    --warning:#9A6B1E; --warning-bg:#FBF0DD;
+    --danger:#B14A3F; --danger-bg:#FBECEA;
+    --radius:10px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.55; }
+  .app { max-width:980px; margin:0 auto; padding:24px 20px 80px; }
+  header h1 { font-size:21px; font-weight:600; margin:0 0 4px; }
+  header p { font-size:13.5px; color:var(--text-secondary); margin:0 0 16px; }
+
+  .voice-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; margin-bottom:18px; font-size:13px; color:var(--text-secondary); }
+  .voice-bar select { font-size:13px; padding:4px 8px; border-radius:6px; border:1px solid var(--border-strong); }
+  .voice-bar input[type=range] { width:100px; }
+
+  .tabs { display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); overflow-x:auto; }
+  .tab-btn { padding:9px 13px; font-size:12.5px; font-weight:500; color:var(--text-secondary); background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; white-space:nowrap; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+  .q-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  .q-title { font-size:14.5px; font-weight:600; margin:0; }
+  .q-desc { font-size:13px; color:var(--text-secondary); margin:4px 0 8px; }
+
+  table.datatbl { border-collapse:collapse; font-size:12px; margin:6px 0 10px; width:100%; overflow-x:auto; display:block; }
+  table.datatbl th, table.datatbl td { border:1px solid var(--border); padding:5px 9px; text-align:left; vertical-align:top; }
+  table.datatbl th { background:var(--accent-bg); color:var(--accent); font-weight:600; }
+  table.datatbl td.good { background:var(--success-bg); color:var(--success); font-weight:600; }
+  table.datatbl td.bad { background:var(--danger-bg); color:var(--danger); font-weight:600; }
+
+  .codeblock { background:#F4F4F2; border-radius:8px; padding:10px 14px; font-family:"SF Mono",Menlo,monospace; font-size:11.3px; color:var(--text-primary); white-space:pre; overflow-x:auto; margin:8px 0; line-height:1.5; }
+  .kw { color:#AF3A83; font-weight:600; }
+  .fn { color:#2971A8; font-weight:600; }
+  .str { color:#1E7A4C; }
+  .num { color:#B5651D; }
+  .cmt { color:#8A8985; font-style:italic; }
+
+  .flow { font-family:"SF Mono",Menlo,monospace; font-size:12px; background:var(--accent-bg); color:var(--accent); border-radius:8px; padding:8px 12px; margin:8px 0; }
+  .tip { font-size:12px; color:var(--success); background:var(--success-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .warn { font-size:12px; color:var(--warning); background:var(--warning-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+
+  .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
+  .listen-btn.speaking { background:var(--accent); color:white; }
+  .listen-btn svg { width:12px; height:12px; }
+
+  .step-label { font-size:12px; font-weight:700; color:var(--accent); margin:10px 0 2px; display:block; }
+  .intro-note { font-size:13px; color:var(--text-secondary); background:var(--accent-bg); border-radius:var(--radius); padding:10px 14px; margin-bottom:16px; }
+  .metric-row { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; }
+  .metric { flex:1; min-width:120px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center; }
+  .metric .label { font-size:11px; color:var(--text-muted); }
+  .metric .before { font-size:14px; color:var(--danger); font-weight:600; }
+  .metric .after { font-size:14px; color:var(--success); font-weight:600; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>SLA Improvement Case Study</h1>
+    <p>75 min → 13 min, SLA 95% → 99%+ — full story with English read-aloud practice</p>
+  </header>
+
+  <div class="voice-bar">
+    <label>🔊 Voice: <select id="voiceSelect"></select></label>
+    <label>Speed: <input type="range" id="rateSlider" min="0.7" max="1.2" step="0.05" value="0.92"></label>
+    <span id="rateLabel">0.92x</span>
+    <button class="listen-btn" id="stopAllBtn" style="margin-left:auto">⏹ Stop</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="bg">📋 Background</button>
+    <button class="tab-btn" data-tab="root">🔍 Root Cause</button>
+    <button class="tab-btn" data-tab="steps">⚙️ Optimization Steps</button>
+    <button class="tab-btn" data-tab="salt">🧂 Salting Deep-Dive</button>
+    <button class="tab-btn" data-tab="result">📊 Results &amp; Takeaways</button>
+  </div>
+
+  <div id="bg" class="tab-panel active"></div>
+  <div id="root" class="tab-panel"></div>
+  <div id="steps" class="tab-panel"></div>
+  <div id="salt" class="tab-panel"></div>
+  <div id="result" class="tab-panel"></div>
+</div>
+
+<script>
+const speakIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+function listenBtn(text) { return `<button class="listen-btn" data-action="speak" data-text="${encodeURIComponent(text)}">${speakIcon}Listen</button>`; }
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function table(headers, rows) {
+  let html = '<table class="datatbl"><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(r => { html += '<tr>' + r.map(c=>`<td>${c}</td>`).join('') + '</tr>'; });
+  html += '</tbody></table>';
+  return html;
+}
+
+const SQL_KEYWORDS = new Set(['SELECT','FROM','WHERE','GROUP','BY','HAVING','ORDER','AS','AND','OR','NOT',
+  'IN','IS','NULL','DISTINCT','INNER','LEFT','RIGHT','SELF','CROSS','JOIN','ON','SET','TRUE','FALSE',
+  'WITH','CASE','WHEN','THEN','ELSE','END','PARTITION','OVER','BETWEEN','LIMIT','DESC','ASC',
+  'UNION','ALL','EXISTS','LIKE','CREATE','TABLE','INSERT','INTO','VALUES']);
+const SQL_FUNCTIONS = new Set(['COUNT','SUM','AVG','MIN','MAX','ROW_NUMBER','RANK','DENSE_RANK','LAG','LEAD',
+  'FIRST_VALUE','LAST_VALUE','IFNULL','COALESCE','DATEDIFF','DATE_SUB','ROUND','HASH','FLOOR','RAND','CAST','NULLIF','CONCAT','SPLIT','RANGE']);
+
+function highlightCode(code) {
+  const tokenRe = /(--[^\n]*)|('[^']*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_.]*)|([\s\S])/g;
+  let out = '';
+  let match;
+  while ((match = tokenRe.exec(code)) !== null) {
+    const [, comment, str, num, word, other] = match;
+    if (comment) out += `<span class="cmt">${esc(comment)}</span>`;
+    else if (str) out += `<span class="str">${esc(str)}</span>`;
+    else if (num) out += `<span class="num">${esc(num)}</span>`;
+    else if (word) {
+      const upper = word.toUpperCase();
+      if (SQL_FUNCTIONS.has(upper)) out += `<span class="fn">${esc(word)}</span>`;
+      else if (SQL_KEYWORDS.has(upper)) out += `<span class="kw">${esc(word)}</span>`;
+      else out += esc(word);
+    } else out += esc(other);
+  }
+  return out;
+}
+
+// ============================================================
+// TAB 1 — BACKGROUND
+// ============================================================
+const bgData = [
+  {title:"The business context", speak:"A cross-border remittance platform needed a Spark job to generate annual WeChat remittance insights. In 2024 the system processed about 12 million transactions, totaling 50 billion RMB in inbound payments.",
+   desc:"Dimensions: sender country, remittance institution, currency. Metrics: transaction count, unique users, inbound amount, average transaction amount.",
+   tip:"Overall result: SLA improved from ~95% to 99%+ through workflow and Spark job level optimizations."},
+  {title:"SLA framework-level optimization", speak:"Four framework-level changes: removing non-critical workflow dependencies, switching to trigger-based scheduling instead of fixed-time triggers, adding monitoring and alerting, and prioritizing optimization of the long-running critical path jobs.",
+   desc:"The four structural changes made BEFORE touching any individual Spark job.",
+   result: table(["Area","Description"], [
+     ["🔗 Workflow Dependency","Removed non-critical and redundant dependencies to streamline DAG execution"],
+     ["⏱️ Trigger-Based Scheduling","Replaced fixed-time triggers with dependency-based scheduling — tasks auto-execute on upstream success"],
+     ["🚨 Monitoring & Alerting","Added alerting for job failures and delays for early detection"],
+     ["🧩 Spark Job Optimization","Prioritized long-running (1h+) critical path jobs, de-emphasized low-impact ones"],
+   ]),
+   tip:null},
+  {title:"Initial SQL (pre-optimization)", speak:"The original query directly used COUNT DISTINCT on sender_id, which forces Spark to keep one giant HashSet per group in memory — that's the root of the OOM risk.",
+   desc:"This single-stage COUNT(DISTINCT) is what causes the entire problem.",
+   code:`SELECT
+  t.institution, t.sender_country, t.currency,
+  COUNT(t.transaction_id) AS tx_count,
+  COUNT(DISTINCT t.sender_id) AS sender_count,
+  SUM(t.amount * fx.fx_to_cnh) AS total_cnh,
+  SUM(t.amount * fx.fx_to_usd) AS total_usd
+FROM transactions t
+JOIN exchange_rates fx
+  ON t.currency = fx.currency AND t.fdate = fx.fdate
+WHERE t.fdate BETWEEN '20240101' AND '20241231'
+GROUP BY t.institution, t.sender_country, t.currency;`,
+   warn:"COUNT(DISTINCT ...) forces a single giant in-memory HashSet per group — the direct cause of OOM under skew."},
+];
+
+// ============================================================
+// TAB 2 — ROOT CAUSE
+// ============================================================
+const rootData = [
+  {title:"Symptoms observed", speak:"Runtime fluctuated between 30 and 75 minutes. Some reducers stalled for over 30 minutes. Executor out-of-memory errors happened sometimes. There were frequent garbage collection pauses, and the Spark UI showed severe task skew.",
+   desc:"What the on-call engineer actually saw before diagnosis.",
+   result: table(["#","Symptom"], [
+     ["1","Runtime fluctuated 30–75 minutes"],
+     ["2","Some reducers stalled for over 30 minutes"],
+     ["3","Sometimes, Executor OOM errors"],
+     ["4","Frequent GC pauses (heap pressure)"],
+     ["5","Spark UI showed severe task skew"],
+   ]),
+   tip:null},
+  {title:"Root cause analysis", speak:"Two extremely hot keys — US Wise USD with about 4 million transactions, and Korea Panda Remit KRW with about 3 million — created shuffle partitions over 5 gigabytes each. Executors only had 6 gigabytes of memory, too small for these skewed reducers, and the default 200 shuffle partitions made it worse.",
+   desc:"Three compounding factors, not just one.",
+   result: table(["Problem","Technical Root Cause"], [
+     ["OOM","HashAggregate retained large intermediate states"],
+     ["GC Pressure","Excessive heap usage from large in-memory hash maps"],
+     ["Data Skew","Uneven key distribution in GROUP BY"],
+     ["Shuffle Overload","Too few partitions (200) → oversized reducer tasks"],
+   ]),
+   warn:"Skewed keys 'US+Wise+USD' (~4M txns) and 'KR+PandaRemit+KRW' (~3M txns) created 5GB+ shuffle partitions each."},
+  {title:"HashAggregate failure mechanism", speak:"The hash map holds one group and aggregation buffer per key. For DISTINCT, it must maintain a large per-group set. As execution memory pressure rises, if fallback doesn't happen early enough, you get an out-of-memory crash instead of a safe spill to disk.",
+   desc:"Why HashAggregate specifically breaks under a COUNT(DISTINCT) + skew combination.",
+   flow:"Shuffle by key → HashMap per group → DISTINCT set grows → memory pressure rises → OOM (or fallback to SortAgg)",
+   tip:null},
+];
+
+// ============================================================
+// TAB 3 — OPTIMIZATION STEPS
+// ============================================================
+const stepsData = [
+  {title:"Step 1: Tune Spark configuration", speak:"Increased executor count to 100 with 4 cores and 6 gigabytes each, enabled dynamic allocation between 5 and 120 executors, and raised shuffle partitions to 2000 for finer skew detection.",
+   desc:"Baseline resource and parallelism tuning before touching the aggregation logic itself.",
+   code:`--num-executors 100 --executor-cores 4 --executor-memory 6G --driver-memory 4G
+
+SET spark.sql.shuffle.partitions = 2000;
+
+SET spark.dynamicAllocation.enabled=true;
+SET spark.dynamicAllocation.maxExecutors=120;
+SET spark.dynamicAllocation.minExecutors=5;`,
+   tip:"2000 shuffle partitions (up from the default 200) gives Spark much finer-grained skew detection."},
+  {title:"Step 2: Enable AQE and skew handling", speak:"Turned on Adaptive Query Execution, enabled partition coalescing and skew join splitting, set a 64 megabyte skewed partition threshold with a factor of 5, and lowered the broadcast join threshold to 10 megabytes.",
+   desc:"Let Spark automatically adapt to real runtime statistics.",
+   code:`SET spark.sql.adaptive.enabled = true;
+SET spark.sql.adaptive.coalescePartitions.enabled = true;
+SET spark.sql.adaptive.skewJoin.enabled = true;
+SET spark.sql.adaptive.skewedPartitionThresholdInBytes = 64MB;
+SET spark.sql.adaptive.skewedPartitionFactor = 5;
+SET spark.sql.autoBroadcastJoinThreshold = 10MB;`,
+   tip:"AQE merges small partitions and splits skewed ones, plus applies broadcast joins automatically for small tables."},
+  {title:"Step 3: Switch to SortAggregate", speak:"Disabled hash-based aggregate execution to force SortAggregate instead — trading a bit of speed on small data for much lower memory usage and OOM risk on skewed data.",
+   desc:"The single config change that eliminates OOM risk from DISTINCT counting.",
+   code:`SET spark.sql.execution.useObjectHashAggregateExec = false;
+SET spark.sql.execution.useHashAggregateExec = false;`,
+   result: table(["Feature","HashAggregate","SortAggregate"], [
+     ["Memory Usage","High (hash map)","Lower (disk spillable)"],
+     ["OOM Risk","High","Much lower"],
+     ["Small Data","Faster","Slightly slower"],
+     ["Skewed Data","Poor","Stable"],
+   ]),
+   tip:null},
+  {title:"Step 4: Targeted salting for hot keys", speak:"Split the two known hot keys into 8 buckets each using a deterministic hash of sender id, route all other rows into a separate non-hot bucket, then aggregate within buckets first before summing back to the original dimensions for an exact result.",
+   desc:"The final, most surgical fix — targeting the SPECIFIC known hot keys.",
+   code:`-- Salt only known hot keys; everyone else goes to bucket 8
+CASE
+  WHEN (t.fsender_country = 'US' AND t.fpartner_org = 'Wise')
+    OR (t.fsender_country = 'KR' AND t.fpartner_org = 'PandaRemit')
+  THEN (HASH(t.sender_id) & 2147483647) % 8      -- hot keys → 8 buckets
+  ELSE 8                                          -- everyone else → fixed bucket 8
+END AS salt_bucket
+
+-- Stage 1: aggregate per dimension + salt bucket (exact dedup within bucket)
+GROUP BY institution, sender_country, partner_org, currency, salt_bucket
+
+-- Stage 2: sum buckets back to original dimensions (still exact)
+GROUP BY institution, sender_country, partner_org, currency`,
+   tip:"Because the salt only depends on sender_id, the same sender ALWAYS lands in the same bucket — so summing bucket counts gives an EXACT distinct count, not an approximation."},
+];
+
+// ============================================================
+// TAB 4 — SALTING DEEP-DIVE
+// ============================================================
+const saltData = [
+  {title:"General salting for JOIN (unknown hot key, broadcastable small table)", speak:"Replicate the small table N times, tagging each copy with a salt value from 0 to N minus 1. Tag every row of the large table with a deterministic salt based on hashing the join key. Then join on both the join key and the salt together.",
+   desc:"Use this when you DON'T know which keys are hot, and the small table is broadcastable.",
+   code:`-- Large table: deterministic salt for every row
+SELECT f.*, (hash(f.merchant_id) & 2147483647) % 8 AS salt
+FROM fact_txn f
+WHERE f.biz_date BETWEEN '20240101' AND '20241231'
+
+-- Small table: replicate 8 times, salt = 0..7
+SELECT d.*, CAST(r.id AS INT) AS salt
+FROM dim_merchant d
+CROSS JOIN (SELECT CAST(id AS INT) AS id FROM range(8)) r
+
+-- Join on (merchant_id, salt)`,
+   tip:"Benefit: no need to identify hot keys in advance — ALL keys get evenly split into N pieces."},
+  {title:"Targeted salting for JOIN (known hot key)", speak:"For the one known hot merchant, randomly assign a salt from 1 to 8. For everyone else, use a fixed salt of 0. On the small table side, replicate only the hot merchant's row 8 times, and keep everyone else at salt 0.",
+   desc:"More efficient than general salting when you KNOW exactly which key is hot.",
+   code:`-- Large table: only the hot merchant gets randomized salt 1-8
+CASE WHEN f.merchant_id = 123
+     THEN CAST(FLOOR(RAND() * 8) AS INT) + 1
+     ELSE 0
+END AS salt
+
+-- Small table: hot merchant replicated 1-8, everyone else stays at 0
+SELECT d.*, 0 AS salt FROM dim_merchant d WHERE d.merchant_id <> 123
+UNION ALL
+SELECT d.*, s.salt FROM dim_merchant d
+JOIN (SELECT 1 AS salt UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+      UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8) s
+  ON d.merchant_id = 123`,
+   tip:"Trade-off: general salting is simpler but replicates the WHOLE small table N times. Targeted salting only replicates the hot row."},
+];
+
+// ============================================================
+// TAB 5 — RESULTS & TAKEAWAYS
+// ============================================================
+const resultData = [
+  {title:"Before vs After", speak:"Runtime dropped from 75 minutes to 13 minutes. OOM errors were resolved. Garbage collection count dropped from over 500 to under 100. Task skew was mitigated, and SLA improved from about 95% to over 99%.",
+   desc:"The full before/after comparison.",
+   metrics: [
+     {label:"Runtime", before:"75 min", after:"13 min"},
+     {label:"OOM Errors", before:"Frequent", after:"Resolved"},
+     {label:"GC Count", before:">500", after:"<100"},
+     {label:"Task Skew", before:"Severe", after:"Mitigated"},
+     {label:"SLA", before:"~95%", after:"99%+"},
+   ],
+   tip:"That's roughly a 6X speedup, driven mainly by eliminating OOM retries and reducing shuffle overhead — not raw compute power."},
+  {title:"Key takeaways", speak:"Use the Spark UI to identify skewed keys. Switch from HashAgg to SortAgg for stability. Apply targeted salting for hot keys, being careful with distinct metrics. Tune shuffle partitions and executor config. Enable AQE plus broadcast join for runtime optimization.",
+   desc:"The five-point mental checklist for any future skew incident.",
+   result: table(["#","Takeaway"], [
+     ["1","Use Spark UI to identify skewed keys (e.g. US+Wise+USD)"],
+     ["2","Switch HashAgg → SortAgg for stability"],
+     ["3","Apply targeted salting for hot keys — with care for distinct metrics"],
+     ["4","Tune shuffle partitions & executor config"],
+     ["5","Enable AQE + Broadcast Join for runtime optimization"],
+   ]),
+   tip:null},
+  {title:"AQE's role in skew optimization", speak:"AQE merges small shuffle partitions, splits skewed ones dynamically, switches join strategies between broadcast and sort-merge, and rewrites the plan at runtime using stage one statistics. It reduces long-tail tasks, but for extreme hot keys, manual salting remains the most effective approach.",
+   desc:"Where AQE's automation ends and manual intervention becomes necessary.",
+   tip:"AQE handles MILD skew automatically. EXTREME hot keys still need manual, targeted salting."},
+];
+
+// ============================================================
+// RENDERING
+// ============================================================
+function renderMetrics(metrics) {
+  let html = '<div class="metric-row">';
+  metrics.forEach(m => {
+    html += `<div class="metric">
+      <div class="label">${m.label}</div>
+      <div class="before">${m.before}</div>
+      <div style="font-size:10px;color:var(--text-muted);">↓</div>
+      <div class="after">${m.after}</div>
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderCard(item) {
+  let html = `<div class="card">
+    <div class="q-head">
+      <p class="q-title">${item.title}</p>
+      ${listenBtn(item.speak)}
+    </div>
+    <p class="q-desc">${item.desc}</p>`;
+  if (item.metrics) html += renderMetrics(item.metrics);
+  if (item.flow) html += `<div class="flow">${item.flow}</div>`;
+  if (item.code) html += `<div class="codeblock">${highlightCode(item.code)}</div>`;
+  if (item.result) html += `<span class="step-label">Detail</span>${item.result}`;
+  if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
+  if (item.warn) html += `<div class="warn">⚠️ ${item.warn}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function renderList(containerId, data) {
+  document.getElementById(containerId).innerHTML = data.map(renderCard).join('');
+}
+
+renderList('bg', bgData);
+renderList('root', rootData);
+renderList('steps', stepsData);
+renderList('salt', saltData);
+renderList('result', resultData);
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+// ============================================================
+// EVENT DELEGATION
+// ============================================================
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="speak"]');
+  if (btn) toggleSpeak(btn);
+});
+
+// ============================================================
+// TEXT-TO-SPEECH
+// ============================================================
+let voices = [];
+let currentBtn = null;
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+function loadVoices() {
+  if (!speechSupported) return;
+  try {
+    voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    const select = document.getElementById('voiceSelect');
+    if (!select) return;
+    select.innerHTML = '';
+    if (voices.length === 0) { select.innerHTML = '<option>Default English voice</option>'; return; }
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Google US English')) opt.selected = true;
+      select.appendChild(opt);
+    });
+  } catch (e) { console.warn('Voice loading failed:', e); }
+}
+try { if (speechSupported) { window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); } } catch (e) { console.warn(e); }
+
+const rateSlider = document.getElementById('rateSlider');
+const rateLabel = document.getElementById('rateLabel');
+if (rateSlider) rateSlider.addEventListener('input', () => { rateLabel.textContent = rateSlider.value + 'x'; });
+
+function toggleSpeak(btn) {
+  if (!speechSupported) { alert('Text-to-speech is not supported in this browser.'); return; }
+  try {
+    const text = decodeURIComponent(btn.dataset.text);
+    if (btn.classList.contains('speaking')) { window.speechSynthesis.cancel(); btn.classList.remove('speaking'); currentBtn = null; return; }
+    window.speechSynthesis.cancel();
+    if (currentBtn) currentBtn.classList.remove('speaking');
+    const utter = new SpeechSynthesisUtterance(text);
+    const voiceIdx = document.getElementById('voiceSelect').value;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+    utter.lang = 'en-US';
+    utter.rate = parseFloat(rateSlider.value);
+    utter.onstart = () => { btn.classList.add('speaking'); currentBtn = btn; };
+    utter.onend = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    utter.onerror = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    window.speechSynthesis.speak(utter);
+  } catch (e) { console.warn('toggleSpeak failed:', e); }
+}
+const stopAllBtn = document.getElementById('stopAllBtn');
+if (stopAllBtn) stopAllBtn.addEventListener('click', () => {
+  if (speechSupported) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  currentBtn = null;
+});
+</script>
+</body>
+</html>

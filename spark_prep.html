@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spark Interview Prep — English Practice</title>
+<style>
+  :root {
+    --bg:#FAFAF9; --surface:#FFFFFF; --border:#E5E5E3; --border-strong:#D4D4D0;
+    --text-primary:#1A1A18; --text-secondary:#57564F; --text-muted:#8A8985;
+    --accent:#2971A8; --accent-bg:#E8F2FA;
+    --success:#1E7A4C; --success-bg:#E4F5EC;
+    --warning:#9A6B1E; --warning-bg:#FBF0DD;
+    --danger:#B14A3F; --danger-bg:#FBECEA;
+    --radius:10px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.55; }
+  .app { max-width:980px; margin:0 auto; padding:24px 20px 80px; }
+  header h1 { font-size:21px; font-weight:600; margin:0 0 4px; }
+  header p { font-size:13.5px; color:var(--text-secondary); margin:0 0 16px; }
+
+  .voice-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; margin-bottom:18px; font-size:13px; color:var(--text-secondary); }
+  .voice-bar select { font-size:13px; padding:4px 8px; border-radius:6px; border:1px solid var(--border-strong); }
+  .voice-bar input[type=range] { width:100px; }
+
+  .tabs { display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); overflow-x:auto; }
+  .tab-btn { padding:9px 13px; font-size:12.5px; font-weight:500; color:var(--text-secondary); background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; white-space:nowrap; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+  .q-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  .q-title { font-size:14.5px; font-weight:600; margin:0; }
+  .q-desc { font-size:13px; color:var(--text-secondary); margin:4px 0 8px; }
+
+  table.datatbl { border-collapse:collapse; font-size:12px; margin:6px 0 10px; width:100%; overflow-x:auto; display:block; }
+  table.datatbl th, table.datatbl td { border:1px solid var(--border); padding:5px 9px; text-align:left; vertical-align:top; }
+  table.datatbl th { background:var(--accent-bg); color:var(--accent); font-weight:600; }
+  table.datatbl td.hl { background:var(--danger-bg); color:var(--danger); font-weight:600; }
+  table.datatbl td.good { background:var(--success-bg); color:var(--success); font-weight:600; }
+
+  .codeblock { background:#F4F4F2; border-radius:8px; padding:10px 14px; font-family:"SF Mono",Menlo,monospace; font-size:11.5px; color:var(--text-primary); white-space:pre; overflow-x:auto; margin:8px 0; line-height:1.55; }
+  .kw { color:#AF3A83; font-weight:600; }
+  .fn { color:#2971A8; font-weight:600; }
+  .str { color:#1E7A4C; }
+  .num { color:#B5651D; }
+  .cmt { color:#8A8985; font-style:italic; }
+
+  .flow { font-family:"SF Mono",Menlo,monospace; font-size:12px; background:var(--accent-bg); color:var(--accent); border-radius:8px; padding:8px 12px; margin:8px 0; }
+  .tip { font-size:12px; color:var(--success); background:var(--success-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .warn { font-size:12px; color:var(--warning); background:var(--warning-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+
+  .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
+  .listen-btn.speaking { background:var(--accent); color:white; }
+  .listen-btn svg { width:12px; height:12px; }
+
+  .step-label { font-size:12px; font-weight:700; color:var(--accent); margin:10px 0 2px; display:block; }
+  .intro-note { font-size:13px; color:var(--text-secondary); background:var(--accent-bg); border-radius:var(--radius); padding:10px 14px; margin-bottom:16px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Spark Interview Prep</h1>
+    <p>Core concepts, execution model, skew handling, and optimization — with English read-aloud practice</p>
+  </header>
+
+  <div class="voice-bar">
+    <label>🔊 Voice: <select id="voiceSelect"></select></label>
+    <label>Speed: <input type="range" id="rateSlider" min="0.7" max="1.2" step="0.05" value="0.92"></label>
+    <span id="rateLabel">0.92x</span>
+    <button class="listen-btn" id="stopAllBtn" style="margin-left:auto">⏹ Stop</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="core">🧠 Core Concepts</button>
+    <button class="tab-btn" data-tab="exec">⚙️ Execution Model</button>
+    <button class="tab-btn" data-tab="skew">🔀 Shuffle &amp; Skew</button>
+    <button class="tab-btn" data-tab="opt">🧂 Optimization</button>
+    <button class="tab-btn" data-tab="quick">❓ Quick Answers</button>
+    <button class="tab-btn" data-tab="deep">🔍 Deep-Dive Q&amp;A</button>
+  </div>
+
+  <div id="core" class="tab-panel active"></div>
+  <div id="exec" class="tab-panel"></div>
+  <div id="skew" class="tab-panel"></div>
+  <div id="opt" class="tab-panel"></div>
+  <div id="quick" class="tab-panel"></div>
+  <div id="deep" class="tab-panel"></div>
+</div>
+
+<script>
+const speakIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+function listenBtn(text) { return `<button class="listen-btn" data-action="speak" data-text="${encodeURIComponent(text)}">${speakIcon}Listen</button>`; }
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function table(headers, rows) {
+  let html = '<table class="datatbl"><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(r => { html += '<tr>' + r.map(c=>`<td>${c}</td>`).join('') + '</tr>'; });
+  html += '</tbody></table>';
+  return html;
+}
+
+const SQL_KEYWORDS = new Set(['SELECT','FROM','WHERE','GROUP','BY','HAVING','ORDER','AS','AND','OR','NOT',
+  'IN','IS','NULL','DISTINCT','INNER','LEFT','RIGHT','SELF','CROSS','JOIN','ON','SET','TRUE','FALSE',
+  'WITH','CASE','WHEN','THEN','ELSE','END','PARTITION','OVER','BETWEEN','LIMIT','DESC','ASC',
+  'UNION','ALL','EXISTS','LIKE','CREATE','TABLE','INSERT','INTO','VALUES']);
+const SQL_FUNCTIONS = new Set(['COUNT','SUM','AVG','MIN','MAX','ROW_NUMBER','RANK','DENSE_RANK','LAG','LEAD',
+  'FIRST_VALUE','LAST_VALUE','IFNULL','COALESCE','DATEDIFF','DATE_SUB','ROUND','HASH','FLOOR','RAND','CAST','NULLIF','CONCAT','SPLIT']);
+
+function highlightCode(code) {
+  const tokenRe = /(--[^\n]*)|('[^']*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_.]*)|([\s\S])/g;
+  let out = '';
+  let match;
+  while ((match = tokenRe.exec(code)) !== null) {
+    const [, comment, str, num, word, other] = match;
+    if (comment) out += `<span class="cmt">${esc(comment)}</span>`;
+    else if (str) out += `<span class="str">${esc(str)}</span>`;
+    else if (num) out += `<span class="num">${esc(num)}</span>`;
+    else if (word) {
+      const upper = word.toUpperCase();
+      if (SQL_FUNCTIONS.has(upper)) out += `<span class="fn">${esc(word)}</span>`;
+      else if (SQL_KEYWORDS.has(upper)) out += `<span class="kw">${esc(word)}</span>`;
+      else out += esc(word);
+    } else out += esc(other);
+  }
+  return out;
+}
+
+// ============================================================
+// TAB 1 — CORE CONCEPTS
+// ============================================================
+const coreData = [
+  {title:"What is Apache Spark?", speak:"Spark is a distributed computing engine for large-scale data processing, supporting in-memory computation and DAG-based execution — faster than MapReduce.", desc:"The one-line answer to say first.", tip:"Supports Python, Scala, Java, and SQL APIs."},
+  {title:"RDD (Resilient Distributed Dataset)", speak:"An RDD is an immutable, partitioned, distributed collection of objects. Immutability stabilizes parallel computation and simplifies fault tolerance.", desc:"The low-level API — supports map, filter, reduceByKey.", tip:"Immutable = never modified in place, only transformed into a new RDD."},
+  {title:"DataFrame", speak:"A DataFrame is a distributed table with named columns and typed rows, built on RDDs and optimized by the Catalyst optimizer — like a distributed Pandas table.", desc:"Higher-level, faster, and more optimized than raw RDDs.", tip:null},
+  {title:"Transformation vs Action", speak:"A transformation is a lazy operation that produces a new RDD or DataFrame, like map or filter. An action triggers actual computation and returns a result, like collect or count.", desc:"This distinction is the foundation of lazy evaluation.", code:`Transformation (lazy):  map(), filter(), groupBy()
+Action (triggers execution):  collect(), count(), show(), save()`, tip:"Nothing runs until an action is called — transformations just build a plan."},
+  {title:"Lazy Evaluation", speak:"Spark builds a logical DAG of transformations when you define operations, but does not execute them immediately. Execution only happens when an action is called.", desc:"This enables Catalyst to see the WHOLE plan before optimizing it.", tip:"Lazy evaluation is what lets Spark optimize the entire pipeline, not just one step at a time."},
+];
+
+// ============================================================
+// TAB 2 — EXECUTION MODEL
+// ============================================================
+const execData = [
+  {title:"Job → Stage → Task", speak:"An action triggers a job. The DAG scheduler splits that job into stages at shuffle boundaries. Each stage is further divided into tasks, one task per partition.",
+   desc:"The core execution hierarchy, top to bottom.",
+   flow:"Action → Job → Stage → Task → Executor",
+   code:`Job          — one action = one job
+Stage        — a set of tasks between shuffle boundaries
+Task         — unit of execution on ONE partition
+DAGScheduler — converts the DAG into stages (splits at shuffle boundaries)
+TaskScheduler— assigns tasks to executors, handles retries and locality
+Driver       — coordinates execution, collects results
+Executor     — runs tasks on worker nodes, has a thread pool for parallelism`,
+   tip:"Stage division happens at shuffle operations like reduceByKey, groupBy, and join."},
+  {title:"Catalyst Optimizer — the 4 plan stages", speak:"Catalyst first parses SQL or DataFrame code into a Logical Plan, resolves it into an Analyzed Plan, applies optimization rules to produce an Optimized Plan, and finally picks physical operators for the Physical Plan.",
+   desc:"Spark's query optimizer — this pipeline runs before ANY execution happens.",
+   flow:"Logical Plan → Analyzed Plan → Optimized Plan → Physical Plan",
+   code:`Logical Plan    — parse SQL/DataFrame into an unresolved plan
+Analyzed Plan   — resolve column names, check schema
+Optimized Plan  — apply rules: predicate pushdown, column pruning, join reordering
+Physical Plan   — choose operators: HashAggregate vs SortMergeJoin`,
+   tip:"Predicate pushdown = filter as early as possible. Column pruning = only read columns you actually need."},
+];
+
+// ============================================================
+// TAB 3 — SHUFFLE & SKEW
+// ============================================================
+const skewData = [
+  {title:"What is Shuffle?", speak:"Shuffle is data redistribution across partitions. It's expensive because it requires disk I/O, network transfer, and serialization.",
+   desc:"The most expensive operation category in Spark.",
+   code:`Narrow transformation — each parent partition maps to ONE child partition
+                        No shuffle needed: map, filter, union
+
+Wide transformation   — parent partitions map to MULTIPLE child partitions
+                        Shuffle required: groupBy, join, reduceByKey`,
+   tip:"If an operation needs data from a DIFFERENT partition, it requires a shuffle."},
+  {title:"Data Skew — causes & symptoms", speak:"Data skew happens when a hot key appears far more often than others, creating a massive, uneven partition. Symptoms include one task running much longer than others, executor out-of-memory errors, and long shuffle read times.",
+   desc:"The problem that causes most Spark performance incidents.",
+   sample: table(["Skew Type","Cause","Solution"], [
+     ["Input files","Many small files or one huge file","Repartition, merge small files, use Parquet"],
+     ["Join keys","Hot key appears millions of times","Broadcast join, salting, AQE"],
+     ["Aggregation keys","Hot key dominates GROUP BY","Two-stage aggregation + salting"],
+     ["General","Uneven partition sizes","AQE, tune shuffle partitions"],
+   ]),
+   result: table(["Symptom","Meaning"], [
+     ["One task runs much longer","Data skew"],
+     ["Executor OOM","HashSet explosion on hot key"],
+     ["High shuffle read time","I/O bottleneck, not CPU"],
+     ["GC pauses","Memory pressure"],
+   ]),
+   tip:"If Shuffle Read Time dominates the Spark UI, the bottleneck is I/O — not CPU."},
+];
+
+// ============================================================
+// TAB 4 — OPTIMIZATION
+// ============================================================
+const optData = [
+  {title:"Two-Stage Aggregation", speak:"The key insight is not speed — it's converting an unspillable memory structure into a spillable one, so Spark can handle skewed keys without crashing. Stage one deduplicates by key plus sender id. Stage two counts the deduplicated rows.",
+   desc:"The technique that turns a crash-prone job into a stable one.",
+   sample: table(["","Single-stage","Two-stage"], [
+     ["Memory model","One giant HashSet","Many small groups"],
+     ["Spillable","No","Yes"],
+     ["OOM risk","High","Low"],
+     ["Speed","Faster (small data)","Stable (large/skewed data)"],
+   ]),
+   code:`-- Stage 1: dedup sender_id first
+GROUP BY (key, sender_id)
+
+-- Stage 2: count deduplicated rows
+GROUP BY (key) → COUNT(*)`,
+   tip:"Real-world result: cut a critical-path job from 75 minutes to 13 minutes using this technique."},
+  {title:"Salting for hot keys", speak:"Identify the hot key, then add a deterministic salt bucket using hash of the row's id modulo the number of buckets. Each bucket goes to a separate reducer in stage one, then results get merged back in stage two.",
+   desc:"For known, extreme hot keys that AQE alone can't fix.",
+   code:`-- Identify hot key, e.g. US+Wise+USD with 4M records
+-- Add salt bucket
+hash(sender_id) % 8   -- buckets 0-7
+
+-- Stage 1: each bucket → separate reducer
+-- Stage 2: merge results from all buckets`,
+   sample: table(["","AQE","Salting"], [
+     ["Timing","After shuffle (runtime)","Before shuffle (logical rewrite)"],
+     ["Implementation","Automatic","Manual SQL change"],
+     ["Best for","Mild skew","Known extreme hot keys"],
+     ["Limitation","Can't rebalance a single extreme hot key","Requires knowing hot keys in advance"],
+   ]),
+   warn:"Salt MUST be deterministic based on the distinct key, not random per row — otherwise COUNT(DISTINCT) will be wrong."},
+  {title:"HashAggregate vs SortAggregate", speak:"HashAggregate keeps everything in an in-memory hash map — fast, but high out-of-memory risk. SortAggregate sorts and spills to disk when needed — slightly slower, but much more stable for skewed data.",
+   desc:"The choice that determines whether your job crashes or just runs slower under skew.",
+   sample: table(["","HashAggregate","SortAggregate"], [
+     ["Memory","High (in-memory HashSet)","Low (disk spillable)"],
+     ["OOM risk","High","Low"],
+     ["Speed","Faster for small data","Stable for large/skewed data"],
+     ["Use when","No skew, small data","Skewed data, large data"],
+   ]),
+   tip:null},
+  {title:"AQE — Adaptive Query Execution", speak:"AQE coalesces small shuffle partitions at runtime, splits large skewed partitions into multiple tasks, and can switch join strategies like SortMergeJoin to BroadcastHashJoin — all automatically, based on real runtime statistics.",
+   desc:"Spark's own automatic adaptation layer.",
+   code:`Coalesce partitions   — merges small shuffle partitions at runtime
+Skew join split       — splits large skewed partitions into multiple tasks
+Switch join strategy  — SortMergeJoin → BroadcastHashJoin at runtime`,
+   warn:"AQE can split partitions, but CANNOT rebalance a single extreme hot key — manual salting is still needed for extreme cases."},
+  {title:"Join Strategies", speak:"BroadcastHashJoin sends a small table to every executor and avoids shuffle entirely — used when one side is under about ten megabytes. SortMergeJoin sorts both large tables and merges on the key. ShuffleHashJoin hashes the smaller side and probes with the larger one.",
+   desc:"Choosing the right join strategy avoids unnecessary shuffle.",
+   sample: table(["Strategy","When to use","How it works"], [
+     ["BroadcastHashJoin","Small table &lt; 10MB","Send small table to all executors, no shuffle"],
+     ["SortMergeJoin","Both tables large","Sort both sides, merge on key"],
+     ["ShuffleHashJoin","One side fits in memory","Hash the smaller side, probe with the larger"],
+   ]),
+   tip:null},
+];
+
+// ============================================================
+// TAB 5 — QUICK ANSWERS
+// ============================================================
+const quickData = [
+  {q:"What is Spark?", a:"Distributed in-memory computing engine, DAG-based, faster than MapReduce."},
+  {q:"What is shuffle?", a:"Data redistribution across partitions. Expensive: disk I/O, network transfer, and serialization."},
+  {q:"What is data skew?", a:"Unbalanced data across partitions. Causes out-of-memory errors and long-tail tasks."},
+  {q:"How did you solve skew?", a:"Two-stage aggregation plus targeted salting plus AQE — cut runtime from 75 minutes to 13 minutes."},
+  {q:"What is AQE?", a:"Runtime optimization: coalesces small partitions, splits skewed ones, and switches join strategies."},
+  {q:"HashAgg vs SortAgg?", a:"HashAgg is faster but has OOM risk. SortAgg is spillable and stable for skewed data."},
+  {q:"What is lazy evaluation?", a:"Transformations build a DAG. Nothing executes until an action is called."},
+  {q:"What is Catalyst?", a:"Spark's query optimizer. Goes from SQL to Logical, Analyzed, Optimized, and finally Physical Plan."},
+];
+
+// ============================================================
+// TAB 6 — DEEP-DIVE Q&A
+// ============================================================
+const deepData = [
+  {title:"Q1: What determines partition count, and is shuffle.partitions=200 meaningful?", speak:"The initial partition count comes from the data source, like HDFS block size. spark.sql.shuffle.partitions sets the number of partitions AFTER a shuffle, not during file read. Setting it to 200 helps large datasets with more parallelism, but can add overhead for small datasets.",
+   desc:"A common trick question about WHEN partition count settings actually apply.",
+   code:`SET spark.sql.shuffle.partitions = 200;`,
+   result: table(["Phase","What happens"], [
+     ["Input Partitioning","Determined by HDFS block size / input format — sets initial parallelism"],
+     ["Map Phase","Tasks transform data within their own partition, no shuffle yet"],
+     ["Reduce Phase","Shuffle re-partitions by key (groupBy, join) — controlled by shuffle.partitions"],
+   ]),
+   tip:"One partition = one task. Parallelism depends on BOTH partition count and available executor cores."},
+  {title:"Q2: Spark vs MapReduce — shuffle and memory", speak:"Spark supports in-memory computation and DAG execution, caching data across stages. MapReduce always writes intermediate data to disk between every stage, which is much slower.",
+   desc:"The core architectural difference between the two engines.",
+   sample: table(["Aspect","Spark","MapReduce"], [
+     ["Execution Model","DAG of stages, in-memory pipelined execution","Two fixed stages: Map → Reduce, disk-based"],
+     ["Shuffle","Sort-based with optimizations (AQE, push-based)","Always disk + full sort, heavy I/O"],
+     ["Intermediate Data","Cached in memory (spills only if needed)","Written to disk every stage"],
+     ["Fault Tolerance","RDD lineage recomputes only lost partitions","Restart tasks using on-disk data"],
+   ]),
+   tip:"Spark's DAG lets it chain operations intelligently, avoiding unnecessary writes that MapReduce can't avoid."},
+  {title:"Q3: Why is Shuffle Read the bottleneck in skewed aggregations?", speak:"Reduce tasks fetch partition files written by map tasks — that's the Shuffle Read stage. Under skew, some partitions are much larger, meaning more data to read and slower tasks. Aggregation itself is usually lightweight compared to I/O-heavy shuffle read.",
+   desc:"Explains why 'the CPU looks idle but the job is still slow' under skew.",
+   result: table(["Spark UI Indicator","Meaning"], [
+     ["Shuffle Read Time: High","Skewed data fetch"],
+     ["Task CPU Time: Usually low","Even in skew cases — confirms it's an I/O problem, not compute"],
+   ]),
+   tip:null},
+  {title:"Q4: How do you troubleshoot Spark performance problems?", speak:"Start with the Web UI to identify slow jobs and stages, then inspect the SQL and DAG to pinpoint the problematic part, examine execution plans with EXPLAIN, check stage summary metrics for skew, and finally investigate the underlying data itself for skewed keys.",
+   desc:"A structured, five-step troubleshooting methodology.",
+   result: table(["Step","Focus"], [
+     ["1. Web UI","Identify slow jobs and stages"],
+     ["2. SQL Code & DAG Inspection","Pinpoint problematic query parts"],
+     ["3. Execution Plans (EXPLAIN)","Check HashAggregate, SortAggregate, SortMergeJoin nodes"],
+     ["4. Stage Summary Metrics","Detect data skew, slow tasks, resource bottlenecks"],
+     ["5. Data Context Investigation","GROUP BY + COUNT to find skewed keys"],
+   ]),
+   tip:"Also watch: Shuffle Read Time (I/O vs CPU), Task Duration Distribution (long tails = skew), Spill Metrics (memory pressure)."},
+  {title:"Q5: What is the Spark Catalyst Optimizer?", speak:"Catalyst is SparkSQL's query optimizer. It applies rule-based optimizations like predicate pushdown, constant folding, join reordering, and column pruning to generate efficient execution plans.",
+   desc:"The rules engine behind query optimization.",
+   code:`Predicate Pushdown   — filter as early as possible
+Constant Folding     — precompute constant expressions
+Join Reordering      — pick the most efficient join order
+Column Pruning       — only read columns actually needed`,
+   tip:null},
+  {title:"Q6: How to use salting to resolve JOIN skew?", speak:"Add a random salt to the large table's join key, then cross-join the small table with all possible salt values so every salted key has a match, join on the salted key, then strip the salt back out and aggregate.",
+   desc:"Full working salted-join pattern.",
+   code:`WITH saltedLarge AS (
+  SELECT
+    CONCAT(CAST(FLOOR(RAND() * 10) AS STRING), '_', joinKey) AS saltedKey,
+    someValue
+  FROM largeTable
+),
+saltedSmall AS (
+  WITH saltValues AS (
+    SELECT '0' AS salt
+    UNION ALL SELECT '1' UNION ALL SELECT '2' UNION ALL SELECT '3'
+    UNION ALL SELECT '4' UNION ALL SELECT '5' UNION ALL SELECT '6'
+    UNION ALL SELECT '7' UNION ALL SELECT '8' UNION ALL SELECT '9'
+  )
+  SELECT CONCAT(sv.salt, '_', t.joinKey) AS saltedKey, otherValue
+  FROM smallTable t
+  CROSS JOIN saltValues sv
+)
+SELECT
+  split(s.saltedKey, '_')[1] AS originalKey,
+  sum(s.someValue) AS aggregatedValue
+FROM saltedLarge s
+JOIN saltedSmall ss ON s.saltedKey = ss.saltedKey
+GROUP BY split(s.saltedKey, '_')[1];`,
+   tip:"Cross-joining the small table with ALL salt values guarantees every salted large-table row finds a match."},
+];
+
+// ============================================================
+// RENDERING
+// ============================================================
+function renderCard(item) {
+  let html = `<div class="card">
+    <div class="q-head">
+      <p class="q-title">${item.title}</p>
+      ${listenBtn(item.speak)}
+    </div>
+    <p class="q-desc">${item.desc}</p>`;
+  if (item.flow) html += `<div class="flow">${item.flow}</div>`;
+  if (item.sample) html += `<span class="step-label">Reference table</span>${item.sample}`;
+  if (item.code) html += `<div class="codeblock">${highlightCode(item.code)}</div>`;
+  if (item.result) html += `<span class="step-label">Result / Detail</span>${item.result}`;
+  if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
+  if (item.warn) html += `<div class="warn">⚠️ ${item.warn}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function renderList(containerId, data) {
+  document.getElementById(containerId).innerHTML = data.map(renderCard).join('');
+}
+
+function renderQuick() {
+  const el = document.getElementById('quick');
+  el.innerHTML = `<div class="intro-note">"Say this first" — the concise, confident opening line for each common question.</div>` +
+    quickData.map(item => `
+      <div class="card">
+        <div class="q-head">
+          <p class="q-title">${item.q}</p>
+          ${listenBtn(item.a)}
+        </div>
+        <p class="q-desc" style="margin-bottom:0;">${item.a}</p>
+      </div>
+    `).join('');
+}
+
+renderList('core', coreData);
+renderList('exec', execData);
+renderList('skew', skewData);
+renderList('opt', optData);
+renderQuick();
+renderList('deep', deepData);
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+// ============================================================
+// EVENT DELEGATION
+// ============================================================
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="speak"]');
+  if (btn) toggleSpeak(btn);
+});
+
+// ============================================================
+// TEXT-TO-SPEECH
+// ============================================================
+let voices = [];
+let currentBtn = null;
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+function loadVoices() {
+  if (!speechSupported) return;
+  try {
+    voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    const select = document.getElementById('voiceSelect');
+    if (!select) return;
+    select.innerHTML = '';
+    if (voices.length === 0) { select.innerHTML = '<option>Default English voice</option>'; return; }
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Google US English')) opt.selected = true;
+      select.appendChild(opt);
+    });
+  } catch (e) { console.warn('Voice loading failed:', e); }
+}
+try { if (speechSupported) { window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); } } catch (e) { console.warn(e); }
+
+const rateSlider = document.getElementById('rateSlider');
+const rateLabel = document.getElementById('rateLabel');
+if (rateSlider) rateSlider.addEventListener('input', () => { rateLabel.textContent = rateSlider.value + 'x'; });
+
+function toggleSpeak(btn) {
+  if (!speechSupported) { alert('Text-to-speech is not supported in this browser.'); return; }
+  try {
+    const text = decodeURIComponent(btn.dataset.text);
+    if (btn.classList.contains('speaking')) { window.speechSynthesis.cancel(); btn.classList.remove('speaking'); currentBtn = null; return; }
+    window.speechSynthesis.cancel();
+    if (currentBtn) currentBtn.classList.remove('speaking');
+    const utter = new SpeechSynthesisUtterance(text);
+    const voiceIdx = document.getElementById('voiceSelect').value;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+    utter.lang = 'en-US';
+    utter.rate = parseFloat(rateSlider.value);
+    utter.onstart = () => { btn.classList.add('speaking'); currentBtn = btn; };
+    utter.onend = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    utter.onerror = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    window.speechSynthesis.speak(utter);
+  } catch (e) { console.warn('toggleSpeak failed:', e); }
+}
+const stopAllBtn = document.getElementById('stopAllBtn');
+if (stopAllBtn) stopAllBtn.addEventListener('click', () => {
+  if (speechSupported) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  currentBtn = null;
+});
+</script>
+</body>
+</html>
