@@ -198,10 +198,17 @@ function renderMetrics(metrics) {
 function renderCard(item) {
   const classAttr = item.idx ? ' numbered' : '';
   const titleHtml = item.idx ? `<span class="idx">${item.idx}.</span>${item.title}` : item.title;
+  // Speak text is now built directly from the same strings shown on screen —
+  // title + description + tip + warning — so audio always matches the visible text.
+  // (Code blocks and data tables are excluded since reading raw SQL/table cells aloud isn't useful.)
+  let speakText = `${item.title}. ${item.desc}`;
+  if (item.tip) speakText += ` ${item.tip}`;
+  if (item.warn) speakText += ` ${item.warn}`;
+
   let html = `<div class="card${classAttr}">
     <div class="q-head">
       <p class="q-title">${titleHtml}</p>
-      ${listenBtn(item.speak)}
+      ${listenBtn(speakText)}
     </div>
     <p class="q-desc">${item.desc}</p>`;
   if (item.metrics) html += renderMetrics(item.metrics);
