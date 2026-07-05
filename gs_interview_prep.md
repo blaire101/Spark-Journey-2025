@@ -96,6 +96,20 @@ d.extendleft([-1,-2])   # bulk add to the left end (note: order gets reversed!)
 
 🎯 Since Python 3.7+, dictionaries ARE ordered!
 
+### Side by side 📊
+
+| | DFS | BFS |
+|---|---|---|
+| Core move | Go deep first, backtrack when stuck | Expand layer by layer |
+| Data structure | Stack (or recursion) | Queue |
+| Mental model | Explore one path fully before trying another | Explore all neighbors before going further |
+
+---
+
+### One-line memory trick 🧠
+
+> **DFS is a maze explorer who commits to one path until forced to turn back. BFS is a rumor spreading outward one "ring" of people at a time.**
+
 ## 📚 Table of Contents — Grouped by Category
 
 **Tip:** Study by category, not by number — grouping similar patterns together helps you internalize the underlying technique instead of memorizing 28 isolated problems.
