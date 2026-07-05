@@ -58,7 +58,38 @@ topk_keys = heapq.nlargest(k, d, key=d.get)
 # DP: dp = [[1] * n for _ in range(m)]
 ```
 
----
+**Set, Dict, Deque**
+
+```python
+# Set common methods 🎯
+s = {1, 2, 3}
+s.add(4)        # add an element
+s.remove(2)     # remove an element (raises KeyError if not found)
+s.discard(5)    # remove an element (no error if not found — safer)
+s.pop()         # randomly removes and returns one element
+4 in s          # check membership → True/False
+
+# Dict common methods 🔑
+d = {"a": 1, "b": 2}
+d.get("x", 0)         # returns default value 0 if key not found (more common)
+
+d["c"] = 3            # add/update
+d.pop("a")            # remove and return the value
+
+"a" in d              # check if key exists
+d.keys()              # all keys
+d.values()            # all values
+d.items()             # all (key, value) pairs
+
+# Deque common methods 🔑
+d.append(4)           # add to the right end → [1,2,3,4]
+d.appendleft(0)        # add to the left end → [0,1,2,3,4]
+d.pop()                # remove and return from the right end → removes 4
+d.popleft()             # remove and return from the left end → removes 0
+
+d.extend([5,6])         # bulk add to the right end
+d.extendleft([-1,-2])   # bulk add to the left end (note: order gets reversed!)
+```
 
 🎯 Since Python 3.7+, dictionaries ARE ordered!
 
