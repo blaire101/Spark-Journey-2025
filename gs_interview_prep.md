@@ -2,9 +2,61 @@
 
 ## Data, Lakehouse and AI Data Platform Engineer — VP, Singapore
 
-Sorted by frequency reported in GS CoderPad interviews (highest first).
-**Approach & Code sections are collapsed by default** — click to reveal after you attempt the problem yourself.
-Each code block includes a runnable example at the bottom.
+```python
+from typing import List
+from collections import deque, defaultdict
+from collections import deque # dq = deque()  dq.popleft()  dq.pop()  dq.append(i)  # maintain decreasing values
+from collections import Counter # t = "ABC" need = Counter(t) is Counter({'A': 1, 'B': 1, 'C': 1})
+import heapq
+
+# def topKFrequent(nums, k):
+#     freq = Counter(nums)
+#     return heapq.nlargest(k, freq.keys(), key=freq.get)
+
+# intervals.sort(key=lambda x: x[0])
+# ''.join(sorted(s))
+
+min_price = float('inf')
+
+scores = {"Alice": 90, "Bob": 85, "Cathy": 92}
+print(scores.items()) # Output: dict_items([('Alice', 90), ('Bob', 85), ('Cathy', 92)])
+list(scores.values())
+[90, 85, 92]
+
+# for i, num in enumerate(scores):
+# for i, num in enumerate(nums):
+# DICT:  self.seen[number] = self.seen.get(number, 0) + 1
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+strs = list(map(str, nums)) # map(func, iterable)
+strs = [str(x) for x in nums]
+
+heapq.heappush(end_times, end)
+heapq.heappop(end_times)
+
+res.append(list(range(left, right + 1)))
+
+heapq.nlargest(k, nums) # heapq.nlargest(2, [3, 2, 1, 5, 6, 4]) → [6, 5]
+d = {"a": 3, "b": 1, "c": 2, "d": 8, "e": 5}
+k = 2
+topk_keys = heapq.nlargest(k, d, key=d.get)
+
+
+# O(n²) DP: dp[i] = max(dp[i], dp[j]+1) for all j < i where nums[i] > nums[j]
+# dp = [math.inf] * (amount + 1)， dp[x] = min(dp[x], dp[x - c] + 1)
+# DP: dp = [[1] * n for _ in range(m)]
+```
 
 ---
 
