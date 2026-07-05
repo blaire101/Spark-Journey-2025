@@ -16,7 +16,7 @@ Each code block includes a runnable example at the bottom.
 
 ### 🗄️ SQL
 - [2) SQL — Deduplicate & Get Latest Record](#2-sql--deduplicate--get-latest-record)
-- [3) SQL — Second Highest Salary per Department](#3-sql--second-highest-salary-per-department)
+- [3) SQL — Second Highest Salary per Department](#3-sql--second-highest-salary-per-department) ⭐
 - [18) SQL — Running Total (Cumulative Sum)](#18-sql--running-total-cumulative-sum)
 - [19) SQL — Find Duplicate Emails](#19-sql--find-duplicate-emails)
 
@@ -26,8 +26,8 @@ Each code block includes a runnable example at the bottom.
 - [15) Top K Frequent Elements](#15-top-k-frequent-elements--leetcode-347)
 - [23) Two Sum (verified)](#23-two-sum)
 - [24) Most Frequent IP Address from Logs (verified)](#24-find-most-frequent-ip-address-from-logs)
-- [26) Student with Highest Average Score (verified)](#26-student-with-highest-average-score)
-
+- [26) Student with Highest Average Score (verified)](#26-student-with-highest-average-score) 🎯🎯🎯  
+                               
 ### 🏗️ Design (Data Structures)
 - [1) LRU Cache](#1-lru-cache--leetcode-146)
 - [17) Design Hit Counter](#17-design-hit-counter--leetcode-362)
