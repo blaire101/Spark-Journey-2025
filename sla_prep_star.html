@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SLA Case Study — STAR Format</title>
+<style>
+  :root {
+    --bg:#FAFAF9; --surface:#FFFFFF; --border:#E5E5E3; --border-strong:#D4D4D0;
+    --text-primary:#1A1A18; --text-secondary:#57564F; --text-muted:#8A8985;
+    --accent:#2971A8; --accent-bg:#E8F2FA;
+    --success:#1E7A4C; --success-bg:#E4F5EC;
+    --warning:#9A6B1E; --warning-bg:#FBF0DD;
+    --danger:#B14A3F; --danger-bg:#FBECEA;
+    --purple:#7B4FA0; --purple-bg:#F1E9F7;
+    --radius:10px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.55; }
+  .app { max-width:980px; margin:0 auto; padding:24px 20px 80px; }
+  header h1 { font-size:21px; font-weight:600; margin:0 0 4px; }
+  header p { font-size:13.5px; color:var(--text-secondary); margin:0 0 16px; }
+
+  .voice-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; margin-bottom:18px; font-size:13px; color:var(--text-secondary); }
+  .voice-bar select { font-size:13px; padding:4px 8px; border-radius:6px; border:1px solid var(--border-strong); }
+  .voice-bar input[type=range] { width:100px; }
+
+  .tabs { display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); overflow-x:auto; }
+  .tab-btn { padding:10px 16px; font-size:13.5px; font-weight:600; color:var(--text-secondary); background:none; border:none; border-bottom:3px solid transparent; cursor:pointer; white-space:nowrap; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .star-banner {
+    display:flex; align-items:center; gap:10px; font-size:13px; font-weight:600;
+    padding:10px 14px; border-radius:var(--radius); margin-bottom:16px;
+  }
+  .star-banner.S { background:var(--purple-bg); color:var(--purple); }
+  .star-banner.T { background:var(--accent-bg); color:var(--accent); }
+  .star-banner.A { background:var(--warning-bg); color:var(--warning); }
+  .star-banner.R { background:var(--success-bg); color:var(--success); }
+
+  .level-header {
+    display:flex; align-items:flex-start; gap:12px; margin:24px 0 12px;
+    padding-bottom:8px; border-bottom:2px solid var(--border-strong);
+  }
+  .level-header:first-of-type { margin-top:4px; }
+  .level-emoji { font-size:20px; line-height:1.3; }
+  .level-label { font-size:14.5px; font-weight:700; color:var(--text-primary); }
+  .level-desc { font-size:12px; color:var(--text-secondary); margin-top:2px; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+  .card.numbered { border-left:3px solid var(--accent); }
+  .q-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  .q-title { font-size:14.5px; font-weight:600; margin:0; }
+  .q-title .idx { color:var(--accent); margin-right:6px; }
+  .q-desc { font-size:13px; color:var(--text-secondary); margin:4px 0 8px; }
+
+  table.datatbl { border-collapse:collapse; font-size:12px; margin:6px 0 10px; width:100%; overflow-x:auto; display:block; }
+  table.datatbl th, table.datatbl td { border:1px solid var(--border); padding:5px 9px; text-align:left; vertical-align:top; }
+  table.datatbl th { background:var(--accent-bg); color:var(--accent); font-weight:600; }
+
+  .codeblock { background:#F4F4F2; border-radius:8px; padding:10px 14px; font-family:"SF Mono",Menlo,monospace; font-size:11.3px; color:var(--text-primary); white-space:pre; overflow-x:auto; margin:8px 0; line-height:1.5; }
+  .kw { color:#AF3A83; font-weight:600; }
+  .fn { color:#2971A8; font-weight:600; }
+  .str { color:#1E7A4C; }
+  .num { color:#B5651D; }
+  .cmt { color:#8A8985; font-style:italic; }
+
+  .flow { font-family:"SF Mono",Menlo,monospace; font-size:12px; background:var(--accent-bg); color:var(--accent); border-radius:8px; padding:8px 12px; margin:8px 0; }
+  .tip { font-size:12px; color:var(--success); background:var(--success-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .warn { font-size:12px; color:var(--warning); background:var(--warning-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+
+  .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
+  .listen-btn.speaking { background:var(--accent); color:white; }
+  .listen-btn svg { width:12px; height:12px; }
+  .listen-btn.big { padding:8px 16px; font-size:13px; font-weight:600; }
+
+  .step-label { font-size:12px; font-weight:700; color:var(--accent); margin:10px 0 2px; display:block; }
+  .intro-note { font-size:13px; color:var(--text-secondary); background:var(--accent-bg); border-radius:var(--radius); padding:10px 14px; margin-bottom:16px; }
+  .metric-row { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; }
+  .metric { flex:1; min-width:110px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center; }
+  .metric .label { font-size:11px; color:var(--text-muted); }
+  .metric .before { font-size:13.5px; color:var(--danger); font-weight:600; }
+  .metric .after { font-size:13.5px; color:var(--success); font-weight:600; }
+
+  .quote-card { background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+  .quote-text { font-size:13.5px; color:var(--text-primary); font-style:italic; line-height:1.7; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>SLA Optimization — STAR Story</h1>
+    <p>75 min → 13 min, SLA 95% → 99%+, told as a complete Situation-Task-Action-Result narrative</p>
+  </header>
+
+  <div class="voice-bar">
+    <label>🔊 Voice: <select id="voiceSelect"></select></label>
+    <label>Speed: <input type="range" id="rateSlider" min="0.7" max="1.2" step="0.05" value="0.92"></label>
+    <span id="rateLabel">0.92x</span>
+    <button class="listen-btn" id="stopAllBtn" style="margin-left:auto">⏹ Stop</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="full">⭐ Full Story</button>
+    <button class="tab-btn" data-tab="s">🎯 Situation</button>
+    <button class="tab-btn" data-tab="t">📋 Task</button>
+    <button class="tab-btn" data-tab="a">🔧 Action</button>
+    <button class="tab-btn" data-tab="r">📊 Result</button>
+  </div>
+
+  <div id="full" class="tab-panel active"></div>
+  <div id="s" class="tab-panel"></div>
+  <div id="t" class="tab-panel"></div>
+  <div id="a" class="tab-panel"></div>
+  <div id="r" class="tab-panel"></div>
+</div>
+
+<script>
+const speakIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+function listenBtn(text, big) { return `<button class="listen-btn${big?' big':''}" data-action="speak" data-text="${encodeURIComponent(text)}">${speakIcon}Listen</button>`; }
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function table(headers, rows) {
+  let html = '<table class="datatbl"><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(r => { html += '<tr>' + r.map(c=>`<td>${c}</td>`).join('') + '</tr>'; });
+  html += '</tbody></table>';
+  return html;
+}
+
+const SQL_KEYWORDS = new Set(['SELECT','FROM','WHERE','GROUP','BY','HAVING','ORDER','AS','AND','OR','NOT',
+  'IN','IS','NULL','DISTINCT','INNER','LEFT','RIGHT','SELF','CROSS','JOIN','ON','SET','TRUE','FALSE',
+  'WITH','CASE','WHEN','THEN','ELSE','END','PARTITION','OVER','BETWEEN','LIMIT','DESC','ASC',
+  'UNION','ALL','EXISTS','LIKE','CREATE','TABLE','INSERT','INTO','VALUES']);
+const SQL_FUNCTIONS = new Set(['COUNT','SUM','AVG','MIN','MAX','ROW_NUMBER','RANK','DENSE_RANK','LAG','LEAD',
+  'FIRST_VALUE','LAST_VALUE','IFNULL','COALESCE','DATEDIFF','DATE_SUB','ROUND','HASH','FLOOR','RAND','CAST','NULLIF','CONCAT','SPLIT','RANGE']);
+
+function highlightCode(code) {
+  const tokenRe = /(--[^\n]*)|('[^']*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_.]*)|([\s\S])/g;
+  let out = '';
+  let match;
+  while ((match = tokenRe.exec(code)) !== null) {
+    const [, comment, str, num, word, other] = match;
+    if (comment) out += `<span class="cmt">${esc(comment)}</span>`;
+    else if (str) out += `<span class="str">${esc(str)}</span>`;
+    else if (num) out += `<span class="num">${esc(num)}</span>`;
+    else if (word) {
+      const upper = word.toUpperCase();
+      if (SQL_FUNCTIONS.has(upper)) out += `<span class="fn">${esc(word)}</span>`;
+      else if (SQL_KEYWORDS.has(upper)) out += `<span class="kw">${esc(word)}</span>`;
+      else out += esc(word);
+    } else out += esc(other);
+  }
+  return out;
+}
+
+// ============================================================
+// FULL STORY (30-second + full version, quotable as-is)
+// ============================================================
+const shortSegments = [
+  "I stabilized a critical Spark job that was hitting OOM errors and missing its SLA deadline.",
+  "The root cause was two hot keys forcing a massive in-memory HashSet during a COUNT DISTINCT.",
+  "I fixed it with two-stage aggregation, targeted salting on those hot keys, and AQE tuning.",
+  "Runtime dropped from 75 to 13 minutes, and the job's on-time SLA compliance rate improved from 95% to over 99%.",
+];
+
+const fullSegments = [
+  {label:"Situation", text:"Our cross-border remittance platform ran a daily Spark job powering remittance analytics \u2014 about 12 million transactions and 50 billion RMB a year."},
+  {label:"Situation (problem)", text:"Runtime fluctuated between 30 and 75 minutes, sometimes hitting executor out-of-memory errors, and the job's on-time SLA compliance rate had dropped to around 95%."},
+  {label:"Task", text:"I was responsible for stabilizing this critical-path job \u2014 getting it reliably completed within the SLA window, without sacrificing accuracy, since the metrics fed compliance and business reporting."},
+  {label:"Action (diagnosis)", text:"I traced the root cause to two extremely hot keys \u2014 together about 7 million transactions \u2014 forcing Spark's COUNT DISTINCT into a single giant in-memory HashSet per group."},
+  {label:"Action (fix 1)", text:"First, I tried the cheapest fix \u2014 pure configuration: tuning shuffle partitions from 200 up to 2000 and enabling Adaptive Query Execution, no code change needed."},
+  {label:"Action (fix 2)", text:"Second, still without touching the query, I switched from HashAggregate to SortAggregate to remove most of the OOM risk."},
+  {label:"Action (fix 3)", text:"Since config alone wasn't fully sufficient, I then rewrote the query using two-stage aggregation, converting that unspillable HashSet into many small spillable groups."},
+  {label:"Action (fix 4)", text:"Finally, for the two specific extreme hot keys that remained the bottleneck, I applied targeted salting \u2014 splitting them into 8 buckets each using a deterministic hash, keeping results exact rather than approximate."},
+  {label:"Action (framework)", text:"I also made framework-level changes \u2014 trigger-based scheduling and failure alerting \u2014 to catch future issues earlier."},
+  {label:"Result", text:"Runtime dropped from 75 minutes to 13 minutes, about a 6x improvement."},
+  {label:"Result (stability)", text:"OOM errors were fully resolved, and GC pauses dropped from over 500 to under 100 per run."},
+  {label:"Result (SLA)", text:"The job's on-time SLA compliance rate improved from about 95% to over 99% \u2014 meaning it now meets its deadline on more than 99% of days, instead of missing it roughly 1 in 20 days."},
+];
+
+// ============================================================
+// RENDERING (shared card/list helpers)
+// ============================================================
+function renderMetrics(metrics) {
+  let html = '<div class="metric-row">';
+  metrics.forEach(m => {
+    html += `<div class="metric">
+      <div class="label">${m.label}</div>
+      <div class="before">${m.before}</div>
+      <div style="font-size:10px;color:var(--text-muted);">↓</div>
+      <div class="after">${m.after}</div>
+    </div>`;
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderCard(item) {
+  const classAttr = item.idx ? ' numbered' : '';
+  const titleHtml = item.idx ? `<span class="idx">${item.idx}.</span>${item.title}` : item.title;
+  let html = `<div class="card${classAttr}">
+    <div class="q-head">
+      <p class="q-title">${titleHtml}</p>
+      ${listenBtn(item.speak)}
+    </div>
+    <p class="q-desc">${item.desc}</p>`;
+  if (item.metrics) html += renderMetrics(item.metrics);
+  if (item.flow) html += `<div class="flow">${item.flow}</div>`;
+  if (item.svgDiagram) html += `<div style="margin:10px 0;">${item.svgDiagram}</div>`;
+  if (item.sample) html += `<span class="step-label">Reference</span>${item.sample}`;
+  if (item.code) html += `<div class="codeblock">${highlightCode(item.code)}</div>`;
+  if (item.result) html += `<span class="step-label">Detail</span>${item.result}`;
+  if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
+  if (item.warn) html += `<div class="warn">⚠️ ${item.warn}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function renderList(containerId, data, bannerLetter, bannerText) {
+  const el = document.getElementById(containerId);
+  let html = '';
+  if (bannerLetter) {
+    html += `<div class="star-banner ${bannerLetter}">${bannerLetter} — ${bannerText}</div>`;
+  }
+  html += data.map(renderCard).join('');
+  el.innerHTML = html;
+}
+
+const levelMeta = {
+  diagnosis: {emoji:"🔍", label:"Level 0 — Diagnosis", desc:"Understand what's actually broken before touching anything."},
+  config:    {emoji:"⚙️", label:"Level 1 — Config (no code change)", desc:"Cheapest fixes. Pure Spark settings — the query stays untouched."},
+  code:      {emoji:"💻", label:"Level 2 — Code (query rewrite required)", desc:"Only reached because Level 1 alone wasn't sufficient."},
+  reference: {emoji:"📚", label:"Reference — documented, not applied here", desc:"General techniques written down for future incidents, not used in THIS fix."},
+  framework: {emoji:"🏗️", label:"Level 3 — Framework (beyond this one job)", desc:"Orchestration-layer changes affecting the whole pipeline, not just this Spark job."},
+};
+
+function renderActionByLevel(containerId, data) {
+  const el = document.getElementById(containerId);
+  let html = `<div class="star-banner A">A — Action</div>`;
+  html += `<div class="intro-note">Four levels, cheapest first: try config before code, and code before the last-resort surgical fix. Framework changes are separate — they apply to the whole pipeline, not just this one query.</div>`;
+
+  let currentLevel = null;
+  data.forEach(item => {
+    if (item.level !== currentLevel) {
+      currentLevel = item.level;
+      const meta = levelMeta[currentLevel];
+      html += `
+        <div class="level-header">
+          <span class="level-emoji">${meta.emoji}</span>
+          <div>
+            <div class="level-label">${meta.label}</div>
+            <div class="level-desc">${meta.desc}</div>
+          </div>
+        </div>
+      `;
+    }
+    html += renderCard(item);
+  });
+
+  el.innerHTML = html;
+}
+
+// ============================================================
+// S — SITUATION
+// ============================================================
+const sData = [
+  {title:"The business context", speak:"A cross-border remittance platform needed a Spark job to generate annual remittance insights. In 2024 the system processed about 12 million transactions, totaling 50 billion RMB in inbound payments.",
+   desc:"Dimensions: sender country, remittance partner, currency. Metrics: transaction count, unique users, inbound amount, average transaction amount.",
+   tip:null},
+  {title:"Example data (illustrative)", speak:"Here's what the raw data looked like. Most partner and country combinations had a modest, even number of transactions. But two combinations — Wise in the US in USD, and PandaRemit in Korea in KRW — had millions of rows each, all funneling into the same GROUP BY key.",
+   desc:"Simplified sample rows to illustrate the shape of the skew — in reality each hot group had 3-4 million rows, not 3.",
+   sample: table(["partner_remittance_provider","sender_country","currency","sender_id","transaction_id","amount","fdate"], [
+     ["Wise","US","USD","U10023","TXN00001","482.50","20240115"],
+     ["Wise","US","USD","U10024","TXN00002","1,205.00","20240115"],
+     ["Wise","US","USD","U10023","TXN00003","310.00","20240116"],
+     ["<i>... 4,000,000 more rows, same (Wise, US, USD) key</i>","","","","","",""],
+     ["PandaRemit","KR","KRW","U55010","TXN04000001","150,000","20240201"],
+     ["<i>... 3,000,000 more rows, same (PandaRemit, KR, KRW) key</i>","","","","","",""],
+     ["GrabPay","SG","SGD","U88221","TXN07000001","600.00","20240301"],
+     ["Airwallex","AU","AUD","U99110","TXN07000002","2,100.00","20240301"],
+   ]),
+   result: table(["currency","fdate","fx_to_cnh","fx_to_usd"], [
+     ["USD","20240115","7.18","1.00"],
+     ["KRW","20240201","0.0054","0.00075"],
+     ["SGD","20240301","5.32","0.74"],
+   ]),
+   warn:"Two GROUP BY keys — (Wise, US, USD) and (PandaRemit, KR, KRW) — each held millions of rows, while every other key held a normal, evenly-sized handful."},
+  {title:"The problem", speak:"Runtime fluctuated between 30 and 75 minutes. Some reducers stalled for over 30 minutes. Executor out-of-memory errors happened sometimes. There were frequent garbage collection pauses, and the Spark UI showed severe task skew. The job's on-time SLA compliance rate had dropped to around 95 percent.",
+   desc:"What the on-call engineer actually saw before diagnosis.",
+   result: table(["#","Symptom"], [
+     ["1","Runtime fluctuated 30–75 minutes"],
+     ["2","Some reducers stalled for over 30 minutes"],
+     ["3","Sometimes, Executor OOM errors"],
+     ["4","Frequent GC pauses (heap pressure)"],
+     ["5","Spark UI showed severe task skew"],
+   ]),
+   warn:"SLA compliance target was 99%+, but the job was only hitting ~95% — meaning it missed its deadline on roughly 1 in 20 days."},
+  {title:"The original query (root cause preview)", speak:"The original query directly used COUNT DISTINCT on sender_id, which forces Spark to keep one giant HashSet per group in memory — that's the seed of the OOM risk.",
+   desc:"This single-stage COUNT(DISTINCT) is what caused the entire problem.",
+   code:`SELECT
+  t.partner_remittance_provider, t.sender_country, t.currency,
+  COUNT(t.transaction_id) AS tx_count,
+  COUNT(DISTINCT t.sender_id) AS sender_count,
+  SUM(t.amount * fx.fx_to_cnh) AS total_cnh,
+  SUM(t.amount * fx.fx_to_usd) AS total_usd
+FROM transactions t
+JOIN exchange_rates fx
+  ON t.currency = fx.currency AND t.fdate = fx.fdate
+WHERE t.fdate BETWEEN '20240101' AND '20241231'
+GROUP BY t.partner_remittance_provider, t.sender_country, t.currency;`,
+   warn:"COUNT(DISTINCT ...) forces a single giant in-memory HashSet per group — the direct cause of OOM under skew."},
+];
+
+// ============================================================
+// T — TASK
+// ============================================================
+const tData = [
+  {title:"My responsibility", speak:"I was responsible for stabilizing this critical-path job, getting it reliably completed within the SLA window without sacrificing accuracy, since the metrics fed compliance and business reporting.",
+   desc:"Why this mattered beyond just 'making it faster'.",
+   result: table(["Goal","Constraint"], [
+     ["Eliminate OOM and memory pressure","Cannot rewrite business logic — same output schema required"],
+     ["Resolve skew to improve parallelism","Distinct counts (sender_count) must stay EXACT, not approximate"],
+     ["Reduce shuffle size, improve stability","Ensure on-time SLA compliance rate ≥ 99%"],
+   ]),
+   tip:"The hard constraint: sender_count is a COUNT(DISTINCT) used in compliance reporting — any fix had to preserve exact correctness, ruling out approximate techniques like HyperLogLog."},
+];
+
+// ============================================================
+// A — ACTION (diagnosis, then escalating fixes: config first, code last)
+// ============================================================
+const aData = [
+  // --- Diagnosis ---
+  {idx:"1", level:"diagnosis", title:"Diagnose: find the root cause", speak:"Two extremely hot keys — Wise US USD with about 4 million transactions, and PandaRemit KR KRW with about 3 million — created shuffle partitions over 5 gigabytes each. Executors only had 6 gigabytes of memory, too small for these skewed reducers, and the default 200 shuffle partitions made it worse.",
+   desc:"Three compounding factors, not just one.",
+   result: table(["Problem","Technical Root Cause"], [
+     ["OOM","HashAggregate retained large intermediate states"],
+     ["GC Pressure","Excessive heap usage from large in-memory hash maps"],
+     ["Data Skew","Uneven key distribution in GROUP BY"],
+     ["Shuffle Overload","Too few partitions (200) → oversized reducer tasks"],
+   ]),
+   warn:"Skewed keys 'Wise+US+USD' (~4M txns) and 'PandaRemit+KR+KRW' (~3M txns) created 5GB+ shuffle partitions each."},
+
+  {idx:"2", level:"diagnosis", title:"Why HashAggregate specifically fails under this pattern", speak:"The hash map holds one group and aggregation buffer per key. For DISTINCT, it must maintain a large per-group set. As execution memory pressure rises, if fallback doesn't happen early enough, you get an out-of-memory crash instead of a safe spill to disk.",
+   desc:"The precise mechanical reason COUNT(DISTINCT) plus skew equals OOM.",
+   svgDiagram: `<svg width="100%" viewBox="0 0 680 520" style="max-width:600px; display:block; margin:0 auto;">
+<defs>
+  <marker id="arrowhead2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+    <path d="M0,0 L8,4 L0,8 Z" fill="#888"/>
+  </marker>
+</defs>
+<rect x="240" y="40" width="200" height="44" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1"/>
+<text x="340" y="62" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600" fill="var(--text-primary)">Shuffle by key</text>
+<line x1="340" y1="84" x2="340" y2="118" stroke="#888" stroke-width="1.5" marker-end="url(#arrowhead2)"/>
+
+<rect x="190" y="120" width="300" height="56" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1"/>
+<text x="340" y="142" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600" fill="var(--accent)">HashMap per key</text>
+<text x="340" y="160" text-anchor="middle" dominant-baseline="central" font-size="11" fill="var(--accent)">Holds group + agg buffer</text>
+<line x1="340" y1="176" x2="340" y2="210" stroke="#888" stroke-width="1.5" marker-end="url(#arrowhead2)"/>
+
+<rect x="210" y="212" width="260" height="56" rx="8" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="1"/>
+<text x="340" y="234" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600" fill="var(--warning)">DISTINCT set grows</text>
+<text x="340" y="252" text-anchor="middle" dominant-baseline="central" font-size="11" fill="var(--warning)">Per group, unbounded</text>
+<line x1="340" y1="268" x2="340" y2="302" stroke="#888" stroke-width="1.5" marker-end="url(#arrowhead2)"/>
+
+<rect x="210" y="304" width="260" height="44" rx="8" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="1"/>
+<text x="340" y="326" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600" fill="var(--warning)">Memory pressure rises</text>
+
+<line x1="340" y1="348" x2="210" y2="402" stroke="#888" stroke-width="1.5" marker-end="url(#arrowhead2)"/>
+<line x1="340" y1="348" x2="475" y2="402" stroke="#888" stroke-width="1.5" marker-end="url(#arrowhead2)"/>
+
+<rect x="100" y="404" width="220" height="56" rx="8" fill="var(--danger-bg)" stroke="var(--danger)" stroke-width="1"/>
+<text x="210" y="426" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600" fill="var(--danger)">OOM crash</text>
+<text x="210" y="444" text-anchor="middle" dominant-baseline="central" font-size="11" fill="var(--danger)">Fallback not early enough</text>
+
+<rect x="360" y="404" width="230" height="56" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1"/>
+<text x="475" y="426" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="600" fill="var(--success)">Spill to disk</text>
+<text x="475" y="444" text-anchor="middle" dominant-baseline="central" font-size="11" fill="var(--success)">SortAgg fallback triggers</text>
+</svg>`,
+   tip:"This is exactly why Fix 3 (SortAggregate) helps: it spills to disk safely instead of crashing when memory runs out."},
+
+  // --- Fix 1: config tuning — cheapest, no code change ---
+  {idx:"3", level:"config", title:"Fix 1: Tune Spark configuration & enable AQE — try this FIRST, no code change", speak:"I started with the cheapest possible fix: pure configuration, no query rewrite. Increased executor count to 100 with 4 cores and 6 gigabytes each, enabled dynamic allocation, raised shuffle partitions to 2000, and turned on Adaptive Query Execution so Spark could automatically coalesce small partitions and split skewed ones.",
+   desc:"Always try config first — if this alone solves it, you never have to touch the query logic at all.",
+   code:`--num-executors 100 --executor-cores 4 --executor-memory 6G --driver-memory 4G
+
+SET spark.sql.shuffle.partitions = 2000;
+SET spark.dynamicAllocation.enabled=true;
+SET spark.dynamicAllocation.maxExecutors=120;
+SET spark.dynamicAllocation.minExecutors=5;
+
+SET spark.sql.adaptive.enabled = true;
+SET spark.sql.adaptive.coalescePartitions.enabled = true;
+SET spark.sql.adaptive.skewJoin.enabled = true;
+SET spark.sql.adaptive.skewedPartitionThresholdInBytes = 64MB;
+SET spark.sql.adaptive.skewedPartitionFactor = 5;
+SET spark.sql.autoBroadcastJoinThreshold = 10MB;`,
+   result: table(["AQE mechanism","What it does"], [
+     ["Coalesce partitions","Merges small shuffle partitions at runtime"],
+     ["Skew join split","Splits large skewed partitions into multiple tasks"],
+     ["Switch join strategy","SortMergeJoin → BroadcastHashJoin at runtime based on real stats"],
+   ]),
+   tip:"2000 shuffle partitions (up from default 200) gave finer-grained skew detection, and AQE cleaned up the MILD skew automatically — but the two EXTREME hot keys were still too large for AQE to split alone."},
+
+  // --- Fix 2: still just a config flag, no code change ---
+  {idx:"4", level:"config", title:"Fix 2: Switch HashAggregate → SortAggregate — still just a config flag", speak:"Config tuning alone reduced the pressure but didn't remove the underlying risk: a single COUNT DISTINCT still builds one giant hash set per group. So next, still without touching the query, I disabled hash-based aggregate execution to force SortAggregate instead — trading a bit of speed on small data for much lower OOM risk.",
+   desc:"Still a pure config change — no query rewrite yet. This alone eliminates most of the OOM risk.",
+   code:`SET spark.sql.execution.useObjectHashAggregateExec = false;
+SET spark.sql.execution.useHashAggregateExec = false;`,
+   result: table(["Feature","HashAggregate","SortAggregate"], [
+     ["Memory Usage","High (hash map)","Lower (disk spillable)"],
+     ["OOM Risk","High","Much lower"],
+     ["Skewed Data","Poor","Stable"],
+   ]),
+   tip:"After this step, OOM crashes stopped — but runtime was STILL inconsistent, because the two hot keys were still funneling millions of rows through one aggregation path."},
+
+  // --- Fix 3: NOW rewrite the query, since config alone wasn't enough ---
+  {idx:"5", level:"code", title:"Fix 3: Two-stage aggregation — config alone wasn't enough, so I rewrote the query", speak:"Config and SortAggregate stopped the crashes, but runtime was still unstable because the query itself was still building one COUNT DISTINCT per group. At this point I had to actually change the SQL: I split the aggregation into two stages. Stage one deduplicates by key plus sender id. Stage two counts the deduplicated rows.",
+   desc:"This is the first step that required an actual code change — only necessary because pure configuration wasn't sufficient on its own.",
+   sample: table(["","Single-stage","Two-stage"], [
+     ["Memory model","One giant HashSet","Many small groups"],
+     ["Spillable","No","Yes"],
+     ["OOM risk","High","Low"],
+   ]),
+   code:`-- Stage 1: dedup rows to one row per (partner_remittance_provider, sender_country, currency, sender_id)
+WITH dedup AS (
+  SELECT
+    t.partner_remittance_provider,
+    t.sender_country,
+    t.currency,
+    t.sender_id
+  FROM transactions t
+  WHERE t.fdate BETWEEN '20240101' AND '20241231'
+  GROUP BY t.partner_remittance_provider, t.sender_country, t.currency, t.sender_id
+)
+-- Stage 2: count deduplicated sender_id rows per dimension (exact distinct count)
+SELECT
+  d.partner_remittance_provider,
+  d.sender_country,
+  d.currency,
+  COUNT(*) AS sender_count
+FROM dedup d
+GROUP BY d.partner_remittance_provider, d.sender_country, d.currency;`,
+   tip:"This converts one unspillable giant HashSet into many small spillable groups — runtime became stable, but the 2 extreme hot keys were STILL the slowest part of every run."},
+
+  // --- Fix 4: targeted salting for the remaining extreme hot keys ---
+  {idx:"6", level:"code", title:"Fix 4: Targeted salting for the 2 known hot keys — the final surgical fix", speak:"Even after config tuning, SortAggregate, and two-stage aggregation, the two known extreme hot keys were still the long pole. So as the final, most surgical step, I split those two specific keys into 8 buckets each using a deterministic hash of sender id, routed everyone else into a separate non-hot bucket, then aggregated within buckets before summing back to the original dimensions for an exact result.",
+   desc:"The last resort — reserved for the SPECIFIC extreme keys that survived every earlier, less invasive fix.",
+   code:`-- A. Dedup exchange rates first (avoid duplicate join fan-out)
+WITH fx_dedup AS (
+  SELECT currency, fdate, fx_to_cnh, fx_to_usd
+  FROM (
+    SELECT
+      currency, fdate, fx_to_cnh, fx_to_usd,
+      ROW_NUMBER() OVER (PARTITION BY currency, fdate ORDER BY fdate DESC) AS rn
+    FROM exchange_rates
+    WHERE fdate BETWEEN '20240101' AND '20241231'
+  ) d
+  WHERE rn = 1
+),
+
+-- B. Salt only the 2 known hot keys; everyone else goes to fixed bucket 8
+salted_txn AS (
+  SELECT
+    t.partner_remittance_provider, t.sender_country, t.currency,
+    t.sender_id, t.transaction_id, t.amount, t.fdate,
+    CASE
+      WHEN (t.sender_country = 'US' AND t.partner_remittance_provider = 'Wise')
+        OR (t.sender_country = 'KR' AND t.partner_remittance_provider = 'PandaRemit')
+      THEN (HASH(t.sender_id) & 2147483647) % 8      -- hot keys → 8 buckets
+      ELSE 8                                          -- everyone else → fixed bucket 8
+    END AS salt_bucket
+  FROM transactions t
+  WHERE t.fdate BETWEEN '20240101' AND '20241231'
+),
+
+-- C. Stage 1: aggregate per dimension + salt bucket (exact dedup within bucket)
+agg_stage1 AS (
+  SELECT
+    s.partner_remittance_provider, s.sender_country, s.currency, s.salt_bucket,
+    COUNT(s.transaction_id) AS tx_cnt_bucket,
+    COUNT(DISTINCT s.sender_id) AS sender_cnt_bucket,
+    SUM(s.amount * fx.fx_to_cnh) AS total_cnh_bucket,
+    SUM(s.amount * fx.fx_to_usd) AS total_usd_bucket
+  FROM salted_txn s
+  JOIN fx_dedup fx
+    ON s.currency = fx.currency AND s.fdate = fx.fdate
+  GROUP BY s.partner_remittance_provider, s.sender_country, s.currency, s.salt_bucket
+)
+
+-- D. Stage 2: sum buckets back to original dimensions (still exact)
+SELECT
+  partner_remittance_provider, sender_country, currency,
+  SUM(tx_cnt_bucket) AS tx_count,
+  SUM(sender_cnt_bucket) AS sender_count,
+  SUM(total_cnh_bucket) AS total_cnh,
+  SUM(total_usd_bucket) AS total_usd,
+  ROUND(SUM(total_cnh_bucket) / NULLIF(SUM(tx_cnt_bucket), 0), 2) AS avg_txn_amt_cnh
+FROM agg_stage1
+GROUP BY partner_remittance_provider, sender_country, currency;`,
+   tip:"Because the salt only depends on sender_id, the same sender ALWAYS lands in the same bucket — summing bucket counts gives an EXACT distinct count, not an approximation."},
+
+  // --- Related technique: general salting ---
+  {idx:"7", level:"reference", title:"Related technique: general JOIN salting (for future unknown hot keys)", speak:"I also documented a more general pattern for future incidents where the hot key isn't known in advance: replicate the small table N times with salt values 0 to N minus 1, tag every large-table row with a deterministic salt, and join on both the key and the salt together.",
+   desc:"A reusable pattern for future incidents where the hot key isn't known ahead of time — not used in this specific fix, but documented for the team.",
+   code:`-- Large table: deterministic salt for every row, based on currency+fdate
+WITH salted_txn AS (
+  SELECT
+    t.*,
+    (HASH(t.currency, t.fdate) & 2147483647) % 8 AS salt
+  FROM transactions t
+  WHERE t.fdate BETWEEN '20240101' AND '20241231'
+),
+
+-- Small table: replicate exchange_rates 8 times, salt = 0..7
+salted_fx AS (
+  SELECT
+    fx.*,
+    CAST(r.id AS INT) AS salt
+  FROM exchange_rates fx
+  CROSS JOIN (SELECT CAST(id AS INT) AS id FROM range(8)) r
+)
+
+-- Join on (currency, fdate, salt) instead of just (currency, fdate)
+SELECT
+  s.partner_remittance_provider, s.sender_country, s.currency,
+  COUNT(s.transaction_id) AS tx_count,
+  SUM(s.amount * f.fx_to_cnh) AS total_cnh
+FROM salted_txn s
+JOIN salted_fx f
+  ON s.currency = f.currency
+ AND s.fdate = f.fdate
+ AND s.salt = f.salt
+GROUP BY s.partner_remittance_provider, s.sender_country, s.currency;`,
+   tip:"Trade-off vs targeted salting: simpler, no need to know hot keys in advance, but replicates the WHOLE small table N times."},
+
+  // --- Related technique: targeted JOIN salting for a known hot key ---
+  {idx:"8", level:"reference", title:"Related technique: targeted JOIN salting (when the hot key IS known)", speak:"For a single known hot key, only that key gets a randomized salt from 1 to 8 on the large table side. Everyone else uses a fixed salt of 0. On the small table side, only the hot key's row gets replicated 8 times; everyone else stays at salt 0.",
+   desc:"More efficient than the general pattern above — use this variant once you've identified the SPECIFIC hot key, without replicating the ENTIRE small table.",
+   code:`-- Large table: only the known hot key gets a randomized salt
+CASE WHEN f.merchant_id = 123
+     THEN CAST(FLOOR(RAND() * 8) AS INT) + 1   -- 1..8
+     ELSE 0
+END AS salt
+
+-- Small table: hot key replicated 1-8, everyone else stays at 0
+SELECT d.*, 0 AS salt FROM dim_merchant d WHERE d.merchant_id <> 123
+UNION ALL
+SELECT d.*, s.salt FROM dim_merchant d
+JOIN (SELECT 1 AS salt UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+      UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8) s
+  ON d.merchant_id = 123`,
+   tip:"Trade-off vs the general pattern: only the ONE hot row gets replicated 8 times, not the whole table — more efficient once you know exactly which key is hot."},
+
+  // --- Framework-level changes ---
+  {idx:"9", level:"framework", title:"Framework-level changes (beyond this one job)", speak:"Beyond the Spark job itself, I removed non-critical workflow dependencies, switched to trigger-based scheduling instead of fixed-time triggers, and added monitoring and alerting so future issues get caught earlier.",
+   desc:"Structural changes applied at the orchestration layer, not just inside this one Spark job.",
+   result: table(["Area","Description"], [
+     ["🔗 Workflow Dependency","Removed non-critical and redundant dependencies to streamline DAG execution"],
+     ["⏱️ Trigger-Based Scheduling","Replaced fixed-time triggers — tasks auto-execute on upstream success"],
+     ["🚨 Monitoring & Alerting","Added alerting for job failures and delays for early detection"],
+   ]),
+   tip:null},
+];
+
+// ============================================================
+// R — RESULT
+// ============================================================
+const rData = [
+  {title:"Before vs After", speak:"Runtime dropped from 75 minutes to 13 minutes. OOM errors were resolved. Garbage collection count dropped from over 500 to under 100. Task skew was mitigated, and the job's on-time SLA compliance rate improved from about 95% to over 99%.",
+   desc:"The full before/after comparison — about a 6x speedup.",
+   metrics: [
+     {label:"Runtime", before:"75 min", after:"13 min"},
+     {label:"OOM Errors", before:"Frequent", after:"Resolved"},
+     {label:"GC Count", before:">500", after:"<100"},
+     {label:"Task Skew", before:"Severe", after:"Mitigated"},
+     {label:"SLA Compliance Rate", before:"~95%", after:"99%+"},
+   ],
+   tip:"The 6X speedup came mainly from eliminating OOM retries and reducing shuffle overhead — not raw compute power."},
+  {title:"Key takeaways (what I'd apply again)", speak:"Use the Spark UI to identify skewed keys. Try config tuning and AQE first, since they require no code change. Switch from HashAgg to SortAgg for stability. Only rewrite the query with two-stage aggregation if config alone isn't enough. Apply targeted salting as the last resort for hot keys, being careful with distinct metrics.",
+   desc:"The escalation checklist for any future skew incident — cheapest fix first, most invasive fix last.",
+   result: table(["#","Takeaway"], [
+     ["1","Use Spark UI to identify skewed keys (e.g. Wise+US+USD)"],
+     ["2","Try config tuning + AQE FIRST — no code change needed"],
+     ["3","Switch HashAgg → SortAgg for stability — still just a config flag"],
+     ["4","Only rewrite the query (two-stage aggregation) if config alone isn't enough"],
+     ["5","Apply targeted salting as the LAST resort — with care for distinct metrics"],
+   ]),
+   tip:"AQE handles MILD skew automatically. EXTREME hot keys still need manual, targeted salting — but only after cheaper options are exhausted."},
+];
+
+function renderFull() {
+  const el = document.getElementById('full');
+  const shortFullText = shortSegments.join(' ');
+  const fullFullText = fullSegments.map(s => s.text).join(' ');
+
+  let html = `<div class="intro-note">Two ready-to-say versions, broken into short segments so you can practice and recall them piece by piece. Each segment has its own Listen button; the card title also plays the whole thing.</div>`;
+
+  html += `<div class="quote-card">
+    <div class="q-head">
+      <p class="q-title">\u26a1 30-Second Version</p>
+      ${listenBtn(shortFullText, true)}
+    </div>`;
+  shortSegments.forEach((seg, i) => {
+    html += `
+      <div class="q-head" style="margin-top:8px; margin-bottom:0;">
+        <p class="quote-text" style="margin:0; flex:1;">${i+1}. "${seg}"</p>
+        ${listenBtn(seg)}
+      </div>
+    `;
+  });
+  html += `</div>`;
+
+  html += `<div class="quote-card">
+    <div class="q-head">
+      <p class="q-title">\ud83d\udcd6 Full STAR Version</p>
+      ${listenBtn(fullFullText, true)}
+    </div>`;
+  fullSegments.forEach(seg => {
+    html += `
+      <div class="q-head" style="margin-top:8px; margin-bottom:0;">
+        <p class="quote-text" style="margin:0; flex:1;"><span class="concept-label" style="display:block;font-size:11px;color:var(--accent);font-weight:600;">${seg.label}</span>"${seg.text}"</p>
+        ${listenBtn(seg.text)}
+      </div>
+    `;
+  });
+  html += `</div>`;
+
+  el.innerHTML = html;
+}
+
+
+renderFull();
+renderList('s', sData, 'S', 'Situation');
+renderList('t', tData, 'T', 'Task');
+renderActionByLevel('a', aData);
+renderList('r', rData, 'R', 'Result');
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+// ============================================================
+// EVENT DELEGATION
+// ============================================================
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="speak"]');
+  if (btn) toggleSpeak(btn);
+});
+
+// ============================================================
+// TEXT-TO-SPEECH
+// ============================================================
+let voices = [];
+let currentBtn = null;
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+function loadVoices() {
+  if (!speechSupported) return;
+  try {
+    voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    const select = document.getElementById('voiceSelect');
+    if (!select) return;
+    select.innerHTML = '';
+    if (voices.length === 0) { select.innerHTML = '<option>Default English voice</option>'; return; }
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Google US English')) opt.selected = true;
+      select.appendChild(opt);
+    });
+  } catch (e) { console.warn('Voice loading failed:', e); }
+}
+try { if (speechSupported) { window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); } } catch (e) { console.warn(e); }
+
+const rateSlider = document.getElementById('rateSlider');
+const rateLabel = document.getElementById('rateLabel');
+if (rateSlider) rateSlider.addEventListener('input', () => { rateLabel.textContent = rateSlider.value + 'x'; });
+
+function toggleSpeak(btn) {
+  if (!speechSupported) { alert('Text-to-speech is not supported in this browser.'); return; }
+  try {
+    const text = decodeURIComponent(btn.dataset.text);
+    if (btn.classList.contains('speaking')) { window.speechSynthesis.cancel(); btn.classList.remove('speaking'); currentBtn = null; return; }
+    window.speechSynthesis.cancel();
+    if (currentBtn) currentBtn.classList.remove('speaking');
+    const utter = new SpeechSynthesisUtterance(text);
+    const voiceIdx = document.getElementById('voiceSelect').value;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+    utter.lang = 'en-US';
+    utter.rate = parseFloat(rateSlider.value);
+    utter.onstart = () => { btn.classList.add('speaking'); currentBtn = btn; };
+    utter.onend = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    utter.onerror = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    window.speechSynthesis.speak(utter);
+  } catch (e) { console.warn('toggleSpeak failed:', e); }
+}
+const stopAllBtn = document.getElementById('stopAllBtn');
+if (stopAllBtn) stopAllBtn.addEventListener('click', () => {
+  if (speechSupported) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  currentBtn = null;
+});
+</script>
+</body>
+</html>
