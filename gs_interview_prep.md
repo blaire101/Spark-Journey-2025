@@ -8,6 +8,8 @@ Each code block includes a runnable example at the bottom.
 
 ---
 
+🎯 Since Python 3.7+, dictionaries ARE ordered!
+
 ## 📚 Table of Contents — Grouped by Category
 
 **Tip:** Study by category, not by number — grouping similar patterns together helps you internalize the underlying technique instead of memorizing 28 isolated problems.
