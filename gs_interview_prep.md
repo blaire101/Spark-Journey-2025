@@ -105,6 +105,10 @@ d.extendleft([-1,-2])   # bulk add to the left end (note: order gets reversed!)
 - [18) SQL — Running Total (Cumulative Sum)](#18-sql--running-total-cumulative-sum)
 - [19) SQL — Find Duplicate Emails](#19-sql--find-duplicate-emails)
 
+### ⛰️ Heap
+- [14) Kth Largest Element in an Array](#14-kth-largest-element-in-an-array--leetcode-215)
+- [15) Top K Frequent Elements](#15-top-k-frequent-elements--leetcode-347)
+
 ### 🔑 HashMap / Grouping / Frequency Counting
 - [9) Group Anagrams](#9-group-anagrams--leetcode-49)
 - [10) Two Sum (+ Streaming Follow-up)](#10-two-sum--follow-up-streaming-data)
