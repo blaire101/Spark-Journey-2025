@@ -175,6 +175,10 @@ d.extendleft([-1,-2])   # bulk add to the left end (note: order gets reversed!)
 ### 🔀 Union-Find
 - [25) Union-Find — Largest Tree Root in a Forest (verified)](#25-union-find--largest-tree-root-in-a-forest)
 
+### 🧭 Sweep Line / Intervals
+- [13) Merge Intervals](#13-merge-intervals--leetcode-56)
+- [29) Interval Price Minimum Overlay (general practice)](#29-interval-price-minimum-overlay)
+
 ---
 
 ### ✅ Part 3 — Verified Questions Only (real sourced interview reports)
@@ -186,6 +190,9 @@ d.extendleft([-1,-2])   # bulk add to the left end (note: order gets reversed!)
 - [26) Student with Highest Average Score](#26-student-with-highest-average-score)
 - [27) Robot Final Coordinates](#27-robot-final-coordinates-from-a-move-string)
 - [28) Design a Calculator](#28-design-a-calculator)
+
+### 📝 Additional Practice (not verified as company-specific)
+- [29) Interval Price Minimum Overlay](#29-interval-price-minimum-overlay)
 
 ### 🔮 Part 4 — Role-Specific Prep (Speculative, English Practice)
 - [Why "Lakehouse" and "AI Data Platform" change the picture](#1-why-lakehouse-and-ai-data-platform-change-the-picture)
@@ -1861,6 +1868,112 @@ if __name__ == "__main__":
 
 ---
 
+## 29) Interval Price Minimum Overlay
+**Source: General practice problem — not verified as company-specific, but closely related to real LeetCode problems that use the same (start, end, value) three-tuple structure (LeetCode 1109 Corporate Flight Bookings, 1094 Car Pooling, 1235 Maximum Profit in Job Scheduling)**
+
+**Problem**
+Given a list of intervals, each with a `start`, an `end`, and a `price`, multiple intervals can overlap in time. For every point in time, find the **minimum price** among all intervals covering it, then merge consecutive segments that end up with the same price into a single interval.
+
+**Sample**
+```
+Input:  [(1,5,20), (1,20,13), (7,10,8)]
+Output: [(1,7,13), (7,10,8), (10,20,13)]
+```
+
+<details>
+<summary><b>Approach (click to expand)</b></summary>
+
+- Collect every start and end value across all intervals into a sorted, deduplicated list of breakpoints — these are the only places the minimum price can possibly change
+- For every pair of adjacent breakpoints, find every interval that fully covers that sub-range, and take the minimum price among them
+- Walk through the resulting segments in order. If a segment has the same price as the previous one AND starts exactly where the previous one ends, merge them into one
+
+**Breakdown for the sample input:**
+
+| Time range | Covered by | Min price |
+|---|---|---|
+| [1,5) | (1,5,20) and (1,20,13) | 13 |
+| [5,7) | (1,20,13) only | 13 |
+| [7,10) | (1,20,13) and (7,10,8) | 8 |
+| [10,20) | (1,20,13) only | 13 |
+
+![gs_lc_interval_price_overlay](docs/gs_lc_interval_price_overlay.svg)
+
+```python
+from collections import namedtuple
+
+Interval = namedtuple('Interval', ['start', 'end', 'price'])
+
+
+def min_price_intervals(intervals):
+    # Step 1: collect all breakpoints, sorted and deduplicated
+    points = sorted(set(
+        [iv.start for iv in intervals] + [iv.end for iv in intervals]
+    ))
+
+    # Step 2: for each sub-range, find the minimum covering price
+    segments = []
+    for i in range(len(points) - 1):
+        lo, hi = points[i], points[i + 1]
+        covering_prices = [
+            iv.price for iv in intervals
+            if iv.start <= lo and iv.end >= hi
+        ]
+        if covering_prices:
+            segments.append(Interval(lo, hi, min(covering_prices)))
+
+    # Step 3: merge consecutive segments with the same price
+    if not segments:
+        return []
+
+    merged = [segments[0]]
+    for seg in segments[1:]:
+        last = merged[-1]
+        if seg.price == last.price and seg.start == last.end:
+            merged[-1] = Interval(last.start, seg.end, last.price)
+        else:
+            merged.append(seg)
+
+    return merged
+
+
+if __name__ == "__main__":
+    intervals = [
+        Interval(1, 5, 20),
+        Interval(1, 20, 13),
+        Interval(7, 10, 8),
+    ]
+    for r in min_price_intervals(intervals):
+        print(r)
+    # Interval(start=1, end=7, price=13)
+    # Interval(start=7, end=10, price=8)
+    # Interval(start=10, end=20, price=13)
+
+    # Extended example with a 4th interval — introduces a new, even
+    # lower price that partially overrides the existing coverage
+    intervals4 = intervals + [Interval(15, 25, 5)]
+    print("--- with 4th interval ---")
+    for r in min_price_intervals(intervals4):
+        print(r)
+    # Interval(start=1, end=7, price=13)
+    # Interval(start=7, end=10, price=8)
+    # Interval(start=10, end=15, price=13)
+    # Interval(start=15, end=25, price=5)
+```
+
+**Memory tip:** This is the "sweep line" pattern — the same core idea behind Merge Intervals, but with a MINIMUM instead of a union, plus a final merge pass to compress equal-value runs.
+
+**Related LeetCode problems with the same 3-tuple (start, end, value) structure:**
+
+| LeetCode Problem | Structure | Core operation |
+|---|---|---|
+| 1109 — Corporate Flight Bookings | (first, last, seats) | Overlapping ranges **sum** together |
+| 1094 — Car Pooling | (passengers, from, to) | Overlapping ranges sum, check against a threshold |
+| 1235 — Maximum Profit in Job Scheduling | (start, end, profit) | Select **non-overlapping** jobs to maximize profit (DP) |
+
+</details>
+
+---
+
 ## Summary Table — Part 3 (Verified)
 
 | # | Question | Category | Source Type |
@@ -1873,6 +1986,7 @@ if __name__ == "__main__":
 | 26 | Highest Average Student | HashMap/GroupBy | LeetCode Discuss (Data Engineer) |
 | 27 | Robot Final Coordinates | String Simulation | LeetCode Discuss (Data Engineer) |
 | 28 | Design a Calculator | Stack/Design | Glassdoor (2026 Superday) |
+| 29 | Interval Price Minimum Overlay | Sweep Line/Intervals | General practice (not company-verified) |
 
 ---
 
@@ -1881,6 +1995,7 @@ if __name__ == "__main__":
 - **Part 1 & 2 (Q1-20):** These are common patterns seen across FAANG/finance-style interviews broadly (LRU Cache, BFS/DFS, SQL window functions, etc). They are reasonable prep material for a Data Engineering role, but were **not individually confirmed** as GS-specific questions — treat them as solid general practice, not guaranteed GS questions.
 - **Part 3 (Q21-28):** Each question here is tied to a **specific, dated, sourced interview report** from Glassdoor, LeetCode Discuss, or Medium. These are the closest things to "verified" GS CoderPad questions available publicly.
 - No source can guarantee what YOUR specific interview will ask — GS explicitly rotates and changes questions, and asks candidates not to redistribute them after the fact.
+- **Q29** is a general practice addition, not from a verified interview report — it was added because it shares the same (start, end, value) 3-tuple structure as real LeetCode problems (1109, 1094, 1235), making it good supplementary practice for interval-style questions.
 
 
 ---
