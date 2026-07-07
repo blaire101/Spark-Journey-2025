@@ -40,6 +40,14 @@
   .num { color:#B5651D; }                         /* numbers */
   .cmt { color:#8A8985; font-style:italic; }      /* -- comments */
   .step-label { font-size:12px; font-weight:700; color:var(--accent); margin:10px 0 2px; display:block; }
+  .diagram-details { margin:10px 0 0; }
+  .diagram-details summary {
+    cursor:pointer; font-size:12.5px; font-weight:600; color:var(--accent);
+    padding:6px 10px; background:var(--accent-bg); border-radius:8px; list-style:none;
+    display:inline-block; user-select:none;
+  }
+  .diagram-details summary::-webkit-details-marker { display:none; }
+  .diagram-details[open] summary { margin-bottom:6px; }
 
   table.datatbl { border-collapse:collapse; font-size:11.5px; margin:6px 0 10px; width:100%; overflow-x:auto; display:block; }
   table.datatbl th, table.datatbl td { border:1px solid var(--border); padding:4px 8px; text-align:center; white-space:nowrap; }
@@ -74,8 +82,7 @@
     <button class="tab-btn active" data-tab="basics">📘 Basics</button>
     <button class="tab-btn" data-tab="window">🧮 Window Functions</button>
     <button class="tab-btn" data-tab="spend">💰 Spend &amp; Averages</button>
-    <button class="tab-btn" data-tab="consec">🔥 Consecutive Days</button>
-    <button class="tab-btn" data-tab="ranking">📊 Sales Ranking</button>
+    <button class="tab-btn" data-tab="consec">🔥 Consecutive Days &amp; 📊 Sales Ranking</button>
     <button class="tab-btn" data-tab="retention">🔄 Retention</button>
   </div>
 
@@ -83,7 +90,6 @@
   <div id="window" class="tab-panel"></div>
   <div id="spend" class="tab-panel"></div>
   <div id="consec" class="tab-panel"></div>
-  <div id="ranking" class="tab-panel"></div>
   <div id="retention" class="tab-panel"></div>
 </div>
 
@@ -329,6 +335,29 @@ ORDER BY s.user_id, t.login_date;`,
       ["A","2025-01-01","1","2024-12-31"],["A","2025-01-02","2","2024-12-31"],
       ["A","2025-01-03","3","2024-12-31"],["A","2025-01-05","4","2025-01-01"],
     ], 3),
+    processDiagram: `<svg width="100%" viewBox="0 0 680 320" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="cd1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="20" y="10" width="640" height="66" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="30" text-anchor="middle" font-size="12" font-weight="600" fill="var(--accent)" font-family="-apple-system,sans-serif">Step 1 — ROW_NUMBER() and flag_date = login_date - rk</text>
+<text x="340" y="48" text-anchor="middle" font-size="11" fill="var(--accent)" font-family="-apple-system,sans-serif">01-01(rk1)-&gt;flag 12-31 | 01-02(rk2)-&gt;flag 12-31 | 01-03(rk3)-&gt;flag 12-31 | 01-05(rk4)-&gt;flag 01-01</text>
+<text x="340" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">First 3 rows share the SAME flag_date — that's the consecutive signal</text>
+<line x1="340" y1="76" x2="340" y2="102" stroke="#888" stroke-width="1.3" marker-end="url(#cd1)"/>
+
+<rect x="20" y="102" width="640" height="66" rx="8" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="340" y="122" text-anchor="middle" font-size="12" font-weight="600" fill="var(--warning)" font-family="-apple-system,sans-serif">Step 2 — GROUP BY user_id, flag_date  HAVING COUNT(*) &gt;= 3</text>
+<text x="340" y="140" text-anchor="middle" font-size="11" fill="var(--warning)" font-family="-apple-system,sans-serif">flag_date=2024-12-31: count=3 (passes) -&gt; min=01-01, max=01-03</text>
+<text x="340" y="156" text-anchor="middle" font-size="11" fill="var(--warning)" font-family="-apple-system,sans-serif">flag_date=2025-01-01: count=1 (fails, dropped by HAVING)</text>
+<line x1="340" y1="168" x2="340" y2="194" stroke="#888" stroke-width="1.3" marker-end="url(#cd1)"/>
+
+<rect x="20" y="194" width="640" height="52" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="214" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Step 3 — JOIN back to table1 on the (min_login_date, max_login_date) range</text>
+<text x="340" y="232" text-anchor="middle" font-size="11" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Expands the single segment row back into its 3 concrete login_date rows</text>
+<line x1="340" y1="246" x2="340" y2="272" stroke="#888" stroke-width="1.3" marker-end="url(#cd1)"/>
+
+<rect x="140" y="272" width="400" height="36" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="294" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Final output — 3 rows for the 01-01..01-03 streak</text>
+</svg>`,
     tip: "flag_date stays IDENTICAL for a true consecutive streak (2024-12-31 repeats 3 times) — that's the whole trick."
   },
   {
@@ -355,6 +384,32 @@ SELECT user_id, segment_id,
 FROM segments
 GROUP BY user_id, segment_id
 HAVING DATEDIFF(MAX(login_date), MIN(login_date)) + 1 >= 3;`,
+    result: table(["user_id","segment_id","min_login_date","max_login_date","continuous_days"], [
+      ["A","0","2025-01-01","2025-01-06","6"],
+    ]),
+    processDiagram: `<svg width="100%" viewBox="0 0 680 320" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="cd2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="20" y="10" width="640" height="66" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="30" text-anchor="middle" font-size="12" font-weight="600" fill="var(--accent)" font-family="-apple-system,sans-serif">Step 1 — LAG(login_date) computes gap in days from the PREVIOUS login</text>
+<text x="340" y="48" text-anchor="middle" font-size="11" fill="var(--accent)" font-family="-apple-system,sans-serif">01-01(first,NULL) | 01-03(gap 2) | 01-05(gap 2) | 01-06(gap 1)</text>
+<text x="340" y="64" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">All gaps &lt;= 2, so gap_flag = 0 for every row</text>
+<line x1="340" y1="76" x2="340" y2="102" stroke="#888" stroke-width="1.3" marker-end="url(#cd2)"/>
+
+<rect x="20" y="102" width="640" height="66" rx="8" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="340" y="122" text-anchor="middle" font-size="12" font-weight="600" fill="var(--warning)" font-family="-apple-system,sans-serif">Step 2 — segment_id = running SUM(gap_flag) ordered by login_date</text>
+<text x="340" y="140" text-anchor="middle" font-size="11" fill="var(--warning)" font-family="-apple-system,sans-serif">Since no gap_flag ever turns to 1, the running sum stays at 0 the whole time</text>
+<text x="340" y="156" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">All 4 rows land in segment_id = 0 — one single streak</text>
+<line x1="340" y1="168" x2="340" y2="194" stroke="#888" stroke-width="1.3" marker-end="url(#cd2)"/>
+
+<rect x="20" y="194" width="640" height="52" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="214" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Step 3 — GROUP BY user_id, segment_id  HAVING span &gt;= 3 days</text>
+<text x="340" y="232" text-anchor="middle" font-size="11" fill="var(--text-primary)" font-family="-apple-system,sans-serif">min=01-01, max=01-06, continuous_days = 6 -&gt; passes HAVING</text>
+<line x1="340" y1="246" x2="340" y2="272" stroke="#888" stroke-width="1.3" marker-end="url(#cd2)"/>
+
+<rect x="140" y="272" width="400" height="36" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="294" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Final output — 1 row spanning 01-01 to 01-06 (6 days)</text>
+</svg>`,
     tip: "Running SUM() of a 0/1 flag is a common trick to create segment IDs — each new '1' starts a new segment."
   },
 ];
@@ -371,6 +426,37 @@ const rankingData = [
       ["1","Beijing","2025-01-01","100"],["2","Shanghai","2025-01-01","150"],["3","Guangzhou","2025-01-01","120"],
       ["4","Beijing","2025-01-02","300"],["5","Shanghai","2025-01-02","250"],["6","Guangzhou","2025-01-02","180"],["7","Beijing","2025-01-02","50"],
     ]),
+    processDiagram: `<svg width="100%" viewBox="0 0 680 420" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="rk1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="40" y="10" width="600" height="30" rx="6" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="29" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Step 1 — Raw orders (7 rows)</text>
+<line x1="340" y1="40" x2="340" y2="66" stroke="#888" stroke-width="1.3" marker-end="url(#rk1)"/>
+
+<rect x="20" y="66" width="640" height="70" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="84" text-anchor="middle" font-size="12" font-weight="600" fill="var(--accent)" font-family="-apple-system,sans-serif">Step 2 — GROUP BY city, order_date  (aggregated CTE)</text>
+<text x="340" y="102" text-anchor="middle" font-size="11" fill="var(--accent)" font-family="-apple-system,sans-serif">Beijing 01-02: two rows (300+50) collapse into daily_sales = 350</text>
+<text x="340" y="120" text-anchor="middle" font-size="11" fill="var(--accent)" font-family="-apple-system,sans-serif">7 raw rows -&gt; 6 aggregated rows (one per city per day)</text>
+<line x1="340" y1="136" x2="340" y2="162" stroke="#888" stroke-width="1.3" marker-end="url(#rk1)"/>
+
+<rect x="20" y="162" width="640" height="150" rx="8" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="340" y="182" text-anchor="middle" font-size="12" font-weight="600" fill="var(--warning)" font-family="-apple-system,sans-serif">Step 3 — 3 window functions run over the aggregated rows</text>
+
+<rect x="40" y="196" width="600" height="30" rx="6" fill="var(--surface)" stroke="var(--warning)" stroke-width="0.7"/>
+<text x="60" y="215" font-size="10.5" fill="var(--text-primary)" font-family="-apple-system,sans-serif">rank: ROW_NUMBER() PARTITION order_date ORDER daily_sales DESC -&gt; 1,2,3 per day</text>
+
+<rect x="40" y="232" width="600" height="30" rx="6" fill="var(--surface)" stroke="var(--warning)" stroke-width="0.7"/>
+<text x="60" y="251" font-size="10.5" fill="var(--text-primary)" font-family="-apple-system,sans-serif">total: SUM() PARTITION order_date, no ORDER BY -&gt; whole day's sum repeated on every row</text>
+
+<rect x="40" y="268" width="600" height="30" rx="6" fill="var(--surface)" stroke="var(--warning)" stroke-width="0.7"/>
+<text x="60" y="287" font-size="10.5" fill="var(--text-primary)" font-family="-apple-system,sans-serif">cumulative: SUM() PARTITION order_date ORDER daily_sales DESC -&gt; running total</text>
+
+<line x1="340" y1="312" x2="340" y2="338" stroke="#888" stroke-width="1.3" marker-end="url(#rk1)"/>
+
+<rect x="120" y="338" width="440" height="44" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="356" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Step 4 — Final output</text>
+<text x="340" y="373" text-anchor="middle" font-size="11" fill="var(--success)" font-family="-apple-system,sans-serif">ORDER BY order_date, daily_sales DESC (outer clause, controls display order)</text>
+</svg>`,
     code: `WITH aggregated AS (
   SELECT city, order_date, SUM(sales) AS daily_sales
   FROM orders
@@ -401,7 +487,49 @@ ORDER BY order_date, daily_sales DESC;`,
       ["1","Beijing","2025-01-01","101","200"],["2","Beijing","2025-01-01","101","300"],
       ["3","Beijing","2025-01-01","102","300"],["4","Beijing","2025-01-01","103","250"],
       ["5","Beijing","2025-01-01","104","100"],["6","Shanghai","2025-01-01","201","400"],
+      ["7","Shanghai","2025-01-01","202","300"],["8","Shanghai","2025-01-01","203","200"],
+      ["9","Shanghai","2025-01-01","204","100"],
     ]),
+    processDiagram: `<svg width="100%" viewBox="0 0 680 460" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="rk2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="40" y="10" width="600" height="30" rx="6" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="29" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Step 1 — Raw orders (9 rows, 2 cities x 4-5 operators)</text>
+<line x1="340" y1="40" x2="340" y2="66" stroke="#888" stroke-width="1.3" marker-end="url(#rk2)"/>
+
+<rect x="20" y="66" width="640" height="70" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="84" text-anchor="middle" font-size="12" font-weight="600" fill="var(--accent)" font-family="-apple-system,sans-serif">Step 2 — operator_sales CTE: GROUP BY city, order_date, operator_id</text>
+<text x="340" y="102" text-anchor="middle" font-size="11" fill="var(--accent)" font-family="-apple-system,sans-serif">Beijing operator 101: two rows (200+300) collapse into total_sales = 500</text>
+<text x="340" y="120" text-anchor="middle" font-size="11" fill="var(--accent)" font-family="-apple-system,sans-serif">9 raw rows -&gt; 8 aggregated rows (one per operator per city per day)</text>
+<line x1="340" y1="136" x2="340" y2="162" stroke="#888" stroke-width="1.3" marker-end="url(#rk2)"/>
+
+<rect x="20" y="162" width="640" height="66" rx="8" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="340" y="182" text-anchor="middle" font-size="12" font-weight="600" fill="var(--warning)" font-family="-apple-system,sans-serif">Step 3 — ranked CTE: ROW_NUMBER()</text>
+<text x="340" y="200" text-anchor="middle" font-size="11" fill="var(--warning)" font-family="-apple-system,sans-serif">PARTITION BY city, order_date  ORDER BY total_sales DESC</text>
+<text x="340" y="216" text-anchor="middle" font-size="11" fill="var(--warning)" font-family="-apple-system,sans-serif">Two partition columns -&gt; one ranking group per (city, day) combination</text>
+<line x1="340" y1="228" x2="340" y2="254" stroke="#888" stroke-width="1.3" marker-end="url(#rk2)"/>
+
+<rect x="20" y="254" width="640" height="130" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="274" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Step 4 — WHERE rn &lt;= 3 (keep only top 3 per group)</text>
+
+<rect x="40" y="286" width="270" height="88" rx="6" fill="var(--danger-bg, #FBECEA)" stroke="#B14A3F"/>
+<text x="175" y="304" text-anchor="middle" font-size="11" font-weight="600" fill="#B14A3F" font-family="-apple-system,sans-serif">Beijing 2025-01-01</text>
+<text x="175" y="322" text-anchor="middle" font-size="10.5" fill="#B14A3F" font-family="-apple-system,sans-serif">101=500 (rn 1) kept</text>
+<text x="175" y="338" text-anchor="middle" font-size="10.5" fill="#B14A3F" font-family="-apple-system,sans-serif">102=300 (rn 2) kept</text>
+<text x="175" y="354" text-anchor="middle" font-size="10.5" fill="#B14A3F" font-family="-apple-system,sans-serif">103=250 (rn 3) kept</text>
+<text x="175" y="370" text-anchor="middle" font-size="10.5" fill="#B14A3F" font-family="-apple-system,sans-serif">104=100 (rn 4) dropped</text>
+
+<rect x="370" y="286" width="270" height="88" rx="6" fill="var(--danger-bg, #FBECEA)" stroke="#B14A3F"/>
+<text x="505" y="304" text-anchor="middle" font-size="11" font-weight="600" fill="#B14A3F" font-family="-apple-system,sans-serif">Shanghai 2025-01-01</text>
+<text x="505" y="322" text-anchor="middle" font-size="10.5" fill="#B14A3F" font-family="-apple-system,sans-serif">201=400 (rn 1) kept</text>
+<text x="505" y="338" text-anchor="middle" font-size="10.5" fill="#B14A3F" font-family="-apple-system,sans-serif">202=300 (rn 2) kept</text>
+<text x="505" y="354" text-anchor="middle" font-size="10.5" fill="#B14A3F" font-family="-apple-system,sans-serif">203=200 (rn 3) kept</text>
+<text x="505" y="370" text-anchor="middle" font-size="10.5" fill="#B14A3F" font-family="-apple-system,sans-serif">204=100 (rn 4) dropped</text>
+
+<line x1="340" y1="384" x2="340" y2="410" stroke="#888" stroke-width="1.3" marker-end="url(#rk2)"/>
+<rect x="140" y="410" width="400" height="36" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="432" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Step 5 — Final output: 6 rows (3 per city)</text>
+</svg>`,
     code: `WITH operator_sales AS (
     SELECT city, order_date, operator_id, SUM(sales) AS total_sales
     FROM orders
@@ -416,13 +544,17 @@ SELECT city, order_date, operator_id, total_sales, rn
 FROM ranked
 WHERE rn <= 3
 ORDER BY city, order_date, rn;`,
-    tip: "PARTITION BY city, order_date — partitioning by TWO columns creates one ranking group per city-date combination."
+    result: table(["city","order_date","operator_id","total_sales","rn"], [
+      ["Beijing","2025-01-01","101","500","1"],
+      ["Beijing","2025-01-01","102","300","2"],
+      ["Beijing","2025-01-01","103","250","3"],
+      ["Shanghai","2025-01-01","201","400","1"],
+      ["Shanghai","2025-01-01","202","300","2"],
+      ["Shanghai","2025-01-01","203","200","3"],
+    ]),
+    tip: "PARTITION BY city, order_date — partitioning by TWO columns creates one ranking group per city-date combination. Operator 104 (Beijing) and 204 (Shanghai) both rank 4th and get filtered out."
   },
 ];
-
-// ============================================================
-// TAB 6 — RETENTION
-// ============================================================
 const retentionData = [
   {
     title: "Rolling vs Cohort retention — the concept",
@@ -555,6 +687,9 @@ const queryFlowSVG = `
 function renderTab(containerId, data) {
   const el = document.getElementById(containerId);
   el.innerHTML = data.map(item => {
+    if (item.sectionHeader) {
+      return `<div class="step-label" style="font-size:14px; margin:20px 0 10px; padding-top:14px; border-top:1px solid var(--border-strong);">${item.sectionHeader}</div>`;
+    }
     let html = `<div class="card">
       <div class="q-head">
         <p class="q-title">${item.title}</p>
@@ -573,6 +708,9 @@ function renderTab(containerId, data) {
     if (item.result) {
       html += `<span class="step-label">Result</span>${item.result}`;
     }
+    if (item.processDiagram) {
+      html += `<details class="diagram-details"><summary>▶ Show execution process</summary>${item.processDiagram}</details>`;
+    }
     if (item.tip) {
       html += `<div class="tip">💡 ${item.tip}</div>`;
     }
@@ -584,8 +722,7 @@ function renderTab(containerId, data) {
 renderTab('basics', basicsData);
 renderTab('window', windowData);
 renderTab('spend', spendData);
-renderTab('consec', consecData);
-renderTab('ranking', rankingData);
+renderTab('consec', [{sectionHeader: "🔥 Consecutive Days"}].concat(consecData).concat([{sectionHeader: "📊 Sales Ranking"}]).concat(rankingData));
 renderTab('retention', retentionData);
 
 // ============================================================
