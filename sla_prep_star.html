@@ -243,7 +243,7 @@ const levelMeta = {
 
 function renderActionByLevel(containerId, data) {
   const el = document.getElementById(containerId);
-  let html = `<div class="star-banner A">A — Action</div>`;
+  let html = `<div class="star-banner A">A — Action (0. Root Cause 1. Config 2. Code 3. Framework)</div>`;
   html += `<div class="intro-note">Four levels, cheapest first: try config before code, and code before the last-resort surgical fix. Framework changes are separate — they apply to the whole pipeline, not just this one query.</div>`;
 
   let currentLevel = null;
