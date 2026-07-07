@@ -158,26 +158,19 @@
   <div class="tabs">
     <button class="tab-btn active" data-tab="cheat">📋 Cheat Sheet</button>
     <button class="tab-btn" data-tab="cat">📚 Categories</button>
-    <button class="tab-btn" data-tab="p1">Part 1</button>
-    <button class="tab-btn" data-tab="p2">Part 2</button>
-    <button class="tab-btn" data-tab="p3">Part 3 — Verified</button>
-    <button class="tab-btn" data-tab="p4">Part 4 — Speculation &amp; English Practice</button>
     <button class="tab-btn" data-tab="ph1">🌅 P1: Fundamentals</button>
     <button class="tab-btn" data-tab="ph2">🏗️ P2: Heap/Stack/Queue</button>
     <button class="tab-btn" data-tab="ph3">🔗 P3: Linked List</button>
     <button class="tab-btn" data-tab="ph4">🧮 P4: Dynamic Programming</button>
-    <button class="tab-btn" data-tab="ph5">🌲 P5: DFS/BFS</button>
+    <button class="tab-btn" data-tab="ph5">🌲 P5: DFS/BFS/Backtracking</button>
     <button class="tab-btn" data-tab="ph6">🎯 P6: Greedy</button>
-    <button class="tab-btn" data-tab="ph7">🔄 P7: Backtracking</button>
+    <button class="tab-btn" data-tab="ph7">📐 P7: Interval Merging</button>
+    <button class="tab-btn" data-tab="design">🏗️ P8: Design Questions</button>
   </div>
 
   <div id="cheat" class="tab-panel active"></div>
   <div id="cat" class="tab-panel"></div>
 
-  <div id="p1" class="tab-panel"></div>
-  <div id="p2" class="tab-panel"></div>
-  <div id="p3" class="tab-panel"></div>
-  <div id="p4" class="tab-panel"></div>
   <div id="ph1" class="tab-panel"></div>
   <div id="ph2" class="tab-panel"></div>
   <div id="ph3" class="tab-panel"></div>
@@ -185,6 +178,7 @@
   <div id="ph5" class="tab-panel"></div>
   <div id="ph6" class="tab-panel"></div>
   <div id="ph7" class="tab-panel"></div>
+  <div id="design" class="tab-panel"></div>
 </div>
 
 <script>
@@ -376,7 +370,7 @@ function stackDiagram(values, opts) {
 
 
 const phase1 = [
-{t:"1.1) Two Sum — LeetCode 1", tag:"general", problem:"Find indices of the two numbers such that they add up to the target.", sample:"nums=[2,7,11,15], target=9 -> [0,1]", approach:["Use a hashmap: for each number check if target minus number was already seen","One pass, O(n) time"], tip:"HashMap turns an O(n^2) brute force into O(n) — the classic complement lookup pattern.", code:`from typing import List
+{t:"1.1) Two Sum — LeetCode 1", tag:"verified", src:"Reported across multiple finance-sector interviews as a common OPENER question", problem:"Find indices of the two numbers such that they add up to the target.", sample:"nums=[2,7,11,15], target=9 -> [0,1]", approach:["Use a hashmap: for each number check if target minus number was already seen","One pass, O(n) time","Follow-up: if data streams in one at a time, maintain a running count hashmap instead of sorting"], tip:"HashMap turns an O(n^2) brute force into O(n) — the classic complement lookup pattern. Streaming means you cannot sort or index by position; maintain a running hashmap instead.", code:`from typing import List
 
 def twoSum(nums: List[int], target: int) -> List[int]:
     hashmap = {}
@@ -386,9 +380,25 @@ def twoSum(nums: List[int], target: int) -> List[int]:
         hashmap[num] = i
     return []
 
+
+class TwoSumStream:
+    """Follow-up: what if data is streaming (arrives one at a time)?"""
+    def __init__(self):
+        self.seen = {}
+
+    def add(self, number):
+        self.seen[number] = self.seen.get(number, 0) + 1
+
+    def find(self, target):
+        for num in self.seen:
+            complement = target - num
+            if complement in self.seen:
+                if complement != num or self.seen[num] > 1:
+                    return True
+        return False
+
 if __name__ == "__main__":
     print(twoSum([2, 7, 11, 15], 9))   # [0, 1]`},
-
 {t:"1.2) Maximum Subarray (Kadane's) — LeetCode 53", tag:"general", problem:"Find the contiguous subarray with the largest sum.", sample:"nums=[-2,1,-3,4,-1,2,1,-5,4] -> 6 (subarray [4,-1,2,1])",
  approach:["At each element decide: extend the current run, or start fresh here","curr = max(x, curr+x); best = max(best, curr)"],
  table: arrayDiagram(["-2","1","-3","4","-1","2","1","-5","4"], {highlights:{3:"success",4:"success",5:"success",6:"success"}, caption:"Best subarray = [4,-1,2,1], sum = 6"}),
@@ -404,7 +414,6 @@ def maxSubArray(nums: List[int]) -> int:
 
 if __name__ == "__main__":
     print(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]))   # 6`},
-
 {t:"1.3) Product of Array Except Self — LeetCode 238", tag:"general", problem:"Return an array where each element is the product of all other elements, without division.", sample:"nums=[1,2,3,4] -> [24,12,8,6]",
  approach:["Compute prefix products (everything to the left)","Compute suffix products (everything to the right)","Multiply prefix[i] * suffix[i] for the final answer"],
  table: gridDiagram([["1","1","2","6"],["24","12","4","1"],["24","12","8","6"]], {caption:"Row1: prefix | Row2: suffix | Row3: prefix×suffix = answer"}),
@@ -429,7 +438,6 @@ def productExceptSelf(nums: List[int]) -> List[int]:
 
 if __name__ == "__main__":
     print(productExceptSelf([1,2,3,4]))   # [24, 12, 8, 6]`},
-
 {t:"1.4) Quick Sort — LeetCode 912", tag:"general", problem:"Sort an array of integers.", sample:"[3,6,2,8,1,5] -> [1,2,3,5,6,8]",
  approach:["Pick a pivot (first element)","Partition into elements < pivot and elements >= pivot","Recursively sort each partition"],
  tip:"Average O(n log n), worst case O(n^2) if pivot choice is unlucky (already sorted input).",
@@ -443,7 +451,6 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     print(quick_sort([3, 6, 2, 8, 1, 5]))   # [1, 2, 3, 5, 6, 8]`},
-
 {t:"1.5) Merge Sort", tag:"general", problem:"Sort an array using the merge sort algorithm.", sample:"[3,6,2,8,1,5] -> [1,2,3,5,6,8]",
  approach:["Split the array in half recursively until single elements","Merge two sorted halves back together, comparing heads one at a time"],
  tip:"Stable O(n log n) always — no worst-case degradation like quicksort.",
@@ -469,7 +476,6 @@ def merge(left, right):
 
 if __name__ == "__main__":
     print(merge_sort([3, 6, 2, 8, 1, 5]))   # [1, 2, 3, 5, 6, 8]`},
-
 {t:"1.6) Arrange Array to Minimum Number — 剑指Offer", tag:"general", problem:"Arrange numbers to form the smallest possible concatenated number.", sample:"[3,30,34,5,9] -> \"3033459\"",
  approach:["Convert numbers to strings","Custom comparator: a+b < b+a means a should come first","Sort using cmp_to_key, strip leading zeros"],
  tip:"If you can use key, always use key (more efficient) — only use cmp_to_key when you need a custom comparison rule between PAIRS of elements.",
@@ -490,7 +496,6 @@ def min_number(nums: List[int]) -> str:
 
 if __name__ == "__main__":
     print(min_number([3, 30, 34, 5, 9]))   # "3033459"`},
-
 {t:"1.7) Search Insert Position — LeetCode 35", tag:"general", problem:"Return the index if target is found, otherwise the index where it would be inserted in order.", sample:"nums=[1,3,5,6], target=5 -> 2  |  target=2 -> 1",
  approach:["Standard binary search lower_bound: find the first index where nums[m] >= target"],
  tip:"This is the 'lower_bound' pattern — the foundation for many binary search variants.",
@@ -509,104 +514,7 @@ def search_insert(nums: List[int], target: int) -> int:
 if __name__ == "__main__":
     print(search_insert([1,3,5,6], 5))   # 2
     print(search_insert([1,3,5,6], 2))   # 1`},
-
-{t:"1.8) Merge Intervals — LeetCode 56", tag:"general", problem:"Merge all overlapping intervals.", sample:"[[1,3],[2,6],[8,10],[15,18]] -> [[1,6],[8,10],[15,18]]",
- approach:["Sort intervals by start time","Walk through: if current overlaps the last merged interval, extend it; otherwise start a new one"],
- table: `<svg width="100%" viewBox="0 0 400 90" style="max-width:400px;display:block;margin:10px auto;">
-   <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Before merge (sorted by start):</text>
-   <rect x="10" y="20" width="60" height="20" rx="4" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="40" y="34" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">[1,3]</text>
-   <rect x="50" y="20" width="140" height="20" rx="4" fill="var(--warning-bg)" stroke="var(--warning)"/><text x="120" y="34" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">[2,6]</text>
-   <rect x="230" y="20" width="60" height="20" rx="4" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="260" y="34" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">[8,10]</text>
-   <rect x="330" y="20" width="60" height="20" rx="4" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="360" y="34" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">[15,18]</text>
-   <text x="10" y="60" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">After merge:</text>
-   <rect x="10" y="66" width="180" height="20" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="100" y="80" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">[1,6]</text>
-   <rect x="230" y="66" width="60" height="20" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="260" y="80" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">[8,10]</text>
-   <rect x="330" y="66" width="60" height="20" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="360" y="80" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">[15,18]</text>
- </svg>`,
- tip:"Sorting first turns 'any overlap' into 'only check the previous interval'.",
- code:`from typing import List
-
-def merge(intervals: List[List[int]]) -> List[List[int]]:
-    intervals.sort(key=lambda x: x[0])
-    merged = [intervals[0]]
-    for start, end in intervals[1:]:
-        if start <= merged[-1][1]:
-            merged[-1][1] = max(merged[-1][1], end)
-        else:
-            merged.append([start, end])
-    return merged
-
-if __name__ == "__main__":
-    print(merge([[1,3],[2,6],[8,10],[15,18]]))   # [[1,6],[8,10],[15,18]]`},
-
-{t:"1.9) Insert Interval — LeetCode 57", tag:"general", problem:"Insert a new interval into a sorted list of non-overlapping intervals, merging if necessary.", sample:"intervals=[[1,2],[3,5],[6,7],[8,10],[12,16]], new=[4,8] -> [[1,2],[3,10],[12,16]]",
- approach:["Simplest approach: append the new interval, sort by start, then reuse the Merge Intervals logic in one pass"],
- tip:"Don't overthink it — appending + sorting + merging is O(n log n) and much less error-prone than manual case handling.",
- code:`from typing import List
-
-def insert_interval_easy(intervals: List[List[int]], new_interval: List[int]) -> List[List[int]]:
-    intervals = intervals + [new_interval]
-    intervals.sort(key=lambda x: x[0])
-    merged: List[List[int]] = []
-    for start, end in intervals:
-        if not merged or start > merged[-1][1]:
-            merged.append([start, end])
-        else:
-            merged[-1][1] = max(merged[-1][1], end)
-    return merged
-
-if __name__ == "__main__":
-    print(insert_interval_easy([[1,3],[6,9]], [2,5]))   # [[1,5],[6,9]]
-    print(insert_interval_easy([[1,2],[3,5],[6,7],[8,10],[12,16]], [4,8]))   # [[1,2],[3,10],[12,16]]`},
-
-{t:"1.10) Meeting Rooms I — LeetCode 252", tag:"general", problem:"Determine if a person can attend all meetings (no overlaps).", sample:"[[0,30],[5,10],[15,20]] -> False  |  [[7,10],[2,4]] -> True",
- approach:["Sort by start time","Check if any meeting starts before the previous one ends"],
- tip:"This is the simplest possible overlap check — just one sorted pass.",
- code:`from typing import List
-
-def can_attend_meetings(intervals: List[List[int]]) -> bool:
-    intervals.sort(key=lambda x: x[0])
-    for i in range(1, len(intervals)):
-        if intervals[i][0] < intervals[i-1][1]:
-            return False
-    return True
-
-if __name__ == "__main__":
-    print(can_attend_meetings([[0,30],[5,10],[15,20]]))   # False
-    print(can_attend_meetings([[7,10],[2,4]]))            # True`},
-
-{t:"1.11) Meeting Rooms II — LeetCode 253", tag:"general", problem:"Find the minimum number of conference rooms required for a list of meetings.", sample:"[[0,30],[5,10],[15,20]] -> 2",
- approach:["Sort meetings by start time","Keep a min-heap of currently occupied rooms' END times","For each meeting, if the earliest-ending room is free by this start time, reuse it (pop); otherwise a new room is needed","Push this meeting's end time; the max heap size ever reached is the answer"],
- table: `<svg width="100%" viewBox="0 0 460 140" style="max-width:460px;display:block;margin:10px auto;">
-   <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Timeline: meetings [0,30] [5,10] [15,20]</text>
-   <rect x="10" y="24" width="400" height="18" rx="3" fill="var(--danger-bg)" stroke="var(--danger)"/><text x="210" y="37" text-anchor="middle" font-size="9" fill="var(--danger)" font-family="-apple-system,sans-serif">Room A: [0,30]</text>
-   <rect x="76" y="46" width="66" height="18" rx="3" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="109" y="59" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">[5,10]</text>
-   <rect x="209" y="46" width="66" height="18" rx="3" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="242" y="59" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">[15,20]</text>
-   <text x="10" y="85" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">[5,10] and [15,20] both overlap with [0,30] but not each other —</text>
-   <text x="10" y="100" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">they can share ONE second room. Peak concurrent rooms = 2.</text>
-   <rect x="10" y="110" width="90" height="22" rx="5" fill="var(--success-bg)" stroke="var(--success)"/><text x="55" y="124" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Answer: 2</text>
- </svg>`,
- tip:"Heap size at any moment = number of rooms currently in simultaneous use — the max over all time is the answer.",
- code:`from typing import List
-import heapq
-
-def min_meeting_rooms(intervals: List[List[int]]) -> int:
-    if not intervals:
-        return 0
-    intervals.sort(key=lambda itv: itv[0])
-    end_times = []
-
-    for start, end in intervals:
-        if end_times and end_times[0] <= start:
-            heapq.heappop(end_times)
-        heapq.heappush(end_times, end)
-
-    return len(end_times)
-
-if __name__ == "__main__":
-    print(min_meeting_rooms([[0,30],[5,10],[15,20]]))   # 2`},
-
-{t:"1.12) Binary Search — LeetCode 704", tag:"general", problem:"Search for a target value in a sorted array.", sample:"[1,2,3,5,6,8], target=5 -> index 3",
+{t:"1.8) Binary Search — LeetCode 704", tag:"general", problem:"Search for a target value in a sorted array.", sample:"[1,2,3,5,6,8], target=5 -> index 3",
  approach:["Maintain low/high pointers, compare mid to target, discard half each time"],
  tip:"low <= high (not <) because a single-element range is still valid to check.",
  code:`def binary_search(arr, target):
@@ -623,8 +531,7 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     print(binary_search([1, 2, 3, 5, 6, 8], 5))   # 3`},
-
-{t:"1.13) Find First/Last Position — LeetCode 34", tag:"general", problem:"Find the first and last index of a target value in a sorted array.", sample:"[5,7,7,8,8,10], target=8 -> [3,4]",
+{t:"1.9) Find First/Last Position — LeetCode 34", tag:"general", problem:"Find the first and last index of a target value in a sorted array.", sample:"[5,7,7,8,8,10], target=8 -> [3,4]",
  approach:["Run binary search twice: once shrinking right on a match (finds first), once shrinking left on a match (finds last)"],
  tip:"Same binary search skeleton, just change which direction you keep narrowing after a match.",
  code:`from typing import List
@@ -648,8 +555,7 @@ def search_range(nums: List[int], target: int) -> List[int]:
 
 if __name__ == "__main__":
     print(search_range([5,7,7,8,8,10], 8))   # [3, 4]`},
-
-{t:"1.14) 3Sum — LeetCode 15", tag:"general", problem:"Find all unique triplets that sum to zero.", sample:"nums=[-1,0,1,2,-1,-4] -> [[-1,-1,2],[-1,0,1]]",
+{t:"1.10) 3Sum — LeetCode 15", tag:"general", problem:"Find all unique triplets that sum to zero.", sample:"nums=[-1,0,1,2,-1,-4] -> [[-1,-1,2],[-1,0,1]]",
  approach:["Sort the array first","Fix index i, then use two pointers (l, r) to find pairs summing to -nums[i]","Skip duplicates at all three positions"],
  table: arrayDiagram(["-4","-1","-1","0","1","2"], {highlights:{1:"warning",2:"accent",5:"accent"}, caption:"Fix i (orange), squeeze l/r (blue) toward each other"}),
  tip:"This is Two Sum's two-pointer cousin, wrapped in an outer loop that fixes one element at a time.",
@@ -681,8 +587,7 @@ def three_sum(nums: List[int]) -> List[List[int]]:
 
 if __name__ == "__main__":
     print(three_sum([-1,0,1,2,-1,-4]))   # [[-1,-1,2],[-1,0,1]]`},
-
-{t:"1.15) Container With Most Water — LeetCode 11", tag:"general", problem:"Find two lines that together with the x-axis form a container holding the most water.", sample:"height=[1,8,6,2,5,4,8,3,7] -> 49",
+{t:"1.11) Container With Most Water — LeetCode 11", tag:"general", problem:"Find two lines that together with the x-axis form a container holding the most water.", sample:"height=[1,8,6,2,5,4,8,3,7] -> 49",
  approach:["Start with pointers at both ends","Area = width * min(height[l], height[r])","Greedily move the pointer at the SHORTER line inward (moving the taller one can only decrease or keep width, never helps)"],
  table: `<svg width="100%" viewBox="0 0 380 130" style="max-width:380px;display:block;margin:10px auto;">
    <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">height = [1,8,6,2,5,4,8,3,7]</text>
@@ -712,8 +617,7 @@ def max_area(height: List[int]) -> int:
 
 if __name__ == "__main__":
     print(max_area([1,8,6,2,5,4,8,3,7]))   # 49`},
-
-{t:"1.16) String to Integer (atoi) — LeetCode 8", tag:"general", problem:"Convert a string to a 32-bit signed integer, following specific parsing rules.", sample:'"4193 with words" -> 4193  |  "words and 987" -> 0',
+{t:"1.12) String to Integer (atoi) — LeetCode 8", tag:"general", problem:"Convert a string to a 32-bit signed integer, following specific parsing rules.", sample:'"4193 with words" -> 4193  |  "words and 987" -> 0',
  approach:["Strip leading whitespace","Check for an optional sign","Read consecutive digits, stop at the first non-digit","Clamp the result to the 32-bit signed integer range"],
  tip:"The trickiest part is usually the edge cases: empty string, no digits at all, and integer overflow clamping.",
  code:`def myAtoi(s: str) -> int:
@@ -740,8 +644,7 @@ if __name__ == "__main__":
     print(myAtoi("42"))               # 42
     print(myAtoi("4193 with words"))  # 4193
     print(myAtoi("words and 987"))    # 0`},
-
-{t:"1.17) Longest Substring Without Repeating Characters — LeetCode 3", tag:"general", problem:"Find the length of the longest substring without repeating characters.", sample:'s="abcabcbb" -> 3 ("abc")',
+{t:"1.13) Longest Substring Without Repeating Characters — LeetCode 3", tag:"general", problem:"Find the length of the longest substring without repeating characters.", sample:'s="abcabcbb" -> 3 ("abc")',
  approach:["Sliding window with a hashmap tracking each character's last seen index","When a repeat is found INSIDE the current window, jump left to just past that repeat"],
  tip:"Right pointer explores, left pointer only jumps forward when needed — window never shrinks character by character unnecessarily.",
  code:`def lengthOfLongestSubstring(s: str) -> int:
@@ -757,8 +660,7 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     print(lengthOfLongestSubstring("abcabcbb"))   # 3`},
-
-{t:"1.18) Continuous Sequence Sum Equals Target — 剑指Offer", tag:"general", problem:"Find all sequences of consecutive positive integers (length >= 2) that sum to target.", sample:"target=15 -> [[1,2,3,4,5],[4,5,6],[7,8]]",
+{t:"1.14) Continuous Sequence Sum Equals Target — 剑指Offer", tag:"general", problem:"Find all sequences of consecutive positive integers (length >= 2) that sum to target.", sample:"target=15 -> [[1,2,3,4,5],[4,5,6],[7,8]]",
  approach:["Two-pointer sliding window over positive integers starting at 1,2","Expand right if current sum is too small, shrink left if too large"],
  tip:"The shortest possible window has 2 elements, so you can stop once left reaches roughly target/2.",
  code:`def find_continuous_sequence(target: int):
@@ -781,8 +683,7 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     print(find_continuous_sequence(15))   # [[1,2,3,4,5],[4,5,6],[7,8]]`},
-
-{t:"1.19) Sliding Window Maximum — LeetCode 239", tag:"general", problem:"Return the maximum value in each sliding window of size k.", sample:"nums=[1,3,-1,-3,5,3,6,7], k=3 -> [3,3,5,5,6,7]",
+{t:"1.15) Sliding Window Maximum — LeetCode 239", tag:"general", problem:"Return the maximum value in each sliding window of size k.", sample:"nums=[1,3,-1,-3,5,3,6,7], k=3 -> [3,3,5,5,6,7]",
  approach:["Maintain a deque of INDICES with values in decreasing order","Before pushing a new index, pop smaller trailing values (they can never be the max again)","Pop the front if it falls outside the current window","Front of deque = index of current window's max"],
  table: `<svg width="100%" viewBox="0 0 460 100" style="max-width:460px;display:block;margin:10px auto;">
    <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">nums=[1,3,-1,-3,5,3,6,7], k=3 — window at i=2..4</text>
@@ -814,8 +715,7 @@ def maxSlidingWindow(nums: List[int], k: int) -> List[int]:
 
 if __name__ == "__main__":
     print(maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3))   # [3,3,5,5,6,7]`},
-
-{t:"1.20) Minimum Window Substring — LeetCode 76", tag:"general", problem:"Return the minimum window in s that contains all characters of t.", sample:'s="ADOBECODEBANC", t="ABC" -> "BANC"',
+{t:"1.16) Minimum Window Substring — LeetCode 76", tag:"general", problem:"Return the minimum window in s that contains all characters of t.", sample:'s="ADOBECODEBANC", t="ABC" -> "BANC"',
  approach:["Expand right, decrementing a 'need' counter for each required character until all requirements are satisfied ('missing' hits 0)","While all requirements are satisfied, shrink from the left to find the minimum valid window, restoring counts as you go"],
  tip:"Expand to find ANY valid window, then shrink to find the SMALLEST valid window — a two-phase sliding window.",
  code:`from collections import Counter
@@ -845,33 +745,180 @@ def minWindow(s: str, t: str) -> str:
 
 if __name__ == "__main__":
     print(minWindow("ADOBECODEBANC", "ABC"))   # "BANC"`},
+{t:"1.17) Group Anagrams — LeetCode 49", tag:"general", problem:"Given an array of strings, group anagrams together.", sample:"eat, tea, tan, ate, nat, bat -> grouped by sorted letters",
+ approach:["Sort each word's letters to get a unique fingerprint","Group words sharing the same sorted key in a hashmap"],
+ tip:"Anagrams always sort to the exact same string. Use that as the hashmap key.",
+ code:`from collections import defaultdict
+
+def groupAnagrams(strs):
+    groups = defaultdict(list)
+    for s in strs:
+        key = ''.join(sorted(s))
+        groups[key].append(s)
+    return list(groups.values())
+
+if __name__ == "__main__":
+    print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
+    # [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]`},
+{t:"1.18) Trapping Rain Water — LeetCode 42", tag:"verified", src:"Multiple independent finance-sector interview reports — one of the MOST frequently mentioned CoderPad questions across sources", problem:"Given an elevation map, compute how much rainwater it can trap after raining.", sample:"height=[0,1,0,2,1,0,1,3,2,1,2,1] -> 6",
+ approach:["Water trapped at a position equals the shorter of the two tallest walls on either side, minus the current height","Precompute the tallest wall to the left and to the right of every position"],
+ tip:"Two-pointer variant also exists (O(1) space) — worth knowing as a follow-up optimization.",
+ code:`def trap(height):
+    if not height: return 0
+    n = len(height)
+    left_max = [0] * n
+    right_max = [0] * n
+
+    left_max[0] = height[0]
+    for i in range(1, n):
+        left_max[i] = max(left_max[i-1], height[i])
+
+    right_max[n-1] = height[n-1]
+    for i in range(n-2, -1, -1):
+        right_max[i] = max(right_max[i+1], height[i])
+
+    return sum(min(left_max[i], right_max[i]) - height[i] for i in range(n))
+
+if __name__ == "__main__":
+    print(trap([0,1,0,2,1,0,1,3,2,1,2,1]))   # 6`},
+{t:"1.19) String Compression", tag:"verified", src:"Medium — My Interview Experience at a Major Investment Bank", problem:"Compress a string by replacing consecutive repeated characters with the character followed by its count.", sample:"aaabbcbbb -> a3b2c1b3",
+ approach:["Walk through the string counting consecutive repeats","When the character changes, append character plus count to the result"],
+ tip:"Loop one past the end of the string so the very last group still gets flushed into the result.",
+ code:`def compress(s: str) -> str:
+    if not s: return ""
+    result = []
+    count = 1
+    for i in range(1, len(s) + 1):
+        if i < len(s) and s[i] == s[i-1]:
+            count += 1
+        else:
+            result.append(s[i-1] + str(count))
+            count = 1
+    return ''.join(result)
+
+if __name__ == "__main__":
+    print(compress("aaabbcbbb"))   # a3b2c1b3`},
+{t:"1.20) Most Frequent IP Address from Logs", tag:"verified", src:"LeetCode Discuss — Software Engineer Associate round", problem:"Given a list of log entries, find the IP address that appears most frequently.", sample:'logs with repeated IPs -> the one with the highest count',
+ approach:["Count occurrences with a hashmap","Track the running maximum while iterating, no second pass needed"],
+ tip:"Interviewer explicitly said no heap needed here, just plain counting.",
+ code:`def mostFrequentIP(logs):
+    counts = {}
+    best_ip, best_count = None, 0
+    for ip in logs:
+        counts[ip] = counts.get(ip, 0) + 1
+        if counts[ip] > best_count:
+            best_ip, best_count = ip, counts[ip]
+    return best_ip
+
+if __name__ == "__main__":
+    logs = ["192.168.1.1", "10.0.0.5", "192.168.1.1", "192.168.1.1", "10.0.0.5"]
+    print(mostFrequentIP(logs))   # 192.168.1.1`},
+{t:"1.21) Student with Highest Average Score", tag:"verified", src:"LeetCode Discuss — Data Engineer round, July 2020", problem:"Given name and score pairs, find the student with the highest average score, floored to the nearest integer.", sample:"Bob, Mike, Jason, Jessica scores -> Jessica has the highest single score average",
+ approach:["Group scores by student name","Compute the floored average per student, then take the maximum"],
+ tip:"This is essentially a GROUP BY and AVERAGE operation done in plain Python instead of SQL.",
+ code:`import math
+from collections import defaultdict
+
+def highestAverage(records):
+    scores = defaultdict(list)
+    for name, score in records:
+        scores[name].append(int(score))
+    best_avg = float('-inf')
+    for name, vals in scores.items():
+        avg = math.floor(sum(vals) / len(vals))
+        best_avg = max(best_avg, avg)
+    return best_avg
+
+if __name__ == "__main__":
+    records = [["Bob","87"], ["Mike","35"], ["Bob","52"],
+               ["Jason","35"], ["Mike","55"], ["Jessica","99"]]
+    print(highestAverage(records))   # 99`},
+{t:"1.22) Robot Final Coordinates from a Move String", tag:"verified", src:"Same July 2020 Data Engineer report, second question", problem:"Given a string of up, down, left, right moves, compute the final coordinates starting from the origin.", sample:'moves="UUUDULR" -> (0,3)',
+ approach:["Map each direction letter to a coordinate delta","Walk through the string applying each delta to a running position"],
+ tip:"Interviewer asked the candidate to add extra test cases afterward — propose edge cases yourself.",
+ code:`def finalCoordinates(moves: str):
+    x, y = 0, 0
+    deltas = {'U': (0, 1), 'D': (0, -1), 'L': (-1, 0), 'R': (1, 0)}
+    for move in moves:
+        dx, dy = deltas[move]
+        x += dx; y += dy
+    return (x, y)
+
+if __name__ == "__main__":
+    print(finalCoordinates("UUUDULR"))   # (0, 3)`},
+{t:"1.23) SQL — Deduplicate & Get Latest Record", tag:"general", problem:"An ETL bug caused duplicate rows in a salary history table. Write a query that returns only the most recent salary per employee.", sample:"ROW_NUMBER() OVER (PARTITION BY employee_id ORDER BY updated_at DESC)",
+ approach:["Use ROW_NUMBER partitioned by employee, ordered by latest date","Filter to row number equals one"],
+ tip:"This exact pattern is explicitly named in many companies' published Data Engineer interview guides.",
+ code:`WITH ranked AS (
+    SELECT *,
+           ROW_NUMBER() OVER (
+               PARTITION BY employee_id
+               ORDER BY updated_at DESC
+           ) AS rn
+    FROM employee_salary_history
+)
+SELECT employee_id, salary, updated_at
+FROM ranked
+WHERE rn = 1;`},
+{t:"1.24) SQL — Second Highest Salary per Department", tag:"general", problem:"Find the second highest salary in each department.", sample:"DENSE_RANK() OVER (PARTITION BY department ORDER BY salary DESC)",
+ approach:["Use DENSE_RANK so tied salaries share the same rank","Filter to rank equals two"],
+ tip:"DENSE_RANK avoids gaps when there are ties. Use it for any Nth highest problem.",
+ code:`WITH ranked AS (
+    SELECT *,
+           DENSE_RANK() OVER (
+               PARTITION BY department
+               ORDER BY salary DESC
+           ) AS rnk
+    FROM employees
+)
+SELECT department, name, salary
+FROM ranked
+WHERE rnk = 2;`},
+{t:"1.25) SQL — Running Total (Cumulative Sum)", tag:"general", problem:"Given daily transaction amounts, compute a running cumulative total ordered by date.", sample:"SUM(amount) OVER (ORDER BY date)",
+ approach:["A window function with ORDER BY but no PARTITION BY treats the whole table as one running window"],
+ tip:"This is the standard pattern for any cumulative metric.",
+ code:`-- Setup
+CREATE TABLE transactions (date DATE, amount INT);
+INSERT INTO transactions VALUES
+    ('2024-01-01', 100), ('2024-01-02', 150),
+    ('2024-01-03', 200), ('2024-01-04', 50);
+
+-- Solution
+SELECT
+    date,
+    amount,
+    SUM(amount) OVER (ORDER BY date) AS running_total
+FROM transactions;`},
+{t:"1.26) SQL — Find Duplicate Emails", tag:"general", problem:"Find all emails that appear more than once in a table.", sample:"GROUP BY email HAVING COUNT(*) greater than 1",
+ approach:["GROUP BY collapses rows with the same email together","HAVING filters groups AFTER aggregation, which WHERE cannot do"],
+ tip:"WHERE filters rows before grouping. HAVING filters groups after aggregation.",
+ code:`-- Setup
+CREATE TABLE Person (id INT, email VARCHAR(100));
+INSERT INTO Person VALUES (1, 'a@x.com'), (2, 'c@x.com'), (3, 'a@x.com');
+
+-- Solution
+SELECT email
+FROM Person
+GROUP BY email
+HAVING COUNT(*) > 1;`},
 ];
 
-
 const phase2 = [
-{t:"2.1) Kth Largest Element in an Array — LeetCode 215", tag:"general", problem:"Find the kth largest element in an unsorted array.", sample:"nums=[3,2,1,5,6,4], k=2 -> 5",
- approach:["heapq.nlargest(k, nums) directly gives the k largest, sorted descending — take the last one, or just use nlargest and index [k-1]"],
- tip:"For interviews, also know the min-heap-of-size-k approach (push all, pop when size>k) — same idea, more manual control.",
+{t:"2.1) Kth Largest / Smallest K Elements — LeetCode 215", tag:"general", problem:"Find the kth largest element in an array, or the smallest k elements — both are the same heap technique in opposite directions.", sample:"nums=[3,2,1,5,6,4], k=2 -> kth largest = 5  |  smallest 3 = [1,2,3]",
+ approach:["heapq.nlargest(k, nums) gives the k largest sorted descending -- index [-1] for the kth largest","heapq.nsmallest(k, nums) is the direct mirror for the smallest k","For interviews, also know the manual min-heap-of-size-k approach: push all, pop when size>k"],
+ tip:"nlargest and nsmallest are literal mirror images of each other -- same usage, opposite direction. This is really ONE technique tested two ways.",
  code:`import heapq
 
 def kth_largest(nums, k):
     return heapq.nlargest(k, nums)[-1]
 
-if __name__ == "__main__":
-    print(kth_largest([3,2,1,5,6,4], 2))   # 5`},
-
-{t:"2.2) Find Smallest k Numbers — 剑指Offer", tag:"general", problem:"Find the smallest k numbers in an array.", sample:"nums=[3,2,1,5,6,4], k=3 -> [1,2,3]",
- approach:["heapq.nsmallest(k, nums) is the direct mirror of nlargest"],
- tip:"nsmallest and nlargest are literal mirror images — same usage, opposite direction.",
- code:`import heapq
-
 def smallest_k(nums, k):
     return heapq.nsmallest(k, nums)
 
 if __name__ == "__main__":
-    print(smallest_k([3, 2, 1, 5, 6, 4], 3))   # [1, 2, 3]`},
-
-{t:"2.3) Valid Parentheses — LeetCode 20", tag:"general", problem:"Determine if a string of brackets is validly matched and nested.", sample:'s="{[()]}" -> True',
+    print(kth_largest([3,2,1,5,6,4], 2))    # 5
+    print(smallest_k([3,2,1,5,6,4], 3))     # [1, 2, 3]`},
+{t:"2.2) Valid Parentheses — LeetCode 20", tag:"general", problem:"Determine if a string of brackets is validly matched and nested.", sample:'s="{[()]}" -> True',
  approach:["Push opening brackets onto a stack","On a closing bracket, pop and check it matches","Stack must be empty at the end"],
  tip:"Stack = last opened, first closed — exactly how brackets nest.",
  code:`def isValid(s: str) -> bool:
@@ -887,8 +934,1012 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     print(isValid("{[()]}"))   # True`},
+{t:"2.3) Daily Temperatures — LeetCode 739", tag:"general", problem:"For each day, find how many days until a warmer temperature; 0 if none.", sample:"T=[73,74,75,71,69,72,76,73] -> [1,1,4,2,1,1,0,0]",
+ approach:["Maintain a stack of INDICES with decreasing temperatures","When the current temp is HIGHER than the stack's top, pop it and record the day difference — that's the answer for that popped index"],
+ table: arrayDiagram(["73","74","75","71","69","72","76","73"], {highlights:{2:"success",6:"success"}, caption:"Each pop from the stack happens when a warmer day is found"}),
+ tip:"This is a MONOTONIC STACK — kept decreasing, popped whenever the current value breaks the pattern.",
+ code:`from typing import List
 
-{t:"2.4) Min Stack — LeetCode 155", tag:"general", problem:"Design a stack that supports push, pop, top, and retrieving the minimum, all in O(1).", sample:"push(-2), push(0), push(-3) -> getMin() = -3",
+def dailyTemperatures(T: List[int]) -> List[int]:
+    n = len(T)
+    res = [0] * n
+    stack = []
+    for i, t in enumerate(T):
+        while stack and T[stack[-1]] < t:
+            j = stack.pop()
+            res[j] = i - j
+        stack.append(i)
+    return res
+
+if __name__ == "__main__":
+    print(dailyTemperatures([73,74,75,71,69,72,76,73]))   # [1,1,4,2,1,1,0,0]`},
+{t:"2.4) Decode String — LeetCode 394", tag:"general", problem:'Decode a string like "3[a2[c]]" into "accaccacc".', sample:'"3[a2[c]]" -> "accaccacc"',
+ approach:["Use a stack storing (previous string, repeat count) pairs","On '[', push the current string and number, reset both","On ']', pop and repeat the current string that many times, prepending the saved previous string"],
+ tip:"Nested brackets are exactly what a stack is built for — each '[' is a 'save my place' and each ']' is a 'combine and return'.",
+ code:`def decodeString(s: str) -> str:
+    stack = []
+    curNum = 0
+    curStr = ''
+    for c in s:
+        if c == '[':
+            stack.append((curStr, curNum))
+            curStr, curNum = '', 0
+        elif c == ']':
+            lastStr, num = stack.pop()
+            curStr = lastStr + curStr * num
+        elif c.isdigit():
+            curNum = curNum * 10 + int(c)
+        else:
+            curStr += c
+    return curStr
+
+if __name__ == "__main__":
+    print(decodeString("3[a2[c]]"))   # "accaccacc"`},
+{t:"2.5) Top K Frequent Elements — LeetCode 347", tag:"general", problem:"Given an array, return the k most frequent elements.", sample:"nums=[1,1,1,2,2,3], k=2 -> [1,2]",
+ approach:["Count frequency with a hashmap first","Then use a heap to extract the top k by frequency"],
+ tip:"Count first with a hashmap, then rank with a heap — this two step combo shows up constantly.",
+ code:`from collections import Counter
+import heapq
+
+def topKFrequent(nums, k):
+    freq = Counter(nums)
+    return heapq.nlargest(k, freq.keys(), key=freq.get)
+
+if __name__ == "__main__":
+    print(topKFrequent([1,1,1,2,2,3], 2))   # [1, 2]`},
+];
+
+const phase3 = [
+{t:"3.1) Merge Two Sorted Lists — LeetCode 21", tag:"general", problem:"Merge two sorted linked lists into one sorted list.", sample:"l1=[1,2,4], l2=[1,3,4] -> [1,1,2,3,4,4]",
+ approach:["Use a dummy head + tail pointer","Compare current nodes of both lists, attach the smaller, advance that pointer","Attach whatever remains once one list is exhausted"],
+ tip:"The dummy head trick avoids special-casing 'what if the merged list starts empty'.",
+ code:`class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val; self.next = next
+
+def mergeTwoLists(l1, l2):
+    dummy = ListNode()
+    cur = dummy
+    while l1 and l2:
+        if l1.val < l2.val:
+            cur.next, l1 = l1, l1.next
+        else:
+            cur.next, l2 = l2, l2.next
+        cur = cur.next
+    cur.next = l1 or l2
+    return dummy.next
+
+def build(vals):
+    d = ListNode(); c = d
+    for v in vals: c.next = ListNode(v); c = c.next
+    return d.next
+def toList(node):
+    r = []
+    while node: r.append(node.val); node = node.next
+    return r
+
+if __name__ == "__main__":
+    print(toList(mergeTwoLists(build([1,2,4]), build([1,3,4]))))   # [1,1,2,3,4,4]`},
+{t:"3.2) Reverse Linked List — LeetCode 206", tag:"general", problem:"Reverse a singly linked list.", sample:"[1,2,3,4,5] -> [5,4,3,2,1]",
+ approach:["Track prev and cur pointers","At each step, save cur.next BEFORE overwriting it, flip cur.next to point backward, advance both pointers"],
+ table: chainDiagram(["1","2","3","4","5"], {uid:1, caption:"Before: 1→2→3→4→5→None"}) + chainDiagram(["5","4","3","2","1"], {uid:2, caption:"After: 5→4→3→2→1→None"}),
+ tip:"Save next_temp BEFORE overwriting cur.next, or you lose the rest of the list forever.",
+ code:`def reverseList(head):
+    prev, cur = None, head
+    while cur:
+        nxt = cur.next
+        cur.next = prev
+        prev, cur = cur, nxt
+    return prev
+
+def build(vals):
+    d = ListNode(); c = d
+    for v in vals: c.next = ListNode(v); c = c.next
+    return d.next
+def toList(node):
+    r = []
+    while node: r.append(node.val); node = node.next
+    return r
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val; self.next = next
+
+if __name__ == "__main__":
+    print(toList(reverseList(build([1,2,3,4,5]))))   # [5,4,3,2,1]`},
+{t:"3.3) Remove Duplicates from Sorted List II — LeetCode 82", tag:"general", problem:"Delete ALL nodes that have duplicate values, leaving only distinct numbers.", sample:"[1,2,3,3,4,4,5] -> [1,2,5]",
+ approach:["Use a dummy head so the head itself can be removed if needed","If cur has the same value as cur.next, skip ALL of them (not just one) and reconnect prev.next past the whole run"],
+ table: chainDiagram(["1","2","3","3","4","4","5"], {uid:3, highlights:[2,3,4,5], caption:"Nodes 3,3,4,4 are duplicate runs — remove entirely"}),
+ tip:"This is 'remove duplicates' NOT 'keep one copy' — every node in a duplicate run gets deleted, including the first occurrence.",
+ code:`class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val; self.next = next
+
+def deleteDuplicates(head):
+    dummy = ListNode(0, head)
+    prev, cur = dummy, head
+    while cur:
+        if cur.next and cur.val == cur.next.val:
+            while cur.next and cur.val == cur.next.val:
+                cur = cur.next
+            prev.next = cur.next
+        else:
+            prev = prev.next
+        cur = cur.next
+    return dummy.next
+
+def build(vals):
+    d = ListNode(); c = d
+    for v in vals: c.next = ListNode(v); c = c.next
+    return d.next
+def toList(node):
+    r = []
+    while node: r.append(node.val); node = node.next
+    return r
+
+if __name__ == "__main__":
+    print(toList(deleteDuplicates(build([1,2,3,3,4,4,5]))))   # [1, 2, 5]`},
+{t:"3.4) Linked List Cycle — LeetCode 141", tag:"general", problem:"Detect if a linked list has a cycle.", sample:"head=[3,2,0,-4], tail connects to index 1 -> True",
+ approach:["Use two pointers: slow moves 1 step, fast moves 2 steps","If they ever meet, there's a cycle; if fast reaches the end (None), there isn't"],
+ tip:"Tortoise and Hare — if you're on a circular track with someone twice as fast, they WILL eventually lap you.",
+ code:`class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val; self.next = next
+
+def hasCycle(head) -> bool:
+    slow = fast = head
+    while fast and fast.next:
+        slow, fast = slow.next, fast.next.next
+        if slow == fast:
+            return True
+    return False
+
+if __name__ == "__main__":
+    n1, n2, n3 = ListNode(3), ListNode(2), ListNode(0)
+    n1.next, n2.next, n3.next = n2, n3, n2   # cycle back to n2
+    print(hasCycle(n1))   # True`},
+];
+
+const phase4 = [
+{t:"4.1) Climbing Stairs — LeetCode 70", tag:"general", problem:"Count the distinct ways to climb n stairs, taking 1 or 2 steps at a time.", sample:"n=3 -> 3 ways ([1+1+1],[1+2],[2+1])",
+ approach:["dp[i] = dp[i-1] + dp[i-2] — to reach step i you came from step i-1 (1 step) or step i-2 (2 steps)","Literally the Fibonacci sequence"],
+ tip:"Any 'count the ways' problem where each step has 2 fixed choices often reduces to Fibonacci.",
+ code:`def climbStairs(n: int) -> int:
+    if n <= 2:
+        return n
+    dp = [0] * (n + 1)
+    dp[1], dp[2] = 1, 2
+    for i in range(3, n + 1):
+        dp[i] = dp[i - 1] + dp[i - 2]
+    return dp[n]
+
+if __name__ == "__main__":
+    print(climbStairs(3))   # 3`},
+{t:"4.2) House Robber — LeetCode 198", tag:"general", problem:"Rob houses in a row for maximum money without robbing two adjacent houses.", sample:"nums=[2,7,9,3,1] -> 12 (rob houses with 2,9,1)",
+ approach:["dp[i] = max(dp[i-1], dp[i-2] + nums[i]) — either skip house i (keep previous best) or rob it (add to the best from 2 houses back)"],
+ table: arrayDiagram(["2","7","9","3","1"], {highlights:{0:"success",2:"success",4:"success"}, caption:"Robbed houses (2+9+1=12) — never adjacent"}),
+ tip:"At every house you ask: 'is it worth skipping my neighbor to rob this one instead?'",
+ code:`from typing import List
+
+def rob(nums: List[int]) -> int:
+    if not nums: return 0
+    if len(nums) == 1: return nums[0]
+    dp = [0] * len(nums)
+    dp[0] = nums[0]
+    dp[1] = max(nums[0], nums[1])
+    for i in range(2, len(nums)):
+        dp[i] = max(dp[i-1], dp[i-2] + nums[i])
+    return dp[-1]
+
+if __name__ == "__main__":
+    print(rob([2,7,9,3,1]))   # 12`},
+{t:"4.3) Longest Increasing Subsequence — LeetCode 300", tag:"general", problem:"Return the length of the longest strictly increasing subsequence.", sample:"nums=[10,9,2,5,3,7,101,18] -> 4 ([2,3,7,101])",
+ approach:["dp[i] = length of the LIS ENDING at index i","For each i, look at all earlier j: if nums[i] > nums[j], dp[i] could extend dp[j]","dp[i] = max(dp[i], dp[j]+1) for all valid j < i"],
+ table: arrayDiagram(["10","9","2","5","3","7","101","18"], {highlights:{2:"success",4:"success",5:"success",6:"success"}, caption:"One valid LIS: [2,3,7,101], length 4"}),
+ tip:"O(n^2) DP is the intuitive version — there's also an O(n log n) patience-sorting version using binary search for follow-ups.",
+ code:`from typing import List
+
+def lengthOfLIS(nums: List[int]) -> int:
+    n = len(nums)
+    if n == 0: return 0
+    dp = [1] * n
+    for i in range(n):
+        for j in range(i):
+            if nums[i] > nums[j]:
+                dp[i] = max(dp[i], dp[j] + 1)
+    return max(dp)
+
+if __name__ == "__main__":
+    print(lengthOfLIS([10,9,2,5,3,7,101,18]))   # 4`},
+{t:"4.4) Coin Change — LeetCode 322", tag:"general", problem:"Return the fewest coins needed to make up a given amount, or -1 if impossible.", sample:"coins=[1,2,5], amount=11 -> 3 (5+5+1)",
+ approach:["Unbounded knapsack DP: dp[x] = fewest coins to make amount x","dp[x] = min(dp[x], dp[x-c]+1) for each coin c where x >= c","dp[0] = 0, everything else starts at infinity"],
+ table: arrayDiagram(["0","1","1","2","2","1","2","2","3","3","2","3"], {highlights:{11:"success"}, caption:"dp array for amount 0..11 with coins [1,2,5] — answer at index 11"}),
+ tip:"inf as the initial value never wins a min() comparison — it's a safe 'not found yet' placeholder.",
+ code:`from typing import List
+import math
+
+def coinChange(coins: List[int], amount: int) -> int:
+    dp = [math.inf] * (amount + 1)
+    dp[0] = 0
+    for x in range(1, amount + 1):
+        for c in coins:
+            if x >= c:
+                dp[x] = min(dp[x], dp[x - c] + 1)
+    return dp[amount] if dp[amount] != math.inf else -1
+
+if __name__ == "__main__":
+    print(coinChange([1,2,5], 11))   # 3`},
+{t:"4.5) Unique Paths — LeetCode 62", tag:"general", problem:"Count unique paths from top-left to bottom-right of a grid, moving only right or down.", sample:"m=3, n=7 -> 28",
+ approach:["dp[i][j] = dp[i-1][j] + dp[i][j-1] — paths from above plus paths from the left","Initialize first row and first column to 1 (only one way to reach any edge cell)"],
+ table: gridDiagram([["1","1","1"],["1","2","3"],["1","3","6"]], {caption:"m=3,n=3 example (smaller than 3x7 for display)"}),
+ tip:"Every cell's path count = sum of the cell above and the cell to the left.",
+ code:`def uniquePaths(m: int, n: int) -> int:
+    dp = [[1] * n for _ in range(m)]
+    for i in range(1, m):
+        for j in range(1, n):
+            dp[i][j] = dp[i-1][j] + dp[i][j-1]
+    return dp[-1][-1]
+
+if __name__ == "__main__":
+    print(uniquePaths(3, 7))   # 28`},
+{t:"4.6) Unique Paths II — LeetCode 63", tag:"general", problem:"Same as Unique Paths, but some cells are blocked by obstacles.", sample:"obstacleGrid=[[0,0,0],[0,1,0],[0,0,0]] -> 2",
+ approach:["Same DP recurrence as Unique Paths","If a cell has an obstacle, force dp[i][j] = 0 (no path can pass through it)"],
+ table: gridDiagram([["1","1","1"],["1","0","1"],["1","1","2"]], {highlight:[1,1], caption:"Obstacle at (1,1) blocks that path entirely"}),
+ tip:"An obstacle doesn't just block itself — it blocks EVERY path that would have passed through it, which naturally propagates through the DP.",
+ code:`from typing import List
+
+def uniquePathsWithObstacles(obstacleGrid: List[List[int]]) -> int:
+    m, n = len(obstacleGrid), len(obstacleGrid[0])
+    dp = [[0] * n for _ in range(m)]
+    dp[0][0] = 1 - obstacleGrid[0][0]
+
+    for i in range(m):
+        for j in range(n):
+            if obstacleGrid[i][j] == 1:
+                dp[i][j] = 0
+                continue
+            if i > 0: dp[i][j] += dp[i-1][j]
+            if j > 0: dp[i][j] += dp[i][j-1]
+    return dp[-1][-1]
+
+if __name__ == "__main__":
+    print(uniquePathsWithObstacles([[0,0,0],[0,1,0],[0,0,0]]))   # 2`},
+{t:"4.7) Minimum Path Sum — LeetCode 64", tag:"general", problem:"Find a path from top-left to bottom-right minimizing the sum of numbers along the path.", sample:"grid=[[1,3,1],[1,5,1],[4,2,1]] -> 7 (path 1→3→1→1→1)",
+ approach:["dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])","Initialize first row and column by simple accumulation (only one way to reach an edge)"],
+ table: gridDiagram([["1","4","5"],["2","7","6"],["6","8","7"]], {highlight:[2,2], caption:"Final dp grid — bottom-right (7) is the answer"}),
+ tip:"Same shape as Unique Paths, but MIN instead of SUM, and you add the cell's own value each time.",
+ code:`from typing import List
+
+def minPathSum(grid: List[List[int]]) -> int:
+    m, n = len(grid), len(grid[0])
+    dp = [[0] * n for _ in range(m)]
+    dp[0][0] = grid[0][0]
+    for j in range(1, n): dp[0][j] = dp[0][j-1] + grid[0][j]
+    for i in range(1, m): dp[i][0] = dp[i-1][0] + grid[i][0]
+    for i in range(1, m):
+        for j in range(1, n):
+            dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])
+    return dp[-1][-1]
+
+if __name__ == "__main__":
+    print(minPathSum([[1,3,1],[1,5,1],[4,2,1]]))   # 7`},
+{t:"4.8) Best Time to Buy/Sell Stock I — LeetCode 121", tag:"general", problem:"Find max profit with exactly ONE buy and ONE sell.", sample:"prices=[7,1,5,3,6,4] -> 5 (buy at 1, sell at 6)",
+ approach:["Track the minimum price seen so far","Profit = current price - minimum so far; keep the best"],
+ tip:"Only one pass, one running minimum — the simplest of the whole stock-problem family.",
+ code:`from typing import List
+
+def maxProfit_I(prices: List[int]) -> int:
+    min_price = float('inf')
+    max_profit = 0
+    for price in prices:
+        min_price = min(min_price, price)
+        max_profit = max(max_profit, price - min_price)
+    return max_profit
+
+if __name__ == "__main__":
+    print(maxProfit_I([7,1,5,3,6,4]))   # 5`},
+{t:"4.9) Best Time to Buy/Sell Stock II — LeetCode 122", tag:"general", problem:"Multiple transactions allowed. Find max profit.", sample:"prices=[7,1,5,3,6,4] -> 7",
+ approach:["Every price increase contributes to profit — just sum all positive day-to-day differences"],
+ tip:"Greedy shortcut for what's really a hold/cash DP — works because there's no cooldown or fee here.",
+ code:`from typing import List
+
+def maxProfit_II(prices: List[int]) -> int:
+    profit = 0
+    for i in range(1, len(prices)):
+        if prices[i] > prices[i-1]:
+            profit += prices[i] - prices[i-1]
+    return profit
+
+if __name__ == "__main__":
+    print(maxProfit_II([7,1,5,3,6,4]))   # 7`},
+{t:"4.10) Best Time to Buy/Sell Stock with Cooldown — LeetCode 309", tag:"general", problem:"Multiple transactions, but must wait 1 day after selling before buying again.", sample:"prices=[1,2,3,0,2] -> 3",
+ approach:["3 states each day: hold (holding stock), sold (just sold today), rest (cooldown or idle)","hold[i] = max(hold[i-1], rest[i-1]-price) — can only BUY from rest, not from sold (that's the cooldown rule)","sold[i] = hold[i-1] + price","rest[i] = max(rest[i-1], sold[i-1])"],
+ table: `<svg width="100%" viewBox="0 0 300 130" style="max-width:300px;display:block;margin:10px auto;">
+   <defs><marker id="cdm" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+   <circle cx="60" cy="30" r="26" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.3"/><text x="60" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">rest</text>
+   <circle cx="200" cy="30" r="26" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.3"/><text x="200" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">hold</text>
+   <circle cx="200" cy="100" r="26" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="1.3"/><text x="200" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">sold</text>
+   <line x1="86" y1="30" x2="172" y2="30" stroke="#888" stroke-width="1.3" marker-end="url(#cdm)"/><text x="130" y="22" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">buy</text>
+   <line x1="200" y1="56" x2="200" y2="72" stroke="#888" stroke-width="1.3" marker-end="url(#cdm)"/><text x="230" y="66" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">sell</text>
+   <path d="M 174 100 Q 100 100 60 56" fill="none" stroke="#888" stroke-width="1.3" marker-end="url(#cdm)"/><text x="100" y="112" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">cooldown ends</text>
+ </svg>`,
+ tip:"This is the whole cooldown rule in one sentence: hold can only buy from rest, never directly from sold.",
+ code:`from typing import List
+
+def maxProfit_cooldown(prices: List[int]) -> int:
+    if not prices: return 0
+    n = len(prices)
+    hold = [-float('inf')] * n
+    sold = [0] * n
+    rest = [0] * n
+    hold[0] = -prices[0]
+    for i in range(1, n):
+        hold[i] = max(hold[i-1], rest[i-1] - prices[i])
+        sold[i] = hold[i-1] + prices[i]
+        rest[i] = max(rest[i-1], sold[i-1])
+    return max(sold[-1], rest[-1])
+
+if __name__ == "__main__":
+    print(maxProfit_cooldown([1,2,3,0,2]))   # 3`},
+{t:"4.11) Best Time to Buy/Sell Stock with Fee — LeetCode 714", tag:"general", problem:"Multiple transactions, but pay a fee on each sale.", sample:"prices=[1,3,2,8,4,9], fee=2 -> 8",
+ approach:["Same hold/cash states as Stock II, just subtract the fee whenever you sell"],
+ tip:"Literally identical to Stock II — just minus fee when selling.",
+ code:`from typing import List
+
+def maxProfit_fee(prices: List[int], fee: int) -> int:
+    hold, cash = -prices[0], 0
+    for price in prices[1:]:
+        hold = max(hold, cash - price)
+        cash = max(cash, hold + price - fee)
+    return cash
+
+if __name__ == "__main__":
+    print(maxProfit_fee([1,3,2,8,4,9], 2))   # 8`},
+{t:"4.12) Best Time to Buy/Sell Stock III — LeetCode 123", tag:"general", problem:"At most 2 transactions allowed. Find max profit.", sample:"prices=[3,3,5,0,0,3,1,4] -> 6",
+ approach:["Track 4 states: buy1 (after first buy), sell1 (after first sell), buy2 (after second buy, using sell1's profit), sell2 (after second sell)","Each state only depends on the previous day's states, updated in this fixed order"],
+ table: chainDiagram(["buy1","sell1","buy2","sell2"], {uid:4, caption:"State chain: each transaction 'funds' the next one's starting capital"}),
+ tip:"buy2 = max(buy2, sell1 - price) is the key insight — the SECOND purchase is funded by the FIRST sale's profit, not fresh capital.",
+ code:`from typing import List
+
+def maxProfit_III(prices: List[int]) -> int:
+    buy1, sell1 = float('-inf'), 0
+    buy2, sell2 = float('-inf'), 0
+    for p in prices:
+        buy1 = max(buy1, -p)
+        sell1 = max(sell1, buy1 + p)
+        buy2 = max(buy2, sell1 - p)
+        sell2 = max(sell2, buy2 + p)
+    return sell2
+
+if __name__ == "__main__":
+    print(maxProfit_III([3,3,5,0,0,3,1,4]))   # 6`},
+{t:"4.13) Longest Palindromic Substring — LeetCode 5", tag:"general", problem:"Find the longest palindromic substring.", sample:'s="babad" -> "bab" (or "aba")',
+ approach:["dp[i][j] = True if s[i..j] is a palindrome","True when s[i]==s[j] AND the inside (i+1..j-1) is also a palindrome (or the substring is length <=2)","Iterate by increasing substring length"],
+ table: gridDiagram([["T","F","T","F","F"],["·","T","F","F","T"],["·","·","T","F","F"],["·","·","·","T","F"],["·","·","·","·","T"]], {caption:'s="babad" — diagonal band shows valid palindrome ranges'}),
+ tip:"You need the INSIDE substring's answer before you can compute the OUTER one — so you must iterate by length, not by row or column.",
+ code:`def longestPalindrome(s: str) -> str:
+    n = len(s)
+    dp = [[False] * n for _ in range(n)]
+    ans = ""
+    for l in range(n):
+        for i in range(n - l):
+            j = i + l
+            if s[i] == s[j] and (l < 2 or dp[i+1][j-1]):
+                dp[i][j] = True
+                if l + 1 > len(ans):
+                    ans = s[i:j+1]
+    return ans
+
+if __name__ == "__main__":
+    print(longestPalindrome("babad"))   # "bab" or "aba"`},
+{t:"4.14) Edit Distance — LeetCode 72", tag:"general", problem:"Find the minimum operations (insert, delete, replace) to convert word1 to word2.", sample:'word1="horse", word2="ros" -> 3',
+ approach:["dp[i][j] = min ops to convert word1[:i] to word2[:j]","If characters match: dp[i][j] = dp[i-1][j-1] (no operation needed)","If not: dp[i][j] = 1 + min(delete, insert, replace) = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])"],
+ table: gridDiagram([["0","1","2","3"],["1","1","2","3"],["2","2","1","2"],["3","2","2","2"],["4","3","2","3"],["5","4","3","2"]], {highlight:[5,3], caption:'word1="horse" (rows) vs word2="ros" (cols) — answer at bottom-right = 3'}),
+ tip:"Three arrows into every cell: delete (from above), insert (from left), replace (diagonal) — pick the cheapest.",
+ code:`def minDistance(word1: str, word2: str) -> int:
+    m, n = len(word1), len(word2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(m + 1): dp[i][0] = i
+    for j in range(n + 1): dp[0][j] = j
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if word1[i-1] == word2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
+    return dp[m][n]
+
+if __name__ == "__main__":
+    print(minDistance("horse", "ros"))   # 3`},
+{t:"4.15) Longest Common Subsequence — LeetCode 1143", tag:"general", problem:"Find the length of the longest subsequence common to two strings.", sample:'text1="abcde", text2="ace" -> 3',
+ approach:["dp[i][j] = LCS length of text1[:i] and text2[:j]","Match: dp[i][j] = dp[i-1][j-1] + 1","No match: dp[i][j] = max(dp[i-1][j], dp[i][j-1])"],
+ table: gridDiagram([["0","0","0"],["0","1","1"],["1","1","1"],["1","1","2"],["1","1","2"],["1","2","3"]], {highlight:[5,2], caption:'text1="abcde" (rows) vs text2="ace" (cols) — LCS = 3'}),
+ tip:"Match -> extend diagonally. No match -> take the best of skipping a char from EITHER string.",
+ code:`def longestCommonSubsequence(text1: str, text2: str) -> int:
+    m, n = len(text1), len(text2)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if text1[i-1] == text2[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    return dp[m][n]
+
+if __name__ == "__main__":
+    print(longestCommonSubsequence("abcde", "ace"))   # 3`},
+{t:"4.16) Word Break — LeetCode 139", tag:"general", problem:"Determine if a string can be segmented into dictionary words.", sample:'s="leetcode", wordDict=["leet","code"] -> True',
+ approach:["dp[i] = True if s[:i] can be segmented","For each i, check all earlier j: if dp[j] is True and s[j:i] is a dictionary word, dp[i] = True"],
+ table: arrayDiagram(["T","F","F","F","T","F","F","F","T"], {highlights:{0:"success",4:"success",8:"success"}, caption:'dp array for s="leetcode": dp[0], dp[4]="leet", dp[8]="leet"+"code" are True'}),
+ tip:"dp[i] means 'can the FIRST i characters be segmented' — not s[i] itself.",
+ code:`from typing import List
+
+def wordBreak(s: str, wordDict: List[str]) -> bool:
+    wordSet = set(wordDict)
+    n = len(s)
+    dp = [False] * (n + 1)
+    dp[0] = True
+    for i in range(1, n + 1):
+        for j in range(i):
+            if dp[j] and s[j:i] in wordSet:
+                dp[i] = True
+                break
+    return dp[n]
+
+if __name__ == "__main__":
+    print(wordBreak("leetcode", ["leet", "code"]))   # True`},
+];
+
+const phase5 = [
+{t:"5.1) Word Search in Matrix — LeetCode 79", tag:"general", problem:"Determine if a word exists in a grid, built from sequentially adjacent cells (no cell reused).", sample:'board=[["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word="ABCCED" -> True',
+ approach:["DFS with backtracking from every cell","Mark the current cell visited temporarily (e.g. '#'), explore 4 directions, then RESTORE it before returning"],
+ tip:"The restore step is critical — forgetting to un-mark a cell after backtracking silently corrupts future search paths.",
+ code:`def exist(board, word) -> bool:
+    rows, cols = len(board), len(board[0])
+
+    def dfs(i, j, k):
+        if k == len(word):
+            return True
+        if i < 0 or i >= rows or j < 0 or j >= cols or board[i][j] != word[k]:
+            return False
+        tmp, board[i][j] = board[i][j], "#"
+        found = (dfs(i+1,j,k+1) or dfs(i-1,j,k+1) or
+                 dfs(i,j+1,k+1) or dfs(i,j-1,k+1))
+        board[i][j] = tmp
+        return found
+
+    for i in range(rows):
+        for j in range(cols):
+            if dfs(i, j, 0):
+                return True
+    return False
+
+if __name__ == "__main__":
+    board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]
+    print(exist(board, "ABCCED"))   # True`},
+{t:"5.2) Robot Movement Range (BFS) — 剑指Offer 13", tag:"general", problem:"Count reachable cells from (0,0), where a cell is blocked if the digit sum of its row+col exceeds k.", sample:"m=2, n=3, k=1 -> 3",
+ approach:["Standard BFS from (0,0)","At each cell, check the digit-sum constraint before adding neighbors to the queue"],
+ tip:"Same BFS skeleton as Number of Islands' multi-source version, just with a custom 'can I enter this cell' check.",
+ code:`from collections import deque
+
+def movingCount(m: int, n: int, k: int) -> int:
+    def digit_sum(x): return sum(map(int, str(x)))
+    q = deque([(0, 0)])
+    visited = set()
+    while q:
+        i, j = q.popleft()
+        if not (0 <= i < m and 0 <= j < n): continue
+        if digit_sum(i) + digit_sum(j) > k or (i, j) in visited: continue
+        visited.add((i, j))
+        q.append((i+1, j)); q.append((i, j+1))
+    return len(visited)
+
+if __name__ == "__main__":
+    print(movingCount(2, 3, 1))   # 3`},
+{t:"5.3) Number of Islands — LeetCode 200", tag:"general", problem:"Count the number of islands in a 2D grid of land ('1') and water ('0').", sample:'grid=["11110","11010","11000","00000"] -> 1',
+ approach:["DFS flood fill: when you find land, sink the ENTIRE connected island by marking visited cells as water","Count how many times a new DFS is triggered"],
+ table: gridDiagram([["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]], {caption:"One connected island (top-left) — DFS floods it all in one call"}),
+ tip:"DFS floods the whole island in one go — mark visited as you go so you never recount.",
+ code:`def numIslands(grid) -> int:
+    if not grid: return 0
+    rows, cols = len(grid), len(grid[0])
+
+    def dfs(i, j):
+        if i<0 or j<0 or i>=rows or j>=cols or grid[i][j] != "1":
+            return
+        grid[i][j] = "0"
+        dfs(i+1,j); dfs(i-1,j); dfs(i,j+1); dfs(i,j-1)
+
+    count = 0
+    for i in range(rows):
+        for j in range(cols):
+            if grid[i][j] == "1":
+                dfs(i, j)
+                count += 1
+    return count
+
+if __name__ == "__main__":
+    grid = [list("11110"), list("11010"), list("11000"), list("00000")]
+    print(numIslands(grid))   # 1`},
+{t:"5.4) Course Schedule — LeetCode 207", tag:"general", problem:"Given prerequisites, determine if all courses can be finished (cycle detection).", sample:"numCourses=2, prerequisites=[[1,0]] -> True",
+ approach:["Build a graph + in-degree count for each course","BFS topological sort: start with courses that have 0 prerequisites","If every course eventually gets processed, there's no cycle"],
+ tip:"If you can't process all nodes via topological sort, there's a cycle -> return False.",
+ code:`from collections import deque
+
+def canFinish(numCourses, prerequisites) -> bool:
+    indeg = [0] * numCourses
+    g = [[] for _ in range(numCourses)]
+    for a, b in prerequisites:
+        g[b].append(a)
+        indeg[a] += 1
+    q = deque([i for i in range(numCourses) if indeg[i] == 0])
+    visited = 0
+    while q:
+        u = q.popleft()
+        visited += 1
+        for v in g[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0:
+                q.append(v)
+    return visited == numCourses
+
+if __name__ == "__main__":
+    print(canFinish(2, [[1, 0]]))          # True
+    print(canFinish(2, [[1,0],[0,1]]))     # False`},
+{t:"5.5) Course Schedule II — LeetCode 210", tag:"general", problem:"Return a valid order to finish all courses (topological ordering).", sample:"numCourses=2, prerequisites=[[1,0]] -> [0,1]",
+ approach:["Same BFS topological sort as Course Schedule I, but collect the order as you go instead of just counting"],
+ table: `<svg width="100%" viewBox="0 0 300 100" style="max-width:300px;display:block;margin:10px auto;">
+   <defs><marker id="csm" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+   <circle cx="40" cy="50" r="24" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.3"/><text x="40" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">0</text>
+   <line x1="64" y1="50" x2="146" y2="50" stroke="#888" stroke-width="1.3" marker-end="url(#csm)"/>
+   <circle cx="170" cy="50" r="24" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.3"/><text x="170" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">1</text>
+   <text x="105" y="30" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">0 must come before 1</text>
+   <text x="105" y="85" text-anchor="middle" font-size="10" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Order: [0, 1]</text>
+ </svg>`,
+ tip:"If the returned order's length doesn't equal numCourses, there's a cycle — return an empty list.",
+ code:`from collections import deque
+
+def findOrder(numCourses, prerequisites):
+    indeg = [0] * numCourses
+    g = [[] for _ in range(numCourses)]
+    for a, b in prerequisites:
+        g[b].append(a); indeg[a] += 1
+    q = deque([i for i in range(numCourses) if indeg[i] == 0])
+    order = []
+    while q:
+        u = q.popleft(); order.append(u)
+        for v in g[u]:
+            indeg[v] -= 1
+            if indeg[v] == 0: q.append(v)
+    return order if len(order) == numCourses else []
+
+if __name__ == "__main__":
+    print(findOrder(2, [[1, 0]]))   # [0, 1]`},
+{t:"5.6) Binary Tree Level Order Traversal — LeetCode 102", tag:"general", problem:"Given a binary tree, return node values grouped level by level.", sample:"root=3, children 9 and 20 -> [[3],[9,20],[15,7]]",
+ approach:["Breadth first search with a queue","Process one full level at a time using the current queue length as the level size"],
+ tip:"The queue length at the start of each loop equals the size of the current level.",
+ code:`from collections import deque
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val; self.left = left; self.right = right
+
+def levelOrder(root):
+    if not root: return []
+    result = []
+    queue = deque([root])
+    while queue:
+        level_size = len(queue)
+        level = []
+        for _ in range(level_size):
+            node = queue.popleft()
+            level.append(node.val)
+            if node.left: queue.append(node.left)
+            if node.right: queue.append(node.right)
+        result.append(level)
+    return result
+
+if __name__ == "__main__":
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20)
+    root.right.left = TreeNode(15)
+    root.right.right = TreeNode(7)
+    print(levelOrder(root))   # [[3], [9, 20], [15, 7]]`},
+{t:"5.7) Rotting Oranges — LeetCode 994", tag:"general", problem:"Rotten oranges infect fresh neighbors every minute. Return minutes until all oranges rot, or -1 if impossible.", sample:"grid=[[2,1,1],[1,1,0],[0,1,1]] -> 4 minutes",
+ approach:["Multi source BFS: seed the queue with EVERY rotten orange at once","Each full layer processed equals exactly one minute"],
+ tip:"Multi source BFS means seeding ALL starting points into the queue together, not one at a time.",
+ code:`from collections import deque
+
+def orangesRotting(grid):
+    rows, cols = len(grid), len(grid[0])
+    queue = deque()
+    fresh = 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] == 2: queue.append((r, c))
+            elif grid[r][c] == 1: fresh += 1
+    minutes = 0
+    directions = [(1,0), (-1,0), (0,1), (0,-1)]
+    while queue and fresh > 0:
+        minutes += 1
+        for _ in range(len(queue)):
+            r, c = queue.popleft()
+            for dr, dc in directions:
+                nr, nc = r + dr, c + dc
+                if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == 1:
+                    grid[nr][nc] = 2
+                    fresh -= 1
+                    queue.append((nr, nc))
+    return minutes if fresh == 0 else -1
+
+if __name__ == "__main__":
+    grid1 = [[2,1,1],[1,1,0],[0,1,1]]
+    print(orangesRotting(grid1))   # 4`},
+{t:"5.8) Union-Find — Largest Tree Root in a Forest", tag:"verified", src:"LeetCode Discuss — Software Engineer Associate, round two", problem:"Given a child to parent hashmap representing a forest, find the root of the tree with the most nodes.", sample:"child_to_parent={1:0,2:0,3:0,6:5} -> root 0 (4 nodes)",
+ approach:["Follow the child to parent chain up to the root for every node","Count how many nodes map to each root"],
+ tip:"This is a lightweight version of Union-Find since the structure is already fully given.",
+ code:`def largestTreeRoot(child_to_parent, all_nodes):
+    def find_root(node):
+        while node in child_to_parent:
+            node = child_to_parent[node]
+        return node
+
+    root_counts = {}
+    for node in all_nodes:
+        root = find_root(node)
+        root_counts[root] = root_counts.get(root, 0) + 1
+
+    best_root, best_count = None, -1
+    for root in sorted(root_counts):
+        if root_counts[root] > best_count:
+            best_root, best_count = root, root_counts[root]
+    return best_root
+
+if __name__ == "__main__":
+    child_to_parent = {1: 0, 2: 0, 3: 0, 6: 5}
+    all_nodes = [0, 1, 2, 3, 5, 6]
+    print(largestTreeRoot(child_to_parent, all_nodes))   # 0`},
+{t:"5.9) Subsets — LeetCode 78", tag:"general", problem:"Return all possible subsets (the power set) of an array of distinct integers.", sample:"nums=[1,2,3] -> [[],[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]",
+ approach:["Backtrack over indices: at each index, recurse WITHOUT taking it, then WITH taking it"],
+ table: `<svg width="100%" viewBox="0 0 400 130" style="max-width:400px;display:block;margin:10px auto;">
+   <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Each element: include or exclude -&gt; 2^n total subsets</text>
+   <circle cx="200" cy="35" r="4" fill="var(--accent)"/><text x="200" y="30" text-anchor="middle" font-size="9" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">start</text>
+   <line x1="200" y1="38" x2="100" y2="70" stroke="#888" stroke-width="1"/><line x1="200" y1="38" x2="300" y2="70" stroke="#888" stroke-width="1"/>
+   <text x="100" y="82" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">include 1</text>
+   <text x="300" y="82" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">exclude 1</text>
+   <rect x="10" y="100" width="55" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="37" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[1,2,3]</text>
+   <rect x="75" y="100" width="45" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="97" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[1,2]</text>
+   <rect x="130" y="100" width="45" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="152" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[1,3]</text>
+   <rect x="185" y="100" width="35" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="202" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[1]</text>
+   <rect x="230" y="100" width="45" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="252" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[2,3]</text>
+   <rect x="285" y="100" width="35" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="302" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[2]</text>
+   <rect x="330" y="100" width="35" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="347" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[3]</text>
+   <rect x="370" y="100" width="25" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="382" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[]</text>
+ </svg>`,
+ tip:"path.append() then recurse then path.pop() — that pop is the 'backtrack' step, undoing the choice for the next branch.",
+ code:`from typing import List
+
+def subsets(nums: List[int]) -> List[List[int]]:
+    res, path = [], []
+    def dfs(i: int):
+        if i == len(nums):
+            res.append(path[:]); return
+        dfs(i + 1)
+        path.append(nums[i])
+        dfs(i + 1)
+        path.pop()
+    dfs(0)
+    return res
+
+if __name__ == "__main__":
+    print(subsets([1,2,3]))`},
+{t:"5.10) Subsets II — LeetCode 90", tag:"general", problem:"Return all subsets when nums may contain duplicates (results must be unique).", sample:"nums=[1,2,2] -> [[],[1],[2],[1,2],[2,2],[1,2,2]]",
+ approach:["Sort first so duplicates are adjacent","At each recursion level, skip a value if it equals the previous value at the SAME level (i > start and nums[i]==nums[i-1])"],
+ tip:"'Same level' skipping (not 'same branch') is the key distinction from Permutations II's duplicate-skipping rule.",
+ code:`from typing import List
+
+def subsetsWithDup(nums: List[int]) -> List[List[int]]:
+    nums.sort()
+    res, path = [], []
+    def dfs(start: int):
+        res.append(path[:])
+        for i in range(start, len(nums)):
+            if i > start and nums[i] == nums[i-1]:
+                continue
+            path.append(nums[i])
+            dfs(i + 1)
+            path.pop()
+    dfs(0)
+    return res
+
+if __name__ == "__main__":
+    print(subsetsWithDup([1,2,2]))`},
+{t:"5.11) Permutations — LeetCode 46", tag:"general", problem:"Return all permutations of distinct integers.", sample:"nums=[1,2,3] -> 6 permutations",
+ approach:["Backtrack with a 'used' boolean array","At each position, try every number that hasn't been used yet"],
+ tip:"Subsets picks a SUBSET of positions (order doesn't matter). Permutations uses ALL elements but tries every ORDER — that's why it needs a 'used' array instead of a 'start' index.",
+ code:`from typing import List
+
+def permute(nums: List[int]) -> List[List[int]]:
+    res, path = [], []
+    used = [False] * len(nums)
+    def dfs():
+        if len(path) == len(nums):
+            res.append(path[:]); return
+        for i, v in enumerate(nums):
+            if used[i]: continue
+            used[i] = True
+            path.append(v)
+            dfs()
+            path.pop()
+            used[i] = False
+    dfs()
+    return res
+
+if __name__ == "__main__":
+    print(permute([1,2,3]))`},
+{t:"5.12) Permutations II — LeetCode 47", tag:"general", problem:"Return all unique permutations when nums can contain duplicates.", sample:"nums=[1,1,2] -> [[1,1,2],[1,2,1],[2,1,1]]",
+ approach:["Sort first","Skip a duplicate value at the SAME depth if the previous identical value hasn't been used yet: nums[i]==nums[i-1] and not used[i-1]"],
+ tip:"'not used[i-1]' is the subtle part — it means the previous identical value was ALREADY popped back out (backtracked), so trying it again at this depth would just repeat a branch we've already explored.",
+ code:`from typing import List
+
+def permuteUnique(nums: List[int]) -> List[List[int]]:
+    nums.sort()
+    res, path = [], []
+    used = [False] * len(nums)
+    def dfs():
+        if len(path) == len(nums):
+            res.append(path[:]); return
+        for i in range(len(nums)):
+            if used[i]: continue
+            if i > 0 and nums[i] == nums[i-1] and not used[i-1]:
+                continue
+            used[i] = True
+            path.append(nums[i])
+            dfs()
+            path.pop()
+            used[i] = False
+    dfs()
+    return res
+
+if __name__ == "__main__":
+    print(permuteUnique([1,1,2]))`},
+{t:"5.13) Combination Sum — LeetCode 39", tag:"general", problem:"Find all unique combinations summing to target; a number may be reused unlimited times.", sample:"candidates=[2,3,6,7], target=7 -> [[7],[2,2,3]]",
+ approach:["Sort candidates first so you can prune early (break once a value exceeds the remaining target)","Backtrack with a 'start' index, but pass the SAME index i again in the recursive call (not i+1) to allow reuse"],
+ table: `<svg width="100%" viewBox="0 0 340 110" style="max-width:340px;display:block;margin:10px auto;">
+   <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">target=7, candidates=[2,3,6,7]</text>
+   <rect x="10" y="24" width="60" height="24" rx="5" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="40" y="40" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">pick 2</text>
+   <text x="80" y="40" font-size="12" fill="var(--text-muted)">→</text>
+   <rect x="95" y="24" width="90" height="24" rx="5" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="140" y="40" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">pick 2 again</text>
+   <text x="192" y="40" font-size="12" fill="var(--text-muted)">→</text>
+   <rect x="207" y="24" width="60" height="24" rx="5" fill="var(--success-bg)" stroke="var(--success)"/><text x="237" y="40" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">pick 3</text>
+   <text x="10" y="70" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">remain: 7 → 5 → 3 → 0, path = [2,2,3] ✓</text>
+   <rect x="10" y="80" width="90" height="22" rx="5" fill="var(--success-bg)" stroke="var(--success)"/><text x="55" y="94" text-anchor="middle" font-size="10" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Result: [2,2,3]</text>
+ </svg>`,
+ tip:"Passing i (not i+1) in the recursive call is what allows the SAME number to be picked again — that's the whole 'unlimited reuse' trick.",
+ code:`from typing import List
+
+def combinationSum(candidates: List[int], target: int) -> List[List[int]]:
+    candidates.sort()
+    res, path = [], []
+    def dfs(start: int, remain: int):
+        if remain == 0:
+            res.append(path[:]); return
+        for i in range(start, len(candidates)):
+            v = candidates[i]
+            if v > remain: break
+            path.append(v)
+            dfs(i, remain - v)
+            path.pop()
+    dfs(0, target)
+    return res
+
+if __name__ == "__main__":
+    print(combinationSum([2,3,6,7], 7))   # [[2,2,3],[7]]`},
+{t:"5.14) Combination Sum II — LeetCode 40", tag:"general", problem:"Same as Combination Sum, but each candidate may only be used ONCE, and candidates may contain duplicates.", sample:"candidates=[10,1,2,7,6,1,5], target=8 -> [[1,1,6],[1,2,5],[1,7],[2,6]]",
+ approach:["Sort first","Skip duplicate values at the SAME depth (i > start and candidates[i]==candidates[i-1])","Advance to i+1 in the recursive call (not i) so each element is used at most once"],
+ tip:"Two changes from Combination Sum: advance to i+1 (no reuse) AND add the same-depth duplicate skip (no duplicate result sets).",
+ code:`from typing import List
+
+def combinationSum2(candidates: List[int], target: int) -> List[List[int]]:
+    candidates.sort()
+    res, path = [], []
+    def dfs(start: int, remain: int):
+        if remain == 0:
+            res.append(path[:]); return
+        for i in range(start, len(candidates)):
+            if i > start and candidates[i] == candidates[i-1]:
+                continue
+            v = candidates[i]
+            if v > remain: break
+            path.append(v)
+            dfs(i + 1, remain - v)
+            path.pop()
+    dfs(0, target)
+    return res
+
+if __name__ == "__main__":
+    print(combinationSum2([10,1,2,7,6,1,5], 8))   # [[1,1,6],[1,2,5],[1,7],[2,6]]`},
+];
+
+const phase6 = [
+{t:"6.1) Jump Game I — LeetCode 55", tag:"general", problem:"Determine if you can reach the last index, where each element is your max jump length from there.", sample:"nums=[2,3,1,1,4] -> True  |  [3,2,1,0,4] -> False",
+ approach:["Track the farthest index reachable so far","If you ever reach an index BEYOND the farthest reachable point, you're stuck — return False"],
+ table: arrayDiagram(["2","3","1","1","4"], {highlights:{0:"success",1:"success",4:"success"}, caption:"Reachable: 0→1 (jump 2)→4 (jump 3) — last index reached"}),
+ tip:"You don't need to know the EXACT path — just whether the farthest reach ever falls behind your current position.",
+ code:`from typing import List
+
+def canJump(nums: List[int]) -> bool:
+    farthest = 0
+    for i, step in enumerate(nums):
+        if i > farthest:
+            return False
+        farthest = max(farthest, i + step)
+    return True
+
+if __name__ == "__main__":
+    print(canJump([2,3,1,1,4]))   # True
+    print(canJump([3,2,1,0,4]))   # False`},
+{t:"6.2) Jump Game II — LeetCode 45", tag:"general", problem:"Return the MINIMUM number of jumps to reach the last index.", sample:"nums=[2,3,1,1,4] -> 2 (0→1→4)",
+ approach:["Track current_end (farthest reachable within the CURRENT jump) and farthest (farthest reachable overall)","When you reach current_end, you MUST take another jump — update current_end to farthest"],
+ tip:"This is a level-by-level BFS in disguise — current_end marks the boundary of the current 'level' of reachability.",
+ code:`from typing import List
+
+def jump(nums: List[int]) -> int:
+    jumps = 0
+    farthest = 0
+    current_end = 0
+    for i in range(len(nums) - 1):
+        farthest = max(farthest, i + nums[i])
+        if i == current_end:
+            jumps += 1
+            current_end = farthest
+    return jumps
+
+if __name__ == "__main__":
+    print(jump([2,3,1,1,4]))   # 2`},
+{t:"6.3) Gas Station — LeetCode 134", tag:"general", problem:"Find the starting gas station index to travel a circular route once, or -1 if impossible.", sample:"gas=[1,2,3,4,5], cost=[3,4,5,1,2] -> 3",
+ approach:["If total gas < total cost, it's impossible — return -1 immediately","Otherwise, greedily track a running tank; whenever it goes negative, the failure means NONE of the stations up to and including this one could be a valid start — reset start to the NEXT station"],
+ tip:"If the total gas is enough for the whole circuit, there's guaranteed to be exactly one valid starting point — you don't need to check every candidate separately.",
+ code:`from typing import List
+
+def canCompleteCircuit(gas: List[int], cost: List[int]) -> int:
+    total, tank, start = 0, 0, 0
+    for i in range(len(gas)):
+        diff = gas[i] - cost[i]
+        total += diff
+        tank += diff
+        if tank < 0:
+            start = i + 1
+            tank = 0
+    return start if total >= 0 else -1
+
+if __name__ == "__main__":
+    print(canCompleteCircuit([1,2,3,4,5], [3,4,5,1,2]))   # 3
+    print(canCompleteCircuit([2,3,4], [3,4,3]))            # -1`},
+];
+
+const phase7 = [
+{t:"7.1) Merge Intervals — LeetCode 56", tag:"general", problem:"Merge all overlapping intervals.", sample:"[[1,3],[2,6],[8,10],[15,18]] -> [[1,6],[8,10],[15,18]]",
+ approach:["Sort intervals by start time","Walk through: if current overlaps the last merged interval, extend it; otherwise start a new one"],
+ table: `<svg width="100%" viewBox="0 0 400 90" style="max-width:400px;display:block;margin:10px auto;">
+   <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Before merge (sorted by start):</text>
+   <rect x="10" y="20" width="60" height="20" rx="4" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="40" y="34" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">[1,3]</text>
+   <rect x="50" y="20" width="140" height="20" rx="4" fill="var(--warning-bg)" stroke="var(--warning)"/><text x="120" y="34" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">[2,6]</text>
+   <rect x="230" y="20" width="60" height="20" rx="4" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="260" y="34" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">[8,10]</text>
+   <rect x="330" y="20" width="60" height="20" rx="4" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="360" y="34" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">[15,18]</text>
+   <text x="10" y="60" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">After merge:</text>
+   <rect x="10" y="66" width="180" height="20" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="100" y="80" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">[1,6]</text>
+   <rect x="230" y="66" width="60" height="20" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="260" y="80" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">[8,10]</text>
+   <rect x="330" y="66" width="60" height="20" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="360" y="80" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">[15,18]</text>
+ </svg>`,
+ tip:"Sorting first turns 'any overlap' into 'only check the previous interval'.",
+ code:`from typing import List
+
+def merge(intervals: List[List[int]]) -> List[List[int]]:
+    intervals.sort(key=lambda x: x[0])
+    merged = [intervals[0]]
+    for start, end in intervals[1:]:
+        if start <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+    return merged
+
+if __name__ == "__main__":
+    print(merge([[1,3],[2,6],[8,10],[15,18]]))   # [[1,6],[8,10],[15,18]]`},
+{t:"7.2) Insert Interval — LeetCode 57", tag:"general", problem:"Insert a new interval into a sorted list of non-overlapping intervals, merging if necessary.", sample:"intervals=[[1,2],[3,5],[6,7],[8,10],[12,16]], new=[4,8] -> [[1,2],[3,10],[12,16]]",
+ approach:["Simplest approach: append the new interval, sort by start, then reuse the Merge Intervals logic in one pass"],
+ tip:"Don't overthink it — appending + sorting + merging is O(n log n) and much less error-prone than manual case handling.",
+ code:`from typing import List
+
+def insert_interval_easy(intervals: List[List[int]], new_interval: List[int]) -> List[List[int]]:
+    intervals = intervals + [new_interval]
+    intervals.sort(key=lambda x: x[0])
+    merged: List[List[int]] = []
+    for start, end in intervals:
+        if not merged or start > merged[-1][1]:
+            merged.append([start, end])
+        else:
+            merged[-1][1] = max(merged[-1][1], end)
+    return merged
+
+if __name__ == "__main__":
+    print(insert_interval_easy([[1,3],[6,9]], [2,5]))   # [[1,5],[6,9]]
+    print(insert_interval_easy([[1,2],[3,5],[6,7],[8,10],[12,16]], [4,8]))   # [[1,2],[3,10],[12,16]]`},
+{t:"7.3) Meeting Rooms II — LeetCode 253", tag:"general", problem:"Find the minimum number of conference rooms required for a list of meetings.", sample:"[[0,30],[5,10],[15,20]] -> 2",
+ approach:["Warm-up version (Meeting Rooms I): sort by start time, just check if any meeting starts before the previous one ends -- answers YES/NO for a single room","Full version (Meeting Rooms II): sort meetings by start time","Keep a min-heap of currently occupied rooms' END times","For each meeting, if the earliest-ending room is free by this start time, reuse it (pop); otherwise a new room is needed","Push this meeting's end time; the max heap size ever reached is the answer"],
+ table: `<svg width="100%" viewBox="0 0 460 140" style="max-width:460px;display:block;margin:10px auto;">
+   <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Timeline: meetings [0,30] [5,10] [15,20]</text>
+   <rect x="10" y="24" width="400" height="18" rx="3" fill="var(--danger-bg)" stroke="var(--danger)"/><text x="210" y="37" text-anchor="middle" font-size="9" fill="var(--danger)" font-family="-apple-system,sans-serif">Room A: [0,30]</text>
+   <rect x="76" y="46" width="66" height="18" rx="3" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="109" y="59" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">[5,10]</text>
+   <rect x="209" y="46" width="66" height="18" rx="3" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="242" y="59" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">[15,20]</text>
+   <text x="10" y="85" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">[5,10] and [15,20] both overlap with [0,30] but not each other —</text>
+   <text x="10" y="100" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">they can share ONE second room. Peak concurrent rooms = 2.</text>
+   <rect x="10" y="110" width="90" height="22" rx="5" fill="var(--success-bg)" stroke="var(--success)"/><text x="55" y="124" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Answer: 2</text>
+ </svg>`,
+ tip:"Heap size at any moment = number of rooms currently in simultaneous use — the max over all time is the answer.",
+ code:`from typing import List
+import heapq
+
+def min_meeting_rooms(intervals: List[List[int]]) -> int:
+    if not intervals:
+        return 0
+    intervals.sort(key=lambda itv: itv[0])
+    end_times = []
+
+    for start, end in intervals:
+        if end_times and end_times[0] <= start:
+            heapq.heappop(end_times)
+        heapq.heappush(end_times, end)
+
+    return len(end_times)
+
+if __name__ == "__main__":
+    print(min_meeting_rooms([[0,30],[5,10],[15,20]]))   # 2`},
+{t:"7.4) Interval Price Minimum Overlay", tag:"general", problem:"Given a list of intervals, each with a start, an end, and a price, multiple intervals can overlap in time. For every point in time, find the minimum price among all intervals covering it, then merge consecutive segments that end up with the same price into a single interval.", sample:"Input: [(1,5,20), (1,20,13), (7,10,8)] -> Output: [(1,7,13), (7,10,8), (10,20,13)]",
+ approach:["Collect every start and end value across all intervals into a sorted, deduplicated list of breakpoints","For every pair of adjacent breakpoints, find every interval that fully covers that sub-range, and take the minimum price among them","Merge consecutive segments that end up with the same price"],
+ table: `<svg width="100%" viewBox="0 0 680 150" style="max-width:600px; display:block; margin:12px auto 4px;">
+<rect x="20" y="24" width="160" height="26" rx="6" fill="#FBECEA" stroke="#B14A3F" stroke-width="1"/><text x="100" y="41" text-anchor="middle" font-size="11" font-weight="600" fill="#B14A3F" font-family="-apple-system,sans-serif">(1,5,20)</text>
+<rect x="20" y="54" width="640" height="26" rx="6" fill="#E8F2FA" stroke="#2971A8" stroke-width="1"/><text x="340" y="71" text-anchor="middle" font-size="11" font-weight="600" fill="#2971A8" font-family="-apple-system,sans-serif">(1,20,13)</text>
+<rect x="228" y="84" width="128" height="26" rx="6" fill="#FBF0DD" stroke="#9A6B1E" stroke-width="1"/><text x="292" y="101" text-anchor="middle" font-size="11" font-weight="600" fill="#9A6B1E" font-family="-apple-system,sans-serif">(7,10,8)</text>
+<text x="10" y="122" font-size="11" fill="#8A8985" font-family="-apple-system,sans-serif">Output (min price, merged):</text>
+<rect x="20" y="128" width="208" height="20" rx="5" fill="#E4F5EC" stroke="#1E7A4C"/><text x="124" y="142" text-anchor="middle" font-size="10" font-weight="700" fill="#1E7A4C" font-family="-apple-system,sans-serif">(1,7,13)</text>
+<rect x="228" y="128" width="128" height="20" rx="5" fill="#FBECEA" stroke="#B14A3F"/><text x="292" y="142" text-anchor="middle" font-size="10" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">(7,10,8)</text>
+<rect x="356" y="128" width="304" height="20" rx="5" fill="#E4F5EC" stroke="#1E7A4C"/><text x="508" y="142" text-anchor="middle" font-size="10" font-weight="700" fill="#1E7A4C" font-family="-apple-system,sans-serif">(10,20,13)</text>
+</svg>`,
+ tip:"This is the sweep line pattern — the same core idea behind Merge Intervals, but with a MINIMUM instead of a union, plus a final merge pass to compress equal-value runs.",
+ code:`from collections import namedtuple
+
+Interval = namedtuple('Interval', ['start', 'end', 'price'])
+
+def min_price_intervals(intervals):
+    points = sorted(set([iv.start for iv in intervals] + [iv.end for iv in intervals]))
+    segments = []
+    for i in range(len(points) - 1):
+        lo, hi = points[i], points[i + 1]
+        covering_prices = [iv.price for iv in intervals if iv.start <= lo and iv.end >= hi]
+        if covering_prices:
+            segments.append(Interval(lo, hi, min(covering_prices)))
+    if not segments: return []
+    merged = [segments[0]]
+    for seg in segments[1:]:
+        last = merged[-1]
+        if seg.price == last.price and seg.start == last.end:
+            merged[-1] = Interval(last.start, seg.end, last.price)
+        else:
+            merged.append(seg)
+    return merged
+
+if __name__ == "__main__":
+    intervals = [Interval(1, 5, 20), Interval(1, 20, 13), Interval(7, 10, 8)]
+    for r in min_price_intervals(intervals):
+        print(r)`},
+];
+
+const phaseDesign = [
+{t:"D.1) Min Stack — LeetCode 155", tag:"general", problem:"Design a stack that supports push, pop, top, and retrieving the minimum, all in O(1).", sample:"push(-2), push(0), push(-3) -> getMin() = -3",
  approach:["Maintain TWO stacks: the main stack, and a parallel 'min stack'","Every push also pushes the CURRENT minimum onto the min stack, so getMin() is always just a peek"],
  table: stackDiagram(["-2 | min=-2","0 | min=-2","-3 | min=-3"], {caption:"Each entry: (value | running min at that point)"}),
  tip:"The min stack isn't 'the minimum' — it's 'the minimum AT THE TIME this element was pushed'.",
@@ -918,8 +1969,7 @@ if __name__ == "__main__":
     print(ms.getMin())   # -3
     ms.pop()
     print(ms.top(), ms.getMin())   # 0 -2`},
-
-{t:"2.5) Implement Queue using Stacks — LeetCode 232", tag:"general", problem:"Implement a FIFO queue using only two stacks.", sample:"push(1), push(2), pop() -> 1, peek() -> 2",
+{t:"D.2) Implement Queue using Stacks — LeetCode 232", tag:"general", problem:"Implement a FIFO queue using only two stacks.", sample:"push(1), push(2), pop() -> 1, peek() -> 2",
  approach:["Use an 'in' stack for pushes","When popping/peeking, if the 'out' stack is empty, dump everything from 'in' into 'out' (this reverses the order to FIFO)"],
  tip:"The dump only happens when 'out' is empty — amortized O(1) per operation, not O(n) every time.",
  code:`class MyQueue:
@@ -951,51 +2001,7 @@ if __name__ == "__main__":
     q.push(1); q.push(2)
     print(q.pop())    # 1
     print(q.peek())   # 2`},
-
-{t:"2.6) Daily Temperatures — LeetCode 739", tag:"general", problem:"For each day, find how many days until a warmer temperature; 0 if none.", sample:"T=[73,74,75,71,69,72,76,73] -> [1,1,4,2,1,1,0,0]",
- approach:["Maintain a stack of INDICES with decreasing temperatures","When the current temp is HIGHER than the stack's top, pop it and record the day difference — that's the answer for that popped index"],
- table: arrayDiagram(["73","74","75","71","69","72","76","73"], {highlights:{2:"success",6:"success"}, caption:"Each pop from the stack happens when a warmer day is found"}),
- tip:"This is a MONOTONIC STACK — kept decreasing, popped whenever the current value breaks the pattern.",
- code:`from typing import List
-
-def dailyTemperatures(T: List[int]) -> List[int]:
-    n = len(T)
-    res = [0] * n
-    stack = []
-    for i, t in enumerate(T):
-        while stack and T[stack[-1]] < t:
-            j = stack.pop()
-            res[j] = i - j
-        stack.append(i)
-    return res
-
-if __name__ == "__main__":
-    print(dailyTemperatures([73,74,75,71,69,72,76,73]))   # [1,1,4,2,1,1,0,0]`},
-
-{t:"2.7) Decode String — LeetCode 394", tag:"general", problem:'Decode a string like "3[a2[c]]" into "accaccacc".', sample:'"3[a2[c]]" -> "accaccacc"',
- approach:["Use a stack storing (previous string, repeat count) pairs","On '[', push the current string and number, reset both","On ']', pop and repeat the current string that many times, prepending the saved previous string"],
- tip:"Nested brackets are exactly what a stack is built for — each '[' is a 'save my place' and each ']' is a 'combine and return'.",
- code:`def decodeString(s: str) -> str:
-    stack = []
-    curNum = 0
-    curStr = ''
-    for c in s:
-        if c == '[':
-            stack.append((curStr, curNum))
-            curStr, curNum = '', 0
-        elif c == ']':
-            lastStr, num = stack.pop()
-            curStr = lastStr + curStr * num
-        elif c.isdigit():
-            curNum = curNum * 10 + int(c)
-        else:
-            curStr += c
-    return curStr
-
-if __name__ == "__main__":
-    print(decodeString("3[a2[c]]"))   # "accaccacc"`},
-
-{t:"2.8) LRU Cache — LeetCode 146", tag:"general", problem:"Design a data structure supporting get/put in O(1), evicting the least recently used item when full.", sample:"cache=LRUCache(2); put(1,1); put(2,2); get(1)->1; put(3,3) evicts key 2",
+{t:"D.3) LRU Cache — LeetCode 146", tag:"general", problem:"Design a data structure supporting get/put in O(1), evicting the least recently used item when full.", sample:"cache=LRUCache(2); put(1,1); put(2,2); get(1)->1; put(3,3) evicts key 2",
  approach:["HashMap for O(1) key lookup + Doubly Linked List for O(1) reordering","Most recently used = front of list; least recently used = tail, evicted when over capacity"],
  tip:"HashMap answers WHERE is it. Linked List tracks HOW RECENTLY it was used.",
  code:`class Node:
@@ -1040,8 +2046,7 @@ if __name__ == "__main__":
     print(cache.get(1))   # 1
     cache.put(3, 3)       # evicts key 2
     print(cache.get(2))   # -1`},
-
-{t:"2.9) Flatten Nested List Iterator — LeetCode 341", tag:"general", problem:"Design an iterator to flatten a nested list of integers.", sample:"[[1,1],2,[1,1]] -> 1,1,2,1,1",
+{t:"D.4) Flatten Nested List Iterator — LeetCode 341", tag:"general", problem:"Design an iterator to flatten a nested list of integers.", sample:"[[1,1],2,[1,1]] -> 1,1,2,1,1",
  approach:["Pre-flatten the entire structure recursively into a flat list at construction time","Then next()/hasNext() are just simple pointer advances"],
  tip:"There's also a lazy, stack-based approach that flattens on-demand — better if the structure is huge and you might not iterate all of it.",
  code:`class NestedIterator:
@@ -1064,787 +2069,143 @@ if __name__ == "__main__":
 
     def hasNext(self) -> bool:
         return self.index < len(self.flat)`},
-];
-
-
-const phase3 = [
-{t:"3.1) Merge Two Sorted Lists — LeetCode 21", tag:"general", problem:"Merge two sorted linked lists into one sorted list.", sample:"l1=[1,2,4], l2=[1,3,4] -> [1,1,2,3,4,4]",
- approach:["Use a dummy head + tail pointer","Compare current nodes of both lists, attach the smaller, advance that pointer","Attach whatever remains once one list is exhausted"],
- tip:"The dummy head trick avoids special-casing 'what if the merged list starts empty'.",
- code:`class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val; self.next = next
-
-def mergeTwoLists(l1, l2):
-    dummy = ListNode()
-    cur = dummy
-    while l1 and l2:
-        if l1.val < l2.val:
-            cur.next, l1 = l1, l1.next
-        else:
-            cur.next, l2 = l2, l2.next
-        cur = cur.next
-    cur.next = l1 or l2
-    return dummy.next
-
-def build(vals):
-    d = ListNode(); c = d
-    for v in vals: c.next = ListNode(v); c = c.next
-    return d.next
-def toList(node):
-    r = []
-    while node: r.append(node.val); node = node.next
-    return r
-
-if __name__ == "__main__":
-    print(toList(mergeTwoLists(build([1,2,4]), build([1,3,4]))))   # [1,1,2,3,4,4]`},
-
-{t:"3.2) Reverse Linked List — LeetCode 206", tag:"general", problem:"Reverse a singly linked list.", sample:"[1,2,3,4,5] -> [5,4,3,2,1]",
- approach:["Track prev and cur pointers","At each step, save cur.next BEFORE overwriting it, flip cur.next to point backward, advance both pointers"],
- table: chainDiagram(["1","2","3","4","5"], {uid:1, caption:"Before: 1→2→3→4→5→None"}) + chainDiagram(["5","4","3","2","1"], {uid:2, caption:"After: 5→4→3→2→1→None"}),
- tip:"Save next_temp BEFORE overwriting cur.next, or you lose the rest of the list forever.",
- code:`def reverseList(head):
-    prev, cur = None, head
-    while cur:
-        nxt = cur.next
-        cur.next = prev
-        prev, cur = cur, nxt
-    return prev
-
-def build(vals):
-    d = ListNode(); c = d
-    for v in vals: c.next = ListNode(v); c = c.next
-    return d.next
-def toList(node):
-    r = []
-    while node: r.append(node.val); node = node.next
-    return r
-
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val; self.next = next
-
-if __name__ == "__main__":
-    print(toList(reverseList(build([1,2,3,4,5]))))   # [5,4,3,2,1]`},
-
-{t:"3.3) Remove Duplicates from Sorted List II — LeetCode 82", tag:"general", problem:"Delete ALL nodes that have duplicate values, leaving only distinct numbers.", sample:"[1,2,3,3,4,4,5] -> [1,2,5]",
- approach:["Use a dummy head so the head itself can be removed if needed","If cur has the same value as cur.next, skip ALL of them (not just one) and reconnect prev.next past the whole run"],
- table: chainDiagram(["1","2","3","3","4","4","5"], {uid:3, highlights:[2,3,4,5], caption:"Nodes 3,3,4,4 are duplicate runs — remove entirely"}),
- tip:"This is 'remove duplicates' NOT 'keep one copy' — every node in a duplicate run gets deleted, including the first occurrence.",
- code:`class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val; self.next = next
-
-def deleteDuplicates(head):
-    dummy = ListNode(0, head)
-    prev, cur = dummy, head
-    while cur:
-        if cur.next and cur.val == cur.next.val:
-            while cur.next and cur.val == cur.next.val:
-                cur = cur.next
-            prev.next = cur.next
-        else:
-            prev = prev.next
-        cur = cur.next
-    return dummy.next
-
-def build(vals):
-    d = ListNode(); c = d
-    for v in vals: c.next = ListNode(v); c = c.next
-    return d.next
-def toList(node):
-    r = []
-    while node: r.append(node.val); node = node.next
-    return r
-
-if __name__ == "__main__":
-    print(toList(deleteDuplicates(build([1,2,3,3,4,4,5]))))   # [1, 2, 5]`},
-
-{t:"3.4) Linked List Cycle — LeetCode 141", tag:"general", problem:"Detect if a linked list has a cycle.", sample:"head=[3,2,0,-4], tail connects to index 1 -> True",
- approach:["Use two pointers: slow moves 1 step, fast moves 2 steps","If they ever meet, there's a cycle; if fast reaches the end (None), there isn't"],
- tip:"Tortoise and Hare — if you're on a circular track with someone twice as fast, they WILL eventually lap you.",
- code:`class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val; self.next = next
-
-def hasCycle(head) -> bool:
-    slow = fast = head
-    while fast and fast.next:
-        slow, fast = slow.next, fast.next.next
-        if slow == fast:
-            return True
-    return False
-
-if __name__ == "__main__":
-    n1, n2, n3 = ListNode(3), ListNode(2), ListNode(0)
-    n1.next, n2.next, n3.next = n2, n3, n2   # cycle back to n2
-    print(hasCycle(n1))   # True`},
-];
-
-
-const phase4 = [
-{t:"4.1) Climbing Stairs — LeetCode 70", tag:"general", problem:"Count the distinct ways to climb n stairs, taking 1 or 2 steps at a time.", sample:"n=3 -> 3 ways ([1+1+1],[1+2],[2+1])",
- approach:["dp[i] = dp[i-1] + dp[i-2] — to reach step i you came from step i-1 (1 step) or step i-2 (2 steps)","Literally the Fibonacci sequence"],
- tip:"Any 'count the ways' problem where each step has 2 fixed choices often reduces to Fibonacci.",
- code:`def climbStairs(n: int) -> int:
-    if n <= 2:
-        return n
-    dp = [0] * (n + 1)
-    dp[1], dp[2] = 1, 2
-    for i in range(3, n + 1):
-        dp[i] = dp[i - 1] + dp[i - 2]
-    return dp[n]
-
-if __name__ == "__main__":
-    print(climbStairs(3))   # 3`},
-
-{t:"4.2) House Robber — LeetCode 198", tag:"general", problem:"Rob houses in a row for maximum money without robbing two adjacent houses.", sample:"nums=[2,7,9,3,1] -> 12 (rob houses with 2,9,1)",
- approach:["dp[i] = max(dp[i-1], dp[i-2] + nums[i]) — either skip house i (keep previous best) or rob it (add to the best from 2 houses back)"],
- table: arrayDiagram(["2","7","9","3","1"], {highlights:{0:"success",2:"success",4:"success"}, caption:"Robbed houses (2+9+1=12) — never adjacent"}),
- tip:"At every house you ask: 'is it worth skipping my neighbor to rob this one instead?'",
- code:`from typing import List
-
-def rob(nums: List[int]) -> int:
-    if not nums: return 0
-    if len(nums) == 1: return nums[0]
-    dp = [0] * len(nums)
-    dp[0] = nums[0]
-    dp[1] = max(nums[0], nums[1])
-    for i in range(2, len(nums)):
-        dp[i] = max(dp[i-1], dp[i-2] + nums[i])
-    return dp[-1]
-
-if __name__ == "__main__":
-    print(rob([2,7,9,3,1]))   # 12`},
-
-{t:"4.3) Longest Increasing Subsequence — LeetCode 300", tag:"general", problem:"Return the length of the longest strictly increasing subsequence.", sample:"nums=[10,9,2,5,3,7,101,18] -> 4 ([2,3,7,101])",
- approach:["dp[i] = length of the LIS ENDING at index i","For each i, look at all earlier j: if nums[i] > nums[j], dp[i] could extend dp[j]","dp[i] = max(dp[i], dp[j]+1) for all valid j < i"],
- table: arrayDiagram(["10","9","2","5","3","7","101","18"], {highlights:{2:"success",4:"success",5:"success",6:"success"}, caption:"One valid LIS: [2,3,7,101], length 4"}),
- tip:"O(n^2) DP is the intuitive version — there's also an O(n log n) patience-sorting version using binary search for follow-ups.",
- code:`from typing import List
-
-def lengthOfLIS(nums: List[int]) -> int:
-    n = len(nums)
-    if n == 0: return 0
-    dp = [1] * n
-    for i in range(n):
-        for j in range(i):
-            if nums[i] > nums[j]:
-                dp[i] = max(dp[i], dp[j] + 1)
-    return max(dp)
-
-if __name__ == "__main__":
-    print(lengthOfLIS([10,9,2,5,3,7,101,18]))   # 4`},
-
-{t:"4.4) Coin Change — LeetCode 322", tag:"general", problem:"Return the fewest coins needed to make up a given amount, or -1 if impossible.", sample:"coins=[1,2,5], amount=11 -> 3 (5+5+1)",
- approach:["Unbounded knapsack DP: dp[x] = fewest coins to make amount x","dp[x] = min(dp[x], dp[x-c]+1) for each coin c where x >= c","dp[0] = 0, everything else starts at infinity"],
- table: arrayDiagram(["0","1","1","2","2","1","2","2","3","3","2","3"], {highlights:{11:"success"}, caption:"dp array for amount 0..11 with coins [1,2,5] — answer at index 11"}),
- tip:"inf as the initial value never wins a min() comparison — it's a safe 'not found yet' placeholder.",
- code:`from typing import List
-import math
-
-def coinChange(coins: List[int], amount: int) -> int:
-    dp = [math.inf] * (amount + 1)
-    dp[0] = 0
-    for x in range(1, amount + 1):
-        for c in coins:
-            if x >= c:
-                dp[x] = min(dp[x], dp[x - c] + 1)
-    return dp[amount] if dp[amount] != math.inf else -1
-
-if __name__ == "__main__":
-    print(coinChange([1,2,5], 11))   # 3`},
-
-{t:"4.5) Unique Paths — LeetCode 62", tag:"general", problem:"Count unique paths from top-left to bottom-right of a grid, moving only right or down.", sample:"m=3, n=7 -> 28",
- approach:["dp[i][j] = dp[i-1][j] + dp[i][j-1] — paths from above plus paths from the left","Initialize first row and first column to 1 (only one way to reach any edge cell)"],
- table: gridDiagram([["1","1","1"],["1","2","3"],["1","3","6"]], {caption:"m=3,n=3 example (smaller than 3x7 for display)"}),
- tip:"Every cell's path count = sum of the cell above and the cell to the left.",
- code:`def uniquePaths(m: int, n: int) -> int:
-    dp = [[1] * n for _ in range(m)]
-    for i in range(1, m):
-        for j in range(1, n):
-            dp[i][j] = dp[i-1][j] + dp[i][j-1]
-    return dp[-1][-1]
-
-if __name__ == "__main__":
-    print(uniquePaths(3, 7))   # 28`},
-
-{t:"4.6) Unique Paths II — LeetCode 63", tag:"general", problem:"Same as Unique Paths, but some cells are blocked by obstacles.", sample:"obstacleGrid=[[0,0,0],[0,1,0],[0,0,0]] -> 2",
- approach:["Same DP recurrence as Unique Paths","If a cell has an obstacle, force dp[i][j] = 0 (no path can pass through it)"],
- table: gridDiagram([["1","1","1"],["1","0","1"],["1","1","2"]], {highlight:[1,1], caption:"Obstacle at (1,1) blocks that path entirely"}),
- tip:"An obstacle doesn't just block itself — it blocks EVERY path that would have passed through it, which naturally propagates through the DP.",
- code:`from typing import List
-
-def uniquePathsWithObstacles(obstacleGrid: List[List[int]]) -> int:
-    m, n = len(obstacleGrid), len(obstacleGrid[0])
-    dp = [[0] * n for _ in range(m)]
-    dp[0][0] = 1 - obstacleGrid[0][0]
-
-    for i in range(m):
-        for j in range(n):
-            if obstacleGrid[i][j] == 1:
-                dp[i][j] = 0
-                continue
-            if i > 0: dp[i][j] += dp[i-1][j]
-            if j > 0: dp[i][j] += dp[i][j-1]
-    return dp[-1][-1]
-
-if __name__ == "__main__":
-    print(uniquePathsWithObstacles([[0,0,0],[0,1,0],[0,0,0]]))   # 2`},
-
-{t:"4.7) Minimum Path Sum — LeetCode 64", tag:"general", problem:"Find a path from top-left to bottom-right minimizing the sum of numbers along the path.", sample:"grid=[[1,3,1],[1,5,1],[4,2,1]] -> 7 (path 1→3→1→1→1)",
- approach:["dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])","Initialize first row and column by simple accumulation (only one way to reach an edge)"],
- table: gridDiagram([["1","4","5"],["2","7","6"],["6","8","7"]], {highlight:[2,2], caption:"Final dp grid — bottom-right (7) is the answer"}),
- tip:"Same shape as Unique Paths, but MIN instead of SUM, and you add the cell's own value each time.",
- code:`from typing import List
-
-def minPathSum(grid: List[List[int]]) -> int:
-    m, n = len(grid), len(grid[0])
-    dp = [[0] * n for _ in range(m)]
-    dp[0][0] = grid[0][0]
-    for j in range(1, n): dp[0][j] = dp[0][j-1] + grid[0][j]
-    for i in range(1, m): dp[i][0] = dp[i-1][0] + grid[i][0]
-    for i in range(1, m):
-        for j in range(1, n):
-            dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1])
-    return dp[-1][-1]
-
-if __name__ == "__main__":
-    print(minPathSum([[1,3,1],[1,5,1],[4,2,1]]))   # 7`},
-
-{t:"4.8) Best Time to Buy/Sell Stock I — LeetCode 121", tag:"general", problem:"Find max profit with exactly ONE buy and ONE sell.", sample:"prices=[7,1,5,3,6,4] -> 5 (buy at 1, sell at 6)",
- approach:["Track the minimum price seen so far","Profit = current price - minimum so far; keep the best"],
- tip:"Only one pass, one running minimum — the simplest of the whole stock-problem family.",
- code:`from typing import List
-
-def maxProfit_I(prices: List[int]) -> int:
-    min_price = float('inf')
-    max_profit = 0
-    for price in prices:
-        min_price = min(min_price, price)
-        max_profit = max(max_profit, price - min_price)
-    return max_profit
-
-if __name__ == "__main__":
-    print(maxProfit_I([7,1,5,3,6,4]))   # 5`},
-
-{t:"4.9) Best Time to Buy/Sell Stock II — LeetCode 122", tag:"general", problem:"Multiple transactions allowed. Find max profit.", sample:"prices=[7,1,5,3,6,4] -> 7",
- approach:["Every price increase contributes to profit — just sum all positive day-to-day differences"],
- tip:"Greedy shortcut for what's really a hold/cash DP — works because there's no cooldown or fee here.",
- code:`from typing import List
-
-def maxProfit_II(prices: List[int]) -> int:
-    profit = 0
-    for i in range(1, len(prices)):
-        if prices[i] > prices[i-1]:
-            profit += prices[i] - prices[i-1]
-    return profit
-
-if __name__ == "__main__":
-    print(maxProfit_II([7,1,5,3,6,4]))   # 7`},
-
-{t:"4.10) Best Time to Buy/Sell Stock with Cooldown — LeetCode 309", tag:"general", problem:"Multiple transactions, but must wait 1 day after selling before buying again.", sample:"prices=[1,2,3,0,2] -> 3",
- approach:["3 states each day: hold (holding stock), sold (just sold today), rest (cooldown or idle)","hold[i] = max(hold[i-1], rest[i-1]-price) — can only BUY from rest, not from sold (that's the cooldown rule)","sold[i] = hold[i-1] + price","rest[i] = max(rest[i-1], sold[i-1])"],
- table: `<svg width="100%" viewBox="0 0 300 130" style="max-width:300px;display:block;margin:10px auto;">
-   <defs><marker id="cdm" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
-   <circle cx="60" cy="30" r="26" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.3"/><text x="60" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">rest</text>
-   <circle cx="200" cy="30" r="26" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.3"/><text x="200" y="34" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">hold</text>
-   <circle cx="200" cy="100" r="26" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="1.3"/><text x="200" y="104" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">sold</text>
-   <line x1="86" y1="30" x2="172" y2="30" stroke="#888" stroke-width="1.3" marker-end="url(#cdm)"/><text x="130" y="22" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">buy</text>
-   <line x1="200" y1="56" x2="200" y2="72" stroke="#888" stroke-width="1.3" marker-end="url(#cdm)"/><text x="230" y="66" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">sell</text>
-   <path d="M 174 100 Q 100 100 60 56" fill="none" stroke="#888" stroke-width="1.3" marker-end="url(#cdm)"/><text x="100" y="112" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">cooldown ends</text>
- </svg>`,
- tip:"This is the whole cooldown rule in one sentence: hold can only buy from rest, never directly from sold.",
- code:`from typing import List
-
-def maxProfit_cooldown(prices: List[int]) -> int:
-    if not prices: return 0
-    n = len(prices)
-    hold = [-float('inf')] * n
-    sold = [0] * n
-    rest = [0] * n
-    hold[0] = -prices[0]
-    for i in range(1, n):
-        hold[i] = max(hold[i-1], rest[i-1] - prices[i])
-        sold[i] = hold[i-1] + prices[i]
-        rest[i] = max(rest[i-1], sold[i-1])
-    return max(sold[-1], rest[-1])
-
-if __name__ == "__main__":
-    print(maxProfit_cooldown([1,2,3,0,2]))   # 3`},
-
-{t:"4.11) Best Time to Buy/Sell Stock with Fee — LeetCode 714", tag:"general", problem:"Multiple transactions, but pay a fee on each sale.", sample:"prices=[1,3,2,8,4,9], fee=2 -> 8",
- approach:["Same hold/cash states as Stock II, just subtract the fee whenever you sell"],
- tip:"Literally identical to Stock II — just minus fee when selling.",
- code:`from typing import List
-
-def maxProfit_fee(prices: List[int], fee: int) -> int:
-    hold, cash = -prices[0], 0
-    for price in prices[1:]:
-        hold = max(hold, cash - price)
-        cash = max(cash, hold + price - fee)
-    return cash
-
-if __name__ == "__main__":
-    print(maxProfit_fee([1,3,2,8,4,9], 2))   # 8`},
-
-{t:"4.12) Best Time to Buy/Sell Stock III — LeetCode 123", tag:"general", problem:"At most 2 transactions allowed. Find max profit.", sample:"prices=[3,3,5,0,0,3,1,4] -> 6",
- approach:["Track 4 states: buy1 (after first buy), sell1 (after first sell), buy2 (after second buy, using sell1's profit), sell2 (after second sell)","Each state only depends on the previous day's states, updated in this fixed order"],
- table: chainDiagram(["buy1","sell1","buy2","sell2"], {uid:4, caption:"State chain: each transaction 'funds' the next one's starting capital"}),
- tip:"buy2 = max(buy2, sell1 - price) is the key insight — the SECOND purchase is funded by the FIRST sale's profit, not fresh capital.",
- code:`from typing import List
-
-def maxProfit_III(prices: List[int]) -> int:
-    buy1, sell1 = float('-inf'), 0
-    buy2, sell2 = float('-inf'), 0
-    for p in prices:
-        buy1 = max(buy1, -p)
-        sell1 = max(sell1, buy1 + p)
-        buy2 = max(buy2, sell1 - p)
-        sell2 = max(sell2, buy2 + p)
-    return sell2
-
-if __name__ == "__main__":
-    print(maxProfit_III([3,3,5,0,0,3,1,4]))   # 6`},
-
-{t:"4.13) Longest Palindromic Substring — LeetCode 5", tag:"general", problem:"Find the longest palindromic substring.", sample:'s="babad" -> "bab" (or "aba")',
- approach:["dp[i][j] = True if s[i..j] is a palindrome","True when s[i]==s[j] AND the inside (i+1..j-1) is also a palindrome (or the substring is length <=2)","Iterate by increasing substring length"],
- table: gridDiagram([["T","F","T","F","F"],["·","T","F","F","T"],["·","·","T","F","F"],["·","·","·","T","F"],["·","·","·","·","T"]], {caption:'s="babad" — diagonal band shows valid palindrome ranges'}),
- tip:"You need the INSIDE substring's answer before you can compute the OUTER one — so you must iterate by length, not by row or column.",
- code:`def longestPalindrome(s: str) -> str:
-    n = len(s)
-    dp = [[False] * n for _ in range(n)]
-    ans = ""
-    for l in range(n):
-        for i in range(n - l):
-            j = i + l
-            if s[i] == s[j] and (l < 2 or dp[i+1][j-1]):
-                dp[i][j] = True
-                if l + 1 > len(ans):
-                    ans = s[i:j+1]
-    return ans
-
-if __name__ == "__main__":
-    print(longestPalindrome("babad"))   # "bab" or "aba"`},
-
-{t:"4.14) Edit Distance — LeetCode 72", tag:"general", problem:"Find the minimum operations (insert, delete, replace) to convert word1 to word2.", sample:'word1="horse", word2="ros" -> 3',
- approach:["dp[i][j] = min ops to convert word1[:i] to word2[:j]","If characters match: dp[i][j] = dp[i-1][j-1] (no operation needed)","If not: dp[i][j] = 1 + min(delete, insert, replace) = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])"],
- table: gridDiagram([["0","1","2","3"],["1","1","2","3"],["2","2","1","2"],["3","2","2","2"],["4","3","2","3"],["5","4","3","2"]], {highlight:[5,3], caption:'word1="horse" (rows) vs word2="ros" (cols) — answer at bottom-right = 3'}),
- tip:"Three arrows into every cell: delete (from above), insert (from left), replace (diagonal) — pick the cheapest.",
- code:`def minDistance(word1: str, word2: str) -> int:
-    m, n = len(word1), len(word2)
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    for i in range(m + 1): dp[i][0] = i
-    for j in range(n + 1): dp[0][j] = j
-
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if word1[i-1] == word2[j-1]:
-                dp[i][j] = dp[i-1][j-1]
-            else:
-                dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
-    return dp[m][n]
-
-if __name__ == "__main__":
-    print(minDistance("horse", "ros"))   # 3`},
-
-{t:"4.15) Longest Common Subsequence — LeetCode 1143", tag:"general", problem:"Find the length of the longest subsequence common to two strings.", sample:'text1="abcde", text2="ace" -> 3',
- approach:["dp[i][j] = LCS length of text1[:i] and text2[:j]","Match: dp[i][j] = dp[i-1][j-1] + 1","No match: dp[i][j] = max(dp[i-1][j], dp[i][j-1])"],
- table: gridDiagram([["0","0","0"],["0","1","1"],["1","1","1"],["1","1","2"],["1","1","2"],["1","2","3"]], {highlight:[5,2], caption:'text1="abcde" (rows) vs text2="ace" (cols) — LCS = 3'}),
- tip:"Match -> extend diagonally. No match -> take the best of skipping a char from EITHER string.",
- code:`def longestCommonSubsequence(text1: str, text2: str) -> int:
-    m, n = len(text1), len(text2)
-    dp = [[0] * (n + 1) for _ in range(m + 1)]
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            if text1[i-1] == text2[j-1]:
-                dp[i][j] = dp[i-1][j-1] + 1
-            else:
-                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
-    return dp[m][n]
-
-if __name__ == "__main__":
-    print(longestCommonSubsequence("abcde", "ace"))   # 3`},
-
-{t:"4.16) Word Break — LeetCode 139", tag:"general", problem:"Determine if a string can be segmented into dictionary words.", sample:'s="leetcode", wordDict=["leet","code"] -> True',
- approach:["dp[i] = True if s[:i] can be segmented","For each i, check all earlier j: if dp[j] is True and s[j:i] is a dictionary word, dp[i] = True"],
- table: arrayDiagram(["T","F","F","F","T","F","F","F","T"], {highlights:{0:"success",4:"success",8:"success"}, caption:'dp array for s="leetcode": dp[0], dp[4]="leet", dp[8]="leet"+"code" are True'}),
- tip:"dp[i] means 'can the FIRST i characters be segmented' — not s[i] itself.",
- code:`from typing import List
-
-def wordBreak(s: str, wordDict: List[str]) -> bool:
-    wordSet = set(wordDict)
-    n = len(s)
-    dp = [False] * (n + 1)
-    dp[0] = True
-    for i in range(1, n + 1):
-        for j in range(i):
-            if dp[j] and s[j:i] in wordSet:
-                dp[i] = True
-                break
-    return dp[n]
-
-if __name__ == "__main__":
-    print(wordBreak("leetcode", ["leet", "code"]))   # True`},
-];
-
-
-const phase5 = [
-{t:"5.1) Word Search in Matrix — LeetCode 79", tag:"general", problem:"Determine if a word exists in a grid, built from sequentially adjacent cells (no cell reused).", sample:'board=[["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word="ABCCED" -> True',
- approach:["DFS with backtracking from every cell","Mark the current cell visited temporarily (e.g. '#'), explore 4 directions, then RESTORE it before returning"],
- tip:"The restore step is critical — forgetting to un-mark a cell after backtracking silently corrupts future search paths.",
- code:`def exist(board, word) -> bool:
-    rows, cols = len(board), len(board[0])
-
-    def dfs(i, j, k):
-        if k == len(word):
-            return True
-        if i < 0 or i >= rows or j < 0 or j >= cols or board[i][j] != word[k]:
-            return False
-        tmp, board[i][j] = board[i][j], "#"
-        found = (dfs(i+1,j,k+1) or dfs(i-1,j,k+1) or
-                 dfs(i,j+1,k+1) or dfs(i,j-1,k+1))
-        board[i][j] = tmp
-        return found
-
-    for i in range(rows):
-        for j in range(cols):
-            if dfs(i, j, 0):
-                return True
-    return False
-
-if __name__ == "__main__":
-    board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]]
-    print(exist(board, "ABCCED"))   # True`},
-
-{t:"5.2) Robot Movement Range (BFS) — 剑指Offer 13", tag:"general", problem:"Count reachable cells from (0,0), where a cell is blocked if the digit sum of its row+col exceeds k.", sample:"m=2, n=3, k=1 -> 3",
- approach:["Standard BFS from (0,0)","At each cell, check the digit-sum constraint before adding neighbors to the queue"],
- tip:"Same BFS skeleton as Number of Islands' multi-source version, just with a custom 'can I enter this cell' check.",
+{t:"D.5) Design Hit Counter — LeetCode 362", tag:"general", problem:"Design a hit counter that counts hits received in the past 300 seconds.", sample:"hit at 1,2,3 then getHits at 4 returns 3",
+ approach:["Use a queue to store timestamps of hits","On a query, pop all timestamps older than the window before counting"],
+ tip:"This is a sliding window over TIME instead of over an array.",
  code:`from collections import deque
 
-def movingCount(m: int, n: int, k: int) -> int:
-    def digit_sum(x): return sum(map(int, str(x)))
-    q = deque([(0, 0)])
-    visited = set()
-    while q:
-        i, j = q.popleft()
-        if not (0 <= i < m and 0 <= j < n): continue
-        if digit_sum(i) + digit_sum(j) > k or (i, j) in visited: continue
-        visited.add((i, j))
-        q.append((i+1, j)); q.append((i, j+1))
-    return len(visited)
+class HitCounter:
+    def __init__(self):
+        self.hits = deque()
+
+    def hit(self, timestamp: int) -> None:
+        self.hits.append(timestamp)
+
+    def getHits(self, timestamp: int) -> int:
+        while self.hits and self.hits[0] <= timestamp - 300:
+            self.hits.popleft()
+        return len(self.hits)
 
 if __name__ == "__main__":
-    print(movingCount(2, 3, 1))   # 3`},
-
-{t:"5.3) Number of Islands — LeetCode 200", tag:"general", problem:"Count the number of islands in a 2D grid of land ('1') and water ('0').", sample:'grid=["11110","11010","11000","00000"] -> 1',
- approach:["DFS flood fill: when you find land, sink the ENTIRE connected island by marking visited cells as water","Count how many times a new DFS is triggered"],
- table: gridDiagram([["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]], {caption:"One connected island (top-left) — DFS floods it all in one call"}),
- tip:"DFS floods the whole island in one go — mark visited as you go so you never recount.",
- code:`def numIslands(grid) -> int:
-    if not grid: return 0
-    rows, cols = len(grid), len(grid[0])
-
-    def dfs(i, j):
-        if i<0 or j<0 or i>=rows or j>=cols or grid[i][j] != "1":
-            return
-        grid[i][j] = "0"
-        dfs(i+1,j); dfs(i-1,j); dfs(i,j+1); dfs(i,j-1)
-
-    count = 0
-    for i in range(rows):
-        for j in range(cols):
-            if grid[i][j] == "1":
-                dfs(i, j)
-                count += 1
-    return count
+    counter = HitCounter()
+    counter.hit(1); counter.hit(2); counter.hit(3)
+    print(counter.getHits(4))    # 3`},
+{t:"D.6) Design a Calculator", tag:"verified", src:"Glassdoor — Superday round, June 2026, Dallas", problem:"Design a basic calculator evaluating an expression with plus, minus, multiply, and divide, respecting precedence.", sample:'Input: "3+2*2" -> Output: 7',
+ approach:["Use a stack to handle operator precedence","For multiply and divide, pop and apply immediately; for plus and minus, push the signed value"],
+ tip:"Interviewer explicitly asked candidates to check all edge cases and discuss time and space complexity.",
+ code:`def calculate(s: str) -> int:
+    stack = []
+    num = 0
+    sign = '+'
+    for i, ch in enumerate(s):
+        if ch.isdigit():
+            num = num * 10 + int(ch)
+        if ch in '+-*/' or i == len(s) - 1:
+            if sign == '+': stack.append(num)
+            elif sign == '-': stack.append(-num)
+            elif sign == '*': stack.append(stack.pop() * num)
+            elif sign == '/': stack.append(int(stack.pop() / num))
+            sign = ch
+            num = 0
+    return sum(stack)
 
 if __name__ == "__main__":
-    grid = [list("11110"), list("11010"), list("11000"), list("00000")]
-    print(numIslands(grid))   # 1`},
-
-{t:"5.4) Course Schedule — LeetCode 207", tag:"general", problem:"Given prerequisites, determine if all courses can be finished (cycle detection).", sample:"numCourses=2, prerequisites=[[1,0]] -> True",
- approach:["Build a graph + in-degree count for each course","BFS topological sort: start with courses that have 0 prerequisites","If every course eventually gets processed, there's no cycle"],
- tip:"If you can't process all nodes via topological sort, there's a cycle -> return False.",
- code:`from collections import deque
-
-def canFinish(numCourses, prerequisites) -> bool:
-    indeg = [0] * numCourses
-    g = [[] for _ in range(numCourses)]
-    for a, b in prerequisites:
-        g[b].append(a)
-        indeg[a] += 1
-    q = deque([i for i in range(numCourses) if indeg[i] == 0])
-    visited = 0
-    while q:
-        u = q.popleft()
-        visited += 1
-        for v in g[u]:
-            indeg[v] -= 1
-            if indeg[v] == 0:
-                q.append(v)
-    return visited == numCourses
-
-if __name__ == "__main__":
-    print(canFinish(2, [[1, 0]]))          # True
-    print(canFinish(2, [[1,0],[0,1]]))     # False`},
-
-{t:"5.5) Course Schedule II — LeetCode 210", tag:"general", problem:"Return a valid order to finish all courses (topological ordering).", sample:"numCourses=2, prerequisites=[[1,0]] -> [0,1]",
- approach:["Same BFS topological sort as Course Schedule I, but collect the order as you go instead of just counting"],
- table: `<svg width="100%" viewBox="0 0 300 100" style="max-width:300px;display:block;margin:10px auto;">
-   <defs><marker id="csm" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
-   <circle cx="40" cy="50" r="24" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.3"/><text x="40" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">0</text>
-   <line x1="64" y1="50" x2="146" y2="50" stroke="#888" stroke-width="1.3" marker-end="url(#csm)"/>
-   <circle cx="170" cy="50" r="24" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.3"/><text x="170" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">1</text>
-   <text x="105" y="30" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">0 must come before 1</text>
-   <text x="105" y="85" text-anchor="middle" font-size="10" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Order: [0, 1]</text>
- </svg>`,
- tip:"If the returned order's length doesn't equal numCourses, there's a cycle — return an empty list.",
- code:`from collections import deque
-
-def findOrder(numCourses, prerequisites):
-    indeg = [0] * numCourses
-    g = [[] for _ in range(numCourses)]
-    for a, b in prerequisites:
-        g[b].append(a); indeg[a] += 1
-    q = deque([i for i in range(numCourses) if indeg[i] == 0])
-    order = []
-    while q:
-        u = q.popleft(); order.append(u)
-        for v in g[u]:
-            indeg[v] -= 1
-            if indeg[v] == 0: q.append(v)
-    return order if len(order) == numCourses else []
-
-if __name__ == "__main__":
-    print(findOrder(2, [[1, 0]]))   # [0, 1]`},
+    print(calculate("3+2*2"))     # 7`},
 ];
 
-const phase6 = [
-{t:"6.1) Jump Game I — LeetCode 55", tag:"general", problem:"Determine if you can reach the last index, where each element is your max jump length from there.", sample:"nums=[2,3,1,1,4] -> True  |  [3,2,1,0,4] -> False",
- approach:["Track the farthest index reachable so far","If you ever reach an index BEYOND the farthest reachable point, you're stuck — return False"],
- table: arrayDiagram(["2","3","1","1","4"], {highlights:{0:"success",1:"success",4:"success"}, caption:"Reachable: 0→1 (jump 2)→4 (jump 3) — last index reached"}),
- tip:"You don't need to know the EXACT path — just whether the farthest reach ever falls behind your current position.",
- code:`from typing import List
-
-def canJump(nums: List[int]) -> bool:
-    farthest = 0
-    for i, step in enumerate(nums):
-        if i > farthest:
-            return False
-        farthest = max(farthest, i + step)
-    return True
-
-if __name__ == "__main__":
-    print(canJump([2,3,1,1,4]))   # True
-    print(canJump([3,2,1,0,4]))   # False`},
-
-{t:"6.2) Jump Game II — LeetCode 45", tag:"general", problem:"Return the MINIMUM number of jumps to reach the last index.", sample:"nums=[2,3,1,1,4] -> 2 (0→1→4)",
- approach:["Track current_end (farthest reachable within the CURRENT jump) and farthest (farthest reachable overall)","When you reach current_end, you MUST take another jump — update current_end to farthest"],
- tip:"This is a level-by-level BFS in disguise — current_end marks the boundary of the current 'level' of reachability.",
- code:`from typing import List
-
-def jump(nums: List[int]) -> int:
-    jumps = 0
-    farthest = 0
-    current_end = 0
-    for i in range(len(nums) - 1):
-        farthest = max(farthest, i + nums[i])
-        if i == current_end:
-            jumps += 1
-            current_end = farthest
-    return jumps
-
-if __name__ == "__main__":
-    print(jump([2,3,1,1,4]))   # 2`},
-
-{t:"6.3) Gas Station — LeetCode 134", tag:"general", problem:"Find the starting gas station index to travel a circular route once, or -1 if impossible.", sample:"gas=[1,2,3,4,5], cost=[3,4,5,1,2] -> 3",
- approach:["If total gas < total cost, it's impossible — return -1 immediately","Otherwise, greedily track a running tank; whenever it goes negative, the failure means NONE of the stations up to and including this one could be a valid start — reset start to the NEXT station"],
- tip:"If the total gas is enough for the whole circuit, there's guaranteed to be exactly one valid starting point — you don't need to check every candidate separately.",
- code:`from typing import List
-
-def canCompleteCircuit(gas: List[int], cost: List[int]) -> int:
-    total, tank, start = 0, 0, 0
-    for i in range(len(gas)):
-        diff = gas[i] - cost[i]
-        total += diff
-        tank += diff
-        if tank < 0:
-            start = i + 1
-            tank = 0
-    return start if total >= 0 else -1
-
-if __name__ == "__main__":
-    print(canCompleteCircuit([1,2,3,4,5], [3,4,5,1,2]))   # 3
-    print(canCompleteCircuit([2,3,4], [3,4,3]))            # -1`},
+const summaryP1 = [
+  ["1.1","Two Sum","HashMap","HashMap turns an O(n^2) brute force into O(n)..."],
+  ["1.2","Maximum Subarray (Kadane's)","Kadane's DP","curr asks 'should I keep going?', best asks '..."],
+  ["1.3","Product of Array Except Self","Prefix/Suffix","Everything except self = everything to my lef..."],
+  ["1.4","Quick Sort","Quicksort","Average O(n log n), worst case O(n^2) if pivo..."],
+  ["1.5","Merge Sort","Merge sort","Stable O(n log n) always — no worst-case degr..."],
+  ["1.6","Arrange Array to Minimum Number","Custom sort","If you can use key, always use key (more effi..."],
+  ["1.7","Search Insert Position","Binary search","This is the 'lower_bound' pattern — the found..."],
+  ["1.8","Binary Search","Binary search","low <= high (not <) because a single-element ..."],
+  ["1.9","Find First/Last Position","Binary search","Same binary search skeleton, just change whic..."],
+  ["1.10","3Sum","Two pointers","This is Two Sum's two-pointer cousin, wrapped..."],
+  ["1.11","Container With Most Water","Two pointers","The pointer holding the SHORTER wall is alway..."],
+  ["1.12","String to Integer (atoi)","Parsing","The trickiest part is usually the edge cases:..."],
+  ["1.13","Longest Substring Without Repeating Characters","Sliding window","Right pointer explores, left pointer only jum..."],
+  ["1.14","Continuous Sequence Sum Equals Target","Sliding window","The shortest possible window has 2 elements, ..."],
+  ["1.15","Sliding Window Maximum","Monotonic deque","This is a MONOTONIC DEQUE — the classic patte..."],
+  ["1.16","Minimum Window Substring","Sliding window","Expand to find ANY valid window, then shrink ..."],
+  ["1.17","Group Anagrams","HashMap","Anagrams always sort to the exact same string..."],
+  ["1.18","Trapping Rain Water","Two pointers","Two-pointer variant also exists (O(1) space) ..."],
+  ["1.19","String Compression","Two-pointer count","Loop one past the end of the string so the ve..."],
+  ["1.20","Most Frequent IP Address from Logs","HashMap","Interviewer explicitly said no heap needed he..."],
+  ["1.21","Student with Highest Average Score","HashMap group","This is essentially a GROUP BY and AVERAGE op..."],
+  ["1.22","Robot Final Coordinates from a Move String","Simulation","Interviewer asked the candidate to add extra ..."],
+  ["1.23","SQL","SQL window fn","This exact pattern is explicitly named in man..."],
+  ["1.24","SQL","SQL window fn","DENSE_RANK avoids gaps when there are ties. U..."],
+  ["1.25","SQL","SQL window fn","This is the standard pattern for any cumulati..."],
+  ["1.26","SQL","SQL group by","WHERE filters rows before grouping. HAVING fi..."]
 ];
-
-const phase7 = [
-{t:"7.1) Subsets — LeetCode 78", tag:"general", problem:"Return all possible subsets (the power set) of an array of distinct integers.", sample:"nums=[1,2,3] -> [[],[1],[2],[3],[1,2],[1,3],[2,3],[1,2,3]]",
- approach:["Backtrack over indices: at each index, recurse WITHOUT taking it, then WITH taking it"],
- table: `<svg width="100%" viewBox="0 0 400 130" style="max-width:400px;display:block;margin:10px auto;">
-   <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Each element: include or exclude -&gt; 2^n total subsets</text>
-   <circle cx="200" cy="35" r="4" fill="var(--accent)"/><text x="200" y="30" text-anchor="middle" font-size="9" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">start</text>
-   <line x1="200" y1="38" x2="100" y2="70" stroke="#888" stroke-width="1"/><line x1="200" y1="38" x2="300" y2="70" stroke="#888" stroke-width="1"/>
-   <text x="100" y="82" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">include 1</text>
-   <text x="300" y="82" text-anchor="middle" font-size="9" fill="var(--text-muted)" font-family="-apple-system,sans-serif">exclude 1</text>
-   <rect x="10" y="100" width="55" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="37" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[1,2,3]</text>
-   <rect x="75" y="100" width="45" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="97" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[1,2]</text>
-   <rect x="130" y="100" width="45" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="152" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[1,3]</text>
-   <rect x="185" y="100" width="35" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="202" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[1]</text>
-   <rect x="230" y="100" width="45" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="252" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[2,3]</text>
-   <rect x="285" y="100" width="35" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="302" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[2]</text>
-   <rect x="330" y="100" width="35" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="347" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[3]</text>
-   <rect x="370" y="100" width="25" height="22" rx="4" fill="var(--success-bg)" stroke="var(--success)"/><text x="382" y="114" text-anchor="middle" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">[]</text>
- </svg>`,
- tip:"path.append() then recurse then path.pop() — that pop is the 'backtrack' step, undoing the choice for the next branch.",
- code:`from typing import List
-
-def subsets(nums: List[int]) -> List[List[int]]:
-    res, path = [], []
-    def dfs(i: int):
-        if i == len(nums):
-            res.append(path[:]); return
-        dfs(i + 1)
-        path.append(nums[i])
-        dfs(i + 1)
-        path.pop()
-    dfs(0)
-    return res
-
-if __name__ == "__main__":
-    print(subsets([1,2,3]))`},
-
-{t:"7.2) Subsets II — LeetCode 90", tag:"general", problem:"Return all subsets when nums may contain duplicates (results must be unique).", sample:"nums=[1,2,2] -> [[],[1],[2],[1,2],[2,2],[1,2,2]]",
- approach:["Sort first so duplicates are adjacent","At each recursion level, skip a value if it equals the previous value at the SAME level (i > start and nums[i]==nums[i-1])"],
- tip:"'Same level' skipping (not 'same branch') is the key distinction from Permutations II's duplicate-skipping rule.",
- code:`from typing import List
-
-def subsetsWithDup(nums: List[int]) -> List[List[int]]:
-    nums.sort()
-    res, path = [], []
-    def dfs(start: int):
-        res.append(path[:])
-        for i in range(start, len(nums)):
-            if i > start and nums[i] == nums[i-1]:
-                continue
-            path.append(nums[i])
-            dfs(i + 1)
-            path.pop()
-    dfs(0)
-    return res
-
-if __name__ == "__main__":
-    print(subsetsWithDup([1,2,2]))`},
-
-{t:"7.3) Permutations — LeetCode 46", tag:"general", problem:"Return all permutations of distinct integers.", sample:"nums=[1,2,3] -> 6 permutations",
- approach:["Backtrack with a 'used' boolean array","At each position, try every number that hasn't been used yet"],
- tip:"Subsets picks a SUBSET of positions (order doesn't matter). Permutations uses ALL elements but tries every ORDER — that's why it needs a 'used' array instead of a 'start' index.",
- code:`from typing import List
-
-def permute(nums: List[int]) -> List[List[int]]:
-    res, path = [], []
-    used = [False] * len(nums)
-    def dfs():
-        if len(path) == len(nums):
-            res.append(path[:]); return
-        for i, v in enumerate(nums):
-            if used[i]: continue
-            used[i] = True
-            path.append(v)
-            dfs()
-            path.pop()
-            used[i] = False
-    dfs()
-    return res
-
-if __name__ == "__main__":
-    print(permute([1,2,3]))`},
-
-{t:"7.4) Permutations II — LeetCode 47", tag:"general", problem:"Return all unique permutations when nums can contain duplicates.", sample:"nums=[1,1,2] -> [[1,1,2],[1,2,1],[2,1,1]]",
- approach:["Sort first","Skip a duplicate value at the SAME depth if the previous identical value hasn't been used yet: nums[i]==nums[i-1] and not used[i-1]"],
- tip:"'not used[i-1]' is the subtle part — it means the previous identical value was ALREADY popped back out (backtracked), so trying it again at this depth would just repeat a branch we've already explored.",
- code:`from typing import List
-
-def permuteUnique(nums: List[int]) -> List[List[int]]:
-    nums.sort()
-    res, path = [], []
-    used = [False] * len(nums)
-    def dfs():
-        if len(path) == len(nums):
-            res.append(path[:]); return
-        for i in range(len(nums)):
-            if used[i]: continue
-            if i > 0 and nums[i] == nums[i-1] and not used[i-1]:
-                continue
-            used[i] = True
-            path.append(nums[i])
-            dfs()
-            path.pop()
-            used[i] = False
-    dfs()
-    return res
-
-if __name__ == "__main__":
-    print(permuteUnique([1,1,2]))`},
-
-{t:"7.5) Combination Sum — LeetCode 39", tag:"general", problem:"Find all unique combinations summing to target; a number may be reused unlimited times.", sample:"candidates=[2,3,6,7], target=7 -> [[7],[2,2,3]]",
- approach:["Sort candidates first so you can prune early (break once a value exceeds the remaining target)","Backtrack with a 'start' index, but pass the SAME index i again in the recursive call (not i+1) to allow reuse"],
- table: `<svg width="100%" viewBox="0 0 340 110" style="max-width:340px;display:block;margin:10px auto;">
-   <text x="10" y="14" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">target=7, candidates=[2,3,6,7]</text>
-   <rect x="10" y="24" width="60" height="24" rx="5" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="40" y="40" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">pick 2</text>
-   <text x="80" y="40" font-size="12" fill="var(--text-muted)">→</text>
-   <rect x="95" y="24" width="90" height="24" rx="5" fill="var(--accent-bg)" stroke="var(--accent)"/><text x="140" y="40" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">pick 2 again</text>
-   <text x="192" y="40" font-size="12" fill="var(--text-muted)">→</text>
-   <rect x="207" y="24" width="60" height="24" rx="5" fill="var(--success-bg)" stroke="var(--success)"/><text x="237" y="40" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">pick 3</text>
-   <text x="10" y="70" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">remain: 7 → 5 → 3 → 0, path = [2,2,3] ✓</text>
-   <rect x="10" y="80" width="90" height="22" rx="5" fill="var(--success-bg)" stroke="var(--success)"/><text x="55" y="94" text-anchor="middle" font-size="10" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Result: [2,2,3]</text>
- </svg>`,
- tip:"Passing i (not i+1) in the recursive call is what allows the SAME number to be picked again — that's the whole 'unlimited reuse' trick.",
- code:`from typing import List
-
-def combinationSum(candidates: List[int], target: int) -> List[List[int]]:
-    candidates.sort()
-    res, path = [], []
-    def dfs(start: int, remain: int):
-        if remain == 0:
-            res.append(path[:]); return
-        for i in range(start, len(candidates)):
-            v = candidates[i]
-            if v > remain: break
-            path.append(v)
-            dfs(i, remain - v)
-            path.pop()
-    dfs(0, target)
-    return res
-
-if __name__ == "__main__":
-    print(combinationSum([2,3,6,7], 7))   # [[2,2,3],[7]]`},
-
-{t:"7.6) Combination Sum II — LeetCode 40", tag:"general", problem:"Same as Combination Sum, but each candidate may only be used ONCE, and candidates may contain duplicates.", sample:"candidates=[10,1,2,7,6,1,5], target=8 -> [[1,1,6],[1,2,5],[1,7],[2,6]]",
- approach:["Sort first","Skip duplicate values at the SAME depth (i > start and candidates[i]==candidates[i-1])","Advance to i+1 in the recursive call (not i) so each element is used at most once"],
- tip:"Two changes from Combination Sum: advance to i+1 (no reuse) AND add the same-depth duplicate skip (no duplicate result sets).",
- code:`from typing import List
-
-def combinationSum2(candidates: List[int], target: int) -> List[List[int]]:
-    candidates.sort()
-    res, path = [], []
-    def dfs(start: int, remain: int):
-        if remain == 0:
-            res.append(path[:]); return
-        for i in range(start, len(candidates)):
-            if i > start and candidates[i] == candidates[i-1]:
-                continue
-            v = candidates[i]
-            if v > remain: break
-            path.append(v)
-            dfs(i + 1, remain - v)
-            path.pop()
-    dfs(0, target)
-    return res
-
-if __name__ == "__main__":
-    print(combinationSum2([10,1,2,7,6,1,5], 8))   # [[1,1,6],[1,2,5],[1,7],[2,6]]`},
+const summaryP2 = [
+  ["2.1","Kth Largest / Smallest K Elements","Heap","nlargest and nsmallest are literal mirror ima..."],
+  ["2.2","Valid Parentheses","Stack","Stack = last opened, first closed — exactly h..."],
+  ["2.3","Daily Temperatures","Monotonic stack","This is a MONOTONIC STACK — kept decreasing, ..."],
+  ["2.4","Decode String","Stack","Nested brackets are exactly what a stack is b..."],
+  ["2.5","Top K Frequent Elements","HashMap+Heap","Count first with a hashmap, then rank with a ..."]
+];
+const summaryP3 = [
+  ["3.1","Merge Two Sorted Lists","2 pointers","The dummy head trick avoids special-casing 'w..."],
+  ["3.2","Reverse Linked List","Pointer reversal","Save next_temp BEFORE overwriting cur.next, o..."],
+  ["3.3","Remove Duplicates from Sorted List II","Dummy head","This is 'remove duplicates' NOT 'keep one cop..."],
+  ["3.4","Linked List Cycle","Fast/slow ptr","Tortoise and Hare — if you're on a circular t..."]
+];
+const summaryP4 = [
+  ["4.1","Climbing Stairs","1D DP","Any 'count the ways' problem where each step ..."],
+  ["4.2","House Robber","1D DP","At every house you ask: 'is it worth skipping..."],
+  ["4.3","Longest Increasing Subsequence","O(n^2) DP","O(n^2) DP is the intuitive version — there's ..."],
+  ["4.4","Coin Change","Unbounded knapsack","inf as the initial value never wins a min() c..."],
+  ["4.5","Unique Paths","Grid DP","Every cell's path count = sum of the cell abo..."],
+  ["4.6","Unique Paths II","Grid DP","An obstacle doesn't just block itself — it bl..."],
+  ["4.7","Minimum Path Sum","Grid DP","Same shape as Unique Paths, but MIN instead o..."],
+  ["4.8","Best Time to Buy/Sell Stock I","Greedy/DP","Only one pass, one running minimum — the simp..."],
+  ["4.9","Best Time to Buy/Sell Stock II","Greedy","Greedy shortcut for what's really a hold/cash..."],
+  ["4.10","Best Time to Buy/Sell Stock with Cooldown","3-state DP","This is the whole cooldown rule in one senten..."],
+  ["4.11","Best Time to Buy/Sell Stock with Fee","2-state DP","Literally identical to Stock II — just minus ..."],
+  ["4.12","Best Time to Buy/Sell Stock III","4-state DP","buy2 = max(buy2, sell1 - price) is the key in..."],
+  ["4.13","Longest Palindromic Substring","Interval DP","You need the INSIDE substring's answer before..."],
+  ["4.14","Edit Distance","2D DP","Three arrows into every cell: delete (from ab..."],
+  ["4.15","Longest Common Subsequence","2D DP","Match -> extend diagonally. No match -> take ..."],
+  ["4.16","Word Break","1D DP","dp[i] means 'can the FIRST i characters be se..."]
+];
+const summaryP5 = [
+  ["5.1","Word Search in Matrix","DFS+backtrack","The restore step is critical — forgetting to ..."],
+  ["5.2","Robot Movement Range (BFS)","BFS","Same BFS skeleton as Number of Islands' multi..."],
+  ["5.3","Number of Islands","DFS flood fill","DFS floods the whole island in one go — mark ..."],
+  ["5.4","Course Schedule","Topo sort (BFS)","If you can't process all nodes via topologica..."],
+  ["5.5","Course Schedule II","Topo sort (BFS)","If the returned order's length doesn't equal ..."],
+  ["5.6","Binary Tree Level Order Traversal","BFS","The queue length at the start of each loop eq..."],
+  ["5.7","Rotting Oranges","Multi-source BFS","Multi source BFS means seeding ALL starting p..."],
+  ["5.8","Union-Find","Union-Find","This is a lightweight version of Union-Find s..."],
+  ["5.9","Subsets","Backtracking","path.append() then recurse then path.pop() — ..."],
+  ["5.10","Subsets II","Backtracking","'Same level' skipping (not 'same branch') is ..."],
+  ["5.11","Permutations","Backtracking","Subsets picks a SUBSET of positions (order do..."],
+  ["5.12","Permutations II","Backtracking","'not used[i-1]' is the subtle part — it means..."],
+  ["5.13","Combination Sum","Backtracking","Passing i (not i+1) in the recursive call is ..."],
+  ["5.14","Combination Sum II","Backtracking","Two changes from Combination Sum: advance to ..."]
+];
+const summaryP6 = [
+  ["6.1","Jump Game I","Greedy","You don't need to know the EXACT path — just ..."],
+  ["6.2","Jump Game II","Greedy","This is a level-by-level BFS in disguise — cu..."],
+  ["6.3","Gas Station","Greedy","If the total gas is enough for the whole circ..."]
+];
+const summaryP7 = [
+  ["7.1","Merge Intervals","Sort+merge","Sorting first turns 'any overlap' into 'only ..."],
+  ["7.2","Insert Interval","Sort+merge","Don't overthink it — appending + sorting + me..."],
+  ["7.3","Meeting Rooms II","Heap","Heap size at any moment = number of rooms cur..."],
+  ["7.4","Interval Price Minimum Overlay","Sweep line","This is the sweep line pattern — the same cor..."]
+];
+const summaryDesign = [
+  ["D.1","Min Stack","2 stacks","The min stack isn't 'the minimum' — it's 'the..."],
+  ["D.2","Implement Queue using Stacks","2 stacks","The dump only happens when 'out' is empty — a..."],
+  ["D.3","LRU Cache","HashMap+DLL","HashMap answers WHERE is it. Linked List trac..."],
+  ["D.4","Flatten Nested List Iterator","Precompute","There's also a lazy, stack-based approach tha..."],
+  ["D.5","Design Hit Counter","Queue (time)","This is a sliding window over TIME instead of..."],
+  ["D.6","Design a Calculator","Stack","Interviewer explicitly asked candidates to ch..."]
 ];
 
 
@@ -2175,6 +2536,43 @@ function renderSummaryTable(rows, caption) {
   `;
 }
 
+function renderSummaryTable3(rows, caption) {
+  return `
+    <div class="card" style="overflow-x:auto;">
+      <p style="font-weight:600; font-size:14px; margin:0 0 10px;">${caption}</p>
+      <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+        <thead>
+          <tr style="border-bottom:1.5px solid var(--border-strong); text-align:left;">
+            <th style="padding:6px 8px; color:var(--text-muted); font-weight:600; width:50px;">#</th>
+            <th style="padding:6px 8px; color:var(--text-muted); font-weight:600;">Question</th>
+            <th style="padding:6px 8px; color:var(--text-muted); font-weight:600;">What's tested (考察点)</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 8px; color:var(--text-muted);">${r[0]}</td>
+              <td style="padding:6px 8px; font-weight:500;">${r[1]}</td>
+              <td style="padding:6px 8px; color:var(--text-secondary);">${r[2]}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+const phaseSummaryMap = {
+  ph1: [summaryP1, "P1: Fundamentals — at a glance"],
+  ph2: [summaryP2, "P2: Heap / Stack / Queue — at a glance"],
+  ph3: [summaryP3, "P3: Linked List — at a glance"],
+  ph4: [summaryP4, "P4: Dynamic Programming — at a glance"],
+  ph5: [summaryP5, "P5: DFS / BFS / Backtracking — at a glance"],
+  ph6: [summaryP6, "P6: Greedy — at a glance"],
+  ph7: [summaryP7, "P7: Interval Merging — at a glance"],
+  design: [summaryDesign, "P8: Design Questions — at a glance"],
+};
+
 function renderPart(containerId, arr, prefix) {
   const el = document.getElementById(containerId);
   const summaryMap = { p1: [summaryPart1, "Part 1 at a glance — 10 questions"], p2: [summaryPart2, "Part 2 at a glance — 10 questions"], p3: [summaryPart3, "Part 3 at a glance — 8 verified questions"] };
@@ -2182,13 +2580,17 @@ function renderPart(containerId, arr, prefix) {
   if (summaryMap[prefix]) {
     html += renderSummaryTable(summaryMap[prefix][0], summaryMap[prefix][1]);
   }
+  if (phaseSummaryMap[containerId]) {
+    html += renderSummaryTable(phaseSummaryMap[containerId][0], phaseSummaryMap[containerId][1]);
+  }
   html += arr.map((q, i) => renderQuestionCard(q, i, prefix)).join('');
   el.innerHTML = html;
 }
 
 function renderPart4() {
-  const el = document.getElementById('p4');
-  let html = `<div class="intro-note">Everything in this tab is <b>educated speculation</b>, based on the company's own published interview guide and role-specific keywords. It is not a leaked question bank — use it to shape your study plan and English speaking practice.</div>`;
+  const el = document.getElementById('design');
+  let html = `<div class="star-banner" style="background:var(--warning-bg); color:var(--warning); margin-top:24px;">🔮 Appendix — Role-Specific Prep &amp; English Practice (not LeetCode questions)</div>`;
+  html += `<div class="intro-note">Everything below is <b>educated speculation</b>, based on the company's own published interview guide and role-specific keywords. It is not a leaked question bank — use it to shape your study plan and English speaking practice.</div>`;
 
   html += renderSummaryTable(
     [
@@ -2251,13 +2653,9 @@ function renderPart4() {
 
   html += `<div class="honest-note">⚠️ Honest note: no source can guarantee what YOUR specific interview will ask. This firm explicitly rotates questions and asks candidates not to redistribute them after the interview.</div>`;
 
-  el.innerHTML = html;
+  el.innerHTML += html;
 }
 
-renderPart('p1', part1, 'p1');
-renderPart('p2', part2, 'p2');
-renderPart('p3', part3, 'p3');
-renderPart4();
 renderPart('ph1', phase1, 'ph1');
 renderPart('ph2', phase2, 'ph2');
 renderPart('ph3', phase3, 'ph3');
@@ -2265,169 +2663,110 @@ renderPart('ph4', phase4, 'ph4');
 renderPart('ph5', phase5, 'ph5');
 renderPart('ph6', phase6, 'ph6');
 renderPart('ph7', phase7, 'ph7');
+renderPart('design', phaseDesign, 'design');
+renderPart4();
 
 // ---------- Categories ----------
 const categories = [
-  { emoji: "🔑", name: "LC Handbook: Arrays & Hashing", items: [
+  { emoji: "🌅", name: "P1: Fundamentals", items: [
     {label:"1.1) Two Sum", tab:"ph1", cardId:"ph1-0"},
     {label:"1.2) Maximum Subarray (Kadane's)", tab:"ph1", cardId:"ph1-1"},
     {label:"1.3) Product of Array Except Self", tab:"ph1", cardId:"ph1-2"},
-  ]},
-  { emoji: "📊", name: "LC Handbook: Sorting", items: [
     {label:"1.4) Quick Sort", tab:"ph1", cardId:"ph1-3"},
     {label:"1.5) Merge Sort", tab:"ph1", cardId:"ph1-4"},
     {label:"1.6) Arrange Array to Minimum Number", tab:"ph1", cardId:"ph1-5"},
-  ]},
-  { emoji: "🔎", name: "LC Handbook: Binary Search", items: [
     {label:"1.7) Search Insert Position", tab:"ph1", cardId:"ph1-6"},
-    {label:"1.12) Binary Search", tab:"ph1", cardId:"ph1-11"},
-    {label:"1.13) Find First/Last Position", tab:"ph1", cardId:"ph1-12"},
+    {label:"1.8) Binary Search", tab:"ph1", cardId:"ph1-7"},
+    {label:"1.9) Find First/Last Position", tab:"ph1", cardId:"ph1-8"},
+    {label:"1.10) 3Sum", tab:"ph1", cardId:"ph1-9"},
+    {label:"1.11) Container With Most Water", tab:"ph1", cardId:"ph1-10"},
+    {label:"1.12) String to Integer (atoi)", tab:"ph1", cardId:"ph1-11"},
+    {label:"1.13) Longest Substring Without Repeating Characters", tab:"ph1", cardId:"ph1-12"},
+    {label:"1.14) Continuous Sequence Sum Equals Target", tab:"ph1", cardId:"ph1-13"},
+    {label:"1.15) Sliding Window Maximum", tab:"ph1", cardId:"ph1-14"},
+    {label:"1.16) Minimum Window Substring", tab:"ph1", cardId:"ph1-15"},
+    {label:"1.17) Group Anagrams", tab:"ph1", cardId:"ph1-16"},
+    {label:"1.18) Trapping Rain Water (verified)", tab:"ph1", cardId:"ph1-17"},
+    {label:"1.19) String Compression (verified)", tab:"ph1", cardId:"ph1-18"},
+    {label:"1.20) Most Frequent IP Address from Logs (verified)", tab:"ph1", cardId:"ph1-19"},
+    {label:"1.21) Student with Highest Average Score (verified)", tab:"ph1", cardId:"ph1-20"},
+    {label:"1.22) Robot Final Coordinates (verified)", tab:"ph1", cardId:"ph1-21"},
+    {label:"1.23) SQL — Deduplicate & Get Latest Record", tab:"ph1", cardId:"ph1-22"},
+    {label:"1.24) SQL — Second Highest Salary per Department", tab:"ph1", cardId:"ph1-23"},
+    {label:"1.25) SQL — Running Total (Cumulative Sum)", tab:"ph1", cardId:"ph1-24"},
+    {label:"1.26) SQL — Find Duplicate Emails", tab:"ph1", cardId:"ph1-25"},
   ]},
-  { emoji:"📐", name: "LC Handbook: Intervals & Meeting Rooms", items: [
-    {label:"1.8) Merge Intervals", tab:"ph1", cardId:"ph1-7"},
-    {label:"1.9) Insert Interval", tab:"ph1", cardId:"ph1-8"},
-    {label:"1.10) Meeting Rooms I", tab:"ph1", cardId:"ph1-9"},
-    {label:"1.11) Meeting Rooms II", tab:"ph1", cardId:"ph1-10"},
+  { emoji: "🏗️", name: "P2: Heap / Stack / Queue", items: [
+    {label:"2.1) Kth Largest / Smallest K Elements", tab:"ph2", cardId:"ph2-0"},
+    {label:"2.2) Valid Parentheses", tab:"ph2", cardId:"ph2-1"},
+    {label:"2.3) Daily Temperatures (monotonic stack)", tab:"ph2", cardId:"ph2-2"},
+    {label:"2.4) Decode String", tab:"ph2", cardId:"ph2-3"},
+    {label:"2.5) Top K Frequent Elements", tab:"ph2", cardId:"ph2-4"},
   ]},
-  { emoji: "👉", name: "LC Handbook: Two Pointers", items: [
-    {label:"1.14) 3Sum", tab:"ph1", cardId:"ph1-13"},
-    {label:"1.15) Container With Most Water", tab:"ph1", cardId:"ph1-14"},
-    {label:"1.16) String to Integer (atoi)", tab:"ph1", cardId:"ph1-15"},
-  ]},
-  { emoji: "🪟", name: "LC Handbook: Sliding Window", items: [
-    {label:"1.17) Longest Substring Without Repeating Characters", tab:"ph1", cardId:"ph1-16"},
-    {label:"1.18) Continuous Sequence Sum Equals Target", tab:"ph1", cardId:"ph1-17"},
-    {label:"1.19) Sliding Window Maximum", tab:"ph1", cardId:"ph1-18"},
-    {label:"1.20) Minimum Window Substring", tab:"ph1", cardId:"ph1-19"},
-  ]},
-  { emoji: "⛰️", name: "LC Handbook: Heap", items: [
-    {label:"2.1) Kth Largest Element in an Array", tab:"ph2", cardId:"ph2-0"},
-    {label:"2.2) Find Smallest k Numbers", tab:"ph2", cardId:"ph2-1"},
-    {label:"1.11) Meeting Rooms II (also heap)", tab:"ph1", cardId:"ph1-10"},
-  ]},
-  { emoji: "📚", name: "LC Handbook: Stack & Queue", items: [
-    {label:"2.3) Valid Parentheses", tab:"ph2", cardId:"ph2-2"},
-    {label:"2.4) Min Stack", tab:"ph2", cardId:"ph2-3"},
-    {label:"2.5) Implement Queue using Stacks", tab:"ph2", cardId:"ph2-4"},
-    {label:"2.6) Daily Temperatures (monotonic stack)", tab:"ph2", cardId:"ph2-5"},
-    {label:"2.7) Decode String", tab:"ph2", cardId:"ph2-6"},
-    {label:"2.8) LRU Cache", tab:"ph2", cardId:"ph2-7"},
-    {label:"2.9) Flatten Nested List Iterator", tab:"ph2", cardId:"ph2-8"},
-  ]},
-  { emoji: "🔗", name: "LC Handbook: Linked List", items: [
+  { emoji: "🔗", name: "P3: Linked List", items: [
     {label:"3.1) Merge Two Sorted Lists", tab:"ph3", cardId:"ph3-0"},
     {label:"3.2) Reverse Linked List", tab:"ph3", cardId:"ph3-1"},
     {label:"3.3) Remove Duplicates from Sorted List II", tab:"ph3", cardId:"ph3-2"},
     {label:"3.4) Linked List Cycle", tab:"ph3", cardId:"ph3-3"},
   ]},
-  { emoji: "🧮", name: "LC Handbook: DP Basics", items: [
+  { emoji: "🧮", name: "P4: Dynamic Programming", items: [
     {label:"4.1) Climbing Stairs", tab:"ph4", cardId:"ph4-0"},
     {label:"4.2) House Robber", tab:"ph4", cardId:"ph4-1"},
     {label:"4.3) Longest Increasing Subsequence", tab:"ph4", cardId:"ph4-2"},
     {label:"4.4) Coin Change", tab:"ph4", cardId:"ph4-3"},
-  ]},
-  { emoji: "🗺️", name: "LC Handbook: DP Grid/Paths", items: [
     {label:"4.5) Unique Paths", tab:"ph4", cardId:"ph4-4"},
     {label:"4.6) Unique Paths II", tab:"ph4", cardId:"ph4-5"},
     {label:"4.7) Minimum Path Sum", tab:"ph4", cardId:"ph4-6"},
-  ]},
-  { emoji: "📈", name: "LC Handbook: DP Stocks", items: [
     {label:"4.8) Best Time to Buy/Sell Stock I", tab:"ph4", cardId:"ph4-7"},
     {label:"4.9) Best Time to Buy/Sell Stock II", tab:"ph4", cardId:"ph4-8"},
     {label:"4.10) Stock with Cooldown", tab:"ph4", cardId:"ph4-9"},
     {label:"4.11) Stock with Fee", tab:"ph4", cardId:"ph4-10"},
     {label:"4.12) Stock III (at most 2 transactions)", tab:"ph4", cardId:"ph4-11"},
-  ]},
-  { emoji: "🔤", name: "LC Handbook: DP Strings", items: [
     {label:"4.13) Longest Palindromic Substring", tab:"ph4", cardId:"ph4-12"},
     {label:"4.14) Edit Distance", tab:"ph4", cardId:"ph4-13"},
     {label:"4.15) Longest Common Subsequence", tab:"ph4", cardId:"ph4-14"},
     {label:"4.16) Word Break", tab:"ph4", cardId:"ph4-15"},
   ]},
-  { emoji: "🌲", name: "LC Handbook: DFS/BFS", items: [
-    {label:"5.1) Word Search in Matrix", tab:"ph5", cardId:"ph5-0"},
-    {label:"5.2) Robot Movement Range", tab:"ph5", cardId:"ph5-1"},
+  { emoji: "🌲", name: "P5: DFS / BFS / Backtracking", items: [
+    {label:"5.1) Word Search in Matrix (DFS + backtrack)", tab:"ph5", cardId:"ph5-0"},
+    {label:"5.2) Robot Movement Range (BFS)", tab:"ph5", cardId:"ph5-1"},
     {label:"5.3) Number of Islands", tab:"ph5", cardId:"ph5-2"},
     {label:"5.4) Course Schedule", tab:"ph5", cardId:"ph5-3"},
     {label:"5.5) Course Schedule II", tab:"ph5", cardId:"ph5-4"},
+    {label:"5.6) Binary Tree Level Order Traversal", tab:"ph5", cardId:"ph5-5"},
+    {label:"5.7) Rotting Oranges (multi-source BFS)", tab:"ph5", cardId:"ph5-6"},
+    {label:"5.8) Union-Find — Largest Tree Root (verified)", tab:"ph5", cardId:"ph5-7"},
+    {label:"5.9) Subsets (backtracking)", tab:"ph5", cardId:"ph5-8"},
+    {label:"5.10) Subsets II (backtracking)", tab:"ph5", cardId:"ph5-9"},
+    {label:"5.11) Permutations (backtracking)", tab:"ph5", cardId:"ph5-10"},
+    {label:"5.12) Permutations II (backtracking)", tab:"ph5", cardId:"ph5-11"},
+    {label:"5.13) Combination Sum (backtracking)", tab:"ph5", cardId:"ph5-12"},
+    {label:"5.14) Combination Sum II (backtracking)", tab:"ph5", cardId:"ph5-13"},
   ]},
-  { emoji: "🎯", name: "LC Handbook: Greedy", items: [
+  { emoji: "🎯", name: "P6: Greedy", items: [
     {label:"6.1) Jump Game I", tab:"ph6", cardId:"ph6-0"},
     {label:"6.2) Jump Game II", tab:"ph6", cardId:"ph6-1"},
     {label:"6.3) Gas Station", tab:"ph6", cardId:"ph6-2"},
   ]},
-  { emoji: "🔄", name: "LC Handbook: Backtracking", items: [
-    {label:"7.1) Subsets", tab:"ph7", cardId:"ph7-0"},
-    {label:"7.2) Subsets II", tab:"ph7", cardId:"ph7-1"},
-    {label:"7.3) Permutations", tab:"ph7", cardId:"ph7-2"},
-    {label:"7.4) Permutations II", tab:"ph7", cardId:"ph7-3"},
-    {label:"7.5) Combination Sum", tab:"ph7", cardId:"ph7-4"},
-    {label:"7.6) Combination Sum II", tab:"ph7", cardId:"ph7-5"},
+  { emoji: "📐", name: "P7: Interval Merging", items: [
+    {label:"7.1) Merge Intervals", tab:"ph7", cardId:"ph7-0"},
+    {label:"7.2) Insert Interval", tab:"ph7", cardId:"ph7-1"},
+    {label:"7.3) Meeting Rooms I & II", tab:"ph7", cardId:"ph7-2"},
+    {label:"7.4) Interval Price Minimum Overlay (general practice)", tab:"ph7", cardId:"ph7-3"},
   ]},
-  { emoji: "🗄️", name: "SQL", items: [
-    {label:"2) SQL — Deduplicate & Get Latest Record", tab:"p1", cardId:"p1-1"},
-    {label:"3) SQL — Second Highest Salary per Department", tab:"p1", cardId:"p1-2"},
-    {label:"18) SQL — Running Total (Cumulative Sum)", tab:"p2", cardId:"p2-7"},
-    {label:"19) SQL — Find Duplicate Emails", tab:"p2", cardId:"p2-8"},
-  ]},
-  { emoji: "🔑", name: "HashMap / Grouping / Frequency Counting", items: [
-    {label:"9) Group Anagrams", tab:"p1", cardId:"p1-8"},
-    {label:"10) Two Sum (+ Streaming Follow-up)", tab:"p1", cardId:"p1-9"},
-    {label:"15) Top K Frequent Elements", tab:"p2", cardId:"p2-4"},
-    {label:"23) Two Sum (verified)", tab:"p3", cardId:"p3-2"},
-    {label:"24) Most Frequent IP Address from Logs (verified)", tab:"p3", cardId:"p3-3"},
-    {label:"26) Student with Highest Average Score (verified)", tab:"p3", cardId:"p3-5"},
-  ]},
-  { emoji: "🏗️", name: "Design (Data Structures)", items: [
-    {label:"1) LRU Cache", tab:"p1", cardId:"p1-0"},
-    {label:"17) Design Hit Counter", tab:"p2", cardId:"p2-6"},
-    {label:"28) Design a Calculator (verified)", tab:"p3", cardId:"p3-7"},
-  ]},
-  { emoji: "📚", name: "Stack", items: [
-    {label:"11) Valid Parentheses", tab:"p2", cardId:"p2-0"},
-    {label:"28) Design a Calculator (also stack-based)", tab:"p3", cardId:"p3-7"},
-  ]},
-  { emoji: "🪟", name: "Sliding Window / Two Pointer", items: [
-    {label:"12) Longest Substring Without Repeating Characters", tab:"p2", cardId:"p2-1"},
-    {label:"16) Trapping Rain Water", tab:"p2", cardId:"p2-5"},
-    {label:"22) Trapping Rain Water (verified)", tab:"p3", cardId:"p3-1"},
-  ]},
-  { emoji: "⛰️", name: "Heap", items: [
-    {label:"14) Kth Largest Element in an Array", tab:"p2", cardId:"p2-3"},
-    {label:"15) Top K Frequent Elements", tab:"p2", cardId:"p2-4"},
-  ]},
-  { emoji: "🌳", name: "BFS / DFS / Graph", items: [
-    {label:"4) Binary Tree Level Order Traversal", tab:"p1", cardId:"p1-3"},
-    {label:"5) Number of Islands", tab:"p1", cardId:"p1-4"},
-    {label:"6) Course Schedule", tab:"p1", cardId:"p1-5"},
-    {label:"7) Rotting Oranges", tab:"p1", cardId:"p1-6"},
-    {label:"25) Union-Find — Largest Tree Root (verified)", tab:"p3", cardId:"p3-4"},
-  ]},
-  { emoji: "🧮", name: "Dynamic Programming", items: [
-    {label:"8) Word Break", tab:"p1", cardId:"p1-7"},
-  ]},
-  { emoji: "📊", name: "Sorting / Greedy", items: [
-    {label:"13) Merge Intervals", tab:"p2", cardId:"p2-2"},
-  ]},
-  { emoji: "🔗", name: "Linked List", items: [
-    {label:"20) Merge Two Sorted Lists", tab:"p2", cardId:"p2-9"},
-  ]},
-  { emoji: "🔤", name: "String / Simulation", items: [
-    {label:"21) String Compression (verified)", tab:"p3", cardId:"p3-0"},
-    {label:"27) Robot Final Coordinates (verified)", tab:"p3", cardId:"p3-6"},
-  ]},
-  { emoji: "🔀", name: "Union-Find", items: [
-    {label:"25) Union-Find — Largest Tree Root in a Forest (verified)", tab:"p3", cardId:"p3-4"},
-  ]},
-  { emoji: "🧭", name: "Sweep Line / Intervals", items: [
-    {label:"13) Merge Intervals", tab:"p2", cardId:"p2-2"},
-    {label:"29) Interval Price Minimum Overlay (general practice)", tab:"p3", cardId:"p3-8"},
+  { emoji: "🏗️", name: "P8: Design Questions", items: [
+    {label:"D.1) Min Stack", tab:"design", cardId:"design-0"},
+    {label:"D.2) Implement Queue using Stacks", tab:"design", cardId:"design-1"},
+    {label:"D.3) LRU Cache", tab:"design", cardId:"design-2"},
+    {label:"D.4) Flatten Nested List Iterator", tab:"design", cardId:"design-3"},
+    {label:"D.5) Design Hit Counter", tab:"design", cardId:"design-4"},
+    {label:"D.6) Design a Calculator (verified)", tab:"design", cardId:"design-5"},
   ]},
 ];
 
 function renderCategories() {
   const el = document.getElementById('cat');
-  let html = `<div class="intro-note">Study by <b>category</b>, not by number — grouping similar patterns together helps you internalize the underlying technique instead of memorizing 28 isolated problems. Click any item to jump straight to it.</div>`;
+  let html = `<div class="intro-note">Study by <b>phase</b>, matching the P1-P8 tabs exactly — grouping by phase helps you internalize each technique instead of memorizing isolated problems. Click any item to jump straight to it.</div>`;
 
   categories.forEach(cat => {
     html += `<div class="section-title">${cat.emoji} ${cat.name}
@@ -2456,15 +2795,14 @@ function renderCategories() {
   });
 
   html += `
-    <div class="section-title">✅ Part 3 — Verified Questions Only</div>
+    <div class="section-title">✅ Verified Questions Reference</div>
     <div class="card">
-      <p style="font-size:13px;color:var(--text-secondary);">All 8 questions in Part 3 come from real, dated, sourced interview reports (Glassdoor, LeetCode Discuss, Medium). See the Part 3 tab for full detail and sourcing.</p>
-      <button class="listen-btn" data-action="goto" data-goto-tab="p3" style="margin-top:6px;">Go to Part 3 →</button>
+      <p style="font-size:13px;color:var(--text-secondary);">Items marked "(verified)" across P1, P5, P7, and P8 come from real, dated, sourced interview reports (Glassdoor, LeetCode Discuss, Medium). Look for the ✅ tag on individual question cards for full sourcing detail.</p>
     </div>
-    <div class="section-title">🔮 Part 4 — Role-Specific Prep (Speculative)</div>
+    <div class="section-title">🔮 Role-Specific Prep &amp; English Practice</div>
     <div class="card">
-      <p style="font-size:13px;color:var(--text-secondary);">Speculative system design topics, the company's own interview guide notes, and English speaking practice phrases for this specific Lakehouse / AI Data Platform role.</p>
-      <button class="listen-btn" data-action="goto" data-goto-tab="p4" style="margin-top:6px;">Go to Part 4 →</button>
+      <p style="font-size:13px;color:var(--text-secondary);">Speculative system design topics, the company's own interview guide notes, and English speaking practice phrases — appended at the bottom of the P8: Design Questions tab.</p>
+      <button class="listen-btn" data-action="goto" data-goto-tab="design" style="margin-top:6px;">Go to P8: Design Questions →</button>
     </div>
   `;
 
