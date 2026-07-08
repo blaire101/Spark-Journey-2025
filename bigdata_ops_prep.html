@@ -1,0 +1,2027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Big Data Platform Ops — Interview Prep</title>
+<style>
+  :root {
+    --bg:#FAFAF9; --surface:#FFFFFF; --border:#E5E5E3; --border-strong:#D4D4D0;
+    --text-primary:#1A1A18; --text-secondary:#57564F; --text-muted:#8A8985;
+    --accent:#2971A8; --accent-bg:#E8F2FA;
+    --success:#1E7A4C; --success-bg:#E4F5EC;
+    --warning:#9A6B1E; --warning-bg:#FBF0DD;
+    --danger:#B14A3F; --danger-bg:#FBECEA;
+    --purple:#7B4FA0; --purple-bg:#F1E9F7;
+    --radius:10px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.55; }
+  .app { max-width:980px; margin:0 auto; padding:24px 20px 80px; }
+  header h1 { font-size:21px; font-weight:600; margin:0 0 4px; }
+  header p { font-size:13.5px; color:var(--text-secondary); margin:0 0 16px; }
+
+  .voice-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; margin-bottom:18px; font-size:13px; color:var(--text-secondary); }
+  .voice-bar select { font-size:13px; padding:4px 8px; border-radius:6px; border:1px solid var(--border-strong); }
+  .voice-bar input[type=range] { width:100px; }
+
+  .tabs { display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); overflow-x:auto; }
+  .tab-btn { padding:9px 13px; font-size:12.5px; font-weight:600; color:var(--text-secondary); background:none; border:none; border-bottom:3px solid transparent; cursor:pointer; white-space:nowrap; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .level-header { display:flex; align-items:flex-start; gap:12px; margin:24px 0 12px; padding-bottom:8px; border-bottom:2px solid var(--border-strong); }
+  .level-header:first-of-type { margin-top:4px; }
+  .level-emoji { font-size:20px; line-height:1.3; }
+  .level-label { font-size:14.5px; font-weight:700; color:var(--text-primary); }
+  .level-desc { font-size:12px; color:var(--text-secondary); margin-top:2px; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+
+  .star-banner { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:700; padding:9px 14px; border-radius:var(--radius); margin:18px 0 10px; }
+  .star-banner.S { background:var(--danger-bg); color:var(--danger); }
+  .star-banner.T { background:var(--warning-bg); color:var(--warning); }
+  .star-banner.A { background:var(--purple-bg); color:var(--purple); }
+
+  .kw-badge { display:inline-block; font-size:11.5px; font-weight:600; padding:1px 8px; border-radius:999px; background:var(--accent-bg); color:var(--accent); font-family:"SF Mono",Menlo,monospace; }
+
+  .steps-list { margin:14px 0; }
+  .step-item { display:flex; gap:12px; margin-bottom:14px; align-items:flex-start; }
+  .step-item:last-child { margin-bottom:0; }
+  .step-num { flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--accent); color:white; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .step-item div:last-child { font-size:13px; line-height:1.6; color:var(--text-primary); }
+  .step-item code { background:#F4F4F2; padding:1px 5px; border-radius:4px; font-family:"SF Mono",Menlo,monospace; font-size:11.5px; }
+  .where-label { font-weight:700; color:var(--accent); }
+  .toc-btn { font-size:12px; font-weight:600; padding:7px 14px; border-radius:999px; border:1.3px solid; cursor:pointer; background:var(--surface); transition:transform 0.1s; }
+  .toc-btn:hover { transform:translateY(-1px); }
+  .toc-btn-s { border-color:var(--danger); color:var(--danger); }
+  .toc-btn-t { border-color:var(--warning); color:var(--warning); }
+  .toc-btn-a { border-color:var(--purple); color:var(--purple); }
+  .zh-desc { color:var(--text-secondary); font-size:12.5px; background:#F7F7F5; border-radius:6px; padding:6px 10px; margin-top:4px !important; }
+
+  .q-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  .q-title { font-size:14.5px; font-weight:600; margin:0; }
+  .q-desc { font-size:13px; color:var(--text-secondary); margin:4px 0 8px; }
+
+  table.datatbl { border-collapse:collapse; font-size:12px; margin:8px 0; width:100%; overflow-x:auto; display:block; }
+  table.datatbl th, table.datatbl td { border:1px solid var(--border); padding:5px 9px; text-align:left; vertical-align:top; }
+  table.datatbl th { background:var(--accent-bg); color:var(--accent); font-weight:600; }
+
+  .codeblock { background:#F4F4F2; border-radius:8px; padding:10px 14px; font-family:"SF Mono",Menlo,monospace; font-size:11.5px; color:var(--text-primary); white-space:pre; overflow-x:auto; margin:8px 0; line-height:1.55; }
+  .kw { color:#AF3A83; font-weight:600; }
+  .fn { color:#2971A8; font-weight:600; }
+  .str { color:#1E7A4C; }
+  .num { color:#B5651D; }
+  .cmt { color:#8A8985; font-style:italic; }
+
+  .tip { font-size:12px; color:var(--success); background:var(--success-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .warn { font-size:12px; color:var(--warning); background:var(--warning-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .step-label { font-size:12px; font-weight:700; color:var(--accent); margin:10px 0 2px; display:block; }
+  .intro-note { font-size:13px; color:var(--text-secondary); background:var(--accent-bg); border-radius:var(--radius); padding:10px 14px; margin-bottom:16px; }
+
+  .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
+  .listen-btn.speaking { background:var(--accent); color:white; }
+  .listen-btn svg { width:12px; height:12px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Big Data Platform Ops — Interview Prep</h1>
+    <p>HDFS · YARN · Spark memory internals · Flink basics · a real troubleshooting playbook — from fundamentals to diagnosis, with diagrams</p>
+  </header>
+
+  <div class="voice-bar">
+    <label>🔊 Voice: <select id="voiceSelect"></select></label>
+    <label>Speed: <input type="range" id="rateSlider" min="0.7" max="1.2" step="0.05" value="0.92"></label>
+    <span id="rateLabel">0.92x</span>
+    <button class="listen-btn" id="stopAllBtn" style="margin-left:auto">⏹ Stop</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="hdfs">🗄️ HDFS</button>
+    <button class="tab-btn" data-tab="yarn">🧶 YARN</button>
+    <button class="tab-btn" data-tab="spark">⚡ Spark Memory</button>
+    <button class="tab-btn" data-tab="flink">🌊 Flink Basics</button>
+    <button class="tab-btn" data-tab="hive">🐝 Hive</button>
+    <button class="tab-btn" data-tab="k8s">🐳 Docker &amp; K8S</button>
+    <button class="tab-btn" data-tab="ref">📋 Quick Reference</button>
+    <button class="tab-btn" data-tab="cases">🎯 面试实战案例 Cases (含排查Playbook)</button>
+  </div>
+
+  <div id="hdfs" class="tab-panel active"></div>
+  <div id="yarn" class="tab-panel"></div>
+  <div id="spark" class="tab-panel"></div>
+  <div id="flink" class="tab-panel"></div>
+  <div id="hive" class="tab-panel"></div>
+  <div id="k8s" class="tab-panel"></div>
+  <div id="ref" class="tab-panel"></div>
+  <div id="cases" class="tab-panel"></div>
+</div>
+
+<script>
+const speakIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+function listenBtn(text) { return `<button class="listen-btn" data-action="speak" data-text="${encodeURIComponent(text)}">${speakIcon}Listen</button>`; }
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function table(headers, rows) {
+  let html = '<table class="datatbl"><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(r => { html += '<tr>' + r.map(c=>`<td>${c}</td>`).join('') + '</tr>'; });
+  html += '</tbody></table>';
+  return html;
+}
+const KW = new Set(['SET','SELECT','FROM','WHERE','if','else','for','while','def','class','return','import','from','as','true','false','TRUE','FALSE']);
+const FN = new Set(['spark-submit','yarn','hdfs','jstack','jmap','top','htop']);
+function highlightCode(code) {
+  const tokenRe = /(#[^\n]*)|('[^'\n]*'|"[^"\n]*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_.-]*)|([\s\S])/g;
+  let out = ''; let m;
+  while ((m = tokenRe.exec(code)) !== null) {
+    const [, comment, str, num, word, other] = m;
+    if (comment) out += `<span class="cmt">${esc(comment)}</span>`;
+    else if (str) out += `<span class="str">${esc(str)}</span>`;
+    else if (num) out += `<span class="num">${esc(num)}</span>`;
+    else if (word) {
+      if (FN.has(word)) out += `<span class="fn">${esc(word)}</span>`;
+      else if (KW.has(word)) out += `<span class="kw">${esc(word)}</span>`;
+      else out += esc(word);
+    } else out += esc(other);
+  }
+  return out;
+}
+
+function renderCard(item) {
+  const speakText = item.speak || `${item.title}. ${item.desc || ''}`;
+  let html = `<div class="card">
+    <div class="q-head">
+      <p class="q-title">${item.title}</p>
+      ${listenBtn(speakText)}
+    </div>`;
+  if (item.desc) html += `<p class="q-desc">${item.desc}</p>`;
+  if (item.zh) html += `<p class="q-desc zh-desc">🇨🇳 ${item.zh}</p>`;
+  if (item.diagram) html += `<div style="margin:10px 0;">${item.diagram}</div>`;
+  if (item.table) html += item.table;
+  if (item.code) html += `<div class="codeblock">${highlightCode(item.code)}</div>`;
+  if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
+  if (item.tipZh) html += `<div class="tip zh-desc">💡🇨🇳 ${item.tipZh}</div>`;
+  if (item.warn) html += `<div class="warn">⚠️ ${item.warn}</div>`;
+  if (item.warnZh) html += `<div class="warn zh-desc">⚠️🇨🇳 ${item.warnZh}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function renderByLevel(containerId, data, levelMetaMap) {
+  const el = document.getElementById(containerId);
+  let html = '';
+  let currentLevel = null;
+  data.forEach(item => {
+    if (item.level !== currentLevel) {
+      currentLevel = item.level;
+      const meta = levelMetaMap[currentLevel];
+      html += `<div class="level-header"><span class="level-emoji">${meta.emoji}</span><div><div class="level-label">${meta.label}</div><div class="level-desc">${meta.desc}</div></div></div>`;
+    }
+    html += renderCard(item);
+  });
+  el.innerHTML = html;
+}
+
+// ============================================================
+// DATA
+// ============================================================
+
+const hdfsLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Fundamentals", desc:"What HDFS is, and its two core node types."},
+  internals: {emoji:"⚙️", label:"Level 2 — How reads/writes actually work", desc:"The mechanics interviewers actually probe."},
+  ha: {emoji:"🛡️", label:"Level 3 — High Availability & failure modes", desc:"What happens when things break, and how HDFS survives it."},
+};
+
+const hdfsData = [
+  {level:"basics", title:"What is HDFS, and why does it exist?", desc:"HDFS (Hadoop Distributed File System) stores huge files by splitting them into fixed-size blocks and spreading those blocks across many cheap machines, with replication for fault tolerance.",
+   zh:"中文：HDFS把超大文件切成固定大小的block，分散存到很多台便宜的机器上，并且做多副本(replication)保证容错。",
+   speak:"HDFS stores huge files by splitting them into fixed-size blocks and spreading those blocks across many cheap machines, with replication for fault tolerance.",
+   table: table(["Property","Typical default"], [
+     ["Block size","128 MB (was 64MB in older Hadoop 1.x)"],
+     ["Replication factor","3 copies of every block"],
+     ["Design goal","High throughput for large files, NOT low-latency small reads"],
+   ]),
+   tip:"HDFS is optimized for 'write once, read many times' — it's bad at handling millions of tiny files (the 'small file problem')."},
+
+  {level:"basics", title:"NameNode vs DataNode — the two core roles", desc:"NameNode is the 'librarian' who knows WHERE every book is. DataNodes are the actual 'shelves' holding the books.",
+   zh:"中文：NameNode是「图书管理员」，只知道每本书放在哪；DataNode才是真正放书的「书架」，存实际数据。",
+   speak:"NameNode is the librarian who knows where every book is. DataNodes are the actual shelves holding the books.",
+   diagram: `<svg width="100%" viewBox="0 0 680 260" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="hd1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="250" y="15" width="180" height="55" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="340" y="37" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">NameNode</text>
+<text x="340" y="55" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-family="-apple-system,sans-serif">Metadata only: filenames,</text>
+<text x="340" y="68" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-family="-apple-system,sans-serif">block locations, permissions</text>
+
+<line x1="340" y1="70" x2="120" y2="130" stroke="#888" stroke-width="1.2" marker-end="url(#hd1)"/>
+<line x1="340" y1="70" x2="340" y2="130" stroke="#888" stroke-width="1.2" marker-end="url(#hd1)"/>
+<line x1="340" y1="70" x2="560" y2="130" stroke="#888" stroke-width="1.2" marker-end="url(#hd1)"/>
+
+<rect x="40" y="130" width="160" height="70" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="120" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode 1</text>
+<text x="120" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">Block A, Block C</text>
+<text x="120" y="184" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">(actual data)</text>
+
+<rect x="260" y="130" width="160" height="70" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode 2</text>
+<text x="340" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">Block B, Block A</text>
+<text x="340" y="184" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">(actual data)</text>
+
+<rect x="480" y="130" width="160" height="70" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="560" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode 3</text>
+<text x="560" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">Block C, Block B</text>
+<text x="560" y="184" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">(actual data)</text>
+
+<text x="340" y="225" text-anchor="middle" font-size="11" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Each block replicated 3x across DIFFERENT DataNodes</text>
+<text x="340" y="243" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">DataNodes also send periodic Heartbeats + Block Reports to NameNode</text>
+</svg>`,
+   tip:"If NameNode dies with no backup, the CLUSTER IS BLIND — it still has all the data blocks, but has no idea what file they belong to. This is why NameNode HA exists (see Level 3)."},
+
+  {level:"internals", title:"Write path — what happens when a client writes a file", desc:"The client never sends data through the NameNode — only metadata requests go there. Actual bytes flow directly to DataNodes.",
+   zh:"中文：客户端写数据时，数据本身不经过NameNode——只有「元数据请求」(问block该写哪)会经过它，真正的字节流直接发给DataNode。",
+   speak:"The client never sends data through the NameNode, only metadata requests go there. Actual bytes flow directly to DataNodes in a pipeline.",
+   diagram: `<svg width="100%" viewBox="0 0 680 240" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="hd2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="20" y="15" width="110" height="40" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="75" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Client</text>
+
+<rect x="280" y="15" width="140" height="40" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="350" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">NameNode</text>
+
+<line x1="130" y1="35" x2="272" y2="35" stroke="#888" stroke-width="1.2" marker-end="url(#hd2)"/>
+<text x="200" y="26" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" font-family="-apple-system,sans-serif">1. "create file X"</text>
+<line x1="272" y1="50" x2="130" y2="50" stroke="#888" stroke-width="1.2" marker-end="url(#hd2)"/>
+<text x="200" y="65" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" font-family="-apple-system,sans-serif">2. returns list of DataNodes to write to</text>
+
+<text x="75" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">3. Client streams data</text>
+<text x="75" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">directly into a PIPELINE:</text>
+
+<rect x="40" y="130" width="120" height="50" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="100" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode A</text>
+<line x1="160" y1="155" x2="270" y2="155" stroke="#888" stroke-width="1.2" marker-end="url(#hd2)"/>
+
+<rect x="280" y="130" width="120" height="50" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode B</text>
+<line x1="400" y1="155" x2="510" y2="155" stroke="#888" stroke-width="1.2" marker-end="url(#hd2)"/>
+
+<rect x="520" y="130" width="120" height="50" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="580" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode C</text>
+
+<text x="340" y="210" text-anchor="middle" font-size="11" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Acknowledgments flow BACKWARD through the pipeline once each node confirms the write</text>
+</svg>`,
+   tip:"NameNode is only involved at the START (getting block locations) — it never sees the actual bytes. This is exactly why HDFS scales: metadata traffic is tiny compared to data traffic."},
+
+  {level:"internals", title:"Read path — simpler than the write path", desc:"Client asks NameNode 'where are the blocks for this file', then reads directly from the CLOSEST available DataNode for each block (rack-awareness).",
+   zh:"中文：客户端先问NameNode「这个文件的block都在哪」，然后直接从最近的DataNode读取每个block(基于机架感知rack-awareness选最近节点)。",
+   speak:"Client asks the NameNode where the blocks for this file are, then reads directly from the closest available DataNode for each block.",
+   tip:"'Closest' is determined by HDFS rack-awareness — same node, then same rack, then a different rack — minimizing cross-rack network traffic."},
+
+  {level:"ha", title:"NameNode High Availability (HA)", desc:"A single NameNode is a single point of failure. HA solves this with an Active/Standby pair kept in sync via a shared edit log.",
+   zh:"中文：单个NameNode是单点故障隐患。HA用一主一备(Active/Standby)的方式解决，两者通过共享的编辑日志(edit log)保持同步。",
+   speak:"A single NameNode is a single point of failure. HA solves this with an Active/Standby pair kept in sync via a shared edit log written to JournalNodes.",
+   diagram: `<svg width="100%" viewBox="0 0 680 220" style="max-width:600px; display:block; margin:8px auto;">
+<rect x="40" y="20" width="160" height="50" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.5"/>
+<text x="120" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Active NameNode</text>
+<text x="120" y="58" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">serving all requests</text>
+
+<rect x="480" y="20" width="160" height="50" rx="8" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="1.5"/>
+<text x="560" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Standby NameNode</text>
+<text x="560" y="58" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">hot backup, ready to take over</text>
+
+<rect x="220" y="110" width="240" height="60" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="132" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">JournalNodes (quorum, usually 3-5)</text>
+<text x="340" y="150" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">Shared edit log both NameNodes write/read</text>
+
+<line x1="120" y1="70" x2="300" y2="108" stroke="#888" stroke-width="1.2"/>
+<line x1="560" y1="70" x2="380" y2="108" stroke="#888" stroke-width="1.2"/>
+
+<text x="340" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">ZKFC (ZooKeeper Failover Controller) monitors health and triggers automatic failover</text>
+</svg>`,
+   tip:"Interview tip: know that ZooKeeper is used for LEADER ELECTION here (deciding which NameNode is Active), not for storing the actual file metadata."},
+
+  {level:"ha", title:"Common HDFS failure modes you should be able to name", desc:"The classic 'what could go wrong' list for an ops interview.",
+   zh:"中文：运维面试里经典的「可能出什么问题」清单。",
+   speak:"Common HDFS failure modes: DataNode disk full, the small file problem, under-replicated blocks, and NameNode memory pressure.",
+   table: table(["Failure mode","What happens","How to detect"], [
+     ["DataNode disk full","That DataNode stops accepting new blocks, may go into 'dead' state","hdfs dfsadmin -report shows disk usage per node"],
+     ["Small file problem","Millions of tiny files bloat NameNode memory (each file+block = ~150 bytes of RAM)","NameNode heap usage climbing; slow metadata ops"],
+     ["Under-replicated blocks","A DataNode died before its blocks could be re-replicated elsewhere","hdfs fsck / reports under-replicated block count"],
+     ["NameNode GC pauses","Huge metadata in JVM heap causes long GC stop-the-world pauses","NameNode UI shows slow response, GC logs show long pauses"],
+   ]),
+   tip:"'Small file problem' is a favorite interview question — the fix is usually: merge small files (e.g. via Hive/Spark compaction, or HAR archives), or use a format like Iceberg/Hudi that manages file compaction automatically."},
+];
+
+
+const yarnLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Fundamentals", desc:"The three core roles in YARN, and what a 'container' actually is."},
+  scheduling: {emoji:"📐", label:"Level 2 — Scheduling & resource allocation", desc:"How YARN decides who gets resources, and how queues work."},
+  blocking: {emoji:"🚧", label:"Level 3 — Why jobs get stuck / cluster blocking", desc:"The exact scenario you asked about — root causes and fixes."},
+};
+
+const yarnData = [
+  {level:"basics", title:"YARN's 3 core roles", desc:"YARN (Yet Another Resource Negotiator) separates 'who manages cluster resources' from 'who runs the actual job logic'.",
+   zh:"中文：YARN把「谁来管集群资源」和「谁来跑具体job逻辑」这两件事拆开，分别交给不同角色负责。",
+   speak:"YARN separates who manages cluster resources from who runs the actual job logic, using three core roles: ResourceManager, NodeManager, and ApplicationMaster.",
+   diagram: `<svg width="100%" viewBox="0 0 680 260" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="yn1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="250" y="15" width="180" height="55" rx="8" fill="var(--danger-bg)" stroke="var(--danger)" stroke-width="1.5"/>
+<text x="340" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">ResourceManager (RM)</text>
+<text x="340" y="55" text-anchor="middle" font-size="10" fill="var(--danger)" font-family="-apple-system,sans-serif">ONE per cluster — global resource boss</text>
+
+<line x1="340" y1="70" x2="150" y2="115" stroke="#888" stroke-width="1.2" marker-end="url(#yn1)"/>
+<line x1="340" y1="70" x2="530" y2="115" stroke="#888" stroke-width="1.2" marker-end="url(#yn1)"/>
+
+<rect x="60" y="115" width="180" height="55" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="150" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">NodeManager (NM)</text>
+<text x="150" y="155" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">ONE per worker machine</text>
+
+<rect x="440" y="115" width="180" height="55" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="530" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">NodeManager (NM)</text>
+<text x="530" y="155" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">ONE per worker machine</text>
+
+<line x1="150" y1="170" x2="150" y2="200" stroke="#888" stroke-width="1.2" marker-end="url(#yn1)"/>
+<rect x="70" y="200" width="160" height="45" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="150" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">ApplicationMaster</text>
+<text x="150" y="236" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">ONE per running job/app</text>
+
+<rect x="440" y="200" width="160" height="45" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="520" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Container</text>
+<text x="520" y="236" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">unit of allocated CPU+RAM</text>
+</svg>`,
+   table: table(["Role","Analogy"], [
+     ["ResourceManager","The building manager who decides which company (job) gets which office (resources)"],
+     ["NodeManager","The floor supervisor on ONE specific floor (machine), reporting available space to the manager"],
+     ["ApplicationMaster","Each company's own on-site coordinator, negotiating for more office space (containers) as needed"],
+     ["Container","An actual allocated office (a fixed slice of CPU + memory) where real work runs"],
+   ]),
+   tip:"Interview trap: people often forget ApplicationMaster ITSELF runs inside a Container too — it's not a separate free resource."},
+
+  {level:"scheduling", title:"How a job actually gets resources — the full flow", desc:"Client submits → RM allocates a container just for the ApplicationMaster → AM then requests MORE containers from RM for the actual work → NM launches those containers.",
+   zh:"中文：客户端提交job → RM先分配一个container专门用来启动ApplicationMaster → AM再向RM申请更多container用于实际计算 → NodeManager负责真正启动这些container。",
+   speak:"Client submits a job to the ResourceManager, which allocates a container just for the ApplicationMaster. The ApplicationMaster then requests more containers for the actual work, and NodeManagers launch those containers.",
+   diagram: `<svg width="100%" viewBox="0 0 680 300" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="yn2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="20" y="10" width="620" height="34" rx="6" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="330" y="31" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">1. Client submits job to ResourceManager</text>
+<line x1="330" y1="44" x2="330" y2="66" stroke="#888" stroke-width="1.2" marker-end="url(#yn2)"/>
+
+<rect x="20" y="66" width="620" height="34" rx="6" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="330" y="87" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--accent)" font-family="-apple-system,sans-serif">2. RM allocates ONE container to launch the ApplicationMaster</text>
+<line x1="330" y1="100" x2="330" y2="122" stroke="#888" stroke-width="1.2" marker-end="url(#yn2)"/>
+
+<rect x="20" y="122" width="620" height="34" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="330" y="143" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--success)" font-family="-apple-system,sans-serif">3. ApplicationMaster registers with RM, requests MORE containers</text>
+<line x1="330" y1="156" x2="330" y2="178" stroke="#888" stroke-width="1.2" marker-end="url(#yn2)"/>
+
+<rect x="20" y="178" width="620" height="34" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="330" y="199" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--warning)" font-family="-apple-system,sans-serif">4. RM negotiates with NodeManagers, grants containers back to AM</text>
+<line x1="330" y1="212" x2="330" y2="234" stroke="#888" stroke-width="1.2" marker-end="url(#yn2)"/>
+
+<rect x="20" y="234" width="620" height="34" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="330" y="255" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--danger)" font-family="-apple-system,sans-serif">5. AM tells NodeManagers to LAUNCH the actual work in those containers</text>
+
+<text x="330" y="288" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">If step 4 can never allocate enough containers -&gt; job appears "stuck"</text>
+</svg>`,
+   tip:"This 5-step flow is the exact thing to draw on a whiteboard if asked 'walk me through what happens when a Spark job is submitted to YARN'."},
+
+  {level:"scheduling", title:"Scheduler types — Capacity vs Fair", desc:"The scheduler decides HOW resources get divided among competing jobs/queues.",
+   zh:"中文：调度器(scheduler)决定资源在多个竞争的job/队列之间该怎么分配。",
+   speak:"Capacity Scheduler guarantees each queue a minimum share of the cluster. Fair Scheduler tries to give every running job an equal share dynamically.",
+   table: table(["Scheduler","How it works","Common use case"], [
+     ["Capacity Scheduler","Cluster divided into queues, each with a guaranteed capacity %; queues can 'borrow' idle capacity from others","Multi-tenant clusters shared by different teams/departments (very common in enterprise Hadoop)"],
+     ["Fair Scheduler","All running jobs get roughly equal resource shares, dynamically rebalanced as jobs start/finish","Clusters prioritizing fairness over strict guarantees"],
+     ["FIFO","Simple queue, first job in gets everything until done","Rarely used in production — mentioned mainly for historical/interview context"],
+   ]),
+   tip:"Most large enterprises (including bank/finance data platforms) use Capacity Scheduler because it gives predictable guarantees per team — good to mention by name in an interview."},
+
+  {level:"blocking", title:"THE core scenario: 'a job is stuck / not progressing' — diagnosis flow", desc:"This is the single most common big-data-ops interview question. Here's the exact step-by-step you should walk through out loud.",
+   zh:"中文：这是大数据运维面试里最常见的问题，没有之一。下面是你应该能脱口而出的完整排查步骤。",
+   speak:"When a job appears stuck, the diagnosis flow is: check if it's even running, check the queue for resource starvation, check for a specific slow stage, then check individual task logs.",
+   diagram: `<svg width="100%" viewBox="0 0 680 380" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="yn3" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="200" y="10" width="280" height="34" rx="6" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="31" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Job "appears stuck" — start here</text>
+<line x1="340" y1="44" x2="340" y2="64" stroke="#888" stroke-width="1.2" marker-end="url(#yn3)"/>
+
+<rect x="140" y="64" width="400" height="40" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Step 1 — Check YARN UI: is the app even ACCEPTED/RUNNING?</text>
+<text x="340" y="96" text-anchor="middle" font-size="9.5" fill="var(--accent)" font-family="-apple-system,sans-serif">If stuck in ACCEPTED state -&gt; resource starvation, go to Step 2</text>
+<line x1="340" y1="104" x2="340" y2="124" stroke="#888" stroke-width="1.2" marker-end="url(#yn3)"/>
+
+<rect x="140" y="124" width="400" height="46" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="340" y="141" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Step 2 — Check queue capacity (yarn queue -status)</text>
+<text x="340" y="156" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">Is the queue at 100% used? Too many pending apps ahead of yours?</text>
+<text x="340" y="169" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">-&gt; if yes, this explains it: not enough resources allocated yet</text>
+<line x1="340" y1="170" x2="340" y2="190" stroke="#888" stroke-width="1.2" marker-end="url(#yn3)"/>
+
+<text x="340" y="206" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="-apple-system,sans-serif">If app IS running but progress bar isn't moving:</text>
+
+<rect x="140" y="216" width="400" height="46" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="233" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Step 3 — Open Spark/YARN app UI, find the STUCK STAGE</text>
+<text x="340" y="248" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">Look at task duration distribution: is ONE task way longer than others?</text>
+<text x="340" y="261" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">-&gt; classic DATA SKEW signature</text>
+<line x1="340" y1="262" x2="340" y2="282" stroke="#888" stroke-width="1.2" marker-end="url(#yn3)"/>
+
+<rect x="140" y="282" width="400" height="46" rx="7" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="340" y="299" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Step 4 — Check the slow task's LOGS + jstack thread dump</text>
+<text x="340" y="314" text-anchor="middle" font-size="9.5" fill="var(--danger)" font-family="-apple-system,sans-serif">GC pauses? Waiting on a lock? Waiting on network/disk I/O?</text>
+<text x="340" y="327" text-anchor="middle" font-size="9.5" fill="var(--danger)" font-family="-apple-system,sans-serif">-&gt; this tells you the EXACT root cause</text>
+
+<text x="340" y="356" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">This 4-step narrowing (cluster -&gt; queue -&gt; stage -&gt; task) is the</text>
+<text x="340" y="372" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">standard mental model for ANY "job is stuck" ops question</text>
+</svg>`,
+   code:`# Step 1: is the app running at all?
+yarn application -list -appStates ALL | grep <app_id>
+
+# Step 2: check queue capacity and pending apps
+yarn queue -status <queue_name>
+yarn application -list -appStates ACCEPTED   # apps waiting for resources
+
+# Step 3: open Spark UI -> Stages tab, sort by task duration
+#         look for ONE task much longer than the rest (data skew signature)
+
+# Step 4: thread dump the slow executor to see what it's actually doing
+jstack <executor_pid> > thread_dump.txt
+# look for: BLOCKED (lock contention), long GC, or I/O wait states`,
+   tip:"Say this framing out loud in an interview: 'I narrow down from cluster-level, to queue-level, to stage-level, to task-level — each step either confirms or rules out a category of cause.'"},
+
+  {level:"blocking", title:"Common ROOT CAUSES behind 'stuck' jobs — a name-the-cause table", desc:"Once you've narrowed down WHERE it's stuck, here's what's usually actually wrong.",
+   zh:"中文：确定了「卡在哪一层」之后，这张表列出了通常的真实原因。",
+   speak:"Common root causes behind stuck jobs include queue resource exhaustion, data skew, deadlock or lock contention, and small file explosion overwhelming the scheduler.",
+   table: table(["Symptom","Likely root cause","Typical fix"], [
+     ["App stuck in ACCEPTED state","Queue is full / cluster resources exhausted","Kill low-priority jobs, request more queue capacity, or wait"],
+     ["One task takes 10x longer than others","Data skew on a hot key","Salting, AQE skew join, repartition, or two-stage aggregation"],
+     ["ApplicationMaster itself unresponsive","AM container OOM, or AM stuck waiting on RM","Increase yarn.app.mapreduce.am.resource.mb, check RM logs"],
+     ["Many tiny tasks, scheduler overhead dominates","Too many small input files / over-partitioned data","Coalesce/repartition before processing, compact small files upstream"],
+     ["Container allocation requested but never granted","NodeManager unhealthy / disk space threshold breached","Check NM health via RM UI — NMs can self-mark UNHEALTHY on low disk"],
+     ["Job hangs at the exact same stage every run","Deadlock or external dependency (e.g., waiting on a lock in Hive Metastore)","Thread dump the driver; check for lock contention in shared metastore"],
+   ]),
+   warn:"NodeManager 'UNHEALTHY' state is an underrated one — YARN automatically stops sending containers to a NodeManager if local disk usage crosses a threshold (default 90%), which can silently shrink your effective cluster capacity."},
+];
+
+
+const sparkLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Driver vs Executor", desc:"The two process types in every Spark application."},
+  memory: {emoji:"🧠", label:"Level 2 — Executor memory internals", desc:"The exact memory regions interviewers expect you to name."},
+  oom: {emoji:"💥", label:"Level 3 — OOM diagnosis", desc:"Which OOM is it, and how do you tell?"},
+};
+
+const sparkData = [
+  {level:"basics", title:"Driver vs Executor — who does what", desc:"Driver is the 'brain' that plans the job. Executors are the 'muscle' that actually crunch data.",
+   zh:"中文：Driver是负责「规划任务」的大脑，Executor是真正干活、处理数据的「肌肉」。",
+   speak:"The Driver is the brain that plans the job and coordinates everything. Executors are the muscle that actually crunch data in parallel across the cluster.",
+   table: table(["Process","Runs where","Responsibility"], [
+     ["Driver","1 per application (inside the AM container, or client machine in client mode)","Builds the DAG, schedules stages/tasks, collects final results"],
+     ["Executor","Many per application, spread across worker nodes","Runs tasks, holds cached data in memory, reports back to Driver"],
+   ]),
+   tip:"Interview trap: 'Driver OOM' and 'Executor OOM' are DIFFERENT problems with different causes — see Level 3."},
+
+  {level:"memory", title:"Executor memory layout — the exact regions", desc:"A single executor's JVM heap is NOT one big undivided pool — Spark's Unified Memory Manager splits it into named regions.",
+   zh:"中文：单个executor的JVM堆内存不是一整块不分区的池子——Spark的统一内存管理器(Unified Memory Manager)把它划分成好几个命名区域。",
+   speak:"An executor's JVM heap is split into named regions by Spark's Unified Memory Manager: reserved memory, user memory, and unified memory — which itself splits into execution memory and storage memory that can borrow space from each other.",
+   diagram: `<svg width="100%" viewBox="0 0 680 260" style="max-width:600px; display:block; margin:8px auto;">
+<rect x="20" y="10" width="640" height="50" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Full JVM Heap (spark.executor.memory, e.g. 6GB)</text>
+<text x="340" y="46" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Split into 3 regions below (not to scale)</text>
+
+<rect x="20" y="80" width="90" height="70" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="65" y="105" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Reserved</text>
+<text x="65" y="120" text-anchor="middle" font-size="9" fill="var(--danger)" font-family="-apple-system,sans-serif">Memory</text>
+<text x="65" y="138" text-anchor="middle" font-size="8.5" fill="var(--danger)" font-family="-apple-system,sans-serif">~300MB, fixed</text>
+
+<rect x="120" y="80" width="130" height="70" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="185" y="105" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">User Memory</text>
+<text x="185" y="122" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">Your objects/data</text>
+<text x="185" y="135" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">structures, UDFs</text>
+<text x="185" y="148" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">~40% by default</text>
+
+<rect x="260" y="80" width="400" height="70" rx="6" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="460" y="105" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Unified Memory (~60% by default, spark.memory.fraction)</text>
+<line x1="460" y1="112" x2="460" y2="145" stroke="var(--accent)" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="345" y="130" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">Execution Memory</text>
+<text x="345" y="143" text-anchor="middle" font-size="8" fill="var(--accent)" font-family="-apple-system,sans-serif">shuffles, joins, sorts, aggregations</text>
+<text x="565" y="130" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">Storage Memory</text>
+<text x="565" y="143" text-anchor="middle" font-size="8" fill="var(--accent)" font-family="-apple-system,sans-serif">cached RDDs/DataFrames, broadcast vars</text>
+
+<text x="340" y="180" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">KEY FACT: Execution and Storage memory can BORROW from each other dynamically</text>
+<text x="340" y="198" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">If cached data isn't using its share, a shuffle-heavy stage can borrow that space —</text>
+<text x="340" y="214" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">but execution memory can forcibly evict cached blocks if it needs the space back</text>
+
+<text x="340" y="240" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">There's also Off-heap memory (spark.executor.memoryOverhead) OUTSIDE this JVM heap —</text>
+<text x="340" y="254" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">used by JVM internals, native libs, and off-heap allocations. Default: max(384MB, 10% of executor memory)</text>
+</svg>`,
+   code:`# Key Spark memory configs
+spark.executor.memory          # JVM heap size for the executor (e.g. 6g)
+spark.executor.memoryOverhead  # off-heap memory OUTSIDE the JVM heap
+                                # default = max(384MB, 0.10 * executor.memory)
+spark.memory.fraction          # % of (heap - reserved) for Unified Memory (default 0.6)
+spark.memory.storageFraction   # % of Unified Memory reserved for Storage (default 0.5)`,
+   tip:"When an interviewer asks 'why did the executor OOM even though I set executor.memory high enough', the answer is often: the OVERHEAD (off-heap) memory was too small, not the heap itself."},
+
+  {level:"oom", title:"Driver OOM vs Executor OOM — how to tell them apart", desc:"Same error message category (OutOfMemoryError), completely different root causes and fixes.",
+   zh:"中文：虽然报错都叫OutOfMemoryError，但Driver OOM和Executor OOM的根因和修复方式完全不同。",
+   speak:"Driver OOM usually means you pulled too much data back to a single machine, like calling collect on a huge dataset. Executor OOM usually means data skew or a HashSet exploding during a distinct aggregation on one hot partition.",
+   table: table(["","Driver OOM","Executor OOM"], [
+     ["Typical cause","collect(), toPandas(), or broadcasting a table that's too large","Data skew — one partition/key has way more data than others"],
+     ["Where you see it","Driver logs, application immediately fails","One specific executor dies, task retries, eventually job fails"],
+     ["Fix direction","Avoid pulling full datasets to driver; increase spark.driver.memory only as last resort","Fix the skew: salting, AQE, repartition, or two-stage aggregation"],
+   ]),
+   warn:"A common beginner mistake in interviews: treating ALL OOMs the same and just saying 'increase memory'. Naming the SPECIFIC memory region and SPECIFIC cause is what separates a junior answer from a senior one."},
+
+  {level:"oom", title:"Reading a Spark OOM stack trace — what to look for", desc:"The exact error text tells you which memory region failed.",
+   zh:"中文：报错信息的具体文字，能告诉你到底是哪块内存区域出了问题。",
+   speak:"The exact wording of the OOM error tells you which memory region failed — Java heap space, GC overhead limit exceeded, or a container killed by YARN for exceeding physical memory.",
+   table: table(["Error text contains...","Meaning"], [
+     ["java.lang.OutOfMemoryError: Java heap space","The JVM heap itself is exhausted — classic OOM"],
+     ["GC overhead limit exceeded","JVM is spending almost all its time garbage collecting and barely making progress — heap is too small for the working set"],
+     ["Container killed by YARN for exceeding memory limits","This is an OFF-HEAP issue — the container's TOTAL memory (heap + overhead) exceeded what YARN allocated. Increase memoryOverhead, not just executor.memory"],
+   ]),
+   tip:"'Container killed by YARN for exceeding memory limits, X GB used, Y GB requested' — memorize this exact phrase, it's the single most common Spark-on-YARN OOM message you'll see in real logs."},
+
+  {level:"oom", title:"Why COUNT(DISTINCT) under skew is a textbook Executor OOM case", desc:"Ties directly back to the SLA case study — worth being able to explain end-to-end.",
+   zh:"中文：这跟之前SLA案例是同一个根因，建议练到能完整讲一遍机制+修复方案。",
+   speak:"COUNT DISTINCT under skew is a textbook executor OOM case because the hot key's HashAggregate must hold one giant in-memory HashSet, and that HashSet keeps growing as more distinct values are seen, without any way to spill safely to disk.",
+   code:`# The mechanism, step by step:
+# 1. Shuffle groups all rows for a key onto ONE task
+# 2. HashAggregate builds an in-memory HashSet to track seen distinct values
+# 3. Hot key -> HashSet grows toward millions of entries
+# 4. HashAggregate CANNOT spill this HashSet to disk safely
+# 5. Executor memory exhausted -> OOM
+
+# The fix (already covered in the SLA case study):
+#   - SortAggregate CAN spill to disk (slower but stable)
+#   - Two-stage aggregation converts 1 giant HashSet into many small ones
+#   - Salting spreads a specific hot key across multiple partitions`,
+   tip:"This is a great 'connect the dots' answer in an interview: mention the exact mechanism (HashSet can't spill) AND the fix (SortAggregate / two-stage / salting) in one breath — shows depth, not memorization."},
+];
+
+
+const flinkLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Flink vs Spark", desc:"The single most important conceptual difference."},
+  arch: {emoji:"🏗️", label:"Level 2 — Architecture", desc:"JobManager, TaskManager, and how a Flink job actually runs."},
+  state: {emoji:"💾", label:"Level 3 — State & fault tolerance", desc:"How Flink survives failures without losing data — this is its signature feature."},
+};
+
+const flinkData = [
+  {level:"basics", title:"The core difference: true streaming vs micro-batching", desc:"Spark Streaming (and Structured Streaming) processes data in small BATCHES on a timer. Flink processes each event AS IT ARRIVES — true record-at-a-time streaming.",
+   zh:"中文：Spark(结构化流)是按固定时间间隔处理「小批次」数据；Flink是每条数据一到就立刻处理，是真正的「逐条流式」处理。",
+   speak:"Spark processes streaming data in small batches on a timer. Flink processes each event as it arrives, true record-at-a-time streaming, which gives it lower latency.",
+   table: table(["","Spark (Structured Streaming)","Flink"], [
+     ["Processing model","Micro-batch (even 'continuous mode' has limits)","True streaming, event-at-a-time"],
+     ["Latency","Seconds (batch interval)","Milliseconds"],
+     ["Origin","Batch engine extended to streaming","Streaming engine, batch is a special case"],
+     ["Common use in finance/payments","Batch ETL, daily/hourly aggregation","Real-time fraud detection, real-time risk scoring"],
+   ]),
+   tip:"Say this if asked 'why would you use Flink instead of Spark': 'When the business requirement is millisecond-level latency — like real-time fraud scoring on each transaction — not just fast batch refresh.'"},
+
+  {level:"arch", title:"JobManager vs TaskManager", desc:"Same conceptual split as Spark's Driver/Executor, different names.",
+   zh:"中文：跟Spark的Driver/Executor是同一种角色划分思路，只是换了个名字。",
+   speak:"JobManager is Flink's equivalent of Spark's Driver — it coordinates the job. TaskManagers are Flink's equivalent of Executors — they actually run the work.",
+   diagram: `<svg width="100%" viewBox="0 0 680 200" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="fl1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="250" y="15" width="180" height="55" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="340" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">JobManager</text>
+<text x="340" y="55" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">coordinates checkpoints,</text>
+<text x="340" y="68" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">schedules tasks, tracks state</text>
+
+<line x1="340" y1="70" x2="150" y2="115" stroke="#888" stroke-width="1.2" marker-end="url(#fl1)"/>
+<line x1="340" y1="70" x2="530" y2="115" stroke="#888" stroke-width="1.2" marker-end="url(#fl1)"/>
+
+<rect x="60" y="115" width="180" height="60" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="150" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">TaskManager</text>
+<text x="150" y="155" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">runs 'task slots' —</text>
+<text x="150" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">parallel processing units</text>
+
+<rect x="440" y="115" width="180" height="60" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="530" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">TaskManager</text>
+<text x="530" y="155" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">runs 'task slots' —</text>
+<text x="530" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">parallel processing units</text>
+</svg>`,
+   tip:"'Task slot' is Flink's unit of parallelism — analogous to a Spark executor core, but specifically tied to memory-isolated slices of a TaskManager."},
+
+  {level:"state", title:"Checkpointing — how Flink recovers from failure without losing data", desc:"Flink periodically takes a consistent snapshot of ALL operator state across the whole pipeline, using a technique called the Chandy-Lamport algorithm (via 'checkpoint barriers').",
+   zh:"中文：Flink会定期给整条pipeline里所有算子的状态拍一张「一致性快照」，用的是Chandy-Lamport算法，具体实现是往数据流里插入「checkpoint barrier」标记。",
+   speak:"Flink periodically takes a consistent snapshot of all operator state across the whole pipeline by injecting checkpoint barriers into the data stream, which flow through the pipeline just like normal records.",
+   diagram: `<svg width="100%" viewBox="0 0 680 180" style="max-width:600px; display:block; margin:8px auto;">
+<text x="10" y="20" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Checkpoint barriers flow through the pipeline like special markers in the data stream:</text>
+
+<rect x="20" y="40" width="140" height="40" rx="6" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="90" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Source</text>
+
+<rect x="200" y="40" width="30" height="40" rx="4" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="215" y="65" text-anchor="middle" font-size="9" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">CP</text>
+
+<rect x="270" y="40" width="140" height="40" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Operator (map/agg)</text>
+
+<rect x="450" y="40" width="140" height="40" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="520" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Sink</text>
+
+<line x1="160" y1="60" x2="196" y2="60" stroke="#888" stroke-width="1.5"/>
+<line x1="230" y1="60" x2="266" y2="60" stroke="#888" stroke-width="1.5"/>
+<line x1="410" y1="60" x2="446" y2="60" stroke="#888" stroke-width="1.5"/>
+
+<text x="340" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Each operator snapshots its state to durable storage (e.g. S3/HDFS) when the barrier passes through</text>
+<text x="340" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">On failure: restart from the LAST completed checkpoint, replay source data after that point</text>
+<text x="340" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">This is how Flink achieves exactly-once processing semantics</text>
+</svg>`,
+   tip:"Interview follow-up to expect: 'What's the difference between checkpoints and savepoints?' — checkpoints are automatic and lightweight (for failure recovery), savepoints are manually triggered and portable (for planned upgrades/migrations)."},
+
+  {level:"state", title:"State backends — where does Flink actually store state?", desc:"For jobs with large state (e.g. tracking millions of active users), the choice of state backend matters a lot for performance.",
+   zh:"中文：如果job的状态很大(比如要追踪几百万活跃用户)，选哪种state backend对性能影响很大。",
+   speak:"HashMapStateBackend keeps everything in JVM heap memory, fast but limited by memory size. RocksDBStateBackend stores state on local disk, using memory only as a cache, so it scales to much larger state at the cost of some latency.",
+   table: table(["State backend","Where state lives","Best for"], [
+     ["HashMapStateBackend","JVM heap (in-memory)","Small state, need lowest possible latency"],
+     ["RocksDBStateBackend","Local disk (embedded RocksDB), memory as cache","Large state (GBs+) that won't fit in heap"],
+   ]),
+   tip:"If asked about 'a job with huge state causing memory pressure' — RocksDBStateBackend is the go-to answer, directly analogous to 'spill to disk' concepts you already know from Spark."},
+];
+
+
+function renderQuickRef() {
+  const el = document.getElementById('ref');
+  let html = `<div class="intro-note">A single-page cheat sheet pulling together every command and concept from the tabs above — for last-minute review right before the interview.</div>`;
+
+  html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Core architecture, one line each</p>` +
+    table(["Component","One-line definition"], [
+      ["NameNode","Holds HDFS metadata only — filenames, permissions, block locations"],
+      ["DataNode","Stores the actual HDFS data blocks (default 128MB each, 3x replicated)"],
+      ["ResourceManager","Cluster-wide resource allocator, ONE per YARN cluster"],
+      ["NodeManager","Per-machine agent that launches/monitors containers"],
+      ["ApplicationMaster","Per-job coordinator that requests containers from the RM"],
+      ["Spark Driver","Builds the DAG, schedules tasks, collects results — the 'brain'"],
+      ["Spark Executor","Runs tasks, holds cached data — the 'muscle'"],
+      ["Flink JobManager","Coordinates checkpoints and task scheduling — Flink's 'Driver'"],
+      ["Flink TaskManager","Runs task slots — Flink's 'Executor'"],
+    ]) + `</div>`;
+
+  html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Command cheat sheet</p>` +
+    `<div class="codeblock">${highlightCode(
+`# YARN
+yarn application -list -appStates ALL
+yarn application -status <app_id>
+yarn queue -status <queue_name>
+yarn logs -applicationId <app_id> -containerId <container_id>
+
+# HDFS
+hdfs dfsadmin -report
+hdfs fsck / -files -blocks -locations
+hdfs dfsadmin -safemode get
+
+# Debugging a stuck/slow task
+jstack <executor_pid>            # thread dump
+top / htop                        # CPU/memory at OS level
+# Spark UI: :4040 (or via YARN proxy) -> Stages -> Tasks -> sort by duration`
+    )}</div></div>`;
+
+  html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">The one sentence to say for almost any "what's wrong" question</p>
+    <p style="font-size:13.5px; font-style:italic; color:var(--text-primary);">
+    "I'd narrow down from cluster, to queue, to job, to stage, to task, to code — checking the YARN and Spark UIs at each level, and using thread dumps or logs once I've isolated the specific task or executor involved."
+    </p>
+    ${listenBtn("I'd narrow down from cluster, to queue, to job, to stage, to task, to code — checking the YARN and Spark UIs at each level, and using thread dumps or logs once I've isolated the specific task or executor involved.")}
+    </div>`;
+
+  html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Memory OOM — the 3-way split to always mention</p>` +
+    table(["OOM type","Root cause","Fix direction"], [
+      ["Driver OOM","Pulled too much data to one machine (collect, toPandas, oversized broadcast)","Avoid full collects; process distributed, only bring back aggregates"],
+      ["Executor OOM (skew)","One hot key/partition overwhelms one task's memory","Salting, two-stage aggregation, AQE skew join, repartition"],
+      ["Container killed by YARN","Off-heap/overhead memory too small relative to total container size","Increase spark.executor.memoryOverhead, not just executor.memory"],
+    ]) + `</div>`;
+
+  el.innerHTML = html;
+}
+
+
+
+// ============================================================
+// RENDER CALLS
+const hiveLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Fundamentals", desc:"What Hive is, and its core architecture pieces."},
+  storage: {emoji:"🗂️", label:"Level 2 — Storage, Partitioning & File Formats", desc:"How Hive organizes data on disk — this drives both performance and cost."},
+  ops: {emoji:"🔧", label:"Level 3 — Ops & common interview questions", desc:"The Metastore, execution engines, and the questions interviewers actually ask."},
+};
+
+const hiveData = [
+  {level:"basics", title:"What is Hive, and why does it exist?", desc:"Hive lets you write SQL (HiveQL) against data sitting in HDFS, translating your query into a MapReduce/Tez/Spark job under the hood — it's a SQL layer over Hadoop, not a database engine itself.",
+   zh:"中文：Hive让你用SQL(HiveQL)去查HDFS上的数据，背后会把SQL翻译成MapReduce/Tez/Spark job去执行——它是Hadoop之上的一层SQL接口，本身不是数据库引擎。",
+   speak:"Hive lets you write SQL against data sitting in HDFS, translating your query into a MapReduce, Tez, or Spark job under the hood.",
+   tip:"Interview one-liner: 'Hive turns SQL into a distributed batch job — it trades query latency for the ability to process massive datasets with familiar SQL syntax.'"},
+
+  {level:"basics", title:"Hive's core architecture — 4 pieces", desc:"Client sends HQL → Driver coordinates → Compiler builds an execution plan (using Metastore for schema info) → Execution Engine actually runs it as MR/Tez/Spark.",
+   zh:"中文：客户端发HQL查询 → Driver负责协调整个流程 → Compiler借助Metastore的表结构信息生成执行计划 → Execution Engine把计划真正跑成MR/Tez/Spark任务。",
+   speak:"Hive's architecture has four pieces: the Driver coordinates everything, the Compiler builds an execution plan using metadata from the Metastore, and the Execution Engine runs it as an actual distributed job.",
+   diagram: `<svg width="100%" viewBox="0 0 680 240" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="hv1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="20" y="15" width="120" height="40" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="80" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Client (HQL)</text>
+<line x1="140" y1="35" x2="172" y2="35" stroke="#888" stroke-width="1.3" marker-end="url(#hv1)"/>
+
+<rect x="176" y="15" width="120" height="40" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="236" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Driver</text>
+<line x1="236" y1="55" x2="236" y2="85" stroke="#888" stroke-width="1.3" marker-end="url(#hv1)"/>
+
+<rect x="176" y="90" width="120" height="40" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="236" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Compiler</text>
+<line x1="296" y1="110" x2="330" y2="110" stroke="#888" stroke-width="1.3" marker-end="url(#hv1)"/>
+
+<rect x="334" y="90" width="140" height="40" rx="7" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="404" y="110" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Metastore</text>
+<text x="404" y="124" text-anchor="middle" font-size="8.5" fill="var(--danger)" font-family="-apple-system,sans-serif">表结构/schema信息</text>
+
+<line x1="236" y1="130" x2="236" y2="160" stroke="#888" stroke-width="1.3" marker-end="url(#hv1)"/>
+<rect x="150" y="165" width="220" height="40" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="260" y="185" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Execution Engine</text>
+<text x="260" y="199" text-anchor="middle" font-size="8.5" fill="var(--success)" font-family="-apple-system,sans-serif">MapReduce / Tez / Spark</text>
+
+<text x="340" y="230" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Metastore只存"元数据"(表结构/分区信息)，真正的数据依然在HDFS上</text>
+</svg>`,
+   tip:"Metastore通常是一个独立的MySQL/PostgreSQL数据库——这是运维上很重要的一点：Metastore挂了，几乎所有Hive查询都会失败，哪怕HDFS本身完全健康。"},
+
+  {level:"basics", title:"Internal (Managed) Table vs External Table", desc:"The single most common Hive interview question about table types.",
+   zh:"中文：这是Hive面试里问表类型时最常见的问题。",
+   speak:"For a managed table, dropping the table deletes both the metadata and the actual data files. For an external table, dropping the table only removes the metadata, the data files stay untouched.",
+   table: table(["","Internal (Managed) Table","External Table"], [
+     ["DROP TABLE 的影响","连数据文件一起删掉","只删元数据，数据文件保留"],
+     ["数据位置","Hive默认管理的warehouse目录下","可以指向任意HDFS路径(LOCATION)"],
+     ["典型使用场景","Hive独占管理的临时/中间表","多个系统共享的原始数据、需要保留历史的核心表"],
+   ]),
+   tip:"生产环境的核心数据表几乎都用External Table——避免有人一不小心DROP TABLE就把原始数据文件也删没了。"},
+
+  {level:"storage", title:"Partitioning — 按目录物理拆分数据", desc:"Partitioning splits a table into separate HDFS subdirectories based on a column's value (e.g. date), letting queries skip irrelevant data entirely.",
+   zh:"中文：分区(Partition)按照某一列的值(比如日期)把表拆成不同的HDFS子目录，让查询能直接跳过不相关的数据，不用扫全表。",
+   speak:"Partitioning splits a table into separate directories based on a column's value, like date, letting queries skip irrelevant data entirely instead of scanning the whole table.",
+   code:`-- 建分区表(按日期分区)
+CREATE TABLE orders (
+  order_id BIGINT,
+  amount DOUBLE
+)
+PARTITIONED BY (dt STRING);
+
+-- 物理上对应的HDFS目录结构：
+-- /warehouse/orders/dt=2025-01-01/
+-- /warehouse/orders/dt=2025-01-02/
+
+-- 查询时加上分区过滤条件，Hive只扫这一个目录
+SELECT * FROM orders WHERE dt = '2025-01-01';   -- 只读1个分区，不是全表`,
+   warn:"⚠️ 面试常见追问：如果WHERE条件里没写分区列，会怎样？——答案是Hive会扫描全部分区(全表扫描)，这就是为什么大表一定要按查询模式设计分区键。"},
+
+  {level:"storage", title:"Bucketing — 表内进一步做hash分桶", desc:"Bucketing hashes a column's values into a fixed number of files WITHIN each partition — mainly used to speed up joins and sampling.",
+   zh:"中文：分桶(Bucketing)是在每个分区内部，再按某列的hash值切成固定数量的文件——主要用来加速join和抽样查询。",
+   speak:"Bucketing hashes a column's values into a fixed number of files within each partition, mainly used to speed up joins between two bucketed tables on the same key.",
+   code:`CREATE TABLE orders (
+  order_id BIGINT,
+  user_id BIGINT,
+  amount DOUBLE
+)
+CLUSTERED BY (user_id) INTO 32 BUCKETS;
+
+-- 如果两张表都按user_id分了相同数量的bucket，
+-- join的时候可以做 Bucket Map Join，避免整表shuffle`,
+   tip:"分区(Partition) vs 分桶(Bucket)的区别：分区是粗粒度的目录拆分(减少扫描量)，分桶是细粒度的文件拆分(主要为了优化join)。两者可以同时使用。"},
+
+  {level:"storage", title:"文件格式对比：ORC vs Parquet vs TextFile", desc:"File format choice massively affects both storage cost and query performance — this connects directly to the Case 4 cost optimization story.",
+   zh:"中文：文件格式的选择对存储成本和查询性能影响巨大——这跟之前Case 4「成本优化」的故事是同一个逻辑。",
+   speak:"ORC and Parquet are both columnar formats with compression and predicate pushdown, much more efficient than plain TextFile for analytical queries.",
+   table: table(["格式","类型","特点"], [
+     ["TextFile","行存","默认格式，无压缩，查询效率最低，但兼容性最好"],
+     ["ORC","列存","Hive原生格式，压缩比高，支持predicate pushdown(谓词下推)"],
+     ["Parquet","列存","跨生态系统更通用(Spark/Presto等都原生支持)，压缩比高"],
+   ]),
+   tip:"面试可以这样说：'For any serious production table, I'd default to ORC or Parquet over plain TextFile — columnar storage with compression typically cuts both storage cost and query time significantly, which directly ties into cluster cost optimization.'"},
+
+  {level:"ops", title:"Hive Metastore — 运维上最容易被忽视的单点", desc:"The Metastore is a normal RDBMS (commonly MySQL) storing ALL table/partition metadata. If it goes down or gets overloaded, EVERY Hive query fails — even though HDFS itself might be perfectly healthy.",
+   zh:"中文：Metastore本质是一个普通的关系型数据库(通常是MySQL)，存着所有表/分区的元数据。它一旦挂了或者过载，所有Hive查询都会失败——哪怕HDFS本身完全正常。",
+   speak:"The Metastore is a normal relational database storing all table and partition metadata. If it goes down, every Hive query fails, even though HDFS itself might be perfectly healthy.",
+   warn:"⚠️ 常见故障模式：表的分区数太多(比如按小时分区、跑了好几年)，导致Metastore数据库本身查询变慢，进而拖慢所有Hive query的编译阶段——这是「Metastore性能瓶颈」，面试值得提一句。",
+   tip:"运维排查思路：如果所有Hive查询都在编译阶段(不是执行阶段)卡住，第一反应应该是查Metastore数据库本身的健康状态和慢查询日志，而不是查YARN/HDFS。"},
+
+  {level:"ops", title:"执行引擎选择：MapReduce vs Tez vs Spark", desc:"The execution engine underneath Hive dramatically changes performance — this is a very common 'why is Hive slow' interview angle.",
+   zh:"中文：Hive底层用哪个执行引擎，对性能影响非常大——这是「为什么Hive这么慢」这类面试问题的常见切入点。",
+   speak:"Hive on MapReduce writes intermediate results to disk between every stage, which is slow. Hive on Tez or Spark keeps intermediate data in memory and pipelines stages together, much faster.",
+   code:`-- 查看/切换执行引擎
+SET hive.execution.engine;          -- 查看当前引擎
+SET hive.execution.engine=tez;      -- 切换成Tez(常见的现代默认值)`,
+   table: table(["引擎","特点"], [
+     ["MapReduce","每个stage之间都写磁盘，慢，但最老最稳定"],
+     ["Tez","stage之间用内存传递数据，避免不必要的磁盘IO，比MR快很多"],
+     ["Spark (Hive on Spark)","复用Spark的执行引擎，同样是内存计算，效果类似Tez"],
+   ]),
+   tip:"如果面试官问'怎么优化一个很慢的Hive查询'，第一句可以说：'I'd first check whether it's running on MapReduce — switching to Tez or Spark as the execution engine alone often gives a large speedup with zero query changes.'"},
+
+  {level:"ops", title:"Hive里的Data Skew该怎么处理", desc:"Same root cause as the Spark skew content — Hive has its own syntax for the same fixes.",
+   zh:"中文：根因跟之前Spark那部分讲的倾斜问题完全一样，Hive只是有自己的配置写法。",
+   speak:"Hive has built-in skew join optimization and the same salting techniques apply — the underlying problem and fixes are conceptually identical to Spark.",
+   code:`-- Hive内置的倾斜join优化(自动检测并处理热key)
+SET hive.optimize.skewjoin=true;
+SET hive.skewjoin.key=100000;   -- 超过这个行数的key被认为是热key
+
+-- Group By倾斜优化(两阶段聚合，Hive自动做)
+SET hive.groupby.skewindata=true;`,
+   tip:"这两个参数背后的原理，就是你已经很熟的'两阶段聚合'和'倾斜join打散'——只是Hive把它们做成了开关配置，不用你手写SQL。"},
+];
+
+const k8sLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Docker Fundamentals", desc:"Image, container, and why big data platforms containerize workloads."},
+  arch: {emoji:"🏗️", label:"Level 2 — Kubernetes Architecture", desc:"Control Plane vs Worker Nodes — the components interviewers expect you to name."},
+  ops: {emoji:"🔧", label:"Level 3 — Big Data on K8s & common interview questions", desc:"Spark-on-K8s, and the troubleshooting commands you'll actually use."},
+};
+
+const k8sData = [
+  {level:"basics", title:"Docker Image vs Container — 一个是模板，一个是运行实例", desc:"An image is a read-only, layered template (like a class). A container is a running instance of that image (like an object) — you can run many containers from the same image.",
+   zh:"中文：Image(镜像)是只读的、分层的模板(类似「类」)；Container(容器)是这个镜像的一个运行实例(类似「对象」)——同一个镜像可以同时跑出很多个容器。",
+   speak:"An image is a read-only layered template, like a class. A container is a running instance of that image, like an object — you can run many containers from the same image.",
+   code:`# 常用命令
+docker build -t myapp:v1 .        # 用Dockerfile构建镜像
+docker run -d myapp:v1            # 基于镜像启动一个容器
+docker ps                          # 查看正在运行的容器
+docker logs <container_id>         # 查看容器日志`,
+   tip:"面试一句话：'An image is the blueprint, a container is a running instance of that blueprint — analogous to a class and an object in OOP.'"},
+
+  {level:"basics", title:"为什么大数据平台要容器化？", desc:"Containerization gives consistent environments (no more 'works on my machine'), faster deployment, and resource isolation — increasingly common for running Spark/Flink jobs on shared infrastructure.",
+   zh:"中文：容器化能保证环境一致性(不再有「我本地能跑」的问题)、部署更快、资源隔离更好——现在越来越多大数据平台用容器跑Spark/Flink任务，而不是传统的YARN。",
+   speak:"Containerization gives consistent environments, faster deployment, and resource isolation — increasingly common for running Spark and Flink jobs on shared infrastructure.",
+   tip:"这跟你已经很熟的YARN不是对立关系，而是「平行」关系——YARN和Kubernetes都是资源调度器，只是YARN是大数据生态原生的，K8s是云原生生态的，现在有的公司甚至把两者结合(Spark on K8s)。"},
+
+  {level:"arch", title:"Kubernetes 架构 — Control Plane vs Worker Node", desc:"The Control Plane makes all cluster-wide decisions. Worker Nodes actually run your containers. This maps almost directly onto YARN's ResourceManager/NodeManager split you already know.",
+   zh:"中文：Control Plane负责整个集群的全局决策，Worker Node负责真正跑容器。这个划分方式跟你已经很熟的YARN的ResourceManager/NodeManager几乎是一一对应的。",
+   speak:"The Control Plane makes all cluster-wide decisions. Worker Nodes actually run your containers — this maps almost directly onto YARN's ResourceManager and NodeManager split.",
+   diagram: `<svg width="100%" viewBox="0 0 680 320" style="max-width:620px; display:block; margin:8px auto;">
+<defs><marker id="k8a" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="140" y="10" width="400" height="130" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="340" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Control Plane (相当于YARN的ResourceManager)</text>
+
+<rect x="155" y="42" width="110" height="40" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="210" y="60" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">API Server</text>
+<text x="210" y="74" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="-apple-system,sans-serif">所有请求的入口</text>
+
+<rect x="275" y="42" width="110" height="40" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="330" y="60" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Scheduler</text>
+<text x="330" y="74" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="-apple-system,sans-serif">决定Pod跑哪个节点</text>
+
+<rect x="395" y="42" width="120" height="40" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="455" y="57" text-anchor="middle" font-size="9" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Controller</text>
+<text x="455" y="68" text-anchor="middle" font-size="9" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Manager</text>
+<text x="455" y="79" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="-apple-system,sans-serif">保持实际=期望状态</text>
+
+<rect x="230" y="92" width="220" height="36" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="340" y="108" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">etcd</text>
+<text x="340" y="120" text-anchor="middle" font-size="7.5" fill="var(--danger)" font-family="-apple-system,sans-serif">存储整个集群的状态数据(分布式KV)</text>
+
+<line x1="220" y1="140" x2="150" y2="175" stroke="#888" stroke-width="1.3" marker-end="url(#k8a)"/>
+<line x1="460" y1="140" x2="530" y2="175" stroke="#888" stroke-width="1.3" marker-end="url(#k8a)"/>
+
+<rect x="40" y="180" width="240" height="120" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.5"/>
+<text x="160" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Worker Node (相当于NodeManager)</text>
+<rect x="55" y="212" width="90" height="34" rx="5" fill="var(--surface)" stroke="var(--success)"/>
+<text x="100" y="227" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">kubelet</text>
+<text x="100" y="240" text-anchor="middle" font-size="7" fill="var(--success)" font-family="-apple-system,sans-serif">管理本机容器</text>
+<rect x="155" y="212" width="105" height="34" rx="5" fill="var(--surface)" stroke="var(--success)"/>
+<text x="207" y="227" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">kube-proxy</text>
+<text x="207" y="240" text-anchor="middle" font-size="7" fill="var(--success)" font-family="-apple-system,sans-serif">网络转发</text>
+<rect x="90" y="255" width="140" height="34" rx="5" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="160" y="275" text-anchor="middle" font-size="9" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Pod(s) 运行中</text>
+
+<rect x="400" y="180" width="240" height="120" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.5"/>
+<text x="520" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Worker Node (相当于NodeManager)</text>
+<rect x="415" y="212" width="90" height="34" rx="5" fill="var(--surface)" stroke="var(--success)"/>
+<text x="460" y="227" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">kubelet</text>
+<text x="460" y="240" text-anchor="middle" font-size="7" fill="var(--success)" font-family="-apple-system,sans-serif">管理本机容器</text>
+<rect x="515" y="212" width="105" height="34" rx="5" fill="var(--surface)" stroke="var(--success)"/>
+<text x="567" y="227" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">kube-proxy</text>
+<text x="567" y="240" text-anchor="middle" font-size="7" fill="var(--success)" font-family="-apple-system,sans-serif">网络转发</text>
+<rect x="450" y="255" width="140" height="34" rx="5" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="520" y="275" text-anchor="middle" font-size="9" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Pod(s) 运行中</text>
+</svg>`,
+   table: table(["K8s组件","对应的YARN概念"], [
+     ["Control Plane / API Server","ResourceManager"],
+     ["Scheduler","YARN的Scheduler(Capacity/Fair)"],
+     ["Worker Node + kubelet","NodeManager"],
+     ["Pod","Container(YARN概念)"],
+   ]),
+   tip:"面试如果被问K8s但你更熟YARN，可以直接说：'I'm very comfortable with YARN, and the concepts map closely — API Server/Scheduler is like ResourceManager, kubelet on each Worker Node is like NodeManager, and a Pod is roughly YARN's Container.'"},
+
+  {level:"arch", title:"Pod 是什么？", desc:"A Pod is the smallest deployable unit in K8s — usually wraps ONE container (sometimes a few tightly-coupled ones sharing network/storage).",
+   zh:"中文：Pod是K8s里最小的可部署单元——通常包一个容器(有时候是几个紧密耦合、共享网络和存储的容器)。",
+   speak:"A Pod is the smallest deployable unit in Kubernetes, usually wrapping one container, sometimes a few tightly-coupled containers that share network and storage.",
+   tip:"容易被问到的点：为什么不直接叫Container，要多包一层Pod？——因为K8s要处理「一组容器共享网络/存储」这种场景(比如sidecar模式)，Pod就是这个「组」的抽象。"},
+
+  {level:"ops", title:"Spark on Kubernetes vs Spark on YARN", desc:"Since you're already very comfortable with Spark on YARN, here's the direct comparison for the K8s equivalent.",
+   zh:"中文：既然你对Spark on YARN已经很熟，这里直接列跟K8s版本的对比。",
+   speak:"On Kubernetes, the Spark Driver runs in its own Pod, and each Executor also runs in its own Pod — Kubernetes' scheduler handles resource allocation instead of YARN's ResourceManager.",
+   table: table(["","Spark on YARN","Spark on Kubernetes"], [
+     ["Driver运行位置","AM Container(ApplicationMaster内)","独立的Driver Pod"],
+     ["Executor运行位置","Container(NodeManager分配)","独立的Executor Pod(一个Pod=一个Executor)"],
+     ["资源调度者","YARN ResourceManager","K8s Scheduler"],
+     ["提交命令","spark-submit --master yarn","spark-submit --master k8s://&lt;api-server&gt;"],
+   ]),
+   tip:"核心思路完全一样(Driver规划、Executor执行)，只是「谁来分配机器资源」这一层从YARN换成了K8s——你对Spark内部机制的理解可以100%复用。"},
+
+  {level:"ops", title:"K8s常见故障排查：Pod起不来怎么办", desc:"The K8s equivalent of 'my Spark job won't start' — the same narrowing-down mindset applies.",
+   zh:"中文：这就是K8s版本的「我的Spark任务起不来」——排查思路跟之前YARN那套「逐层缩小范围」完全一致。",
+   speak:"When a Pod won't start, first check its status, then describe it for events, then check the logs — the same layer-by-layer narrowing approach you already use for YARN.",
+   code:`# Step 1: 看Pod整体状态
+kubectl get pods
+
+NAME                  READY   STATUS             RESTARTS   AGE
+spark-driver-abc123    0/1    CrashLoopBackOff   5          3m
+spark-exec-1-def456    0/1    Pending            0          3m
+
+# Step 2: 看具体是什么事件导致的(重点看Events部分)
+kubectl describe pod spark-driver-abc123
+
+Events:
+  Warning  FailedScheduling  ... 0/3 nodes are available: insufficient memory
+
+# Step 3: 看容器日志(如果Pod至少启动过)
+kubectl logs spark-driver-abc123
+
+# Step 4: 如果容器一直重启，看上一次崩溃前的日志
+kubectl logs spark-driver-abc123 --previous`,
+   table: table(["Pod状态","含义","常见原因"], [
+     ["Pending","还没被调度到任何节点","集群资源不足(对应YARN的ACCEPTED)"],
+     ["CrashLoopBackOff","容器反复启动又崩溃","应用本身报错，或者健康检查失败"],
+     ["OOMKilled","容器因为超内存被杀","跟Spark on YARN的Container OOM是同一个概念，只是换了个名字"],
+     ["ImagePullBackOff","镜像拉取失败","镜像地址错误、没权限、registry不可达"],
+   ]),
+   tip:"面试总结句：'The diagnosis flow mirrors YARN — kubectl get pods to see the overall state, kubectl describe for scheduling events, and kubectl logs for the actual error, narrowing down layer by layer just like I would with YARN and Spark UI.'"},
+];
+
+// ============================================================
+renderByLevel('hdfs', hdfsData, hdfsLevelMeta);
+renderByLevel('yarn', yarnData, yarnLevelMeta);
+renderByLevel('spark', sparkData, sparkLevelMeta);
+renderByLevel('flink', flinkData, flinkLevelMeta);
+renderByLevel('hive', hiveData, hiveLevelMeta);
+renderByLevel('k8s', k8sData, k8sLevelMeta);
+renderQuickRef();
+
+// ============================================================
+// DIAGRAMS FOR CASES TAB (bilingual: Chinese labels + English keyword badges)
+// ============================================================
+
+
+// ============================================================
+// UI MOCKUPS — what YARN RM UI and Spark UI actually look like
+// ============================================================
+
+
+// ============================================================
+// UI MOCKUPS — what YARN RM UI and Spark UI actually look like
+// ============================================================
+
+const yarnUIMockup = `<svg width="100%" viewBox="0 0 680 300" style="max-width:620px; display:block; margin:10px auto; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.12);">
+<!-- browser chrome -->
+<rect x="0" y="0" width="680" height="28" fill="#E5E5E3"/>
+<circle cx="14" cy="14" r="4" fill="#FF5F57"/>
+<circle cx="28" cy="14" r="4" fill="#FEBC2E"/>
+<circle cx="42" cy="14" r="4" fill="#28C840"/>
+<rect x="60" y="6" width="500" height="16" rx="4" fill="#FFFFFF" stroke="#D4D4D0"/>
+<text x="70" y="18" font-size="10" fill="#57564F" font-family="-apple-system,sans-serif">http://&lt;resourcemanager-host&gt;:8088/cluster/apps</text>
+
+<!-- page body -->
+<rect x="0" y="28" width="680" height="272" fill="#FFFFFF"/>
+<text x="14" y="48" font-size="12" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">All Applications</text>
+
+<!-- table header -->
+<rect x="14" y="58" width="652" height="24" fill="#E8F2FA"/>
+<text x="20" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Application ID</text>
+<text x="200" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Name</text>
+<text x="330" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">State</text>
+<text x="420" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Queue</text>
+<text x="500" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Progress</text>
+<text x="600" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Tracking UI</text>
+
+<!-- row 1: RUNNING, normal -->
+<rect x="14" y="82" width="652" height="26" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="99" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">application_1721_0042</text>
+<text x="200" y="99" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">daily_etl_job</text>
+<rect x="330" y="88" width="62" height="14" rx="3" fill="#E4F5EC"/>
+<text x="361" y="98" text-anchor="middle" font-size="8" font-weight="700" fill="#1E7A4C" font-family="-apple-system,sans-serif">RUNNING</text>
+<text x="420" y="99" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">default</text>
+<text x="500" y="99" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">45%</text>
+<text x="600" y="99" font-size="9" fill="#2971A8" font-family="-apple-system,sans-serif">ApplicationMaster</text>
+
+<!-- row 2: ACCEPTED - the one you're diagnosing -->
+<rect x="14" y="108" width="652" height="30" fill="#FBECEA" stroke="#B14A3F" stroke-width="1.3"/>
+<text x="20" y="127" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">application_1721_0043</text>
+<text x="200" y="127" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">your_stuck_job</text>
+<rect x="330" y="115" width="62" height="16" rx="3" fill="#FBECEA" stroke="#B14A3F"/>
+<text x="361" y="126" text-anchor="middle" font-size="8" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">ACCEPTED</text>
+<text x="420" y="127" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">prod_etl</text>
+<text x="500" y="127" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">0%</text>
+<text x="600" y="127" font-size="9" fill="#8A8985" font-family="-apple-system,sans-serif">N/A (not started)</text>
+
+<!-- row 3: RUNNING -->
+<rect x="14" y="138" width="652" height="26" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="155" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">application_1721_0041</text>
+<text x="200" y="155" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">hourly_agg_job</text>
+<rect x="330" y="144" width="62" height="14" rx="3" fill="#E4F5EC"/>
+<text x="361" y="154" text-anchor="middle" font-size="8" font-weight="700" fill="#1E7A4C" font-family="-apple-system,sans-serif">RUNNING</text>
+<text x="420" y="155" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">default</text>
+<text x="500" y="155" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">88%</text>
+<text x="600" y="155" font-size="9" fill="#2971A8" font-family="-apple-system,sans-serif">ApplicationMaster</text>
+
+<line x1="14" y1="185" x2="666" y2="185" stroke="#D4D4D0" stroke-dasharray="3,3"/>
+<text x="340" y="205" text-anchor="middle" font-size="10.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">👆 你的job卡在 ACCEPTED，Progress一直是0% → 说明还没分到资源</text>
+<text x="340" y="223" text-anchor="middle" font-size="10" fill="#57564F" font-family="-apple-system,sans-serif">下一步：点击这个queue "prod_etl"，检查队列容量是否已被占满</text>
+
+<rect x="14" y="240" width="652" height="50" rx="6" fill="#FBF0DD" stroke="#9A6B1E"/>
+<text x="24" y="258" font-size="9.5" font-weight="700" fill="#9A6B1E" font-family="-apple-system,sans-serif">Queue: prod_etl — Used Capacity: 100% / 100%</text>
+<text x="24" y="274" font-size="9" fill="#9A6B1E" font-family="-apple-system,sans-serif">Pending Applications: 3 (你的job排在第2位，前面还有1个job占着资源)</text>
+</svg>`;
+
+const sparkUIMockup = `<svg width="100%" viewBox="0 0 680 320" style="max-width:620px; display:block; margin:10px auto; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.12);">
+<!-- browser chrome -->
+<rect x="0" y="0" width="680" height="28" fill="#E5E5E3"/>
+<circle cx="14" cy="14" r="4" fill="#FF5F57"/>
+<circle cx="28" cy="14" r="4" fill="#FEBC2E"/>
+<circle cx="42" cy="14" r="4" fill="#28C840"/>
+<rect x="60" y="6" width="500" height="16" rx="4" fill="#FFFFFF" stroke="#D4D4D0"/>
+<text x="70" y="18" font-size="10" fill="#57564F" font-family="-apple-system,sans-serif">http://&lt;driver-host&gt;:4040/stages/stage/?id=12</text>
+
+<!-- page body -->
+<rect x="0" y="28" width="680" height="292" fill="#FFFFFF"/>
+<text x="14" y="48" font-size="12" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">Stage 12 — Tasks (200 total)</text>
+<text x="14" y="64" font-size="9.5" fill="#57564F" font-family="-apple-system,sans-serif">Summary Metrics — Task Duration:  Min 1.2s  |  Median 1.8s  |  Max 4.2min ⚠️</text>
+
+<!-- table header -->
+<rect x="14" y="76" width="652" height="24" fill="#E8F2FA"/>
+<text x="20" y="92" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Task ID</text>
+<text x="110" y="92" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Executor ID</text>
+<text x="220" y="92" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Status</text>
+<text x="310" y="92" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Duration</text>
+<text x="410" y="92" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Shuffle Read Size</text>
+<text x="560" y="92" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">GC Time</text>
+
+<!-- normal rows -->
+<rect x="14" y="100" width="652" height="24" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="116" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">142</text>
+<text x="110" y="116" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">executor_7</text>
+<text x="220" y="116" font-size="9" fill="#1E7A4C" font-family="-apple-system,sans-serif">SUCCESS</text>
+<text x="310" y="116" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">1.8 s</text>
+<text x="410" y="116" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">24.1 MB</text>
+<text x="560" y="116" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">0.1 s</text>
+
+<rect x="14" y="124" width="652" height="24" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="140" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">143</text>
+<text x="110" y="140" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">executor_3</text>
+<text x="220" y="140" font-size="9" fill="#1E7A4C" font-family="-apple-system,sans-serif">SUCCESS</text>
+<text x="310" y="140" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">2.1 s</text>
+<text x="410" y="140" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">31.5 MB</text>
+<text x="560" y="140" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">0.1 s</text>
+
+<!-- the SKEWED task -->
+<rect x="14" y="148" width="652" height="30" fill="#FBECEA" stroke="#B14A3F" stroke-width="1.3"/>
+<text x="20" y="167" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">144</text>
+<text x="110" y="167" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">executor_12</text>
+<text x="220" y="167" font-size="9" font-weight="700" fill="#9A6B1E" font-family="-apple-system,sans-serif">RUNNING</text>
+<text x="310" y="167" font-size="9.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">4.2 min ⚠️</text>
+<text x="410" y="167" font-size="9.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">3.8 GB ⚠️</text>
+<text x="560" y="167" font-size="9.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">38 s ⚠️</text>
+
+<rect x="14" y="178" width="652" height="24" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="194" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">145</text>
+<text x="110" y="194" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">executor_9</text>
+<text x="220" y="194" font-size="9" fill="#1E7A4C" font-family="-apple-system,sans-serif">SUCCESS</text>
+<text x="310" y="194" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">1.6 s</text>
+<text x="410" y="194" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">19.8 MB</text>
+<text x="560" y="194" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">0.1 s</text>
+
+<line x1="14" y1="215" x2="666" y2="215" stroke="#D4D4D0" stroke-dasharray="3,3"/>
+<text x="340" y="235" text-anchor="middle" font-size="10.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">👆 Task 144: 耗时4.2分钟 vs 其他task 1-2秒，Shuffle Read 3.8GB vs 20-30MB</text>
+<text x="340" y="253" text-anchor="middle" font-size="10" fill="#57564F" font-family="-apple-system,sans-serif">这就是典型的data skew signature —— 这个task处理的数据量是其他task的100倍以上</text>
+
+<rect x="14" y="268" width="652" height="42" rx="6" fill="#FBF0DD" stroke="#9A6B1E"/>
+<text x="24" y="284" font-size="9.5" font-weight="700" fill="#9A6B1E" font-family="-apple-system,sans-serif">下一步：点 Task 144 展开详情，找到 executor_12，用 jstack 抓这个进程的线程栈</text>
+<text x="24" y="300" font-size="9" fill="#9A6B1E" font-family="-apple-system,sans-serif">或者直接点 Spark UI 自带的 "Thread Dump" 按钮（不需要SSH到那台机器）</text>
+</svg>`;
+
+
+// ============================================================
+// ADDITIONAL UI MOCKUPS
+// ============================================================
+
+const executorsTabMockup = `<svg width="100%" viewBox="0 0 680 260" style="max-width:620px; display:block; margin:10px auto; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.12);">
+<rect x="0" y="0" width="680" height="28" fill="#E5E5E3"/>
+<circle cx="14" cy="14" r="4" fill="#FF5F57"/><circle cx="28" cy="14" r="4" fill="#FEBC2E"/><circle cx="42" cy="14" r="4" fill="#28C840"/>
+<rect x="60" y="6" width="480" height="16" rx="4" fill="#FFFFFF" stroke="#D4D4D0"/>
+<text x="70" y="18" font-size="10" fill="#57564F" font-family="-apple-system,sans-serif">http://&lt;driver-host&gt;:4040/executors</text>
+
+<rect x="0" y="28" width="680" height="232" fill="#FFFFFF"/>
+<text x="14" y="48" font-size="12" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">Executors</text>
+
+<rect x="14" y="58" width="652" height="24" fill="#E8F2FA"/>
+<text x="20" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Executor ID</text>
+<text x="120" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Host</text>
+<text x="280" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Active Tasks</text>
+<text x="390" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Failed Tasks</text>
+<text x="510" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Complete Tasks</text>
+
+<rect x="14" y="82" width="652" height="24" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="98" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">executor_3</text>
+<text x="120" y="98" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">node-a07.internal</text>
+<text x="280" y="98" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">2</text>
+<text x="390" y="98" font-size="9" fill="#1E7A4C" font-family="-apple-system,sans-serif">0</text>
+<text x="510" y="98" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">184</text>
+
+<!-- unhealthy concentration -->
+<rect x="14" y="106" width="652" height="26" fill="#FBECEA" stroke="#B14A3F" stroke-width="1.3"/>
+<text x="20" y="123" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">executor_12</text>
+<text x="120" y="123" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">node-b19.internal</text>
+<text x="280" y="123" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">0</text>
+<text x="390" y="123" font-size="9.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">47 ⚠️</text>
+<text x="510" y="123" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">12</text>
+
+<rect x="14" y="134" width="652" height="26" fill="#FBECEA" stroke="#B14A3F" stroke-width="1.3"/>
+<text x="20" y="151" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">executor_15</text>
+<text x="120" y="151" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">node-b19.internal</text>
+<text x="280" y="151" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">0</text>
+<text x="390" y="151" font-size="9.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">52 ⚠️</text>
+<text x="510" y="151" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">8</text>
+
+<rect x="14" y="162" width="652" height="24" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="178" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">executor_8</text>
+<text x="120" y="178" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">node-a11.internal</text>
+<text x="280" y="178" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">3</text>
+<text x="390" y="178" font-size="9" fill="#1E7A4C" font-family="-apple-system,sans-serif">0</text>
+<text x="510" y="178" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">201</text>
+
+<line x1="14" y1="196" x2="666" y2="196" stroke="#D4D4D0" stroke-dasharray="3,3"/>
+<text x="340" y="215" text-anchor="middle" font-size="10.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">👆 executor_12 和 executor_15 都在同一台机器 node-b19，失败数远超其他</text>
+<text x="340" y="233" text-anchor="middle" font-size="10" fill="#57564F" font-family="-apple-system,sans-serif">→ 高度怀疑是 node-b19 这台物理机本身有问题，不是数据/代码问题</text>
+</svg>`;
+
+const nodeHealthMockup = `<svg width="100%" viewBox="0 0 680 220" style="max-width:620px; display:block; margin:10px auto; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.12);">
+<rect x="0" y="0" width="680" height="28" fill="#E5E5E3"/>
+<circle cx="14" cy="14" r="4" fill="#FF5F57"/><circle cx="28" cy="14" r="4" fill="#FEBC2E"/><circle cx="42" cy="14" r="4" fill="#28C840"/>
+<rect x="60" y="6" width="480" height="16" rx="4" fill="#FFFFFF" stroke="#D4D4D0"/>
+<text x="70" y="18" font-size="10" fill="#57564F" font-family="-apple-system,sans-serif">http://&lt;resourcemanager-host&gt;:8088/cluster/nodes</text>
+
+<rect x="0" y="28" width="680" height="192" fill="#FFFFFF"/>
+<text x="14" y="48" font-size="12" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">Nodes of the cluster</text>
+
+<rect x="14" y="58" width="652" height="24" fill="#E8F2FA"/>
+<text x="20" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Node</text>
+<text x="180" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Node HTTP</text>
+<text x="330" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Health-report</text>
+<text x="500" y="74" font-size="9" font-weight="700" fill="#2971A8" font-family="-apple-system,sans-serif">Containers</text>
+
+<rect x="14" y="82" width="652" height="24" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="98" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">node-a07.internal:8042</text>
+<rect x="330" y="88" width="55" height="14" rx="3" fill="#E4F5EC"/>
+<text x="357" y="98" text-anchor="middle" font-size="8" font-weight="700" fill="#1E7A4C" font-family="-apple-system,sans-serif">Healthy</text>
+<text x="500" y="98" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">6</text>
+
+<!-- unhealthy node -->
+<rect x="14" y="106" width="652" height="30" fill="#FBECEA" stroke="#B14A3F" stroke-width="1.3"/>
+<text x="20" y="125" font-size="9" font-weight="700" fill="#1A1A18" font-family="-apple-system,sans-serif">node-b19.internal:8042</text>
+<rect x="330" y="113" width="70" height="16" rx="3" fill="#FBECEA" stroke="#B14A3F"/>
+<text x="365" y="124" text-anchor="middle" font-size="8" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">UNHEALTHY</text>
+<text x="500" y="125" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">0</text>
+
+<rect x="14" y="140" width="652" height="24" fill="#FFFFFF" stroke="#E5E5E3"/>
+<text x="20" y="156" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">node-a11.internal:8042</text>
+<rect x="330" y="146" width="55" height="14" rx="3" fill="#E4F5EC"/>
+<text x="357" y="156" text-anchor="middle" font-size="8" font-weight="700" fill="#1E7A4C" font-family="-apple-system,sans-serif">Healthy</text>
+<text x="500" y="156" font-size="9" fill="#1A1A18" font-family="-apple-system,sans-serif">8</text>
+
+<text x="340" y="185" text-anchor="middle" font-size="10.5" font-weight="700" fill="#B14A3F" font-family="-apple-system,sans-serif">👆 node-b19 状态是 UNHEALTHY，Containers=0 → YARN已经不往这台机器派任务了</text>
+</svg>`;
+
+const threadDumpMockup = `<svg width="100%" viewBox="0 0 680 280" style="max-width:620px; display:block; margin:10px auto; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.12);">
+<rect x="0" y="0" width="680" height="28" fill="#2D2D2D"/>
+<circle cx="14" cy="14" r="4" fill="#FF5F57"/><circle cx="28" cy="14" r="4" fill="#FEBC2E"/><circle cx="42" cy="14" r="4" fill="#28C840"/>
+<text x="340" y="18" text-anchor="middle" font-size="10" fill="#CCCCCC" font-family="-apple-system,sans-serif">Terminal — user@node-b19</text>
+
+<rect x="0" y="28" width="680" height="252" fill="#1E1E1E"/>
+<text x="14" y="48" font-size="10" fill="#7EC699" font-family="SF Mono,Menlo,monospace">$ jstack 28471 &gt; thread_dump.txt</text>
+<text x="14" y="64" font-size="10" fill="#7EC699" font-family="SF Mono,Menlo,monospace">$ grep -A 15 "Executor task launch" thread_dump.txt</text>
+
+<text x="14" y="88" font-size="9.5" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">"Executor task launch worker for task 144" #212</text>
+<text x="14" y="103" font-size="9.5" fill="#E8AA6B" font-family="SF Mono,Menlo,monospace">   java.lang.Thread.State: BLOCKED (on object monitor)</text>
+<text x="14" y="118" font-size="9.5" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">        at org.apache.spark.storage.BlockManager</text>
+<text x="14" y="133" font-size="9.5" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">        - waiting to lock &lt;0x000000078a2b1d40&gt;</text>
+<text x="14" y="148" font-size="9.5" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">          (a org.apache.spark.storage.BlockInfoManager)</text>
+<text x="14" y="163" font-size="9.5" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">        at org.apache.spark.sql.execution.HashAggregateExec</text>
+<text x="14" y="178" font-size="9.5" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">        at org.apache.spark.scheduler.Task.run(Task.scala:131)</text>
+
+<rect x="14" y="192" width="652" height="70" rx="6" fill="#2D2D2D" stroke="#E8AA6B"/>
+<text x="24" y="210" font-size="10" font-weight="700" fill="#E8AA6B" font-family="SF Mono,Menlo,monospace">解读这段输出：</text>
+<text x="24" y="228" font-size="9.5" fill="#D4D4D4" font-family="-apple-system,sans-serif">state = BLOCKED → 这个线程在等一把锁 (waiting to lock)</text>
+<text x="24" y="244" font-size="9.5" fill="#D4D4D4" font-family="-apple-system,sans-serif">卡在 HashAggregateExec → 印证了这是HashAggregate内存/锁竞争问题</text>
+<text x="24" y="258" font-size="9.5" fill="#D4D4D4" font-family="-apple-system,sans-serif">→ 跟"data skew导致HashSet爆炸"的诊断完全吻合</text>
+</svg>`;
+
+
+// ============================================================
+// DIAGRAMS FOR CASES TAB (bilingual: Chinese labels + English keyword badges)
+// ============================================================
+
+const narrowingDiagram = `<svg width="100%" viewBox="0 0 680 130" style="max-width:620px; display:block; margin:8px auto;">
+<defs><marker id="nw0" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="10" y="30" width="95" height="40" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="57" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">集群</text>
+<text x="57" y="62" text-anchor="middle" font-size="8.5" fill="var(--danger)" font-family="-apple-system,sans-serif">Cluster</text>
+<line x1="105" y1="50" x2="122" y2="50" stroke="#888" stroke-width="1.3" marker-end="url(#nw0)"/>
+
+<rect x="126" y="30" width="95" height="40" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="173" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">队列</text>
+<text x="173" y="62" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">Queue</text>
+<line x1="221" y1="50" x2="238" y2="50" stroke="#888" stroke-width="1.3" marker-end="url(#nw0)"/>
+
+<rect x="242" y="30" width="85" height="40" rx="6" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="284" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">任务</text>
+<text x="284" y="62" text-anchor="middle" font-size="8.5" fill="var(--accent)" font-family="-apple-system,sans-serif">Job</text>
+<line x1="327" y1="50" x2="344" y2="50" stroke="#888" stroke-width="1.3" marker-end="url(#nw0)"/>
+
+<rect x="348" y="30" width="95" height="40" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="395" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">阶段</text>
+<text x="395" y="62" text-anchor="middle" font-size="8.5" fill="var(--success)" font-family="-apple-system,sans-serif">Stage</text>
+<line x1="443" y1="50" x2="460" y2="50" stroke="#888" stroke-width="1.3" marker-end="url(#nw0)"/>
+
+<rect x="464" y="30" width="85" height="40" rx="6" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="506" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">任务片</text>
+<text x="506" y="62" text-anchor="middle" font-size="8.5" fill="var(--purple)" font-family="-apple-system,sans-serif">Task</text>
+<line x1="549" y1="50" x2="566" y2="50" stroke="#888" stroke-width="1.3" marker-end="url(#nw0)"/>
+
+<rect x="570" y="30" width="100" height="40" rx="6" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="620" y="47" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">代码/数据</text>
+<text x="620" y="62" text-anchor="middle" font-size="8.5" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Code/Data</text>
+
+<text x="340" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">每一步：要么找到答案，要么排除这一层，往下一层深挖</text>
+</svg>`;
+
+const case1Diagram = `<svg width="100%" viewBox="0 0 680 340" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="c1a" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="180" y="10" width="320" height="40" rx="7" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="35" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Job 看起来卡住了 (appears blocked)</text>
+<line x1="340" y1="50" x2="340" y2="70" stroke="#888" stroke-width="1.3" marker-end="url(#c1a)"/>
+
+<rect x="120" y="70" width="440" height="42" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="88" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">① 查YARN UI：ACCEPTED 还是 RUNNING？</text>
+<text x="340" y="104" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">ACCEPTED = 还在排队，没分到资源</text>
+<line x1="340" y1="112" x2="340" y2="132" stroke="#888" stroke-width="1.3" marker-end="url(#c1a)"/>
+
+<rect x="120" y="132" width="440" height="46" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="340" y="150" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">② 卡在ACCEPTED → 查queue资源 (资源问题)</text>
+<text x="340" y="166" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">yarn queue -status &lt;queue&gt;</text>
+<line x1="340" y1="178" x2="340" y2="198" stroke="#888" stroke-width="1.3" marker-end="url(#c1a)"/>
+
+<text x="340" y="212" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="-apple-system,sans-serif">若RUNNING但进度不动:</text>
+
+<rect x="120" y="222" width="440" height="46" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="240" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">③ 开Spark UI找卡住的stage，看task耗时分布</text>
+<text x="340" y="256" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">一个task特别慢 = data skew(数据倾斜)</text>
+<line x1="340" y1="268" x2="340" y2="288" stroke="#888" stroke-width="1.3" marker-end="url(#c1a)"/>
+
+<rect x="120" y="288" width="440" height="46" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="340" y="306" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">④ jstack抓thread dump，看具体在等什么</text>
+<text x="340" y="322" text-anchor="middle" font-size="10" fill="var(--purple)" font-family="-apple-system,sans-serif">BLOCKED(锁) / WAITING(I/O) / 长GC</text>
+</svg>`;
+
+const case2Diagram = `<svg width="100%" viewBox="0 0 680 240" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="c2a" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="180" y="10" width="320" height="40" rx="7" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="35" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">很多task同时失败 (many task failures)</text>
+<line x1="340" y1="50" x2="340" y2="70" stroke="#888" stroke-width="1.3" marker-end="url(#c2a)"/>
+
+<rect x="180" y="70" width="320" height="40" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="95" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">失败是否集中在某几台机器？</text>
+
+<line x1="260" y1="110" x2="170" y2="145" stroke="#888" stroke-width="1.3" marker-end="url(#c2a)"/>
+<text x="200" y="130" font-size="10" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">是 Yes</text>
+<line x1="420" y1="110" x2="510" y2="145" stroke="#888" stroke-width="1.3" marker-end="url(#c2a)"/>
+<text x="470" y="130" font-size="10" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">否 No</text>
+
+<rect x="30" y="145" width="280" height="60" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="170" y="165" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">检查NodeManager健康状态</text>
+<text x="170" y="182" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">磁盘满 → 节点被标记UNHEALTHY</text>
+<text x="170" y="197" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">→ 基础设施问题</text>
+
+<rect x="370" y="145" width="280" height="60" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="510" y="165" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">看错误信息本身</text>
+<text x="510" y="182" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">exceeding memory limits = 内存不够</text>
+<text x="510" y="197" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">超时 → 查下游依赖(如Hive Metastore)</text>
+</svg>`;
+
+const case3Diagram = `<svg width="100%" viewBox="0 0 680 240" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="c3a" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="180" y="10" width="320" height="40" rx="7" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="35" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">只有一个task失败 (single task failure)</text>
+<line x1="340" y1="50" x2="340" y2="70" stroke="#888" stroke-width="1.3" marker-end="url(#c3a)"/>
+
+<rect x="180" y="70" width="320" height="40" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="95" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">这个task的partition明显偏大吗？</text>
+
+<line x1="260" y1="110" x2="170" y2="145" stroke="#888" stroke-width="1.3" marker-end="url(#c3a)"/>
+<text x="200" y="130" font-size="10" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">是 Yes</text>
+<line x1="420" y1="110" x2="510" y2="145" stroke="#888" stroke-width="1.3" marker-end="url(#c3a)"/>
+<text x="470" y="130" font-size="10" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">否 No</text>
+
+<rect x="30" y="145" width="280" height="60" rx="7" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="170" y="165" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Data Skew（数据倾斜）</text>
+<text x="170" y="182" text-anchor="middle" font-size="9.5" fill="var(--danger)" font-family="-apple-system,sans-serif">这个task处理的数据量远超其他</text>
+<text x="170" y="197" text-anchor="middle" font-size="9.5" fill="var(--danger)" font-family="-apple-system,sans-serif">→ 修复：salting / repartition</text>
+
+<rect x="370" y="145" width="280" height="60" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="510" y="165" text-anchor="middle" font-size="11" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">看具体报错信息</text>
+<text x="510" y="182" text-anchor="middle" font-size="9.5" fill="var(--purple)" font-family="-apple-system,sans-serif">NumberFormatException等 = 脏数据</text>
+<text x="510" y="197" text-anchor="middle" font-size="9.5" fill="var(--purple)" font-family="-apple-system,sans-serif">→ 修复：数据校验/try-catch跳过</text>
+</svg>`;
+
+
+// ============================================================
+// YARN 架构常见面试题 diagrams
+// ============================================================
+
+const rmHADiagram = `<svg width="100%" viewBox="0 0 680 200" style="max-width:600px; display:block; margin:8px auto;">
+<rect x="40" y="20" width="160" height="50" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.5"/>
+<text x="120" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Active RM</text>
+<text x="120" y="58" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">正在处理请求</text>
+
+<rect x="480" y="20" width="160" height="50" rx="8" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="1.5"/>
+<text x="560" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Standby RM</text>
+<text x="560" y="58" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">热备，随时接管</text>
+
+<rect x="250" y="105" width="180" height="50" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="127" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">ZooKeeper</text>
+<text x="340" y="143" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">负责 Leader Election</text>
+
+<line x1="120" y1="70" x2="300" y2="103" stroke="#888" stroke-width="1.2"/>
+<line x1="560" y1="70" x2="380" y2="103" stroke="#888" stroke-width="1.2"/>
+
+<text x="340" y="185" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Active RM挂了 → ZooKeeper检测到 → Standby自动升级为Active</text>
+</svg>`;
+
+const preemptionDiagram = `<svg width="100%" viewBox="0 0 680 180" style="max-width:600px; display:block; margin:8px auto;">
+<text x="10" y="18" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Before 抢占：Queue B(低优先级)占用了本该属于Queue A的资源</text>
+<rect x="20" y="30" width="300" height="30" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="170" y="50" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">Queue A (高优先级, 保证30%) — 只用了10%</text>
+<rect x="330" y="30" width="330" height="30" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="495" y="50" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">Queue B (低优先级) — 占用了70%(超出自己的份额)</text>
+
+<text x="10" y="95" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">After 抢占：YARN会杀掉Queue B部分container，把资源还给Queue A</text>
+<rect x="20" y="107" width="204" height="30" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="122" y="127" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">Queue A — 恢复到30%</text>
+<rect x="234" y="107" width="426" height="30" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="447" y="127" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">Queue B — 让出资源，回落到自己的份额</text>
+
+<text x="340" y="165" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">被抢占的container会被KILL掉，正在跑的任务会失败重试 —— 这也是"很多task同时失败"的一个可能原因</text>
+</svg>`;
+
+function renderYarnFAQ() {
+  const el = document.getElementById('cases');
+  let html = el.innerHTML;
+
+  html += `<div class="star-banner" style="background:var(--accent-bg); color:var(--accent);">📚 YARN 架构常见面试题</div>`;
+
+  html += `<div class="card">
+    <p class="q-title">Q1: 为什么要有YARN？Hadoop 1.0时代是怎么处理的？</p>
+    <p class="q-desc" style="margin:8px 0;"><b>Hadoop 1.0</b>：只有一个 <span class="kw-badge">JobTracker</span> 身兼数职——既管资源分配，又管任务调度，容易成为性能瓶颈，而且只支持MapReduce一种计算框架。</p>
+    <p class="q-desc"><b>YARN</b>：把这两个职责拆开——<span class="kw-badge">ResourceManager</span> 专门管资源，<span class="kw-badge">ApplicationMaster</span> 专门管每个job自己的调度逻辑，这样YARN就能同时支持Spark、Flink、MapReduce等多种计算引擎，不再绑死在MapReduce上。</p>
+    <div class="tip">💡 一句话回答：YARN把"资源管理"和"任务调度"解耦，让集群能同时跑多种计算框架，而不只是MapReduce</div>
+  </div>`;
+
+  html += `<div class="card">
+    <p class="q-title">Q2: ResourceManager是单点吗？挂了怎么办？</p>
+    <p class="q-desc" style="margin:8px 0;">默认情况下ResourceManager确实是<b>单点</b>，但生产环境通常会配置 <span class="kw-badge">RM HA</span>（High Availability）—— 一个Active、一个Standby，通过 <span class="kw-badge">ZooKeeper</span> 做Leader Election(选主)。</p>
+    ${rmHADiagram}
+    <div class="tip">💡 面试追问准备：如果问"为什么用ZooKeeper而不是其他方案" —— ZooKeeper天生支持分布式一致性和临时节点(ephemeral node)机制，非常适合做这种"谁是主"的选举场景</div>
+  </div>`;
+
+  html += `<div class="card">
+    <p class="q-title">Q3: 什么是资源抢占(Preemption)？</p>
+    <p class="q-desc" style="margin:8px 0;">Capacity Scheduler允许队列之间"借用"闲置资源——但如果高优先级队列突然需要资源，而低优先级队列正占着"借来的"资源不还，YARN可以强制<span class="kw-badge">KILL</span>掉低优先级队列的部分container，把资源还给高优先级队列。</p>
+    ${preemptionDiagram}
+    <div class="warn">⚠️ 这是"Case 2: 很多task失败"的另一个可能原因——如果发现失败的task都来自同一个低优先级队列，且时间点跟另一个高优先级job启动的时间吻合，很可能是被抢占了，不是故障</div>
+  </div>`;
+
+  html += `<div class="card">
+    <p class="q-title">Q4: Container的资源是怎么决定大小的？</p>
+    ${table(["配置项","作用"], [
+      ["yarn.scheduler.minimum-allocation-mb","每个container最少分配多少内存(比如1024MB)，请求的内存会被向上取整到这个值的倍数"],
+      ["yarn.scheduler.maximum-allocation-mb","单个container能申请的内存上限"],
+      ["yarn.nodemanager.resource.memory-mb","单台机器上YARN总共能用多少内存(通常留一部分给OS和其他服务)"],
+    ])}
+    <div class="tip">💡 面试考点：如果你申请 spark.executor.memory=5.5g，但minimum-allocation-mb=1024，YARN实际会分配6144MB(向上取整到1024的倍数)——这也是为什么有时候看到的实际占用比配置的要大一点</div>
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+
+function renderCasesTab() {
+  const el = document.getElementById('cases');
+  let html = '';
+
+  // ---------- Priority framing ----------
+  html += `<div class="card">
+    <p class="q-title" style="margin-bottom:8px;">这个岗位到底要掌握到什么程度？</p>
+    <p class="q-desc" style="margin-bottom:10px;">这是运维岗（<b>Ops/SRE</b>），面试官不指望你能默写底层实现，真正想看的是：<i>"出问题了，你的第一反应和排查步骤是什么？"</i></p>
+    ${table(["优先级","内容","为什么"], [
+      ["🔴 必须熟练","YARN/Spark排查思路、OOM诊断、Cluster→Queue→Job→Stage→Task框架","JD反复强调 <b>troubleshooting</b>、<b>failure resolution</b>，这是每天要用的"],
+      ["🟡 要懂原理，不用死记","HDFS基础架构（NameNode/DataNode）、Spark内存分区","面试可能问'为什么会OOM'，要说得出机制，不用记参数默认值"],
+      ["🟢 知道存在即可","Flink细节、HA的zookeeper选举细节","没深入用过，面试官大概率不会深挖"],
+    ])}
+    <div class="tip">💡 一句话结论：把80%时间花在"排查Case怎么讲"，这才是运维面试的核心战场</div>
+  </div>`;
+
+  html += `<div class="card">
+    <p class="q-title" style="margin-bottom:8px;">通用排查框架（贯穿下面所有Case）</p>
+    <div class="flow-diagram">${narrowingDiagram}</div>
+    <p class="q-desc">中文口诀：<b>先看集群，再看队列，然后看job，再看stage，最后看task和代码</b> —— 每一步要么找到答案，要么排除这一层，往下一层深挖。</p>
+  </div>`;
+
+  html += `<div class="star-banner S" id="case1-anchor">🚧 Case 1 — 集群阻塞了 (Job / Cluster appears blocked)</div>`;
+  html += `<div class="card">
+    <p class="q-desc" style="margin-bottom:10px;">面试官可能这样问：<i>"Tell me about a time a job or cluster appeared blocked. How did you diagnose it?"</i></p>
+    ${case1Diagram}
+
+    <div class="steps-list">
+      <div class="step-item">
+        <span class="step-num">1</span>
+        <div>
+          <b>先确认job到底有没有跑起来</b><br>
+          <span class="where-label">📍 在哪看：</span>打开 YARN ResourceManager UI (<code>:8088/cluster/apps</code>)，看application状态是 <span class="kw-badge">ACCEPTED</span>（排队中）还是 <span class="kw-badge">RUNNING</span>（已经在跑）
+        </div>
+      </div>
+    </div>
+    <p class="q-desc" style="margin:10px 0 4px;"><b>实际界面长这样：</b></p>
+    ${yarnUIMockup}
+    <div class="codeblock">${highlightCode(`# 命令行方式确认（不想开浏览器时）
+$ yarn application -status application_1721_0043
+
+Application-Id : application_1721_0043
+Application-Name : your_stuck_job
+State : ACCEPTED
+Final-State : UNDEFINED
+Queue : prod_etl
+Progress : 0%
+Tracking-URL : N/A (app not started yet)`)}</div>
+    <div class="tip">💡 看到 State: ACCEPTED + Progress: 0% → 这就是"还没分到资源"的确凿证据，直接跳到步骤2</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">2</span>
+        <div>
+          <b>如果卡在ACCEPTED → 资源问题，不是代码问题</b><br>
+          <span class="where-label">📍 在哪看：</span>检查这个 <span class="kw-badge">queue</span> 是不是被占满，这是典型的 <span class="kw-badge">resource starvation</span>
+        </div>
+      </div>
+    </div>
+    <div class="codeblock">${highlightCode(`$ yarn queue -status prod_etl
+
+Queue Name : prod_etl
+        State : RUNNING
+        Capacity : 25.0%
+        Current Capacity : 100.0%          <- 已经用满了！
+        Maximum Capacity : 30.0%
+        Default Node Label expression : <DEFAULT_PARTITION>
+
+$ yarn application -list -appStates ACCEPTED
+
+Total number of applications (ACCEPTED): 3
+                Application-Id      Application-Name        Queue
+application_1721_0043      your_stuck_job          prod_etl
+application_1721_0044      other_pending_job_1     prod_etl
+application_1721_0045      other_pending_job_2     prod_etl`)}</div>
+    <div class="warn">⚠️ Current Capacity 100% + 前面还有排队的job → 这个queue资源已经被占满，你的job要等别人跑完释放资源，或者找管理员申请更多queue容量</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">3</span>
+        <div>
+          <b>如果是RUNNING但进度条不动 → 打开Spark UI找卡在哪个stage</b><br>
+          <span class="where-label">📍 在哪看：</span>Spark UI (<code>:4040</code>) → Stages Tab，看 <span class="kw-badge">task duration distribution</span>
+        </div>
+      </div>
+    </div>
+    <p class="q-desc" style="margin:10px 0 4px;"><b>实际界面长这样：</b></p>
+    ${sparkUIMockup}
+    <div class="tip">💡 一个task 4.2分钟 vs 其他task 1-2秒，Shuffle Read 3.8GB vs 20-30MB → 大概率是 <span class="kw-badge">data skew</span>（数据倾斜）</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">4</span>
+        <div>
+          <b>定位到具体task后，抓thread dump看它在干嘛</b><br>
+          <span class="where-label">📍 在哪看：</span>两种方式 —— (a) Spark UI点击该Task旁边的 "Thread Dump" 按钮，或 (b) SSH到那台机器手动执行 <code>jstack</code>
+        </div>
+      </div>
+    </div>
+    <p class="q-desc" style="margin:10px 0 4px;"><b>jstack 实际操作和输出：</b></p>
+    ${threadDumpMockup}
+    <div class="tip">💡 面试总结句：<i>"I narrow down from cluster level to queue level to stage level to task level — each step either confirms or rules out a category of cause."</i></div>
+  </div>`;
+
+  html += `<div class="star-banner T" id="case2-anchor">💥 Case 2 — 很多task同时失败 (Many task failures in one job)</div>`;
+  html += `<div class="card">
+    <p class="q-desc" style="margin-bottom:10px;">面试官可能这样问：<i>"A job had a large number of task failures. Walk me through your approach."</i></p>
+    <div class="warn">⚠️ 关键判断：多个task同时失败，通常指向"系统性/环境性"问题，不是单条数据的问题</div>
+    ${case2Diagram}
+
+    <div class="steps-list">
+      <div class="step-item">
+        <span class="step-num">1</span>
+        <div>
+          <b>先看失败的task是不是集中在某几台机器上</b><br>
+          <span class="where-label">📍 在哪看：</span>Spark UI → <b>Executors Tab</b>，看 Failed Tasks 这一列，是不是集中在某几个executor
+        </div>
+      </div>
+    </div>
+    <p class="q-desc" style="margin:10px 0 4px;"><b>实际界面长这样：</b></p>
+    ${executorsTabMockup}
+    <div class="tip">💡 executor_12 和 executor_15 都在同一台机器 node-b19，且失败数远超其他 → <span class="kw-badge">executor failure concentration</span>，怀疑是这台机器本身有问题</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">2</span>
+        <div>
+          <b>检查NodeManager健康状态</b><br>
+          <span class="where-label">📍 在哪看：</span>YARN ResourceManager UI → <b>Nodes</b> 页面 (<code>:8088/cluster/nodes</code>)
+        </div>
+      </div>
+    </div>
+    ${nodeHealthMockup}
+    <div class="codeblock">${highlightCode(`# 命令行方式查看节点健康状态
+$ yarn node -list -all
+
+Total Nodes:3
+         Node-Id             Node-State    Node-Http-Address     Running-Containers
+node-a07.internal:45454        RUNNING     node-a07.internal:8042        6
+node-b19.internal:45454      UNHEALTHY     node-b19.internal:8042        0
+node-a11.internal:45454        RUNNING     node-a11.internal:8042        8
+
+# 查看具体是什么原因导致UNHEALTHY
+$ yarn node -status node-b19.internal:45454
+
+Node-Health-Report : 1/1 local-dirs are bad: /data/yarn/nm-local-dir;
+                      1/1 log-dirs are bad: /data/yarn/logs`)}</div>
+    <div class="warn">⚠️ "local-dirs are bad" 通常就是磁盘满了或者磁盘故障 —— 磁盘使用率超过阈值(默认90%)时，YARN会自动标记该节点为 <span class="kw-badge">UNHEALTHY</span>，不再分配任务给它</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">3</span>
+        <div>
+          <b>如果不是集中在几台机器，是"平均分布"的大量失败 → 看错误信息本身</b><br>
+          <span class="where-label">📍 在哪看：</span>Spark UI → Stage详情页的 Tasks 列表，点开失败task的 <b>"Errors"</b> 列；或者用命令拉取容器日志
+        </div>
+      </div>
+    </div>
+    <div class="codeblock">${highlightCode(`# 拉取某个失败task的容器日志
+$ yarn logs -applicationId application_1721_0043 -containerId container_1721_0043_01_000012
+
+# 情况A：内存不够
+ExecutorLostFailure (executor 12 exited caused by one of the running tasks)
+Reason: Container killed by YARN for exceeding memory limits.
+6.2 GB of 6 GB physical memory used. Consider boosting
+spark.executor.memoryOverhead.
+
+# 情况B：下游依赖超时
+org.apache.thrift.transport.TTransportException: java.net.SocketTimeoutException:
+Read timed out
+  at com.example...HiveMetaStoreClient.getTable(...)`)}</div>
+    <div class="tip">💡 情况A(内存) → 调大spark.executor.memoryOverhead；情况B(超时) → 检查 <span class="kw-badge">downstream dependency</span>（比如Hive Metastore）是否挂了或者过载</div>
+    <div class="tip">💡 面试总结句：<i>"Many failures spread evenly across executors usually points to a systemic issue — infrastructure health or a shared downstream dependency — rather than a data problem."</i></div>
+  </div>`;
+
+  html += `<div class="star-banner A" id="case3-anchor">🎯 Case 3 — 只有一个task失败 (Single task failure, rest succeeded)</div>`;
+  html += `<div class="card">
+    <p class="q-desc" style="margin-bottom:10px;">面试官可能这样问：<i>"Only one task out of hundreds failed. What would you check?"</i></p>
+    <div class="warn">⚠️ 关键判断：单点失败，通常是"数据问题"或者这个task恰好分到了一个热key</div>
+    ${case3Diagram}
+
+    <div class="steps-list">
+      <div class="step-item">
+        <span class="step-num">1</span>
+        <div>
+          <b>先看这个task对应的partition大小</b><br>
+          <span class="where-label">📍 在哪看：</span>Spark UI → Stage详情页的 Tasks 列表，看 <b>Shuffle Read Size</b> / <b>Input Size</b> 这两列，对比这个task跟其他task的数值差距
+        </div>
+      </div>
+    </div>
+    <div class="codeblock">${highlightCode(`# Spark UI Tasks 表格里，重点看这两列(节选)
+Task ID   Status    Duration   Shuffle Read Size   Input Size
+88        SUCCESS   1.4 s      22 MB                18 MB
+89        SUCCESS   1.6 s      25 MB                21 MB
+90        FAILED    -          2.9 GB               2.6 GB       <- 明显偏大
+91        SUCCESS   1.3 s      19 MB                17 MB`)}</div>
+    <div class="tip">💡 Task 90 的 Shuffle Read/Input 明显比其他task大100倍以上 → <span class="kw-badge">data skew</span>（partition size imbalance），这个task处理的数据量远超其他</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">2</span>
+        <div>
+          <b>看错误信息是不是"脏数据"导致的</b><br>
+          <span class="where-label">📍 在哪看：</span>如果Shuffle Read/Input Size跟其他task差不多(没有明显偏大)，就不是skew，直接看这个task的报错堆栈
+        </div>
+      </div>
+    </div>
+    <div class="codeblock">${highlightCode(`$ yarn logs -applicationId application_1721_0043 -containerId container_..._000090
+
+Caused by: java.lang.NumberFormatException: For input string: "N/A"
+    at java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+    at java.lang.Integer.parseInt(Integer.java:580)
+    at com.example.etl.ParseRecord$.apply(ParseRecord.scala:42)
+    at org.apache.spark.sql.execution.MapPartitionsExec...
+
+# 关键信息：某一行数据里amount字段是字符串"N/A"而不是数字
+# 这条脏数据恰好落在这个partition里，其他partition没遇到`)}</div>
+    <div class="tip">💡 属于 <span class="kw-badge">malformed record</span> / <span class="kw-badge">data quality issue</span> —— 其他task因为没遇到这条脏数据，所以没报错</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">3</span>
+        <div>
+          <b>确认后的修复方向</b><br>
+          skew → salting 或 repartition；脏数据 → 加数据校验/过滤逻辑，或 try-catch 跳过异常行并记录，而不是让整个task失败
+        </div>
+      </div>
+    </div>
+    <div class="codeblock">${highlightCode(`# 脏数据修复示例：加一层容错解析，而不是让整个task挂掉
+def safe_parse_amount(s):
+    try:
+        return float(s)
+    except ValueError:
+        # 记录到日志/单独的错误表，而不是让整个job失败
+        logger.warn(f"Skipping malformed amount value: {s}")
+        return None`)}</div>
+    <div class="tip">💡 面试总结句：<i>"A single task failure usually isolates to either that specific partition's data volume, or a specific bad record — I'd check the Shuffle Read / Input Size columns first, then the actual error message."</i></div>
+  </div>`;
+
+  html += `<div class="star-banner" style="background:var(--success-bg); color:var(--success);" id="case4-anchor">💰 Case 4 — 成本优化 (Cluster Cost Optimization)</div>`;
+  html += `<div class="card">
+    <p class="q-desc" style="margin-bottom:10px;">面试官可能这样问：<i>"Tell me about a time you optimized cluster costs."</i></p>
+    <p class="q-desc zh-desc">🇨🇳 这是JD明确要求的"Optimise big data cluster costs"，前3个Case是"救火"，这个Case是"主动优化"，是不同性质的能力展示。</p>
+
+    <div class="steps-list">
+      <div class="step-item">
+        <span class="step-num">1</span>
+        <div>
+          <b>先定位成本大头在哪里</b><br>
+          <span class="where-label">📍 在哪看：</span>HDFS存储用量报表 (<code>hdfs dfsadmin -report</code>)，按业务线/表拆解storage占用，找出Top N大表
+        </div>
+      </div>
+    </div>
+    <div class="codeblock">${highlightCode(`$ hdfs dfsadmin -report
+
+Configured Capacity: 500 TB
+DFS Used: 420 TB (84%)          <- 存储压力大
+Under replicated blocks: 0
+
+# 按表统计存储占用，找出大户
+$ hdfs dfs -du -h /warehouse/*.db/* | sort -rh | head -10
+
+85.2 T   /warehouse/payments.db/transaction_log      <- 最大的一张表
+42.1 T   /warehouse/payments.db/user_events
+...`)}</div>
+    <div class="tip">💡 定位到 <code>transaction_log</code> 这张表占了85TB，是最大的优化目标</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">2</span>
+        <div>
+          <b>分析这张表为什么这么大、能不能优化存储格式</b><br>
+          原来用的是 <span class="kw-badge">Hive on plain ORC/Parquet</span>，没有column-level压缩优化，也没有自动小文件合并、没有生命周期管理(老数据一直占着热存储)
+        </div>
+      </div>
+    </div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">3</span>
+        <div>
+          <b>迁移到 Apache Iceberg，用它的表格式优化能力</b><br>
+          Iceberg支持更高效的文件组织(避免小文件问题)、支持<span class="kw-badge">compaction</span>(自动合并小文件)、支持<span class="kw-badge">lifecycle policy</span>(冷数据自动转低成本存储层)
+        </div>
+      </div>
+    </div>
+    <div class="codeblock">${highlightCode(`-- 迁移过程示例（简化版）
+CREATE TABLE payments.transaction_log_iceberg (
+  ...
+) USING iceberg
+TBLPROPERTIES (
+  'write.target-file-size-bytes' = '536870912',  -- 512MB，避免小文件
+  'write.parquet.compression-codec' = 'zstd'      -- 更高压缩比
+);
+
+INSERT INTO payments.transaction_log_iceberg
+SELECT * FROM payments.transaction_log;
+
+-- 配置生命周期策略：90天以上数据转冷存储
+ALTER TABLE payments.transaction_log_iceberg
+SET TBLPROPERTIES ('write.lifecycle.cold-after-days'='90');`)}</div>
+
+    <div class="steps-list" style="margin-top:16px;">
+      <div class="step-item">
+        <span class="step-num">4</span>
+        <div>
+          <b>验证效果，量化成果</b><br>
+          迁移100+张表后，存储成本降低 <b>65%</b>，且查询性能没有下降(甚至因为文件更规整而有所提升)
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">💡 面试总结句：<i>"I identified our largest tables by storage footprint, found that switching from plain Hive tables to Iceberg — with better compression and automated file compaction and lifecycle policies — cut our storage costs by 65% without any query performance regression."</i></div>
+    <div class="warn">⚠️ 面试官如果追问"怎么保证迁移过程中数据不丢/业务不受影响"——记得提：先在非生产表验证、双写一段时间对比结果一致性、灰度切流量，而不是一次性全量切换</div>
+  </div>`;
+
+  html += `<div class="card">
+    <p class="q-title" style="margin-bottom:10px;">4个Case的核心区别，一张表看懂</p>
+    ${table(["Case","性质","关键判断依据","在哪看"], [
+      ["🚧 集群阻塞","被动排查(卡住)","queue状态 + task耗时分布","YARN RM UI + Spark Stages Tab"],
+      ["💥 很多task失败","被动排查(大面积)","失败是否集中在特定机器上","Spark Executors Tab + YARN Nodes页"],
+      ["🎯 一个task失败","被动排查(单点)","partition大小 + 具体报错信息","Spark Tasks表格 + 容器日志"],
+      ["💰 成本优化","主动优化(非故障)","存储占用Top N + 格式/生命周期分析","HDFS用量报表 + 表结构分析"],
+    ])}
+  </div>`;
+
+  el.innerHTML = html;
+}
+
+
+const masterDiagram = `<svg width="100%" viewBox="0 0 720 700" style="max-width:680px; display:block; margin:10px auto;">
+<defs>
+  <marker id="md1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker>
+  <marker id="md2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#7B4FA0"/></marker>
+  <marker id="md3" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#1E7A4C"/></marker>
+</defs>
+
+<!-- Step 0: Client -->
+<rect x="270" y="10" width="180" height="36" rx="7" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="360" y="33" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">① Client: spark-submit --master yarn</text>
+<line x1="360" y1="46" x2="360" y2="66" stroke="#888" stroke-width="1.3" marker-end="url(#md1)"/>
+
+<!-- YARN ResourceManager -->
+<rect x="220" y="66" width="280" height="62" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.6"/>
+<text x="360" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">② YARN ResourceManager (RM)</text>
+<text x="360" y="102" text-anchor="middle" font-size="9.5" fill="var(--accent)" font-family="-apple-system,sans-serif">Scheduler (Capacity/Fair) + Queues</text>
+<text x="360" y="117" text-anchor="middle" font-size="9.5" fill="var(--accent)" font-family="-apple-system,sans-serif">分配第一个Container，用来启动ApplicationMaster</text>
+
+<line x1="300" y1="128" x2="180" y2="160" stroke="var(--accent)" stroke-width="1.3" marker-end="url(#md1)"/>
+<text x="215" y="148" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">③ 分配AM容器</text>
+
+<!-- NodeManager 1 (hosts AM = Driver) -->
+<rect x="20" y="160" width="320" height="220" rx="8" fill="#F7F7F5" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="35" y="178" font-size="10.5" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">NodeManager A</text>
+
+<!-- Container 0 = AM = Driver -->
+<rect x="35" y="188" width="290" height="180" rx="7" fill="none" stroke="var(--purple)" stroke-width="1.3" stroke-dasharray="5,3"/>
+<text x="45" y="204" font-size="9.5" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Container 0 = ApplicationMaster</text>
+
+<rect x="50" y="212" width="260" height="34" rx="6" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="180" y="233" text-anchor="middle" font-size="11" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Spark Driver 进程</text>
+
+<rect x="50" y="254" width="120" height="52" rx="6" fill="var(--surface)" stroke="var(--purple)" stroke-width="1"/>
+<text x="110" y="270" text-anchor="middle" font-size="9" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">SparkContext</text>
+<text x="110" y="284" text-anchor="middle" font-size="8" fill="var(--purple)" font-family="-apple-system,sans-serif">入口, 持有</text>
+<text x="110" y="296" text-anchor="middle" font-size="8" fill="var(--purple)" font-family="-apple-system,sans-serif">集群连接</text>
+
+<rect x="190" y="254" width="120" height="52" rx="6" fill="var(--surface)" stroke="var(--purple)" stroke-width="1"/>
+<text x="250" y="270" text-anchor="middle" font-size="9" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">DAGScheduler</text>
+<text x="250" y="284" text-anchor="middle" font-size="8" fill="var(--purple)" font-family="-apple-system,sans-serif">按shuffle边界</text>
+<text x="250" y="296" text-anchor="middle" font-size="8" fill="var(--purple)" font-family="-apple-system,sans-serif">切分Stage</text>
+
+<rect x="120" y="314" width="120" height="46" rx="6" fill="var(--surface)" stroke="var(--purple)" stroke-width="1"/>
+<text x="180" y="330" text-anchor="middle" font-size="9" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">TaskScheduler</text>
+<text x="180" y="344" text-anchor="middle" font-size="8" fill="var(--purple)" font-family="-apple-system,sans-serif">把Stage拆成Task</text>
+<text x="180" y="356" text-anchor="middle" font-size="8" fill="var(--purple)" font-family="-apple-system,sans-serif">分发给Executor</text>
+
+<line x1="340" y1="240" x2="380" y2="210" stroke="var(--purple)" stroke-width="1.3" marker-end="url(#md2)"/>
+<text x="345" y="195" font-size="9" fill="var(--purple)" font-family="-apple-system,sans-serif">④ 向RM申请</text>
+<text x="345" y="207" font-size="9" fill="var(--purple)" font-family="-apple-system,sans-serif">更多Container</text>
+
+<!-- back to RM for more containers -->
+<line x1="380" y1="128" x2="420" y2="160" stroke="var(--accent)" stroke-width="1.3" marker-end="url(#md1)"/>
+<text x="405" y="148" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">⑤ 分配</text>
+<text x="405" y="160" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif" style="display:none;"></text>
+
+<!-- NodeManager B (Executor 1) -->
+<rect x="380" y="160" width="320" height="105" rx="8" fill="#F7F7F5" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="395" y="178" font-size="10.5" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">NodeManager B</text>
+
+<rect x="395" y="188" width="290" height="65" rx="7" fill="none" stroke="var(--success)" stroke-width="1.3" stroke-dasharray="5,3"/>
+<text x="405" y="202" font-size="9" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Container 1 = Executor 1</text>
+<rect x="410" y="208" width="120" height="38" rx="5" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="470" y="223" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Executor JVM</text>
+<text x="470" y="237" text-anchor="middle" font-size="7.5" fill="var(--success)" font-family="-apple-system,sans-serif">Task slots (并行)</text>
+<rect x="540" y="208" width="130" height="38" rx="5" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="605" y="223" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">BlockManager</text>
+<text x="605" y="237" text-anchor="middle" font-size="7.5" fill="var(--success)" font-family="-apple-system,sans-serif">缓存 + shuffle blocks</text>
+
+<!-- NodeManager C (Executor 2) -->
+<rect x="380" y="275" width="320" height="105" rx="8" fill="#F7F7F5" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="395" y="293" font-size="10.5" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">NodeManager C</text>
+
+<rect x="395" y="303" width="290" height="65" rx="7" fill="none" stroke="var(--success)" stroke-width="1.3" stroke-dasharray="5,3"/>
+<text x="405" y="317" font-size="9" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Container 2 = Executor 2</text>
+<rect x="410" y="323" width="120" height="38" rx="5" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="470" y="338" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Executor JVM</text>
+<text x="470" y="352" text-anchor="middle" font-size="7.5" fill="var(--success)" font-family="-apple-system,sans-serif">Task slots (并行)</text>
+<rect x="540" y="323" width="130" height="38" rx="5" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="605" y="338" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">BlockManager</text>
+<text x="605" y="352" text-anchor="middle" font-size="7.5" fill="var(--success)" font-family="-apple-system,sans-serif">缓存 + shuffle blocks</text>
+
+<!-- Driver -> Executors: task dispatch -->
+<line x1="240" y1="337" x2="470" y2="220" stroke="var(--purple)" stroke-width="1.3" stroke-dasharray="4,2" marker-end="url(#md2)"/>
+<line x1="240" y1="345" x2="470" y2="335" stroke="var(--purple)" stroke-width="1.3" stroke-dasharray="4,2" marker-end="url(#md2)"/>
+<text x="330" y="410" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">⑥ TaskScheduler把Task分发给各Executor执行</text>
+
+<!-- Executor <-> Executor shuffle -->
+<line x1="530" y1="246" x2="530" y2="323" stroke="var(--success)" stroke-width="1.3" marker-end="url(#md3)"/>
+<line x1="545" y1="323" x2="545" y2="246" stroke="var(--success)" stroke-width="1.3" marker-end="url(#md3)"/>
+<text x="700" y="290" font-size="9" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif" transform="rotate(90 700 290)">⑦ Shuffle</text>
+
+<!-- Executors -> Driver: status/results -->
+<line x1="470" y1="253" x2="240" y2="330" stroke="var(--warning)" stroke-width="1.3" stroke-dasharray="2,2" marker-end="url(#md1)"/>
+<line x1="470" y1="330" x2="240" y2="345" stroke="var(--warning)" stroke-width="1.3" stroke-dasharray="2,2" marker-end="url(#md1)"/>
+<text x="330" y="428" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">⑧ Executor向Driver汇报任务状态/结果</text>
+
+<!-- Legend / summary -->
+<rect x="20" y="450" width="680" height="230" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="35" y="472" font-size="11" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">完整流程总结（YARN Cluster Mode）：</text>
+<text x="35" y="494" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">① 客户端执行 spark-submit，请求提交到YARN</text>
+<text x="35" y="514" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">② RM的Scheduler根据Queue容量决定何时能分配资源</text>
+<text x="35" y="534" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">③ RM先分配ONE个Container，用来启动ApplicationMaster</text>
+<text x="35" y="554" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">④ 在YARN Cluster Mode下，AM内部直接运行的就是Spark Driver进程</text>
+<text x="35" y="574" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">⑤ Driver的SparkContext启动后，向RM申请更多Container用作Executor</text>
+<text x="35" y="594" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">⑥ DAGScheduler按shuffle边界把job切成多个Stage，TaskScheduler把每个</text>
+<text x="45" y="610" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Stage拆成多个Task，分发给各Executor并行执行</text>
+<text x="35" y="630" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">⑦ Executor之间通过BlockManager直接做shuffle数据交换（不经过Driver）</text>
+<text x="35" y="650" font-size="10" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">⑧ Task执行完毕后，Executor把状态/结果汇报回Driver，全部完成后作业结束</text>
+<text x="35" y="670" font-size="9.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">💡 关键点：YARN负责"分配机器资源"，Spark负责"怎么用这些资源跑计算"——两层分工</text>
+</svg>`;
+
+function renderMasterDiagram() {
+  const el = document.getElementById('cases');
+  let html = `<div class="star-banner" style="background:var(--danger-bg); color:var(--danger);">🗺️ 总图 — Spark on YARN 完整任务提交流程</div>`;
+  html += `<div class="card">
+    <p class="q-desc" style="margin-bottom:6px;">这张图把YARN的组件（ResourceManager, NodeManager, Container）和Spark的组件（Driver, SparkContext, DAGScheduler, TaskScheduler, Executor, BlockManager）全部放进同一张图——理解这张图，前面所有Case的排查逻辑就都有了"地图"。</p>
+    ${masterDiagram}
+  </div>`;
+  html += `<div class="card" style="padding:12px 18px;">
+    <p style="font-size:12.5px; font-weight:700; color:var(--text-secondary); margin:0 0 8px;">📑 快速跳转 (点击直达对应Case)</p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button class="toc-btn toc-btn-s" onclick="document.getElementById('case1-anchor').scrollIntoView({behavior:'smooth', block:'start'})">🚧 Case 1 — 集群阻塞</button>
+      <button class="toc-btn toc-btn-t" onclick="document.getElementById('case2-anchor').scrollIntoView({behavior:'smooth', block:'start'})">💥 Case 2 — 大量task失败</button>
+      <button class="toc-btn toc-btn-a" onclick="document.getElementById('case3-anchor').scrollIntoView({behavior:'smooth', block:'start'})">🎯 Case 3 — 单个task失败</button>
+      <button class="toc-btn" style="border-color:var(--success); color:var(--success);" onclick="document.getElementById('case4-anchor').scrollIntoView({behavior:'smooth', block:'start'})">💰 Case 4 — 成本优化</button>
+    </div>
+  </div>`;
+  el.innerHTML = html + el.innerHTML;
+}
+
+function renderSupplementaryReference() {
+  const el = document.getElementById('cases');
+  let html = `<div class="star-banner" style="background:var(--accent-bg); color:var(--accent);">📎 补充排查参考 (原 Troubleshooting Playbook 内容)</div>`;
+
+  html += `<div class="card">
+    <p class="q-title">Executor OOM — 面试可以直接用的完整讲解</p>
+    <p class="q-desc">Connects directly to the SLA case study content — this is worth having as a complete, fluent 60-second answer.</p>
+    <p class="q-desc zh-desc">🇨🇳 这段内容直接对应之前SLA案例的完整逻辑，建议练到能流畅讲60秒。</p>
+    <div class="codeblock">${highlightCode(`# Diagnosis sequence:
+# 1. Confirm it's actually OOM (not just slow) - check executor logs for:
+#    "java.lang.OutOfMemoryError" or "Container killed by YARN for exceeding memory limits"
+
+# 2. Confirm it's skew-driven - Spark UI Stages tab, check task duration distribution
+#    (max task duration >> median task duration = skew signature)
+
+# 3. Identify which memory region failed (see Spark Memory tab):
+#    - "Java heap space" -> heap itself too small, or genuinely too much data on one task
+#    - "Container killed... exceeding memory limits" -> off-heap/overhead too small
+
+# 4. Apply matching fix:
+#    - Config-only: bump spark.sql.shuffle.partitions, enable AQE, try SortAggregate
+#    - Code change: two-stage aggregation to avoid one giant HashSet
+#    - Last resort: targeted salting on the specific hot key`)}</div>
+    <div class="tip">💡 This is literally the same escalation ladder from the SLA case study (config first, code second, salting last) — reuse that exact story if this comes up.</div>
+    <div class="tip zh-desc">💡🇨🇳 这跟SLA案例的升级逻辑完全一样（先配置、再改代码、最后才加盐），可以直接复用那个故事。</div>
+  </div>`;
+
+  html += `<div class="card">
+    <p class="q-title">"Job很慢但没卡死" — 跟"卡住"是不同的诊断路径</p>
+    <p class="q-desc">Don't confuse this with a hard block — a slow-but-progressing job usually means resource contention or inefficient execution plan.</p>
+    <p class="q-desc zh-desc">🇨🇳 别把这个跟Case 1"卡住"搞混——一直在慢慢跑，通常是资源竞争或者执行计划不优，不是真的block。</p>
+    ${table(["Symptom","Likely cause","Fix"], [
+      ["Every task is uniformly slow (not one outlier)","Under-provisioned resources, or too few executors","Increase executor count/cores, check cluster-wide contention"],
+      ["Huge number of very small tasks","Over-partitioned data (too many small files)","Repartition/coalesce input data; compact small files upstream"],
+      ["Join stage unexpectedly slow","Wrong join strategy (e.g. SortMergeJoin instead of Broadcast)","Check spark.sql.autoBroadcastJoinThreshold; force broadcast hint"],
+      ["Shuffle read/write time dominates","Too much data movement across the network","Reduce shuffle via partitioning; filter/project earlier"],
+    ])}
+    <div class="tip">💡 Key question: "is progress happening at all, just slowly, or has it truly stalled?" — that determines which playbook you're in.</div>
+    <div class="tip zh-desc">💡🇨🇳 关键自问："到底是完全没进展，还是只是慢"——这句话决定了你该用哪套排查流程</div>
+  </div>`;
+
+  html += `<div class="card">
+    <p class="q-title">HDFS存储层的运维问题</p>
+    <p class="q-desc">Storage-layer problems that show up as application-layer symptoms if you don't know where to look.</p>
+    <p class="q-desc zh-desc">🇨🇳 存储层的问题，如果不知道往哪查，表现出来的症状会像是"应用层"的问题，容易误判方向。</p>
+    <div class="codeblock">${highlightCode(`# Check overall HDFS health
+hdfs dfsadmin -report                    # per-DataNode capacity/usage summary
+hdfs fsck / -files -blocks -locations    # find corrupt/under-replicated blocks
+
+# If a specific DataNode looks unhealthy:
+hdfs dfsadmin -report | grep -A 10 "<hostname>"
+
+# Check NameNode health/safe mode status
+hdfs dfsadmin -safemode get`)}</div>
+    ${table(["Symptom","What to check","Command"], [
+      ["Write fails with 'could not find enough datanodes'","Disk full on multiple DataNodes","hdfs dfsadmin -report — check % used per node"],
+      ["Job fails reading a specific file","Corrupt or missing block replicas","hdfs fsck &lt;path&gt; -files -blocks"],
+      ["Cluster in read-only mode unexpectedly","NameNode stuck in Safe Mode","hdfs dfsadmin -safemode get / -safemode leave"],
+    ])}
+    <div class="tip">💡 'Safe Mode' is HDFS's built-in protective state on startup — forcing it off too early can cause HDFS to think blocks are missing when they aren't.</div>
+    <div class="tip zh-desc">💡🇨🇳 "Safe Mode"是HDFS启动时的保护性状态——太早强制退出可能导致HDFS误以为block丢失了(其实还没上报完)</div>
+  </div>`;
+
+  el.innerHTML += html;
+}
+
+renderCasesTab();
+renderYarnFAQ();
+renderMasterDiagram();
+renderSupplementaryReference();
+
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+// ============================================================
+// EVENT DELEGATION
+// ============================================================
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="speak"]');
+  if (btn) toggleSpeak(btn);
+});
+
+// ============================================================
+// TEXT-TO-SPEECH
+// ============================================================
+let voices = [];
+let currentBtn = null;
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+function loadVoices() {
+  if (!speechSupported) return;
+  try {
+    voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    const select = document.getElementById('voiceSelect');
+    if (!select) return;
+    select.innerHTML = '';
+    if (voices.length === 0) { select.innerHTML = '<option>Default English voice</option>'; return; }
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Google US English')) opt.selected = true;
+      select.appendChild(opt);
+    });
+  } catch (e) { console.warn('Voice loading failed:', e); }
+}
+try { if (speechSupported) { window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); } } catch (e) { console.warn(e); }
+
+const rateSlider = document.getElementById('rateSlider');
+const rateLabel = document.getElementById('rateLabel');
+if (rateSlider) rateSlider.addEventListener('input', () => { rateLabel.textContent = rateSlider.value + 'x'; });
+
+function toggleSpeak(btn) {
+  if (!speechSupported) { alert('Text-to-speech is not supported in this browser.'); return; }
+  try {
+    const text = decodeURIComponent(btn.dataset.text);
+    if (btn.classList.contains('speaking')) { window.speechSynthesis.cancel(); btn.classList.remove('speaking'); currentBtn = null; return; }
+    window.speechSynthesis.cancel();
+    if (currentBtn) currentBtn.classList.remove('speaking');
+    const utter = new SpeechSynthesisUtterance(text);
+    const voiceIdx = document.getElementById('voiceSelect').value;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+    utter.lang = 'en-US';
+    utter.rate = parseFloat(rateSlider.value);
+    utter.onstart = () => { btn.classList.add('speaking'); currentBtn = btn; };
+    utter.onend = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    utter.onerror = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    window.speechSynthesis.speak(utter);
+  } catch (e) { console.warn('toggleSpeak failed:', e); }
+}
+const stopAllBtn = document.getElementById('stopAllBtn');
+if (stopAllBtn) stopAllBtn.addEventListener('click', () => {
+  if (speechSupported) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  currentBtn = null;
+});
+</script>
+</body>
+</html>
