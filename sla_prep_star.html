@@ -103,17 +103,17 @@
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="full">⭐ Full Story</button>
-    <button class="tab-btn" data-tab="s">🎯 Situation</button>
+    <button class="tab-btn" data-tab="s">🎯🔧 Situation &amp; Action</button>
     <button class="tab-btn" data-tab="t">📋 Task</button>
-    <button class="tab-btn" data-tab="a">🔧 Action</button>
     <button class="tab-btn" data-tab="r">📊 Result</button>
+    <button class="tab-btn" data-tab="skew">🧂 SQL: Multi-Distinct &amp; Skew</button>
   </div>
 
   <div id="full" class="tab-panel active"></div>
   <div id="s" class="tab-panel"></div>
   <div id="t" class="tab-panel"></div>
-  <div id="a" class="tab-panel"></div>
   <div id="r" class="tab-panel"></div>
+  <div id="skew" class="tab-panel"></div>
 </div>
 
 <script>
@@ -223,14 +223,14 @@ function renderCard(item) {
   return html;
 }
 
-function renderList(containerId, data, bannerLetter, bannerText) {
+function renderList(containerId, data, bannerLetter, bannerText, append) {
   const el = document.getElementById(containerId);
   let html = '';
   if (bannerLetter) {
     html += `<div class="star-banner ${bannerLetter}">${bannerLetter} — ${bannerText}</div>`;
   }
   html += data.map(renderCard).join('');
-  el.innerHTML = html;
+  if (append) el.innerHTML += html; else el.innerHTML = html;
 }
 
 const levelMeta = {
@@ -241,16 +241,17 @@ const levelMeta = {
   framework: {emoji:"🏗️", label:"Level 3 — Framework (beyond this one job)", desc:"Orchestration-layer changes affecting the whole pipeline, not just this Spark job."},
 };
 
-function renderActionByLevel(containerId, data) {
+function renderByLevel(containerId, data, levelMetaMap, bannerLetter, bannerText, introText, append) {
   const el = document.getElementById(containerId);
-  let html = `<div class="star-banner A">A — Action (0. Root Cause 1. Config 2. Code 3. Framework)</div>`;
-  html += `<div class="intro-note">Four levels, cheapest first: try config before code, and code before the last-resort surgical fix. Framework changes are separate — they apply to the whole pipeline, not just this one query.</div>`;
+  let html = '';
+  if (bannerLetter) html += `<div class="star-banner ${bannerLetter}">${bannerLetter} — ${bannerText}</div>`;
+  if (introText) html += `<div class="intro-note">${introText}</div>`;
 
   let currentLevel = null;
   data.forEach(item => {
     if (item.level !== currentLevel) {
       currentLevel = item.level;
-      const meta = levelMeta[currentLevel];
+      const meta = levelMetaMap[currentLevel];
       html += `
         <div class="level-header">
           <span class="level-emoji">${meta.emoji}</span>
@@ -264,7 +265,12 @@ function renderActionByLevel(containerId, data) {
     html += renderCard(item);
   });
 
-  el.innerHTML = html;
+  if (append) el.innerHTML += html; else el.innerHTML = html;
+}
+
+function renderActionByLevel(containerId, data, append) {
+  renderByLevel(containerId, data, levelMeta, "A", "Action",
+    "Four levels, cheapest first: try config before code, and code before the last-resort surgical fix. Framework changes are separate — they apply to the whole pipeline, not just this one query.", append);
 }
 
 // ============================================================
@@ -302,8 +308,8 @@ const sData = [
      ["5","Spark UI showed severe task skew"],
    ]),
    warn:"SLA compliance target was 99%+, but the job was only hitting ~95% — meaning it missed its deadline on roughly 1 in 20 days."},
-  {title:"The original query (root cause preview)", speak:"The original query directly used COUNT DISTINCT on sender_id, which forces Spark to keep one giant HashSet per group in memory — that's the seed of the OOM risk.",
-   desc:"This single-stage COUNT(DISTINCT) is what caused the entire problem.",
+  {title:"❌ BEFORE — the original (broken) query", speak:"The original query directly used COUNT DISTINCT on sender_id, which forces Spark to keep one giant HashSet per group in memory — that's the seed of the OOM risk.",
+   desc:"This single-stage COUNT(DISTINCT) is what caused the entire problem. This exact query was later REPLACED — see the final production query at the end of the Action section below, which is a different query, not a patch on this one.",
    code:`SELECT
   t.partner_remittance_provider, t.sender_country, t.currency,
   COUNT(t.transaction_id) AS tx_count,
@@ -450,8 +456,8 @@ GROUP BY d.partner_remittance_provider, d.sender_country, d.currency;`,
    tip:"This converts one unspillable giant HashSet into many small spillable groups — runtime became stable, but the 2 extreme hot keys were STILL the slowest part of every run."},
 
   // --- Fix 4: targeted salting for the remaining extreme hot keys ---
-  {idx:"6", level:"code", title:"Fix 4: Targeted salting for the 2 known hot keys — the final surgical fix", speak:"Even after config tuning, SortAggregate, and two-stage aggregation, the two known extreme hot keys were still the long pole. So as the final, most surgical step, I split those two specific keys into 8 buckets each using a deterministic hash of sender id, routed everyone else into a separate non-hot bucket, then aggregated within buckets before summing back to the original dimensions for an exact result.",
-   desc:"The last resort — reserved for the SPECIFIC extreme keys that survived every earlier, less invasive fix.",
+  {idx:"6", level:"code", title:"✅ AFTER — Fix 4: Targeted salting — the FINAL production query", speak:"Even after config tuning, SortAggregate, and two-stage aggregation, the two known extreme hot keys were still the long pole. So as the final, most surgical step, I split those two specific keys into 8 buckets each using a deterministic hash of sender id, routed everyone else into a separate non-hot bucket, then aggregated within buckets before summing back to the original dimensions for an exact result.",
+   desc:"The last resort — reserved for the SPECIFIC extreme keys that survived every earlier, less invasive fix. This is a COMPLETELY DIFFERENT query from the original 'BEFORE' query shown in the Situation section above — not a small patch, a full rewrite of the aggregation logic.",
    code:`-- A. Dedup exchange rates first (avoid duplicate join fan-out)
 WITH fx_dedup AS (
   SELECT currency, fdate, fx_to_cnh, fx_to_usd
@@ -568,6 +574,254 @@ JOIN (SELECT 1 AS salt UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
    ]),
    tip:null},
 ];
+// ============================================================
+// TAB: SQL — Multi-COUNT(DISTINCT) & Data Skew
+// ============================================================
+const skewLevelMeta = {
+  example:   {emoji:"📊", label:"Example Dataset", desc:"A small, fully-traceable table used throughout this whole analysis."},
+  analysis:  {emoji:"🔍", label:"Data Skew — Causes &amp; Problems", desc:"Understand WHY skew happens and WHAT it breaks, before touching any SQL."},
+  baseline:  {emoji:"✅", label:"Level 1 — Baseline (try this first)", desc:"The plain, obvious query. Fine for small-to-medium data — don't optimize prematurely."},
+  split:     {emoji:"🔀", label:"Level 2 — Split into single-dimension subqueries", desc:"Only reached because Level 1 showed real slowness or OOM on large data."},
+  skew:      {emoji:"🧂", label:"Level 3 — Data skew: salting the hot key", desc:"Only needed when a specific key is disproportionately large."},
+  optimized: {emoji:"⚡", label:"Level 4 — Efficient combined version", desc:"The leanest correct version — fewest full table scans."},
+};
+
+const skewData = [
+  // ============================================================
+  // SECTION 0: Example Dataset
+  // ============================================================
+  {level:"example", title:"The dataset used throughout this analysis", desc:"12 rows total. Key 'x' has 8 rows (67% of the table) — a deliberately hot key. 'y' and 'z' have 2 rows each, representing normal, evenly-sized keys.",
+   result: table(["a","b","c","d"], [
+     ["x","100","c1","d1"],["x","200","c1","d2"],["x","150","c2","d1"],["x","300","c1","d3"],
+     ["x","250","c3","d2"],["x","120","c2","d1"],["x","180","c4","d4"],["x","90","c1","d2"],
+     ["y","50","c5","d5"],["y","80","c6","d5"],
+     ["z","30","c7","d6"],["z","40","c7","d7"],
+   ]),
+   tip:"In production, 'x' wouldn't be 8 rows — it would be millions, while 'y' and 'z' stay small. The 67% concentration ratio is what matters, not the absolute row count."},
+
+  {level:"example", title:"The query we're optimizing, and its exact correct answer", desc:"This is the ground truth every optimized rewrite in this tab must match exactly.",
+   code:`SELECT a, sum(b), count(distinct c), count(distinct d)
+FROM test
+GROUP BY a;`,
+   result: table(["a","sum(b)","count(distinct c)","count(distinct d)"], [
+     ["x","1390","4","4"],
+     ["y","130","2","1"],
+     ["z","70","1","2"],
+   ]),
+   tip:"Verify by hand: x has c-values {c1,c2,c3,c4} → 4 distinct. d-values {d1,d2,d3,d4} → 4 distinct. sum(b) = 100+200+150+300+250+120+180+90 = 1390."},
+
+  // ============================================================
+  // SECTION 1: Data Skew Analysis
+  // ============================================================
+  {level:"analysis", title:"What is data skew?", desc:"Data skew means rows are NOT evenly distributed across the GROUP BY / shuffle key — a small number of key values (like 'x' above) hold a disproportionate share of the total rows.",
+   svgDiagram: `<svg width="100%" viewBox="0 0 680 190" style="max-width:600px; display:block; margin:10px auto;">
+<text x="10" y="18" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Row count per key — balanced vs skewed</text>
+
+<text x="10" y="50" font-size="11" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Balanced:</text>
+<rect x="90" y="35" width="60" height="20" fill="var(--success-bg)" stroke="var(--success)"/>
+<rect x="160" y="35" width="55" height="20" fill="var(--success-bg)" stroke="var(--success)"/>
+<rect x="225" y="35" width="58" height="20" fill="var(--success-bg)" stroke="var(--success)"/>
+<rect x="293" y="35" width="52" height="20" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="420" y="50" font-size="10.5" fill="var(--success)" font-family="-apple-system,sans-serif">every reducer does similar work</text>
+
+<text x="10" y="100" font-size="11" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Skewed (this dataset):</text>
+<rect x="90" y="70" width="340" height="20" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="260" y="85" text-anchor="middle" font-size="10" fill="var(--danger)" font-family="-apple-system,sans-serif">key 'x' — 8 rows (67%)</text>
+<rect x="440" y="70" width="20" height="20" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<rect x="470" y="70" width="20" height="20" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="560" y="85" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">'y','z' — 2 rows each</text>
+
+<text x="10" y="140" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">One task handles 'x' alone — it does 4x the work of any other task</text>
+<text x="10" y="160" font-size="11" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">In production this ratio is often 1000:1 or worse, not 4:1</text>
+</svg>`},
+
+  {level:"analysis", title:"Common causes of data skew — 5 typical patterns", desc:"Skew almost always traces back to a real, non-random property of the business data — not bad luck.",
+   result: table(["Cause","Example"], [
+     ["Power-law user/customer behavior","A handful of VIP accounts or bot accounts generate most transactions"],
+     ["Default / placeholder values","NULL, 0, or 'UNKNOWN' used as a fallback dominates the join or group key"],
+     ["Popular product / hot category","One best-selling SKU or trending category dwarfs all others"],
+     ["Time-based clustering","Most rows are from 'today' in an incrementally-loaded table"],
+     ["Upstream join fan-out","A join earlier in the pipeline duplicated rows for one specific key"],
+   ]),
+   tip:"Diagnosing the CAUSE matters — a NULL-dominated join key is fixed differently (filter or isolate NULLs) than a genuinely hot VIP customer (salting)."},
+
+  {level:"analysis", title:"What problems does skew actually cause?", desc:"Four concrete failure modes, from mild to catastrophic.",
+   svgDiagram: `<svg width="100%" viewBox="0 0 680 230" style="max-width:600px; display:block; margin:10px auto;">
+<text x="10" y="18" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Task duration per reducer — one straggler holds up the whole job</text>
+
+<rect x="10" y="30" width="55" height="18" fill="var(--success-bg)" stroke="var(--success)"/>
+<rect x="10" y="52" width="60" height="18" fill="var(--success-bg)" stroke="var(--success)"/>
+<rect x="10" y="74" width="50" height="18" fill="var(--success-bg)" stroke="var(--success)"/>
+<rect x="10" y="96" width="600" height="18" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="320" y="109" text-anchor="middle" font-size="10" fill="var(--danger)" font-family="-apple-system,sans-serif">task for key 'x' — 10x+ longer than the others</text>
+<text x="640" y="45" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">done</text>
+
+<line x1="10" y1="130" x2="670" y2="130" stroke="var(--border-strong)" stroke-width="1"/>
+
+<text x="10" y="150" font-size="11.5" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">1. Long-tail task — job waits on the slowest reducer to finish</text>
+<text x="10" y="170" font-size="11.5" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">2. Executor OOM — the hot task's in-memory state (HashSet) outgrows its heap</text>
+<text x="10" y="190" font-size="11.5" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">3. Wasted cluster capacity — 99% of executors sit idle waiting on the 1 straggler</text>
+<text x="10" y="210" font-size="11.5" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">4. Retry storms — a killed/OOM task retries, often failing the same way again</text>
+</svg>`,
+   tip:"The business impact is usually #1 and #3 combined: the job takes far longer than the DATA VOLUME alone would suggest, because parallelism collapses down to whatever the hot key's single task is doing."},
+
+  {level:"analysis", title:"Why multi-COUNT(DISTINCT) makes it worse specifically", desc:"With two distinct dimensions (c and d) in the same GROUP BY, the hot key's single task must hold TWO separate deduplication structures in memory at once — for the SAME oversized partition.",
+   tip:"This is the same underlying failure as the HashAggregate OOM in the SLA case study — just doubled, because c and d each need their own HashSet on the same hot task."},
+
+  {level:"analysis", title:"What does a task's memory actually look like, precisely?", desc:"A task doesn't process just ONE key — it processes a whole batch of keys. Internally it holds one HashMap, where EACH key gets its own aggregation buffer, and each COUNT(DISTINCT) column gets its own HashSet inside that buffer.",
+   svgDiagram: `<svg width="100%" viewBox="0 0 680 320" style="max-width:620px; display:block; margin:10px auto;">
+<rect x="10" y="10" width="660" height="300" rx="10" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="30" y="34" font-size="13" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Task 3 — HashMap&lt;key, AggregationBuffer&gt;</text>
+
+<rect x="30" y="50" width="620" height="90" rx="8" fill="var(--danger-bg)" stroke="var(--danger)" stroke-width="1.5"/>
+<text x="45" y="72" font-size="12" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">a = 'x'  (hot key, millions of rows)</text>
+<text x="45" y="90" font-size="11" fill="var(--danger)" font-family="-apple-system,sans-serif">sum_b accumulator: 1 number (cheap)</text>
+<text x="45" y="106" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">HashSet_c: {c1, c2, c3, ... } — grows toward millions of entries</text>
+<text x="45" y="124" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">HashSet_d: {d1, d2, d3, ... } — grows toward millions of entries</text>
+
+<rect x="30" y="152" width="620" height="52" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1"/>
+<text x="45" y="172" font-size="12" font-weight="600" fill="var(--success)" font-family="-apple-system,sans-serif">a = 'p'  (normal key, a few hundred rows)</text>
+<text x="45" y="190" font-size="10.5" fill="var(--success)" font-family="-apple-system,sans-serif">sum_b accumulator + small HashSet_c + small HashSet_d</text>
+
+<rect x="30" y="212" width="620" height="52" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1"/>
+<text x="45" y="232" font-size="12" font-weight="600" fill="var(--success)" font-family="-apple-system,sans-serif">a = 'q'  (normal key, a few hundred rows)</text>
+<text x="45" y="250" font-size="10.5" fill="var(--success)" font-family="-apple-system,sans-serif">sum_b accumulator + small HashSet_c + small HashSet_d</text>
+
+<text x="30" y="290" font-size="11.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Total HashSets in this task = (number of keys) × (number of DISTINCT columns) = 3 × 2 = 6</text>
+<text x="30" y="306" font-size="11" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">But only the hot key's 2 HashSets are actually large enough to cause OOM</text>
+</svg>`,
+   tip:"The formula is: total HashSets per task = (distinct GROUP BY keys landing on that task) × (number of COUNT(DISTINCT) expressions). With 3 keys and 2 distinct columns, that's 6 — but memory pressure comes almost entirely from the hot key's 2 oversized ones, not the other small ones."},
+
+  // ============================================================
+  // SECTION 2: Step-by-step optimization
+  // ============================================================
+  {level:"baseline", title:"Just use plain GROUP BY — this is the right default", desc:"Simple, readable, and correct. For this dataset (or anything small-to-medium), this is the right choice — don't reach for anything fancier without evidence of a real problem.",
+   code:`SELECT a, sum(b), count(distinct c), count(distinct d)
+FROM test
+GROUP BY a;`,
+   result: table(["a","sum(b)","count(distinct c)","count(distinct d)"], [
+     ["x","1390","4","4"],["y","130","2","1"],["z","70","1","2"],
+   ]),
+   tip:"Premature optimization trades away readability for a performance problem that may not exist. Write this first, then measure."},
+
+  {level:"baseline", title:"When does it actually become a problem?", desc:"Only optimize once one of these is genuinely true — don't guess.",
+   result: table(["Signal","Why it matters"], [
+     ["Table has 10M+ rows","More raw data funneling into each group's HashSets"],
+     ["c or d has high cardinality","Bigger HashSets per group"],
+     ["Data is skewed on a (like key 'x' here)","One task does disproportionately more work than others"],
+     ["Spark UI shows one long-tail task or an OOM","Concrete evidence, not a guess"],
+   ])},
+
+  {level:"split", title:"Split into single-dimension subqueries, then JOIN", desc:"Each subquery handles exactly ONE aggregation dimension, so no single task ever needs to hold two HashSets at once.",
+   code:`SELECT t1.a, t1.sum_b, t2.cnt_c, t3.cnt_d
+FROM (SELECT a, SUM(b) AS sum_b FROM test GROUP BY a) t1
+JOIN (SELECT a, COUNT(DISTINCT c) AS cnt_c FROM test GROUP BY a) t2 ON t1.a = t2.a
+JOIN (SELECT a, COUNT(DISTINCT d) AS cnt_d FROM test GROUP BY a) t3 ON t1.a = t3.a;`,
+   result: table(["a","sum_b","cnt_c","cnt_d"], [
+     ["x","1390","4","4"],["y","130","2","1"],["z","70","1","2"],
+   ]),
+   tip:"Matches the ground truth exactly. Trade-off: 3 full table scans instead of 1, plus 2 joins."},
+
+  {level:"split", title:"Alternative: UNION ALL with a tag column (single scan)", desc:"Tags each row with which dimension it belongs to, scans the table only once, then filters per-dimension inside the aggregate functions.",
+   code:`SELECT a,
+  SUM(CASE WHEN tag=0 THEN b END) AS sum_b,
+  COUNT(DISTINCT CASE WHEN tag=1 THEN c END) AS cnt_c,
+  COUNT(DISTINCT CASE WHEN tag=2 THEN d END) AS cnt_d
+FROM (
+  SELECT a, b, NULL AS c, NULL AS d, 0 AS tag FROM test
+  UNION ALL
+  SELECT a, NULL, c, NULL, 1 FROM test
+  UNION ALL
+  SELECT a, NULL, NULL, d, 2 FROM test
+) unioned
+GROUP BY a;`,
+   tip:"One scan instead of three, but the intermediate UNION ALL result is 3x the row count. Usually split+JOIN is easier for the optimizer to parallelize well."},
+
+  {level:"skew", title:"When GROUP BY a, c alone is enough — and when it isn't", desc:"Grouping by the composite key (a, c) shuffles by hash(a, c), not just hash(a) — so it often self-distributes even when 'a' is a hot key. The deciding factor is c's cardinality WITHIN that hot key.",
+   result: table(["Scenario","Distinct c under hot key 'x'","Is (a,c) shuffle skewed?"], [
+     ["This dataset","4 distinct values (c1,c2,c3,c4)","Mild — spreads across 4 shuffle partitions, not 1"],
+     ["Worse case","Only 1 distinct value repeated 1000s of times","Yes — every row still funnels into ONE partition"],
+   ]),
+   tip:"In THIS dataset, GROUP BY a,c alone already spreads key 'x' across 4 partitions instead of 1 — a real improvement even before adding any salt."},
+
+  {level:"skew", title:"Salting — for when (a,c) itself is still skewed", desc:"Add a deterministic hash-based salt bucket to spread the dedup work across more partitions, then sum the per-bucket counts back together.",
+   svgDiagram: `<svg width="100%" viewBox="0 0 680 170" style="max-width:600px; display:block; margin:8px auto;">
+<rect x="20" y="10" width="640" height="50" rx="8" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="340" y="30" text-anchor="middle" font-size="12" font-weight="600" fill="var(--danger)" font-family="-apple-system,sans-serif">salt = RANDOM() % N  —  WRONG</text>
+<text x="340" y="48" text-anchor="middle" font-size="11" fill="var(--danger)" font-family="-apple-system,sans-serif">Same c value lands in a DIFFERENT bucket each time -&gt; double-counted</text>
+
+<rect x="20" y="70" width="640" height="50" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="90" text-anchor="middle" font-size="12" font-weight="600" fill="var(--success)" font-family="-apple-system,sans-serif">salt = HASH(c) % N  —  CORRECT</text>
+<text x="340" y="108" text-anchor="middle" font-size="11" fill="var(--success)" font-family="-apple-system,sans-serif">Same c value ALWAYS lands in the SAME bucket -&gt; exact dedup, spread across N partitions</text>
+
+<text x="340" y="145" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">The salt MUST be a deterministic function of the value being deduplicated</text>
+</svg>`,
+   code:`WITH salted AS (
+  SELECT a, b, c, d,
+    (HASH(c) & 2147483647) % 8 AS salt_c,
+    (HASH(d) & 2147483647) % 8 AS salt_d
+  FROM test
+),
+c_dedup AS (
+  SELECT DISTINCT a, salt_c, c FROM salted
+),
+cnt_c AS (
+  SELECT a, SUM(cnt) AS cnt_c FROM (
+    SELECT a, salt_c, COUNT(*) AS cnt FROM c_dedup GROUP BY a, salt_c
+  ) x GROUP BY a
+),
+d_dedup AS (
+  SELECT DISTINCT a, salt_d, d FROM salted
+),
+cnt_d AS (
+  SELECT a, SUM(cnt) AS cnt_d FROM (
+    SELECT a, salt_d, COUNT(*) AS cnt FROM d_dedup GROUP BY a, salt_d
+  ) x GROUP BY a
+)
+SELECT a, cnt_c, cnt_d FROM cnt_c JOIN cnt_d USING (a);`,
+   result: table(["a","cnt_c","cnt_d"], [
+     ["x","4","4"],["y","2","1"],["z","1","2"],
+   ]),
+   warn:"A real mistake caught while building this: using RANDOM() instead of a deterministic HASH() broke correctness on a larger test (300 distinct became 2,152 after salting). Always salt using a hash of the value itself, never a random number."},
+
+  {level:"optimized", title:"The leanest correct version — piggyback SUM(b) onto the dedup scan", desc:"Instead of a separate scan just for SUM(b), compute it as a byproduct of the (a,c) aggregation — saving one full table scan compared to the 3-way split.",
+   code:`WITH q1 AS (
+  SELECT a, c, SUM(b) AS sum_b_ac
+  FROM test
+  GROUP BY a, c
+),
+q2 AS (
+  SELECT a, d
+  FROM test
+  GROUP BY a, d              -- no need to recompute sum(b) here
+),
+q1_agg AS (
+  SELECT a, SUM(sum_b_ac) AS sum_b, COUNT(*) AS cnt_c
+  FROM q1
+  GROUP BY a
+),
+q2_agg AS (
+  SELECT a, COUNT(*) AS cnt_d
+  FROM q2
+  GROUP BY a
+)
+SELECT q1_agg.a, q1_agg.sum_b, q1_agg.cnt_c, q2_agg.cnt_d
+FROM q1_agg
+JOIN q2_agg ON q1_agg.a = q2_agg.a;`,
+   result: table(["a","sum_b","cnt_c","cnt_d"], [
+     ["x","1390","4","4"],["y","130","2","1"],["z","70","1","2"],
+   ]),
+   tip:"SUM is associative — summing partial sums grouped by (a,c) and re-summing by a gives EXACTLY the same result as summing directly by a. This cuts table scans from 3 down to 2, and the (a,c) shuffle already partially fixes skew for free."},
+
+  {level:"optimized", title:"Full decision summary", desc:"The complete escalation path for this pattern, cheapest to most involved.",
+   result: table(["Level","Approach","Table scans","Use when"], [
+     ["1","Plain GROUP BY","1","Small/medium data, no observed problem"],
+     ["2","Split + JOIN","3","Confirmed slowness, no skew"],
+     ["2b","q1/q2 combined (piggyback sum)","2","Same as above, slightly leaner"],
+     ["3","Salted two-stage","2 + salt overhead","Confirmed skew AND low cardinality under hot key"],
+   ]),
+   tip:"Always diagnose with real evidence (Spark UI task times, OOM logs) before escalating — each level trades simplicity for performance, and the trade isn't free."},
+];
 
 // ============================================================
 // R — RESULT
@@ -639,8 +893,10 @@ function renderFull() {
 renderFull();
 renderList('s', sData, 'S', 'Situation');
 renderList('t', tData, 'T', 'Task');
-renderActionByLevel('a', aData);
+renderActionByLevel('s', aData, true);
 renderList('r', rData, 'R', 'Result');
+renderByLevel('skew', skewData, skewLevelMeta, null, null,
+  "A full deep-dive: a concrete example dataset, a complete analysis of what data skew is and why it happens, the specific problems it causes, and finally a step-by-step SQL rewrite from simplest to most optimized — all verified against the same dataset throughout.");
 
 // ============================================================
 // TABS
