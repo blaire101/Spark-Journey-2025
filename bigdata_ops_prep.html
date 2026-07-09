@@ -58,6 +58,7 @@
   .toc-btn-t { border-color:var(--warning); color:var(--warning); }
   .toc-btn-a { border-color:var(--purple); color:var(--purple); }
   .zh-desc { color:var(--text-secondary); font-size:12.5px; background:#F7F7F5; border-radius:6px; padding:6px 10px; margin-top:4px !important; }
+  .cell-zh { color:var(--text-muted); font-size:10.5px; }
 
   .q-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
   .q-title { font-size:14.5px; font-weight:600; margin:0; }
@@ -99,18 +100,16 @@
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="hdfs">🗄️ HDFS</button>
-    <button class="tab-btn" data-tab="yarn">🧶 YARN</button>
+    <button class="tab-btn active" data-tab="hdfs">🗄️🧶 HDFS &amp; YARN</button>
+    <button class="tab-btn" data-tab="hive">🐝 Hive</button>
     <button class="tab-btn" data-tab="spark">⚡ Spark Memory</button>
     <button class="tab-btn" data-tab="flink">🌊 Flink Basics</button>
-    <button class="tab-btn" data-tab="hive">🐝 Hive</button>
     <button class="tab-btn" data-tab="k8s">🐳 Docker &amp; K8S</button>
+    <button class="tab-btn" data-tab="cases">🎯 Interview_Cases</button>
     <button class="tab-btn" data-tab="ref">📋 Quick Reference</button>
-    <button class="tab-btn" data-tab="cases">🎯 面试实战案例 Cases (含排查Playbook)</button>
   </div>
 
   <div id="hdfs" class="tab-panel active"></div>
-  <div id="yarn" class="tab-panel"></div>
   <div id="spark" class="tab-panel"></div>
   <div id="flink" class="tab-panel"></div>
   <div id="hive" class="tab-panel"></div>
@@ -124,8 +123,15 @@ const speakIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h
 function listenBtn(text) { return `<button class="listen-btn" data-action="speak" data-text="${encodeURIComponent(text)}">${speakIcon}Listen</button>`; }
 function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function table(headers, rows) {
+  function renderCell(c) {
+    if (typeof c === 'string' && c.includes('||')) {
+      const [en, zh] = c.split('||');
+      return `${en}<br><span class="cell-zh">🇨🇳 ${zh}</span>`;
+    }
+    return c;
+  }
   let html = '<table class="datatbl"><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
-  rows.forEach(r => { html += '<tr>' + r.map(c=>`<td>${c}</td>`).join('') + '</tr>'; });
+  rows.forEach(r => { html += '<tr>' + r.map(c=>`<td>${renderCell(c)}</td>`).join('') + '</tr>'; });
   html += '</tbody></table>';
   return html;
 }
@@ -168,7 +174,7 @@ function renderCard(item) {
   return html;
 }
 
-function renderByLevel(containerId, data, levelMetaMap) {
+function renderByLevel(containerId, data, levelMetaMap, append) {
   const el = document.getElementById(containerId);
   let html = '';
   let currentLevel = null;
@@ -180,7 +186,7 @@ function renderByLevel(containerId, data, levelMetaMap) {
     }
     html += renderCard(item);
   });
-  el.innerHTML = html;
+  if (append) el.innerHTML += html; else el.innerHTML = html;
 }
 
 // ============================================================
@@ -198,9 +204,9 @@ const hdfsData = [
    zh:"中文：HDFS把超大文件切成固定大小的block，分散存到很多台便宜的机器上，并且做多副本(replication)保证容错。",
    speak:"HDFS stores huge files by splitting them into fixed-size blocks and spreading those blocks across many cheap machines, with replication for fault tolerance.",
    table: table(["Property","Typical default"], [
-     ["Block size","128 MB (was 64MB in older Hadoop 1.x)"],
-     ["Replication factor","3 copies of every block"],
-     ["Design goal","High throughput for large files, NOT low-latency small reads"],
+     ["Block size","128 MB (was 64MB in older Hadoop 1.x)||128MB(旧版Hadoop 1.x是64MB)"],
+     ["Replication factor","3 copies of every block||每个block默认3份副本"],
+     ["Design goal","High throughput for large files, NOT low-latency small reads||为大文件高吞吐设计，不是为低延迟小读设计"],
    ]),
    tip:"HDFS is optimized for 'write once, read many times' — it's bad at handling millions of tiny files (the 'small file problem')."},
 
@@ -304,10 +310,10 @@ const hdfsData = [
    zh:"中文：运维面试里经典的「可能出什么问题」清单。",
    speak:"Common HDFS failure modes: DataNode disk full, the small file problem, under-replicated blocks, and NameNode memory pressure.",
    table: table(["Failure mode","What happens","How to detect"], [
-     ["DataNode disk full","That DataNode stops accepting new blocks, may go into 'dead' state","hdfs dfsadmin -report shows disk usage per node"],
-     ["Small file problem","Millions of tiny files bloat NameNode memory (each file+block = ~150 bytes of RAM)","NameNode heap usage climbing; slow metadata ops"],
-     ["Under-replicated blocks","A DataNode died before its blocks could be re-replicated elsewhere","hdfs fsck / reports under-replicated block count"],
-     ["NameNode GC pauses","Huge metadata in JVM heap causes long GC stop-the-world pauses","NameNode UI shows slow response, GC logs show long pauses"],
+     ["DataNode disk full","That DataNode stops accepting new blocks, may go into 'dead' state||该节点停止接收新block，可能变成dead状态","hdfs dfsadmin -report shows disk usage per node||用这个命令看每个节点的磁盘占用"],
+     ["Small file problem","Millions of tiny files bloat NameNode memory (each file+block = ~150 bytes of RAM)||海量小文件会撑爆NameNode内存(每个文件+block约占150字节)","NameNode heap usage climbing; slow metadata ops||NameNode堆内存持续上升，元数据操作变慢"],
+     ["Under-replicated blocks","A DataNode died before its blocks could be re-replicated elsewhere||某DataNode挂掉，它的block还没来得及在别处补副本","hdfs fsck / reports under-replicated block count||用这个命令查副本不足的block数量"],
+     ["NameNode GC pauses","Huge metadata in JVM heap causes long GC stop-the-world pauses||元数据太多导致JVM堆内存GC时长时间卡顿(stop-the-world)","NameNode UI shows slow response, GC logs show long pauses||NameNode界面响应变慢，GC日志显示长时间停顿"],
    ]),
    tip:"'Small file problem' is a favorite interview question — the fix is usually: merge small files (e.g. via Hive/Spark compaction, or HAR archives), or use a format like Iceberg/Hudi that manages file compaction automatically."},
 ];
@@ -350,10 +356,10 @@ const yarnData = [
 <text x="520" y="236" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">unit of allocated CPU+RAM</text>
 </svg>`,
    table: table(["Role","Analogy"], [
-     ["ResourceManager","The building manager who decides which company (job) gets which office (resources)"],
-     ["NodeManager","The floor supervisor on ONE specific floor (machine), reporting available space to the manager"],
-     ["ApplicationMaster","Each company's own on-site coordinator, negotiating for more office space (containers) as needed"],
-     ["Container","An actual allocated office (a fixed slice of CPU + memory) where real work runs"],
+     ["ResourceManager","The building manager who decides which company (job) gets which office (resources)||大楼管理员，决定哪家公司(job)分到哪间办公室(资源)"],
+     ["NodeManager","The floor supervisor on ONE specific floor (machine), reporting available space to the manager||某一层楼(机器)的主管，向大楼管理员汇报空闲空间"],
+     ["ApplicationMaster","Each company's own on-site coordinator, negotiating for more office space (containers) as needed||每家公司自己的现场协调员，按需申请更多办公空间(container)"],
+     ["Container","An actual allocated office (a fixed slice of CPU + memory) where real work runs||实际分配到的办公室(固定的CPU+内存切片)，真正干活的地方"],
    ]),
    tip:"Interview trap: people often forget ApplicationMaster ITSELF runs inside a Container too — it's not a separate free resource."},
 
@@ -389,9 +395,9 @@ const yarnData = [
    zh:"中文：调度器(scheduler)决定资源在多个竞争的job/队列之间该怎么分配。",
    speak:"Capacity Scheduler guarantees each queue a minimum share of the cluster. Fair Scheduler tries to give every running job an equal share dynamically.",
    table: table(["Scheduler","How it works","Common use case"], [
-     ["Capacity Scheduler","Cluster divided into queues, each with a guaranteed capacity %; queues can 'borrow' idle capacity from others","Multi-tenant clusters shared by different teams/departments (very common in enterprise Hadoop)"],
-     ["Fair Scheduler","All running jobs get roughly equal resource shares, dynamically rebalanced as jobs start/finish","Clusters prioritizing fairness over strict guarantees"],
-     ["FIFO","Simple queue, first job in gets everything until done","Rarely used in production — mentioned mainly for historical/interview context"],
+     ["Capacity Scheduler","Cluster divided into queues, each with a guaranteed capacity %; queues can 'borrow' idle capacity from others||集群按队列划分，每个队列保证一定容量比例；队列之间可以互相「借用」空闲容量","Multi-tenant clusters shared by different teams/departments (very common in enterprise Hadoop)||多个团队/部门共享集群时很常用(企业级Hadoop最常见)"],
+     ["Fair Scheduler","All running jobs get roughly equal resource shares, dynamically rebalanced as jobs start/finish||所有运行中的job大致平分资源，随job启停动态调整","Clusters prioritizing fairness over strict guarantees||更看重公平性而非严格资源保证的集群"],
+     ["FIFO","Simple queue, first job in gets everything until done||简单队列，先进先出，先来的job独占资源直到跑完","Rarely used in production — mentioned mainly for historical/interview context||生产环境很少用，主要是面试/历史背景知识"],
    ]),
    tip:"Most large enterprises (including bank/finance data platforms) use Capacity Scheduler because it gives predictable guarantees per team — good to mention by name in an interview."},
 
@@ -451,12 +457,12 @@ jstack <executor_pid> > thread_dump.txt
    zh:"中文：确定了「卡在哪一层」之后，这张表列出了通常的真实原因。",
    speak:"Common root causes behind stuck jobs include queue resource exhaustion, data skew, deadlock or lock contention, and small file explosion overwhelming the scheduler.",
    table: table(["Symptom","Likely root cause","Typical fix"], [
-     ["App stuck in ACCEPTED state","Queue is full / cluster resources exhausted","Kill low-priority jobs, request more queue capacity, or wait"],
-     ["One task takes 10x longer than others","Data skew on a hot key","Salting, AQE skew join, repartition, or two-stage aggregation"],
-     ["ApplicationMaster itself unresponsive","AM container OOM, or AM stuck waiting on RM","Increase yarn.app.mapreduce.am.resource.mb, check RM logs"],
-     ["Many tiny tasks, scheduler overhead dominates","Too many small input files / over-partitioned data","Coalesce/repartition before processing, compact small files upstream"],
-     ["Container allocation requested but never granted","NodeManager unhealthy / disk space threshold breached","Check NM health via RM UI — NMs can self-mark UNHEALTHY on low disk"],
-     ["Job hangs at the exact same stage every run","Deadlock or external dependency (e.g., waiting on a lock in Hive Metastore)","Thread dump the driver; check for lock contention in shared metastore"],
+     ["App stuck in ACCEPTED state","Queue is full / cluster resources exhausted||队列满了/集群资源耗尽","Kill low-priority jobs, request more queue capacity, or wait||杀掉低优先级job、申请更多队列容量，或等待"],
+     ["One task takes 10x longer than others","Data skew on a hot key||热key导致的数据倾斜","Salting, AQE skew join, repartition, or two-stage aggregation||加盐、AQE倾斜join优化、重分区，或两阶段聚合"],
+     ["ApplicationMaster itself unresponsive","AM container OOM, or AM stuck waiting on RM||AM容器OOM，或者AM卡在等RM响应","Increase yarn.app.mapreduce.am.resource.mb, check RM logs||调大AM内存配置，检查RM日志"],
+     ["Many tiny tasks, scheduler overhead dominates","Too many small input files / over-partitioned data||输入小文件太多/分区过细","Coalesce/repartition before processing, compact small files upstream||处理前先合并分区，上游先做小文件合并"],
+     ["Container allocation requested but never granted","NodeManager unhealthy / disk space threshold breached||NodeManager不健康/磁盘超过阈值","Check NM health via RM UI — NMs can self-mark UNHEALTHY on low disk||通过RM界面查NM健康状态——磁盘不够会自动标记UNHEALTHY"],
+     ["Job hangs at the exact same stage every run","Deadlock or external dependency (e.g., waiting on a lock in Hive Metastore)||死锁或外部依赖(比如卡在Hive Metastore的锁等待)","Thread dump the driver; check for lock contention in shared metastore||对Driver做线程栈分析，检查Metastore的锁竞争"],
    ]),
    warn:"NodeManager 'UNHEALTHY' state is an underrated one — YARN automatically stops sending containers to a NodeManager if local disk usage crosses a threshold (default 90%), which can silently shrink your effective cluster capacity."},
 ];
@@ -473,8 +479,8 @@ const sparkData = [
    zh:"中文：Driver是负责「规划任务」的大脑，Executor是真正干活、处理数据的「肌肉」。",
    speak:"The Driver is the brain that plans the job and coordinates everything. Executors are the muscle that actually crunch data in parallel across the cluster.",
    table: table(["Process","Runs where","Responsibility"], [
-     ["Driver","1 per application (inside the AM container, or client machine in client mode)","Builds the DAG, schedules stages/tasks, collects final results"],
-     ["Executor","Many per application, spread across worker nodes","Runs tasks, holds cached data in memory, reports back to Driver"],
+     ["Driver","1 per application (inside the AM container, or client machine in client mode)||每个应用1个(在AM容器内，或client模式下在客户端机器)","Builds the DAG, schedules stages/tasks, collects final results||构建DAG、调度Stage/Task、收集最终结果"],
+     ["Executor","Many per application, spread across worker nodes||每个应用可以有很多个，分散在多台worker节点","Runs tasks, holds cached data in memory, reports back to Driver||执行task、内存里持有缓存数据、向Driver汇报"],
    ]),
    tip:"Interview trap: 'Driver OOM' and 'Executor OOM' are DIFFERENT problems with different causes — see Level 3."},
 
@@ -524,9 +530,9 @@ spark.memory.storageFraction   # % of Unified Memory reserved for Storage (defau
    zh:"中文：虽然报错都叫OutOfMemoryError，但Driver OOM和Executor OOM的根因和修复方式完全不同。",
    speak:"Driver OOM usually means you pulled too much data back to a single machine, like calling collect on a huge dataset. Executor OOM usually means data skew or a HashSet exploding during a distinct aggregation on one hot partition.",
    table: table(["","Driver OOM","Executor OOM"], [
-     ["Typical cause","collect(), toPandas(), or broadcasting a table that's too large","Data skew — one partition/key has way more data than others"],
-     ["Where you see it","Driver logs, application immediately fails","One specific executor dies, task retries, eventually job fails"],
-     ["Fix direction","Avoid pulling full datasets to driver; increase spark.driver.memory only as last resort","Fix the skew: salting, AQE, repartition, or two-stage aggregation"],
+     ["Typical cause","collect(), toPandas(), or broadcasting a table that's too large||collect()、toPandas()，或者广播了太大的表","Data skew — one partition/key has way more data than others||数据倾斜——某个partition/key数据量远超其他"],
+     ["Where you see it","Driver logs, application immediately fails||Driver日志里，应用立刻失败","One specific executor dies, task retries, eventually job fails||某个具体executor挂掉，task重试，最终job失败"],
+     ["Fix direction","Avoid pulling full datasets to driver; increase spark.driver.memory only as last resort||避免把全量数据拉到driver；调大driver内存只作为最后手段","Fix the skew: salting, AQE, repartition, or two-stage aggregation||修复倾斜本身：加盐、AQE、重分区，或两阶段聚合"],
    ]),
    warn:"A common beginner mistake in interviews: treating ALL OOMs the same and just saying 'increase memory'. Naming the SPECIFIC memory region and SPECIFIC cause is what separates a junior answer from a senior one."},
 
@@ -534,9 +540,9 @@ spark.memory.storageFraction   # % of Unified Memory reserved for Storage (defau
    zh:"中文：报错信息的具体文字，能告诉你到底是哪块内存区域出了问题。",
    speak:"The exact wording of the OOM error tells you which memory region failed — Java heap space, GC overhead limit exceeded, or a container killed by YARN for exceeding physical memory.",
    table: table(["Error text contains...","Meaning"], [
-     ["java.lang.OutOfMemoryError: Java heap space","The JVM heap itself is exhausted — classic OOM"],
-     ["GC overhead limit exceeded","JVM is spending almost all its time garbage collecting and barely making progress — heap is too small for the working set"],
-     ["Container killed by YARN for exceeding memory limits","This is an OFF-HEAP issue — the container's TOTAL memory (heap + overhead) exceeded what YARN allocated. Increase memoryOverhead, not just executor.memory"],
+     ["java.lang.OutOfMemoryError: Java heap space","The JVM heap itself is exhausted — classic OOM||JVM堆内存本身耗尽——经典OOM"],
+     ["GC overhead limit exceeded","JVM is spending almost all its time garbage collecting and barely making progress — heap is too small for the working set||JVM几乎所有时间都在做GC、几乎没有实际进展——堆内存对当前工作集太小"],
+     ["Container killed by YARN for exceeding memory limits","This is an OFF-HEAP issue — the container's TOTAL memory (heap + overhead) exceeded what YARN allocated. Increase memoryOverhead, not just executor.memory||这是堆外内存问题——容器总内存(堆+overhead)超过YARN分配的额度。要调大memoryOverhead，不只是executor.memory"],
    ]),
    tip:"'Container killed by YARN for exceeding memory limits, X GB used, Y GB requested' — memorize this exact phrase, it's the single most common Spark-on-YARN OOM message you'll see in real logs."},
 
@@ -569,10 +575,10 @@ const flinkData = [
    zh:"中文：Spark(结构化流)是按固定时间间隔处理「小批次」数据；Flink是每条数据一到就立刻处理，是真正的「逐条流式」处理。",
    speak:"Spark processes streaming data in small batches on a timer. Flink processes each event as it arrives, true record-at-a-time streaming, which gives it lower latency.",
    table: table(["","Spark (Structured Streaming)","Flink"], [
-     ["Processing model","Micro-batch (even 'continuous mode' has limits)","True streaming, event-at-a-time"],
-     ["Latency","Seconds (batch interval)","Milliseconds"],
-     ["Origin","Batch engine extended to streaming","Streaming engine, batch is a special case"],
-     ["Common use in finance/payments","Batch ETL, daily/hourly aggregation","Real-time fraud detection, real-time risk scoring"],
+     ["Processing model","Micro-batch (even 'continuous mode' has limits)||微批处理(即使「continuous mode」也有限制)","True streaming, event-at-a-time||真正的流式处理，逐条事件处理"],
+     ["Latency","Seconds (batch interval)||秒级(取决于批次间隔)","Milliseconds||毫秒级"],
+     ["Origin","Batch engine extended to streaming||批处理引擎扩展支持流处理","Streaming engine, batch is a special case||流处理引擎，批处理是特例"],
+     ["Common use in finance/payments","Batch ETL, daily/hourly aggregation||批处理ETL，日/小时级聚合","Real-time fraud detection, real-time risk scoring||实时反欺诈检测，实时风险评分"],
    ]),
    tip:"Say this if asked 'why would you use Flink instead of Spark': 'When the business requirement is millisecond-level latency — like real-time fraud scoring on each transaction — not just fast batch refresh.'"},
 
@@ -633,8 +639,8 @@ const flinkData = [
    zh:"中文：如果job的状态很大(比如要追踪几百万活跃用户)，选哪种state backend对性能影响很大。",
    speak:"HashMapStateBackend keeps everything in JVM heap memory, fast but limited by memory size. RocksDBStateBackend stores state on local disk, using memory only as a cache, so it scales to much larger state at the cost of some latency.",
    table: table(["State backend","Where state lives","Best for"], [
-     ["HashMapStateBackend","JVM heap (in-memory)","Small state, need lowest possible latency"],
-     ["RocksDBStateBackend","Local disk (embedded RocksDB), memory as cache","Large state (GBs+) that won't fit in heap"],
+     ["HashMapStateBackend","JVM heap (in-memory)||JVM堆内存(纯内存)","Small state, need lowest possible latency||状态小、需要最低延迟的场景"],
+     ["RocksDBStateBackend","Local disk (embedded RocksDB), memory as cache||本地磁盘(内嵌RocksDB)，内存作为缓存","Large state (GBs+) that won't fit in heap||状态很大(GB级以上)、堆内存放不下的场景"],
    ]),
    tip:"If asked about 'a job with huge state causing memory pressure' — RocksDBStateBackend is the go-to answer, directly analogous to 'spill to disk' concepts you already know from Spark."},
 ];
@@ -646,15 +652,15 @@ function renderQuickRef() {
 
   html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Core architecture, one line each</p>` +
     table(["Component","One-line definition"], [
-      ["NameNode","Holds HDFS metadata only — filenames, permissions, block locations"],
-      ["DataNode","Stores the actual HDFS data blocks (default 128MB each, 3x replicated)"],
-      ["ResourceManager","Cluster-wide resource allocator, ONE per YARN cluster"],
-      ["NodeManager","Per-machine agent that launches/monitors containers"],
-      ["ApplicationMaster","Per-job coordinator that requests containers from the RM"],
-      ["Spark Driver","Builds the DAG, schedules tasks, collects results — the 'brain'"],
-      ["Spark Executor","Runs tasks, holds cached data — the 'muscle'"],
-      ["Flink JobManager","Coordinates checkpoints and task scheduling — Flink's 'Driver'"],
-      ["Flink TaskManager","Runs task slots — Flink's 'Executor'"],
+      ["NameNode","Holds HDFS metadata only — filenames, permissions, block locations||只存HDFS元数据——文件名、权限、block位置"],
+      ["DataNode","Stores the actual HDFS data blocks (default 128MB each, 3x replicated)||存储实际HDFS数据block(默认每个128MB，3副本)"],
+      ["ResourceManager","Cluster-wide resource allocator, ONE per YARN cluster||全集群资源分配者，每个YARN集群只有一个"],
+      ["NodeManager","Per-machine agent that launches/monitors containers||每台机器上的代理，负责启动/监控container"],
+      ["ApplicationMaster","Per-job coordinator that requests containers from the RM||每个job的协调者，向RM申请container"],
+      ["Spark Driver","Builds the DAG, schedules tasks, collects results — the 'brain'||构建DAG、调度task、收集结果——「大脑」"],
+      ["Spark Executor","Runs tasks, holds cached data — the 'muscle'||执行task、持有缓存数据——「肌肉」"],
+      ["Flink JobManager","Coordinates checkpoints and task scheduling — Flink's 'Driver'||协调checkpoint和任务调度——Flink版的「Driver」"],
+      ["Flink TaskManager","Runs task slots — Flink's 'Executor'||运行task slot——Flink版的「Executor」"],
     ]) + `</div>`;
 
   html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Command cheat sheet</p>` +
@@ -685,9 +691,9 @@ top / htop                        # CPU/memory at OS level
 
   html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Memory OOM — the 3-way split to always mention</p>` +
     table(["OOM type","Root cause","Fix direction"], [
-      ["Driver OOM","Pulled too much data to one machine (collect, toPandas, oversized broadcast)","Avoid full collects; process distributed, only bring back aggregates"],
-      ["Executor OOM (skew)","One hot key/partition overwhelms one task's memory","Salting, two-stage aggregation, AQE skew join, repartition"],
-      ["Container killed by YARN","Off-heap/overhead memory too small relative to total container size","Increase spark.executor.memoryOverhead, not just executor.memory"],
+      ["Driver OOM","Pulled too much data to one machine (collect, toPandas, oversized broadcast)||把太多数据拉到一台机器(collect、toPandas、过大的广播)","Avoid full collects; process distributed, only bring back aggregates||避免全量collect；分布式处理，只把聚合结果拉回来"],
+      ["Executor OOM (skew)","One hot key/partition overwhelms one task's memory||某个热key/分区把单个task内存撑爆","Salting, two-stage aggregation, AQE skew join, repartition||加盐、两阶段聚合、AQE倾斜join、重分区"],
+      ["Container killed by YARN","Off-heap/overhead memory too small relative to total container size||堆外/overhead内存相对容器总大小太小","Increase spark.executor.memoryOverhead, not just executor.memory||调大memoryOverhead，不只是executor.memory"],
     ]) + `</div>`;
 
   el.innerHTML = html;
@@ -951,7 +957,8 @@ kubectl logs spark-driver-abc123 --previous`,
 
 // ============================================================
 renderByLevel('hdfs', hdfsData, hdfsLevelMeta);
-renderByLevel('yarn', yarnData, yarnLevelMeta);
+document.getElementById('hdfs').innerHTML += `<div class="star-banner" style="background:var(--accent-bg); color:var(--accent); margin-top:24px;">🧶 YARN</div>`;
+renderByLevel('hdfs', yarnData, yarnLevelMeta, true);
 renderByLevel('spark', sparkData, sparkLevelMeta);
 renderByLevel('flink', flinkData, flinkLevelMeta);
 renderByLevel('hive', hiveData, hiveLevelMeta);
@@ -1909,10 +1916,10 @@ function renderSupplementaryReference() {
     <p class="q-desc">Don't confuse this with a hard block — a slow-but-progressing job usually means resource contention or inefficient execution plan.</p>
     <p class="q-desc zh-desc">🇨🇳 别把这个跟Case 1"卡住"搞混——一直在慢慢跑，通常是资源竞争或者执行计划不优，不是真的block。</p>
     ${table(["Symptom","Likely cause","Fix"], [
-      ["Every task is uniformly slow (not one outlier)","Under-provisioned resources, or too few executors","Increase executor count/cores, check cluster-wide contention"],
-      ["Huge number of very small tasks","Over-partitioned data (too many small files)","Repartition/coalesce input data; compact small files upstream"],
-      ["Join stage unexpectedly slow","Wrong join strategy (e.g. SortMergeJoin instead of Broadcast)","Check spark.sql.autoBroadcastJoinThreshold; force broadcast hint"],
-      ["Shuffle read/write time dominates","Too much data movement across the network","Reduce shuffle via partitioning; filter/project earlier"],
+      ["Every task is uniformly slow (not one outlier)","Under-provisioned resources, or too few executors||资源配置不足，或executor数量太少","Increase executor count/cores, check cluster-wide contention||增加executor数量/核数，检查集群整体资源争抢"],
+      ["Huge number of very small tasks","Over-partitioned data (too many small files)||数据分区过细(小文件太多)","Repartition/coalesce input data; compact small files upstream||重分区/合并输入数据；上游先合并小文件"],
+      ["Join stage unexpectedly slow","Wrong join strategy (e.g. SortMergeJoin instead of Broadcast)||join策略选错了(比如该用Broadcast却用了SortMergeJoin)","Check spark.sql.autoBroadcastJoinThreshold; force broadcast hint||检查广播join阈值配置；强制加broadcast hint"],
+      ["Shuffle read/write time dominates","Too much data movement across the network||网络间数据搬运量太大","Reduce shuffle via partitioning; filter/project earlier||用合理分区减少shuffle；尽早filter/projection"],
     ])}
     <div class="tip">💡 Key question: "is progress happening at all, just slowly, or has it truly stalled?" — that determines which playbook you're in.</div>
     <div class="tip zh-desc">💡🇨🇳 关键自问："到底是完全没进展，还是只是慢"——这句话决定了你该用哪套排查流程</div>
@@ -1932,9 +1939,9 @@ hdfs dfsadmin -report | grep -A 10 "<hostname>"
 # Check NameNode health/safe mode status
 hdfs dfsadmin -safemode get`)}</div>
     ${table(["Symptom","What to check","Command"], [
-      ["Write fails with 'could not find enough datanodes'","Disk full on multiple DataNodes","hdfs dfsadmin -report — check % used per node"],
-      ["Job fails reading a specific file","Corrupt or missing block replicas","hdfs fsck &lt;path&gt; -files -blocks"],
-      ["Cluster in read-only mode unexpectedly","NameNode stuck in Safe Mode","hdfs dfsadmin -safemode get / -safemode leave"],
+      ["Write fails with 'could not find enough datanodes'","Disk full on multiple DataNodes||多个DataNode磁盘满了","hdfs dfsadmin -report — check % used per node||用这个命令查每个节点磁盘占用百分比"],
+      ["Job fails reading a specific file","Corrupt or missing block replicas||block副本损坏或丢失","hdfs fsck &lt;path&gt; -files -blocks||用这个命令检查具体路径的block情况"],
+      ["Cluster in read-only mode unexpectedly","NameNode stuck in Safe Mode||NameNode卡在安全模式(Safe Mode)","hdfs dfsadmin -safemode get / -safemode leave||用这两个命令查看/退出安全模式"],
     ])}
     <div class="tip">💡 'Safe Mode' is HDFS's built-in protective state on startup — forcing it off too early can cause HDFS to think blocks are missing when they aren't.</div>
     <div class="tip zh-desc">💡🇨🇳 "Safe Mode"是HDFS启动时的保护性状态——太早强制退出可能导致HDFS误以为block丢失了(其实还没上报完)</div>
