@@ -128,6 +128,7 @@
     <button class="tab-btn" data-tab="linux">🐧 Linux</button>
     <button class="tab-btn" data-tab="sla">🔥 SLA</button>
     <button class="tab-btn" data-tab="sqltab">🗄️ SQL</button>
+    <button class="tab-btn" data-tab="ai">🤖 AI_Case</button>
     <button class="tab-btn" data-tab="cases">🎯 Interview_Cases</button>
     <button class="tab-btn" data-tab="ref">📋 Quick Reference</button>
   </div>
@@ -1154,6 +1155,7 @@ flags <span class="kw">AS</span> (
 <span class="kw">FROM</span> flags
 <span class="kw">GROUP</span> <span class="kw">BY</span> first_date
 <span class="kw">ORDER</span> <span class="kw">BY</span> cohort_date;</div><span class="step-label">Result</span><table class="datatbl"><thead><tr><th>cohort_date</th><th>cohort_size</th><th>retained_30d</th><th>retention_rate_30d</th></tr></thead><tbody><tr><td>2024-01-02</td><td>3</td><td>2</td><td>0.67</td></tr><tr><td>2024-03-01</td><td>1</td><td>1</td><td>1.00</td></tr></tbody></table><div class="tip">💡 The LEFT JOIN in Step 2 is essential — sellers with NO return still need a row (with a NULL return_date) so they correctly get flagged as 0 in Step 3.</div></div></div>
+  <div id="ai" class="tab-panel"></div>
   <div id="ref" class="tab-panel"></div>
   <div id="cases" class="tab-panel"></div>
 </div>
@@ -1206,6 +1208,8 @@ function renderCard(item) {
   if (item.diagram) html += `<div style="margin:10px 0;">${item.diagram}</div>`;
   if (item.table) html += item.table;
   if (item.code) html += `<div class="codeblock">${highlightCode(item.code)}</div>`;
+  if (item.collapsibleCode) html += `<details class="diagram-details"><summary>${item.collapsibleLabel || '▶ 展开查看文件'}</summary><div class="codeblock">${highlightCode(item.collapsibleCode)}</div></details>`;
+  if (item.collapsibleHtml) html += `<details class="diagram-details"><summary>${item.collapsibleLabel || '▶ 展开查看详情'}</summary>${item.collapsibleHtml}</details>`;
   if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
   if (item.tipZh) html += `<div class="tip zh-desc">💡🇨🇳 ${item.tipZh}</div>`;
   if (item.warn) html += `<div class="warn">⚠️ ${item.warn}</div>`;
@@ -1770,6 +1774,343 @@ const flinkData = [
 ];
 
 
+const aiLevelMeta = {
+  xiaomi: {emoji:"📦", label:"实战案例 XM Reservation Skill", desc:"真实项目案例：从数据集市设计，到封装成自然语言查询工具的完整故事。"},
+  basics: {emoji:"🧩", label:"基础概念 Foundations", desc:"LangChain / Agents / Tools — LLM应用开发的地基。"},
+  orchestration: {emoji:"🕸️", label:"编排与数据 Orchestration & Data", desc:"LangGraph多步编排、LlamaIndex/RAG —— 让LLM能「办事」、能「查资料」。"},
+  ops: {emoji:"🔭", label:"可观测性与集成 Observability & Integration", desc:"Langfuse监控、BigQuery集成 —— AI应用的「运维」视角，跟你的大数据背景直接相关。"},
+};
+
+const aiData = [
+  {level:"xiaomi", title:"Business Case — Reservation Attribution Mart 从0到1设计", desc:"I designed a full-snapshot reservation attribution mart from scratch, at User × Campaign × Product × Site grain, to track pre-launch conversion and power CRM remarketing.",
+   zh:"中文：从0到1设计了一张全量快照的预约归因数据集市(Reservation Attribution Mart)，粒度是 User × Campaign × Product × Site，用来追踪新品发布前的预约转化，并支撑CRM精准营销。",
+   speak:"I designed a full-snapshot reservation attribution mart from scratch, at User by Campaign by Product by Site grain, to track pre-launch conversion and power CRM remarketing.",
+   collapsibleLabel: "▶ 展开查看完整6步故事",
+   collapsibleHtml: table(["步骤","内容"], [
+     ["Step 1 — 业务问题","用户在新品发布前预约，但没有办法追踪「预约之后是否购买」，也没法精准营销未转化用户"],
+     ["Step 2 — 设计决策","见下方决策表"],
+     ["Step 3 — 技术难点","预约表和订单表之间没有直接外键，用Spark非等值时间窗口join(non-equi time-window join)，把每条预约匹配到活动窗口期内的订单"],
+     ["Step 4 — 下游价值","tag_reserved_not_paid直接喂给CRM，不用额外join；分析师用COUNT DISTINCT mid算转化率；贡献了+0.2pp的转化提升"],
+     ["Step 5 — 结果","数据延迟从T+1天降到T+1小时，能支持活动当天的复盘分析"],
+   ]),
+   tip:"这是你CV里Kyuubi工具那条的「业务土壤」——工具本身是在这张表的基础上做的自然语言查询封装，讲故事时可以先讲这张表怎么设计的，再讲工具怎么让分析师用自然语言查它。"},
+
+  {level:"xiaomi", title:"设计决策表 + 关键字段", desc:"The core design choices: pre-launch reservation as the business process, User×Campaign×Product×Site as the grain, and a full snapshot table type.",
+   zh:"中文：核心设计选择：以「预约」这个动作作为业务过程(business process)，粒度定在User×Campaign×Product×Site，表类型选全量快照(full snapshot)。",
+   speak:"The core design choices were pre-launch reservation as the business process, User by Campaign by Product by Site as the grain, and a full snapshot table type.",
+   collapsibleLabel: "▶ 展开查看决策表 + 建表SQL + join逻辑",
+   collapsibleHtml: table(["维度","选择","原因"], [
+     ["Business process","预约(pre-launch reservation)事件","要追踪的核心业务动作"],
+     ["Grain","User × Campaign × Product × Site","分析所需的最细粒度"],
+     ["Fact","reserve_flag = 1","用户预约了该商品"],
+     ["Dimensions","Campaign, Product, Site, UTM/channel","支撑多维度分析"],
+     ["Table type","Full snapshot (df)","需要每天的预约全量状态"],
+   ]) + `<div class="codeblock">${highlightCode(`CREATE TABLE dm_reservation_attribution (
+  mid              STRING  COMMENT '用户ID',
+  campaign_id      STRING  COMMENT '活动ID',
+  product_id       STRING  COMMENT '预约商品SKU',
+  site             STRING  COMMENT 'MiWeb / MiWorldwide',
+  reserve_flag     INT     COMMENT '1=已预约',
+  order_flag       INT     COMMENT '1=已购买',
+  tag_reserved_not_paid INT COMMENT '1=预约未购买，直接喂CRM用',
+  utm_source       STRING  COMMENT '流量来源',
+  channel          STRING  COMMENT '渠道',
+  reserve_time     TIMESTAMP COMMENT '预约时间',
+  order_time       TIMESTAMP COMMENT '下单时间(可为空)'
+)
+PARTITIONED BY (dt STRING)
+STORED AS ORC;
+
+-- 非等值时间窗口join核心逻辑(预约表没有订单的外键，靠时间窗口匹配)
+SELECT r.mid, r.campaign_id, r.product_id, r.site,
+       r.reserve_flag,
+       CASE WHEN o.order_id IS NOT NULL THEN 1 ELSE 0 END AS order_flag,
+       CASE WHEN o.order_id IS NULL THEN 1 ELSE 0 END AS tag_reserved_not_paid
+FROM reservation_log r
+LEFT JOIN order_log o
+  ON r.mid = o.mid
+ AND r.product_id = o.product_id
+ AND o.order_time BETWEEN r.reserve_time AND r.campaign_launch_end_time  -- 非等值时间窗口条件
+`)}</div>`,
+   warn:"这张表设计里最容易被面试官追问的点：为什么用非等值时间窗口join而不是普通等值join——因为预约和订单之间没有直接的外键关联，只能靠「同一个用户+同一个商品+订单时间落在活动窗口内」这个业务规则去匹配。"},
+
+  {level:"xiaomi", title:"📦 案例：把这张表封装成 Claude Code Skill（自然语言查询工具）", desc:"On top of this table, I built a Claude Code Skill on Kyuubi that lets analysts ask questions in natural language (Chinese or English) and get back validated SparkSQL + results — no need to remember table/column names or hand-write joins.",
+   zh:"中文：在这张表的基础上，做了一个Claude Code Skill(跑在Kyuubi上)，让分析师可以直接用自然语言(中文/英文都行)提问，工具自动生成SparkSQL并执行返回结果——不用记表名/字段名，也不用手写join。",
+   speak:"On top of this table, I built a Claude Code Skill on Kyuubi that lets analysts ask questions in natural language and get back validated SparkSQL and results, without needing to remember table or column names.",
+   diagram: `<svg width="100%" viewBox="0 0 680 220" style="max-width:620px; display:block; margin:8px auto;">
+<defs><marker id="rs1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="10" y="15" width="150" height="46" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="85" y="34" text-anchor="middle" font-size="10" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">分析师提问</text>
+<text x="85" y="49" text-anchor="middle" font-size="8" fill="var(--purple)" font-family="-apple-system,sans-serif">"上周预约未买的有多少?"</text>
+<line x1="160" y1="38" x2="192" y2="38" stroke="#888" stroke-width="1.3" marker-end="url(#rs1)"/>
+
+<rect x="196" y="15" width="150" height="46" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="271" y="34" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Claude Code Skill</text>
+<text x="271" y="49" text-anchor="middle" font-size="8" fill="var(--accent)" font-family="-apple-system,sans-serif">解析意图+匹配表schema</text>
+<line x1="346" y1="38" x2="378" y2="38" stroke="#888" stroke-width="1.3" marker-end="url(#rs1)"/>
+
+<rect x="382" y="15" width="130" height="46" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="447" y="34" text-anchor="middle" font-size="10" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">生成SparkSQL</text>
+<text x="447" y="49" text-anchor="middle" font-size="8" fill="var(--warning)" font-family="-apple-system,sans-serif">自动带上分区裁剪</text>
+<line x1="512" y1="38" x2="544" y2="38" stroke="#888" stroke-width="1.3" marker-end="url(#rs1)"/>
+
+<rect x="548" y="15" width="120" height="46" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="608" y="34" text-anchor="middle" font-size="10" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Kyuubi执行</text>
+<text x="608" y="49" text-anchor="middle" font-size="8" fill="var(--success)" font-family="-apple-system,sans-serif">返回结果</text>
+
+<rect x="20" y="80" width="640" height="130" rx="8" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="34" y="100" font-size="10.5" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Skill内部做了3件事，不是简单调用LLM：</text>
+<text x="34" y="120" font-size="9.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">① Schema-aware：预加载dm_reservation_attribution的字段/comment，LLM才知道"预约未买"对应tag_reserved_not_paid</text>
+<text x="34" y="140" font-size="9.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">② 安全护栏：生成的SQL先过一遍静态检查(禁止DROP/DELETE，强制带dt分区条件避免全表扫描)</text>
+<text x="34" y="160" font-size="9.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">③ 结果解释：不只是甩回一张表，还会用自然语言总结"这个结果说明了什么"</text>
+<text x="34" y="188" font-size="9.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">效果：把分析师原本要等DE排期的临时查询需求，缩短到自助秒级获得答案</text>
+</svg>`,
+   tip:"这就是你CV里那句「Built an internal automation tool... reduced ad-hoc engineering support tickets」的完整背景故事——这张表设计得好，是这个工具能做出来的前提，两者是一体的。"},
+
+  {level:"xiaomi", title:"📄 真正的 SKILL.md 文件（可折叠展开）", desc:"The actual skill definition file I wrote — this is what Claude Code reads to know WHEN to trigger the skill and HOW to behave once triggered.",
+   zh:"中文：这是真正写的Skill定义文件本身——Claude Code靠这个文件判断「什么时候该触发这个skill」以及「触发后该怎么做」。",
+   speak:"This is the actual skill definition file — what Claude Code reads to know when to trigger the skill and how to behave once triggered.",
+   tip:"写完这个文件，存成 SKILL.md，放进内部git仓库(data-team-skills)对应的 reservation-insights/ 子目录下提交——不是存在自己电脑就算完事，团队其他人靠git pull+软链接拿到的就是这个文件。",
+   collapsibleLabel: "▶ 展开查看 SKILL.md 完整内容",
+   collapsibleCode: `---
+name: reservation-insights
+description: >
+  查询"预约归因数据集市"(dm_reservation_attribution)相关问题时使用这个skill。
+  当用户提到"预约"、"reservation"、"预约转化"、"预约未购买"、"CRM召回名单"、
+  或者提到具体字段如 tag_reserved_not_paid、reserve_flag 时，都应该触发本skill。
+  用户可能用中文或英文提问，两者都要支持。
+---
+
+# Reservation Insights Skill
+
+## 这个skill是做什么的
+
+把 dm_reservation_attribution 表封装成一个"能听懂人话"的查询工具，
+让分析师不需要记字段名、不需要手写SQL join，直接用自然语言提问即可。
+
+## 触发条件（何时应该使用这个skill）
+
+- 用户问题涉及"预约"、"新品预约"、"预约转化率"相关业务
+- 用户提到 CRM 召回、未转化用户名单
+- 用户直接提到本表的字段名（mid / campaign_id / tag_reserved_not_paid 等）
+
+如果用户问的是其他数据集市(比如订单表、用户画像表)的问题，不要用这个skill。
+
+## 表结构参考（必读，生成SQL前先确认字段含义）
+
+| 字段 | 含义 |
+|---|---|
+| mid | 用户ID |
+| campaign_id | 活动ID |
+| product_id | 预约商品SKU |
+| site | MiWeb / MiWorldwide |
+| reserve_flag | 1=已预约 |
+| order_flag | 1=已购买 |
+| tag_reserved_not_paid | 1=预约未购买（CRM召回名单直接用这个字段） |
+| utm_source / channel | 流量来源/渠道 |
+| dt | 分区日期，YYYY-MM-DD |
+
+## 生成SQL时必须遵守的规则
+
+1. **必须带dt分区过滤**——绝对不允许生成没有dt条件的SQL，会导致全表扫描
+2. **只允许SELECT**——检测到用户想要DROP/DELETE/UPDATE/INSERT，直接拒绝并说明"这个skill只支持查询"
+3. **去重用COUNT DISTINCT mid**——涉及用户数统计，一律按mid去重，不要直接COUNT(*)
+4. **默认查询范围**——如果用户没说明确的时间范围，默认查最近7天，并且要在回答里注明"默认取了最近7天数据"
+
+## 结果呈现规则
+
+不要只返回一张原始结果表。执行完SQL后，用1-2句自然语言总结这个数字说明了什么，
+比如"XX渠道的预约未购买用户有N个，建议推给CRM做定向召回"。
+
+## 示例对话（few-shot，帮助模型理解预期行为）
+
+**用户**: 上周MiWeb渠道预约了但没买的用户有多少？
+
+**应生成的SQL**:
+\`\`\`sql
+SELECT COUNT(DISTINCT mid) AS unconverted_users
+FROM dm_reservation_attribution
+WHERE site = 'MiWeb'
+  AND tag_reserved_not_paid = 1
+  AND dt BETWEEN '2026-01-01' AND '2026-01-07'
+\`\`\`
+
+**应生成的回答**: "上周MiWeb渠道有 3,241 个用户预约后未购买，建议推给CRM做定向召回。"
+
+---
+
+**用户**: drop一下这张表
+
+**应生成的回答**: "抱歉，这个skill只支持查询(SELECT)，不能执行删表操作。如果确实需要，请联系数据平台团队走正式流程。"
+`,
+   warn:"面试延伸问法：如果面试官问「你怎么防止AI乱生成SQL」，这份SKILL.md里的「生成SQL时必须遵守的规则」这一节就是答案——用明确的规则+few-shot示例约束模型行为，而不是完全放任它自由发挥。"},
+  {level:"xiaomi", title:"📖 Skill README（安装+使用说明，编写给团队内部用）", desc:"The internal documentation I wrote for the team — how to install the skill, and example natural-language queries with the SQL they generate.",
+   zh:"中文：给团队写的内部使用文档——怎么安装这个Skill，以及几个自然语言提问+对应生成SQL的例子。",
+   speak:"The internal documentation covers how to install the skill, and example natural language queries with the SQL they generate.",
+   collapsibleLabel: "▶ 展开查看 README 完整内容",
+   collapsibleCode: `# Reservation Insights Skill
+用自然语言查询预约归因数据集市，跑在Kyuubi上的Claude Code Skill
+
+## 这是什么
+把 dm_reservation_attribution 表封装成一个"能听懂人话"的查询工具。
+分析师不用记字段名、不用写join，直接用中文或英文提问就行。
+
+## 安装（团队怎么分发，不是靠人工一个个拷贝）
+这个skill放在数据平台团队维护的内部git仓库里(比如 data-team-skills 仓库)，
+不是靠"我把文件发给每个人，大家手动拷贝"这种方式分发，那样没法维护版本、
+也没法在更新时通知到所有人。实际流程：
+
+1. 仓库里维护所有团队共享的skill，reservation-insights是其中一个子目录
+2. 新同事入职时，onboarding脚本会自动clone这个仓库，
+   并在 ~/.claude/skills/ 下建好软链接(symlink)指向仓库里的对应skill目录
+3. 后续skill有更新，运营人员只需要在仓库目录下执行一次 git pull，
+   软链接会自动指向最新内容，不需要重新配置或者重启电脑
+4. 重启一下Claude Code(让它重新扫描skills目录)，新版本就生效了
+
+不需要额外配置连接信息——团队内部的SQL网关(访问Kyuubi查表)这一层已经统一解决了，
+Skill只负责"自然语言→SQL"这一步，剩下的查询执行走的是已有的网关通道。
+
+## 使用示例
+
+### 例1：
+提问: "上周MiWeb渠道预约了但没买的用户有多少？"
+生成SQL:
+  SELECT COUNT(DISTINCT mid) AS unconverted_users
+  FROM dm_reservation_attribution
+  WHERE site = 'MiWeb'
+    AND tag_reserved_not_paid = 1
+    AND dt BETWEEN '2026-01-01' AND '2026-01-07'
+返回: "上周MiWeb渠道有 3,241 个用户预约后未购买，可以推给CRM做召回。"
+
+### 例2：
+提问: "XX活动的整体预约转化率是多少？"
+生成SQL:
+  SELECT campaign_id,
+         COUNT(DISTINCT CASE WHEN order_flag=1 THEN mid END) * 1.0
+           / COUNT(DISTINCT mid) AS conversion_rate
+  FROM dm_reservation_attribution
+  WHERE campaign_id = 'XX活动ID'
+  GROUP BY campaign_id
+
+### 例3(英文提问也支持)：
+Q: "Which UTM source has the highest reservation-to-order conversion?"
+生成SQL:
+  SELECT utm_source,
+         COUNT(DISTINCT CASE WHEN order_flag=1 THEN mid END) * 1.0
+           / COUNT(DISTINCT mid) AS conversion_rate
+  FROM dm_reservation_attribution
+  GROUP BY utm_source
+  ORDER BY conversion_rate DESC
+
+## 安全护栏
+- 自动强制带dt分区过滤，避免误扫全表
+- 只允许SELECT，检测到DROP/DELETE/UPDATE会直接拒绝执行
+- 单次查询有超时和扫描量上限，避免误跑大查询拖垮集群`,
+   tip:"这份README本身也是一个不错的故事素材——面试官如果问「你怎么保证工具好用、别人敢用」，安全护栏(权限限制/分区强制/超时保护)这几点能体现你的工程严谨性，不只是「能跑就行」。"},
+
+
+  {level:"basics", title:"LangChain 是什么", desc:"LangChain is a framework for building LLM applications — it standardizes how you chain together prompts, models, memory, and external data sources.",
+   zh:"中文：LangChain是一个用来搭建LLM应用的框架——它把「提示词、模型调用、记忆、外部数据源」这些拼接成标准化的流程(chain)。",
+   speak:"LangChain is a framework for building LLM applications, standardizing how you chain together prompts, models, memory, and external data sources.",
+   diagram: `<svg width="100%" viewBox="0 0 680 160" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="ai1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="10" y="50" width="110" height="44" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="65" y="76" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Prompt模板</text>
+<line x1="120" y1="72" x2="152" y2="72" stroke="#888" stroke-width="1.3" marker-end="url(#ai1)"/>
+
+<rect x="156" y="50" width="110" height="44" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="211" y="76" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">LLM模型调用</text>
+<line x1="266" y1="72" x2="298" y2="72" stroke="#888" stroke-width="1.3" marker-end="url(#ai1)"/>
+
+<rect x="302" y="50" width="110" height="44" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="357" y="76" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Memory记忆</text>
+<line x1="412" y1="72" x2="444" y2="72" stroke="#888" stroke-width="1.3" marker-end="url(#ai1)"/>
+
+<rect x="448" y="50" width="110" height="44" rx="7" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="503" y="70" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">外部数据/</text>
+<text x="503" y="84" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">工具</text>
+<line x1="558" y1="72" x2="590" y2="72" stroke="#888" stroke-width="1.3" marker-end="url(#ai1)"/>
+
+<rect x="594" y="50" width="80" height="44" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="634" y="76" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">输出</text>
+
+<text x="340" y="125" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">这一整条串联起来的流程，就叫一个 "Chain"（链）</text>
+</svg>`,
+   tip:"类比你熟悉的东西：LangChain有点像给LLM搭的「ETL pipeline」——把不同处理步骤(prompt/model/memory/tool)串成一条标准化流水线，而不是每次都手写胶水代码。"},
+
+  {level:"basics", title:"Functions / Tools / Agents — 让LLM能'动手做事'", desc:"By default an LLM only generates text. 'Tools' let it call external functions (search, calculator, database query). An 'Agent' is an LLM that decides WHICH tool to call and WHEN, in a loop.",
+   zh:"中文：LLM默认只会生成文字。给它配上「Tools」(工具)，它就能调用外部函数(搜索、计算器、查数据库)。「Agent」(智能体)就是一个能自己决定「该用哪个工具、什么时候用」的LLM，循环执行直到任务完成。",
+   speak:"By default an LLM only generates text. Tools let it call external functions like search or database queries. An Agent is an LLM that decides which tool to call and when, in a loop.",
+   table: table(["概念","一句话解释"], [
+     ["Function/Tool","一个LLM可以调用的外部能力，比如「查天气」「算数」「查SQL数据库」"],
+     ["Function Calling","LLM输出结构化的「我要调用哪个函数、参数是什么」，而不是直接回答"],
+     ["Agent","会自主循环「思考→选工具→执行→看结果→再思考」，直到任务完成的LLM系统"],
+   ]),
+   tip:"这跟你熟悉的领域有个自然连接点：你在XM做的Kyuubi自然语言转SQL工具，本质上就是一个简化版的「Tool calling」——自然语言 → 判断用户想查什么 → 生成SQL → 执行。"},
+
+  {level:"orchestration", title:"LangGraph — 用'图'来编排多步骤Agent流程", desc:"LangGraph models an agent's workflow as a graph of nodes and edges, allowing loops, conditional branches, and explicit state — more control than a simple linear chain.",
+   zh:"中文：LangGraph把Agent的工作流程建模成「图」(节点+边)，支持循环、条件分支、显式状态管理——比简单的线性chain更灵活可控。",
+   speak:"LangGraph models an agent's workflow as a graph, allowing loops, conditional branches, and explicit state — more control than a simple linear chain.",
+   tip:"类比你熟悉的DAG：LangGraph的「图」跟你在Airflow/Spark里熟悉的DAG(有向无环图)概念上很像——只是LangGraph的图可以有「循环」（Agent反复尝试直到成功），DAG通常不允许环。"},
+
+  {level:"orchestration", title:"LlamaIndex + RAG — 让LLM能'查你自己的资料'", desc:"LLMs don't know your private/internal data. RAG (Retrieval-Augmented Generation) retrieves relevant documents first, then feeds them to the LLM as context. LlamaIndex is a framework specialized for building this retrieval pipeline.",
+   zh:"中文：LLM不知道你的私有/内部数据。RAG(检索增强生成)的做法是：先检索出相关文档，再把这些文档作为上下文喂给LLM。LlamaIndex是专门用来搭建这套检索流程的框架。",
+   speak:"LLMs don't know your private data. RAG retrieves relevant documents first, then feeds them to the LLM as context. LlamaIndex is a framework specialized for building this retrieval pipeline.",
+   diagram: `<svg width="100%" viewBox="0 0 680 180" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="ai2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="10" y="20" width="130" height="44" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="75" y="46" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">用户提问</text>
+<line x1="140" y1="42" x2="172" y2="42" stroke="#888" stroke-width="1.3" marker-end="url(#ai2)"/>
+
+<rect x="176" y="20" width="150" height="44" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="251" y="38" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">向量数据库检索</text>
+<text x="251" y="52" text-anchor="middle" font-size="8.5" fill="var(--accent)" font-family="-apple-system,sans-serif">(找出最相关的文档片段)</text>
+<line x1="326" y1="42" x2="358" y2="42" stroke="#888" stroke-width="1.3" marker-end="url(#ai2)"/>
+
+<rect x="362" y="20" width="150" height="44" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="437" y="38" text-anchor="middle" font-size="10" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">拼进Prompt上下文</text>
+<text x="437" y="52" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">(文档内容+原问题)</text>
+<line x1="512" y1="42" x2="544" y2="42" stroke="#888" stroke-width="1.3" marker-end="url(#ai2)"/>
+
+<rect x="548" y="20" width="120" height="44" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="608" y="46" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">LLM生成回答</text>
+
+<text x="340" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">这就是 RAG (Retrieval-Augmented Generation)</text>
+<text x="340" y="120" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">"先查资料，再回答" —— 而不是让LLM凭训练时的记忆瞎编</text>
+<text x="340" y="145" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">向量数据库的角色，某种程度上类似你熟悉的"查询引擎"——</text>
+<text x="340" y="163" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">只是索引和查询的对象从"结构化行"变成了"文本语义"</text>
+</svg>`,
+   tip:"面试/闲聊延伸：如果聊到「你了解AI工程吗」，可以提一句：RAG本质上是给LLM接了一条「数据管道」——跟你做数据仓库、ETL的思路是相通的，只是数据形态从结构化表变成了非结构化文档。"},
+
+  {level:"ops", title:"Langfuse — LLM应用的'可观测性'(Observability)", desc:"Langfuse traces every step of an LLM application — prompts sent, tokens used, latency, cost — similar in spirit to APM tools for traditional software, but for LLM chains/agents.",
+   zh:"中文：Langfuse记录LLM应用的每一步执行细节——发了什么prompt、用了多少token、延迟多少、花了多少钱——精神上跟传统软件的APM监控工具类似，只是对象换成了LLM chain/agent。",
+   speak:"Langfuse traces every step of an LLM application — prompts sent, tokens used, latency, and cost — similar to APM tools for traditional software, but for LLM chains and agents.",
+   tip:"类比你熟悉的东西：Langfuse之于LLM应用，有点像你熟悉的Spark UI之于Spark job——都是「看清楚这个系统内部到底在做什么、哪一步慢、哪一步贵」的可观测性工具。"},
+
+  {level:"ops", title:"LangChain + BigQuery 集成 — LLM连接结构化数据仓库", desc:"This integration lets an LLM/Agent query a structured data warehouse (BigQuery) directly — e.g. asking a question in natural language, and the agent generates + runs SQL against your warehouse.",
+   zh:"中文：这个集成让LLM/Agent能直接查询结构化数据仓库(BigQuery)——比如用自然语言提问，Agent自动生成SQL并在你的数仓上执行。",
+   speak:"This integration lets an LLM agent query a structured data warehouse directly — asking a question in natural language, and the agent generates and runs SQL against your warehouse.",
+   tip:"这个是离你现有技能最近的一块——本质上就是「自然语言转SQL + 对接数仓」，跟你在XM做的Kyuubi工具是同一个方向，只是BigQuery是Google云上的数仓，你更熟悉的是Hive/Spark生态。"},
+
+  {level:"ops", title:"📎 完整学习资源表 Full Resource Table", desc:"Every link, in execution order, with time and cost — for later self-study reference, not required for the interview itself.",
+   zh:"中文：按执行顺序排列的完整资源清单，附时间和费用——留作后续自学参考，不是面试硬性要求。",
+   speak:"A full resource table with every link in execution order, time, and cost, for later self-study reference.",
+   table: table(["Step","Resource","Time","Cost"], [
+     ["1a","LangChain for LLM App Dev (deeplearning.ai)","1h","Free"],
+     ["1b","Functions, Tools and Agents (deeplearning.ai)","~4h","Free"],
+     ["1c","AI Agents in LangGraph ★ (learn.deeplearning.ai)","~1-2h","Free"],
+     ["2","LlamaIndex — DeepLearning.AI","2-3 days","Free"],
+     ["2b","LlamaIndex — Coursera mirror","—","Free"],
+     ["3a","Langfuse docs home","—","Free"],
+     ["3b","Langfuse observability overview","30 min","Free"],
+     ["3c","Langfuse get started guide","1-2 days","Free"],
+     ["3d","Langfuse GitHub","—","Free"],
+     ["3e","AI Engineer Production Track (optional, search Udemy)","18.5h","Paid"],
+     ["4","LangChain BigQuery integration (python.langchain.com)","—","Free"],
+   ]),
+   tip:"标★的LangGraph那一步官方标注是重点。整张表已经帮你按执行顺序排好，跟着走就行，不用另外规划。"},
+];
+
 function renderQuickRef() {
   const el = document.getElementById('ref');
   let html = `<div class="intro-note">A single-page cheat sheet pulling together every command and concept from the tabs above — for last-minute review right before the interview.</div>`;
@@ -2208,6 +2549,7 @@ renderByLevel('spark', sparkData, sparkLevelMeta);
 renderByLevel('flink', flinkData, flinkLevelMeta);
 renderByLevel('k8s', k8sData, k8sLevelMeta);
 renderByLevel('linux', linuxData, linuxLevelMeta);
+renderByLevel('ai', aiData, aiLevelMeta);
 renderQuickRef();
 
 // ============================================================
