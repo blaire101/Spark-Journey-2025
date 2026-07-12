@@ -143,8 +143,8 @@
   <div class="tabs">
     <button class="tab-btn active" data-tab="hdfs">🧶🗄️🐝 YARN &amp; HDFS &amp; Hive</button>
     <button class="tab-btn" data-tab="spark">⚡ Spark Memory</button>
-    <button class="tab-btn" data-tab="flink">🌊 Flink Basics</button>
-    <button class="tab-btn" data-tab="clickhouse">🏎️ ClickHouse</button>
+    <button class="tab-btn" data-tab="flink">🌊 Flink</button>
+    <button class="tab-btn" data-tab="clickhouse">📨 MQ &amp; ClickHouse</button>
     <button class="tab-btn" data-tab="k8s">🐳 Docker &amp; K8S</button>
     <button class="tab-btn" data-tab="linux">🐧 Linux</button>
     <button class="tab-btn" data-tab="sla">🔥 SLA</button>
@@ -1729,16 +1729,6 @@ const flinkData = [
 <div class="example-box"><b>最小例子：</b>用户 u_7001 在 09:05 支付 ¥5,000。Flink 可以立即判断它是不是今天第一笔、是不是历史首次支付，或者把它累加到 09:00–10:00 的小时窗口里。</div>`,
    tip:"先把 Flink 理解成“会记忆的、一直运行的 SQL 引擎”，后面的 State、Watermark、Checkpoint 就容易理解了。"},
 
-  {level:"basics", title:"Flink vs Spark Structured Streaming — do not overstate the difference", desc:"Spark Structured Streaming uses micro-batch by default; Flink is designed around continuous stateful stream processing. Both can process streams, so choose by workload rather than slogans.",
-   zh:"中文：不要简单背“Spark是假流、Flink是真流”。更准确的说法是：Spark Structured Streaming 默认采用 micro-batch；Flink 从架构上以持续流处理、事件时间和有状态计算为核心。",
-   speak:"Spark Structured Streaming uses micro-batch by default, while Flink is designed around continuous stateful stream processing. The choice depends on latency, state, and operational requirements.",
-   table: table(["Question","Spark Structured Streaming","Flink"], [
-     ["Default execution","Micro-batch||默认把新数据组成小批次执行","Continuous streaming pipeline||持续运行的流式 pipeline"],
-     ["Typical strength","Unified batch and stream pipelines||批流统一、复用 Spark 生态","Event time, large state, low-latency streaming||事件时间、大状态、低延迟流处理"],
-     ["Good example","Hourly ETL / incremental lakehouse||小时 ETL、增量湖仓","Per-event fraud / real-time rules||逐笔风控、实时规则判断"],
-   ]),
-   tip:"面试说法：I would choose Flink when the requirement depends heavily on event-time correctness, long-running keyed state, and low-latency reactions per event."},
-
   {level:"basics", title:"One event passes through Source → Operators → Sink", desc:"Every Flink job can be understood as three parts. Operators may be stateless or stateful.",
    zh:"中文：任何 Flink 作业都可以拆成三段：从哪里读、途中怎么算、最后写到哪里。",
    html:`<div class="flink-map">
@@ -1918,6 +1908,116 @@ LEFT JOIN hbase_first_pay
   FOR SYSTEM_TIME AS OF t.proctime AS h
 ON t.rowkey = h.rowkey;`,
    tip:"Lookup Join 通常需要左表有 Processing Time 属性，右表 connector 支持 lookup。"},
+
+  {level:"concepts", title:"Flink physical deployment — machines, processes and task scheduling", desc:"This diagram shows what is actually installed on each machine and how a submitted job becomes parallel subtasks.",
+   zh:"中文：Flink 集群不是抽象概念。机器上长期运行 JobManager 和 TaskManager 进程；提交 JobGraph 后，JobManager 把 Source、Operator、Sink 的并行子任务调度到不同 TaskManager 的 slot 中。",
+   diagram:`<svg viewBox="0 0 1000 520" role="img" aria-label="Flink machines and deployment architecture" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+<defs><marker id="fmach" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#64748b"/></marker></defs>
+<text x="500" y="30" text-anchor="middle" font-size="17" font-weight="700">Flink physical deployment: Machine → Process → Slot → Subtask</text>
+<rect x="35" y="55" width="930" height="70" rx="10" fill="#eef4fb" stroke="#2971A8"/>
+<text x="70" y="82" font-size="13" font-weight="700">Client / CI machine</text><text x="70" y="104" font-size="11">flink run / SQL Gateway submits JobGraph + JAR/SQL</text>
+<line x1="500" y1="125" x2="500" y2="155" stroke="#64748b" stroke-width="2" marker-end="url(#fmach)"/>
+<rect x="330" y="155" width="340" height="90" rx="10" fill="#fff3df" stroke="#9A6B1E" stroke-width="1.5"/>
+<text x="500" y="182" text-anchor="middle" font-size="14" font-weight="700">Machine F1 — JobManager process</text>
+<text x="500" y="204" text-anchor="middle" font-size="11">Dispatcher · ResourceManager · Scheduler · Checkpoint Coordinator</text>
+<text x="500" y="224" text-anchor="middle" font-size="11">Builds execution graph and assigns subtasks to available slots</text>
+<line x1="420" y1="245" x2="230" y2="295" stroke="#64748b" stroke-width="2" marker-end="url(#fmach)"/>
+<line x1="580" y1="245" x2="770" y2="295" stroke="#64748b" stroke-width="2" marker-end="url(#fmach)"/>
+<rect x="35" y="295" width="420" height="165" rx="12" fill="#eaf7ef" stroke="#1E7A4C" stroke-width="1.5"/>
+<text x="245" y="322" text-anchor="middle" font-size="14" font-weight="700">Machine F2 — TaskManager process</text>
+<rect x="60" y="342" width="170" height="90" rx="8" fill="white" stroke="#1E7A4C"/><text x="145" y="365" text-anchor="middle" font-size="12" font-weight="700">Slot 1</text><text x="145" y="387" text-anchor="middle" font-size="10">Kafka Source subtask 0</text><text x="145" y="405" text-anchor="middle" font-size="10">→ Filter subtask 0</text><text x="145" y="423" text-anchor="middle" font-size="10">→ Sink subtask 0</text>
+<rect x="255" y="342" width="170" height="90" rx="8" fill="white" stroke="#1E7A4C"/><text x="340" y="365" text-anchor="middle" font-size="12" font-weight="700">Slot 2</text><text x="340" y="387" text-anchor="middle" font-size="10">Window subtask 0</text><text x="340" y="405" text-anchor="middle" font-size="10">Keyed State shard A</text><text x="340" y="423" text-anchor="middle" font-size="10">local RocksDB</text>
+<rect x="545" y="295" width="420" height="165" rx="12" fill="#eaf7ef" stroke="#1E7A4C" stroke-width="1.5"/>
+<text x="755" y="322" text-anchor="middle" font-size="14" font-weight="700">Machine F3 — TaskManager process</text>
+<rect x="570" y="342" width="170" height="90" rx="8" fill="white" stroke="#1E7A4C"/><text x="655" y="365" text-anchor="middle" font-size="12" font-weight="700">Slot 1</text><text x="655" y="387" text-anchor="middle" font-size="10">Kafka Source subtask 1</text><text x="655" y="405" text-anchor="middle" font-size="10">→ Filter subtask 1</text><text x="655" y="423" text-anchor="middle" font-size="10">→ Sink subtask 1</text>
+<rect x="765" y="342" width="170" height="90" rx="8" fill="white" stroke="#1E7A4C"/><text x="850" y="365" text-anchor="middle" font-size="12" font-weight="700">Slot 2</text><text x="850" y="387" text-anchor="middle" font-size="10">Window subtask 1</text><text x="850" y="405" text-anchor="middle" font-size="10">Keyed State shard B</text><text x="850" y="423" text-anchor="middle" font-size="10">local RocksDB</text>
+<rect x="250" y="478" width="500" height="28" rx="6" fill="#f5f5f3" stroke="#d4d4d0"/><text x="500" y="497" text-anchor="middle" font-size="11">Checkpoint snapshots are uploaded to durable storage such as HDFS / S3; local TaskManager disks are not enough for recovery.</text>
+</svg>`,
+   table: table(["Layer","Flink meaning","Spark comparison"],[
+     ["Coordinator process","JobManager schedules jobs and coordinates checkpoints||JobManager负责调度与Checkpoint","Driver coordinates a Spark application||Driver协调Spark应用"],
+     ["Worker process","TaskManager executes long-running subtasks||TaskManager执行长期运行子任务","Executor executes tasks for stages||Executor执行Stage中的Task"],
+     ["Resource unit","Task slot shares TaskManager resources||Slot是TaskManager资源共享单位","Executor cores determine concurrent tasks||Executor Core决定并发Task数"],
+     ["Execution lifetime","Streaming subtasks normally run continuously||流式Subtask通常长期运行","Tasks are created stage by stage and finish||Task按Stage产生并结束"],
+     ["Recovery","Restore operator state from checkpoint||从Checkpoint恢复算子状态","Recompute lost partitions from lineage; streaming also uses checkpoints||依赖Lineage重算，流式也使用Checkpoint"]
+   ]),
+   tip:"面试不要说 JobManager 处理业务数据。真正执行 Source、Window、Join、Sink 的是 TaskManager 上的并行 Subtask。"},
+
+  {level:"concepts", title:"Flink vs Spark — execution architecture on machines", desc:"Both have one coordinator and multiple workers, but their scheduling unit and state model are different.",
+   zh:"中文：Flink 与 Spark 都有协调节点和工作节点，但 Flink 流任务的 Subtask 长期存活并持续维护状态；Spark 更典型的是 Driver 按 Stage 调度一批批短生命周期 Task。",
+   diagram:`<svg viewBox="0 0 1000 430" role="img" aria-label="Flink and Spark physical architecture comparison" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+<defs><marker id="fsarr" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#64748b"/></marker></defs>
+<text x="500" y="28" text-anchor="middle" font-size="17" font-weight="700">Flink vs Spark: what runs on the machines?</text>
+<rect x="25" y="50" width="460" height="345" rx="12" fill="#f5fbf7" stroke="#1E7A4C"/>
+<text x="255" y="78" text-anchor="middle" font-size="15" font-weight="700">Flink — continuous dataflow</text>
+<rect x="150" y="98" width="210" height="60" rx="8" fill="#fff3df" stroke="#9A6B1E"/><text x="255" y="123" text-anchor="middle" font-size="12" font-weight="700">Machine F1: JobManager</text><text x="255" y="143" text-anchor="middle" font-size="10">schedule + checkpoint coordinator</text>
+<line x1="255" y1="158" x2="145" y2="205" stroke="#64748b" marker-end="url(#fsarr)"/><line x1="255" y1="158" x2="365" y2="205" stroke="#64748b" marker-end="url(#fsarr)"/>
+<rect x="55" y="205" width="180" height="120" rx="8" fill="white" stroke="#1E7A4C"/><text x="145" y="230" text-anchor="middle" font-size="12" font-weight="700">Machine F2: TaskManager</text><text x="145" y="254" text-anchor="middle" font-size="10">Source subtask 0</text><text x="145" y="274" text-anchor="middle" font-size="10">Window subtask 0</text><text x="145" y="294" text-anchor="middle" font-size="10">Keyed State A</text><text x="145" y="314" text-anchor="middle" font-size="10">keeps running</text>
+<rect x="275" y="205" width="180" height="120" rx="8" fill="white" stroke="#1E7A4C"/><text x="365" y="230" text-anchor="middle" font-size="12" font-weight="700">Machine F3: TaskManager</text><text x="365" y="254" text-anchor="middle" font-size="10">Source subtask 1</text><text x="365" y="274" text-anchor="middle" font-size="10">Window subtask 1</text><text x="365" y="294" text-anchor="middle" font-size="10">Keyed State B</text><text x="365" y="314" text-anchor="middle" font-size="10">keeps running</text>
+<text x="255" y="360" text-anchor="middle" font-size="11" font-weight="700">Core idea: long-running operators + local working state</text>
+<rect x="515" y="50" width="460" height="345" rx="12" fill="#f4f7fc" stroke="#2971A8"/>
+<text x="745" y="78" text-anchor="middle" font-size="15" font-weight="700">Spark — stage/task scheduling</text>
+<rect x="640" y="98" width="210" height="60" rx="8" fill="#e8f2fa" stroke="#2971A8"/><text x="745" y="123" text-anchor="middle" font-size="12" font-weight="700">Machine S1: Driver</text><text x="745" y="143" text-anchor="middle" font-size="10">DAG → stages → tasks</text>
+<line x1="745" y1="158" x2="635" y2="205" stroke="#64748b" marker-end="url(#fsarr)"/><line x1="745" y1="158" x2="855" y2="205" stroke="#64748b" marker-end="url(#fsarr)"/>
+<rect x="545" y="205" width="180" height="120" rx="8" fill="white" stroke="#2971A8"/><text x="635" y="230" text-anchor="middle" font-size="12" font-weight="700">Machine S2: Executor</text><text x="635" y="254" text-anchor="middle" font-size="10">Stage 1 Task 0</text><text x="635" y="274" text-anchor="middle" font-size="10">Stage 2 Task 0</text><text x="635" y="294" text-anchor="middle" font-size="10">cache / shuffle blocks</text><text x="635" y="314" text-anchor="middle" font-size="10">task finishes</text>
+<rect x="765" y="205" width="180" height="120" rx="8" fill="white" stroke="#2971A8"/><text x="855" y="230" text-anchor="middle" font-size="12" font-weight="700">Machine S3: Executor</text><text x="855" y="254" text-anchor="middle" font-size="10">Stage 1 Task 1</text><text x="855" y="274" text-anchor="middle" font-size="10">Stage 2 Task 1</text><text x="855" y="294" text-anchor="middle" font-size="10">cache / shuffle blocks</text><text x="855" y="314" text-anchor="middle" font-size="10">task finishes</text>
+<text x="745" y="360" text-anchor="middle" font-size="11" font-weight="700">Core idea: DAG split into stages and short-lived tasks</text>
+</svg>`,
+   tip:"准确说法：Flink 更强调持续数据流和显式有状态算子；Spark Structured Streaming 默认通过 micro-batch 把流不断转换成一批批 Spark 作业。"},
+
+  {level:"concepts", title:"State from zero — what Flink remembers, where it is stored, and how it is recovered", desc:"State is the memory of a streaming computation. Without state, Flink cannot deduplicate, aggregate windows, detect patterns or enrich events consistently.",
+   zh:"中文：State 就是流计算的“记忆”。例如今天已经见过哪些订单、每个商家当前累计多少风险订单、每个用户最早支付时间是什么。",
+   diagram:`<svg viewBox="0 0 1000 540" role="img" aria-label="Flink keyed state explanation" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+<defs><marker id="starr" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#64748b"/></marker></defs>
+<text x="500" y="30" text-anchor="middle" font-size="17" font-weight="700">Flink State: keyBy decides which subtask owns each key</text>
+<rect x="35" y="60" width="220" height="150" rx="10" fill="#eef4fb" stroke="#2971A8"/>
+<text x="145" y="87" text-anchor="middle" font-size="13" font-weight="700">Incoming payment events</text>
+<text x="60" y="117" font-size="11">u_1001, order_A, 09:00</text><text x="60" y="142" font-size="11">u_2002, order_B, 09:01</text><text x="60" y="167" font-size="11">u_1001, order_C, 09:05</text><text x="60" y="192" font-size="11">u_3003, order_D, 09:06</text>
+<line x1="255" y1="135" x2="350" y2="135" stroke="#64748b" stroke-width="2" marker-end="url(#starr)"/><text x="302" y="120" text-anchor="middle" font-size="11" font-weight="700">keyBy(user_id)</text>
+<rect x="350" y="55" width="615" height="305" rx="12" fill="#f7faf8" stroke="#1E7A4C"/>
+<text x="657" y="82" text-anchor="middle" font-size="14" font-weight="700">Parallel operator: FirstPaymentDedup, parallelism = 2</text>
+<rect x="380" y="105" width="260" height="220" rx="10" fill="white" stroke="#1E7A4C"/>
+<text x="510" y="132" text-anchor="middle" font-size="13" font-weight="700">Subtask 0 on Machine F2</text>
+<text x="510" y="153" text-anchor="middle" font-size="10">owns keys hashed to shard A</text>
+<rect x="405" y="170" width="210" height="118" rx="7" fill="#e4f5ec" stroke="#1E7A4C"/>
+<text x="510" y="194" text-anchor="middle" font-size="11" font-weight="700">Keyed State</text>
+<text x="430" y="220" font-size="10">u_1001 → earliest=09:00</text><text x="430" y="244" font-size="10">u_3003 → earliest=09:06</text><text x="430" y="268" font-size="10">timer / TTL metadata</text>
+<rect x="675" y="105" width="260" height="220" rx="10" fill="white" stroke="#1E7A4C"/>
+<text x="805" y="132" text-anchor="middle" font-size="13" font-weight="700">Subtask 1 on Machine F3</text>
+<text x="805" y="153" text-anchor="middle" font-size="10">owns keys hashed to shard B</text>
+<rect x="700" y="170" width="210" height="118" rx="7" fill="#e4f5ec" stroke="#1E7A4C"/>
+<text x="805" y="194" text-anchor="middle" font-size="11" font-weight="700">Keyed State</text>
+<text x="725" y="220" font-size="10">u_2002 → earliest=09:01</text><text x="725" y="244" font-size="10">other users...</text><text x="725" y="268" font-size="10">timer / TTL metadata</text>
+<line x1="510" y1="325" x2="510" y2="395" stroke="#64748b" stroke-width="2" marker-end="url(#starr)"/><line x1="805" y1="325" x2="805" y2="395" stroke="#64748b" stroke-width="2" marker-end="url(#starr)"/>
+<rect x="340" y="395" width="625" height="105" rx="10" fill="#fff3df" stroke="#9A6B1E"/>
+<text x="652" y="420" text-anchor="middle" font-size="13" font-weight="700">Checkpoint snapshot → durable storage (HDFS / S3)</text>
+<text x="370" y="447" font-size="11">1. Barrier reaches all input channels</text><text x="370" y="470" font-size="11">2. Each subtask snapshots its owned state + source offsets</text>
+<text x="680" y="447" font-size="11">3. Failure: new TaskManager restores the latest snapshot</text><text x="680" y="470" font-size="11">4. Kafka resumes from checkpointed offsets</text>
+<rect x="35" y="395" width="260" height="105" rx="10" fill="#fbecea" stroke="#B14A3F"/>
+<text x="165" y="420" text-anchor="middle" font-size="13" font-weight="700">Important distinction</text><text x="55" y="449" font-size="10">Working State: local heap / RocksDB</text><text x="55" y="472" font-size="10">Checkpoint: durable recovery snapshot</text><text x="55" y="491" font-size="10">They are related, but not the same thing.</text>
+</svg>`,
+   table: table(["State type","What it stores","Simple example"],[
+     ["ValueState<T>","One value per key||每个Key一个值","user_id → earliest_pay_time"],
+     ["ListState<T>","A list per key/operator||每个Key或算子一个列表","Temporarily buffer events before a rule fires"],
+     ["MapState<K,V>","A map inside each key||每个Key内部一张Map","seller_id → {risk_type: count}"],
+     ["ReducingState / AggregatingState","Incremental aggregate||增量聚合","Running count, sum, average"],
+     ["BroadcastState","Small rule/config copied to all subtasks||小规则广播到所有Subtask","Risk rule version / threshold table"],
+     ["Operator State","State bound to an operator instance, not a business key||绑定算子实例而不是业务Key","Kafka partition assignments / source split state"]
+   ]),
+   code:`// DataStream mental model
+stream
+  .keyBy(event -> event.userId)   // same user always reaches the same logical state shard
+  .process(new KeyedProcessFunction<>() {
+      private ValueState<Long> earliestPayTime;
+
+      public void processElement(Event e, Context ctx, Collector<Event> out) {
+          Long current = earliestPayTime.value();
+          if (current == null || e.payTime < current) {
+              earliestPayTime.update(e.payTime);
+              out.collect(e);
+          }
+      }
+  });`,
+   warn:"State can grow forever if keys never expire. Production jobs must estimate state size and use TTL, window cleanup, timers, or bounded business keys."},
 
   {level:"cases", title:"Level 3 roadmap — two cases, each teaches a different part of Flink", desc:"Case 1 is event-by-event decisioning. Case 2 is event-time aggregation. Learn the business question first, then the SQL.",
    zh:"中文：不要一上来背代码。先问“这条支付来了，我要立刻判断什么？”或者“这一小时结束后，我要统计什么？”",
@@ -2488,7 +2588,67 @@ GROUP BY window_start, window_end;`,
    html:`<div class="example-box"><b>时间线：</b><br>09:58 事件后，Watermark≈09:57:55，窗口还不能关。<br>10:02 事件到达后，Watermark≈10:01:55，越过10:00，输出 3笔 / ¥43,000。<br>10:03 才到的 Event Time=09:55 事件已经晚于水位，默认不会进入已关闭窗口。</div>`,
    warn:"空闲检测应通过 `table.exec.source.idle-timeout` 配置。它解决“某个 Kafka 分区长时间无数据，拖住全局最小 Watermark”的问题。"},
 
-  {level:"cases", title:"Case 2.3 — Late data, historical backfill and T-1 calibration", desc:"Real-time output is fast but may be incomplete. Complete ODS data is used once for history and daily for yesterday's correction.",
+  {level:"cases", title:"Case 2.3 — Watermark buffer vs allowed lateness: two different protections", desc:"The five-second Watermark delay handles small out-of-order events before the first window firing. Allowed lateness, available in the DataStream API, keeps window state after that firing so later events can update the result for a limited period.",
+   zh:"中文：Watermark 的 -5 秒用于吸收几秒级乱序；allowedLateness 用于窗口首次触发后继续保留状态，在限定时间内接收更晚的数据并重新计算。两者不是一回事。",
+   diagram:`<svg class="flink-inline-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs><marker id="lateArrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/></marker></defs>
+  <rect width="1000" height="500" fill="#fafafa"/>
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">Watermark buffer 与 allowed lateness：两层不同的保护</text>
+
+  <text x="60" y="72" font-size="12" font-weight="700" fill="#3b6ea5">Event-time timeline for window [09:00, 10:00)</text>
+  <line x1="80" y1="115" x2="920" y2="115" stroke="#c9d2dc" stroke-width="3"/>
+  <line x1="480" y1="92" x2="480" y2="140" stroke="#8e44ad" stroke-width="3"/>
+  <text x="480" y="82" text-anchor="middle" font-size="11" fill="#8e44ad">window end 10:00:00</text>
+  <line x1="520" y1="92" x2="520" y2="140" stroke="#3b6ea5" stroke-width="3"/>
+  <text x="520" y="153" text-anchor="middle" font-size="10" fill="#3b6ea5">max event time 10:00:05</text>
+  <path d="M520,175 L480,175" stroke="#8e44ad" stroke-width="3" marker-end="url(#lateArrow)"/>
+  <text x="500" y="194" text-anchor="middle" font-size="10" fill="#8e44ad">Watermark = max event time − 5s = 10:00:00</text>
+
+  <rect x="55" y="225" width="425" height="205" rx="10" fill="#eaf1fb" stroke="#3b6ea5"/>
+  <text x="267" y="252" text-anchor="middle" font-size="13" font-weight="700" fill="#3b6ea5">Layer 1 — Watermark buffer</text>
+  <text x="75" y="278" font-size="11" fill="#1f2d3d">• Protects small event-time disorder before the first firing</text>
+  <text x="75" y="301" font-size="11" fill="#1f2d3d">• −5s means Watermark trails the maximum observed Event Time by 5s</text>
+  <text x="75" y="324" font-size="11" fill="#1f2d3d">• It is not a five-second wall-clock sleep</text>
+  <text x="75" y="347" font-size="11" fill="#1f2d3d">• A 09:59:58 event can still be accepted before WM reaches 10:00</text>
+  <text x="75" y="370" font-size="11" fill="#c0392b">• A 09:55 event arriving after WM=10:01:55 is already late</text>
+  <text x="75" y="405" font-size="10" fill="#5b6472">Use it for seconds-level network jitter and partition disorder.</text>
+
+  <rect x="520" y="225" width="425" height="205" rx="10" fill="#f3eafa" stroke="#8e44ad"/>
+  <text x="732" y="252" text-anchor="middle" font-size="13" font-weight="700" fill="#8e44ad">Layer 2 — allowedLateness</text>
+  <text x="540" y="278" font-size="11" fill="#1f2d3d">• Window fires when Watermark reaches 10:00</text>
+  <text x="540" y="301" font-size="11" fill="#1f2d3d">• State remains available for an extra period, e.g. 10 minutes</text>
+  <text x="540" y="324" font-size="11" fill="#1f2d3d">• A late 09:55 event may update and re-emit the window result</text>
+  <text x="540" y="347" font-size="11" fill="#1f2d3d">• Final cleanup occurs after WM passes 10:10</text>
+  <text x="540" y="370" font-size="11" fill="#c0392b">• This is mainly a DataStream API window feature, not standard SQL TVF behavior</text>
+  <text x="540" y="405" font-size="10" fill="#5b6472">Use it only when corrected retractions/updates are supported downstream.</text>
+
+  <text x="500" y="468" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2d3d">Watermark decides the first result time; allowed lateness decides how long that result may still be corrected.</text>
+</svg>`,
+   table: table(["Mechanism","What it controls","Five-minute-late event","API note"], [
+     ["Watermark − 5s","First window firing; tolerates up to roughly 5s event-time disorder relative to progress","Not protected once Watermark has passed the window end","Flink SQL and DataStream"],
+     ["allowedLateness = 10 min","How long window state remains after its first firing","Can update the result until Watermark passes window end + 10 min","Primarily DataStream API"],
+     ["T+1 calibration","Final accuracy using complete offline data","Corrected in the next offline recomputation","Batch/Spark/Hive-style correction"],
+   ]),
+   html:`<div class="example-box"><b>Walk-through：</b><br>
+1. The 09:00–10:00 window ends at 10:00:00.<br>
+2. With a five-second out-of-orderness strategy, the Watermark reaches 10:00 only after the maximum observed Event Time reaches about 10:00:05.<br>
+3. This protects an event such as 09:59:58 that arrives slightly out of order before that Watermark advance.<br>
+4. It does <b>not</b> protect a 09:55 event arriving after an event with Event Time 10:02 has already advanced the Watermark to about 10:01:55.<br>
+5. In the DataStream API, <code>allowedLateness(Time.minutes(10))</code> can keep the window state until the Watermark passes 10:10 and emit an updated result when that late event arrives.</div>`,
+   code:`// DataStream API concept example
+stream
+  .keyBy(event -> event.getSellerId())
+  .window(TumblingEventTimeWindows.of(Time.hours(1)))
+  .allowedLateness(Time.minutes(10))
+  .sideOutputLateData(lateOutputTag)
+  .aggregate(...);
+
+// Flink SQL Window TVF normally emits based on Watermark.
+// For very late records, use a wider Watermark strategy,
+// a dedicated correction stream, or T+1 offline calibration.`,
+   tip:"Do not describe Watermark −5s as a guaranteed five-second wait in processing time. It is a five-second event-time lag behind the maximum observed timestamp. Also confirm whether the downstream sink can consume update/retraction results before using allowed lateness."},
+
+  {level:"cases", title:"Case 2.4 — Late data, historical backfill and T-1 calibration", desc:"Real-time output is fast but may be incomplete. Complete ODS data is used once for history and daily for yesterday's correction.",
    zh:"中文：实时层先给“快的近似值”；离线层再给“慢但完整的准确值”。昨天及更早的数据最终都会被校准。",
    diagram: `<svg class="flink-inline-svg" viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
   <defs>
@@ -2550,7 +2710,7 @@ WHERE dt = '\${yesterday}'
 GROUP BY DATE_FORMAT(pay_time, 'yyyy-MM-dd HH:00:00');`,
    tip:"这就是 Lambda 思路的简化版：实时层负责快，批处理层负责最终准确。"},
 
-  {level:"cases", title:"Case 2.4 — Why ClickHouse is the final serving table", desc:"HBase is optimized for point lookups by key; ClickHouse is optimized for analytical scans and aggregation used by BI dashboards.",
+  {level:"cases", title:"Case 2.5 — Why ClickHouse is the final serving table", desc:"HBase is optimized for point lookups by key; ClickHouse is optimized for analytical scans and aggregation used by BI dashboards.",
    zh:"中文：Case 1 的读者是程序，每条事件按 user_id 点查；Case 2 的读者是 BI/人，需要按时间范围聚合，所以最终落 ClickHouse。",
    diagram: `<svg class="flink-inline-svg" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
   <defs>
@@ -2651,7 +2811,30 @@ ORDER BY window_start;`,
      ["Sink","Retries, duplicate keys, transaction/idempotency","Duplicate coupon or duplicate dashboard rows||重复发券或重复行"],
    ]),
    html:`<div class="answer-box"><strong>60-second summary</strong>Case 1 uses keyed state to keep each user's first payment of the day, a processing-time HBase lookup to check historical first payment, and an idempotent coupon service for the external side effect. Case 2 uses event-time tumbling windows and watermarks for hourly metrics, then backfills history and recalibrates T-1 from complete ODS data before serving BI from ClickHouse.</div>`,
-   tip:"能完整说出这段，你就已经不是只会背 Flink 定义，而是能把概念落到真实数据链路。"},
+   tip:"能完整说出这段，你就已经不是只会背 Flink 定义，而是能把概念落到真实数据链路。"},,
+
+  {level:"cases", title:"Common Flink interview questions — especially State", desc:"Use these questions to check whether you understand the mechanism instead of only memorizing terminology.",
+   zh:"中文：这些题重点考 State、Checkpoint、并行度和故障恢复。回答时最好先给一句定义，再给一个支付或风控例子。",
+   table: table(["Question","Core answer"],[
+     ["1. What is State in Flink?","State is the memory retained across events. It enables deduplication, windows, joins and pattern detection.||State是跨事件保留的记忆，使去重、窗口、Join和模式检测成为可能。"],
+     ["2. Keyed State vs Operator State?","Keyed State is partitioned by business key after keyBy; Operator State belongs to each operator instance.||Keyed State按业务Key切分；Operator State属于算子实例。"],
+     ["3. Where does State live?","Working state lives in heap or local RocksDB; checkpoints persist snapshots to HDFS/S3 for recovery.||工作状态在Heap或本地RocksDB；Checkpoint快照持久化到HDFS/S3。"],
+     ["4. What happens after rescaling?","Flink redistributes keyed-state key groups and operator state to the new parallel subtasks.||Flink把Key Group和Operator State重新分配给新的并行Subtask。"],
+     ["5. Why can State become a problem?","Unbounded keys, long TTL, large windows and skew can cause state growth, slow checkpoints and disk pressure.||Key无限增长、TTL过长、大窗口和倾斜会造成状态膨胀、Checkpoint变慢和磁盘压力。"],
+     ["6. Checkpoint vs Savepoint?","Checkpoint is automatic failure recovery; Savepoint is a user-triggered, portable snapshot for upgrade or migration.||Checkpoint用于自动容错；Savepoint用于升级迁移。"],
+     ["7. How does exactly-once work?","Checkpoint barriers align state and source offsets; exactly-once to external sinks also requires transactional or idempotent sink behavior.||Barrier对齐状态与Source Offset；外部Sink还需要事务或幂等。"],
+     ["8. What is backpressure?","A slow downstream operator prevents upstream operators from emitting, so buffers fill and latency/lag increase.||下游慢导致上游无法继续发送，Buffer堆积，延迟和Lag上升。"],
+     ["9. Kafka partitions vs Flink parallelism?","Source parallelism cannot actively consume more partitions than Kafka provides; repartitioning later can increase downstream parallelism.||Source有效并发受Kafka Partition数限制，后续Shuffle可提高下游并行度。"],
+     ["10. Why use TTL?","TTL removes stale keyed state and prevents infinite growth, but cleanup timing and late events must be considered.||TTL清理过期Key防止无限增长，但要考虑清理时机与迟到数据。"]
+   ]),
+   html:`<div class="answer-box"><strong>State interview template</strong><br>
+1. Define the state: what must the job remember?<br>
+2. Define the key: how is state partitioned?<br>
+3. Define lifecycle: when is it updated and cleaned?<br>
+4. Define recovery: which checkpoint restores it?<br>
+5. Define scale risk: state size, skew, TTL and checkpoint duration.</div>`,
+   tip:"最重要的一句：After keyBy, all events for the same key are routed to the same logical keyed-state partition, so the operator can update that key consistently."}
+
 ];
 
 
@@ -4421,7 +4604,190 @@ hdfs dfsadmin -safemode get`)}</div>
 
 function renderClickHouseTab() {
   const el = document.getElementById('clickhouse');
-  let html = `<div class="intro-note"><b>Learning path:</b> start from zero and move from basic concepts to internal architecture, MergeTree table design, production ingestion, and a complete Flink + ClickHouse e-commerce security example.</div>`;
+  let html = `<div class="intro-note"><b>Learning path:</b> first understand Kafka from zero, then follow the data into Flink and ClickHouse. The ClickHouse section continues from fundamentals to internal architecture, MergeTree table design, production ingestion, and a complete e-commerce security example.</div>`;
+
+  html += `<div class="level-header"><span class="level-emoji">📨</span><div><div class="level-label">Kafka 0 → 1 — the event transport layer</div><div class="level-desc">Understand why Kafka exists, how records are stored, and how Flink consumes them before writing analytical results to ClickHouse.</div></div></div>`;
+
+  html += renderCard({
+    title:'K1. What problem does Kafka solve?',
+    desc:'Kafka is a distributed event-streaming platform. It sits between systems so producers and consumers do not need to call each other directly. Producers append events to Kafka; consumers read those events independently at their own speed.',
+    zh:'Kafka 是一个分布式事件流平台。它位于上下游系统之间，让生产者与消费者不必直接调用。生产者把事件追加到 Kafka，消费者按照自己的速度独立读取。',
+    html: table(['Without Kafka','With Kafka'],[
+      ['Order service directly calls risk, analytics and notification systems. One slow downstream service can affect the producer.||订单服务直接调用风控、分析和通知系统，下游变慢可能拖累上游','Order service writes one event to Kafka. Flink, monitoring and other consumers read it independently.||订单服务只写一份事件到Kafka，Flink、监控等消费者独立读取'],
+      ['Each new consumer requires another integration.||每增加一个消费者就要新增一套接口','New consumers subscribe to the existing topic without changing the producer.||新消费者订阅已有Topic即可，无需改造生产者'],
+      ['Temporary downstream failure may lose events unless the producer implements retries and storage.||下游临时故障时，上游必须自行处理重试和存储','Kafka retains events, allowing consumers to resume from their last committed offset.||Kafka保留事件，消费者可从已提交Offset继续消费']
+    ]),
+    tip:'A simple sentence: Kafka stores and transports events; Flink calculates them; ClickHouse stores the analytical results for fast queries.',
+    tipZh:'一句话：Kafka负责保存和传输事件，Flink负责计算，ClickHouse负责保存分析结果并提供快速查询。'
+  });
+
+  html += renderCard({
+    title:'K2. Kafka core architecture — Producer, Broker, Topic and Consumer',
+    desc:'A topic is a named event stream. A topic is split into partitions. Brokers store those partitions, and records inside each partition are ordered by offset.',
+    zh:'Topic 是一条有名字的事件流；Topic 被拆成多个 Partition；Broker 保存这些 Partition；同一 Partition 内的消息通过 Offset 保持顺序。',
+    html:`<svg viewBox="0 0 980 500" role="img" aria-label="Kafka core architecture" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs><marker id="kArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="490" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#1f2d3d">Kafka: producers append events, brokers store partitions, consumers read by offset</text>
+      <rect x="35" y="85" width="170" height="95" rx="12" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="120" y="113" text-anchor="middle" font-size="14" font-weight="700">Producer</text>
+      <text x="120" y="136" text-anchor="middle" font-size="11">Order / payment service</text>
+      <text x="120" y="155" text-anchor="middle" font-size="11">send(key, value)</text>
+      <line x1="205" y1="132" x2="282" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kArrow)"/>
+
+      <rect x="290" y="55" width="420" height="270" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="500" y="82" text-anchor="middle" font-size="15" font-weight="700">Kafka Cluster — Topic: security_events</text>
+      <rect x="315" y="105" width="115" height="185" rx="10" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="372" y="129" text-anchor="middle" font-size="12" font-weight="700">Machine 1</text><text x="372" y="143" text-anchor="middle" font-size="9">Kafka Broker 1 process</text>
+      <rect x="330" y="150" width="85" height="48" rx="7" fill="#fff" stroke="#c9a45b"/><text x="372" y="170" text-anchor="middle" font-size="10" font-weight="700">Partition 0</text><text x="372" y="187" text-anchor="middle" font-size="9">offset 0…120</text>
+      <rect x="330" y="215" width="85" height="48" rx="7" fill="#fff" stroke="#c9a45b"/><text x="372" y="235" text-anchor="middle" font-size="10" font-weight="700">P1 replica</text><text x="372" y="252" text-anchor="middle" font-size="9">backup copy</text>
+
+      <rect x="443" y="105" width="115" height="185" rx="10" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="500" y="129" text-anchor="middle" font-size="12" font-weight="700">Machine 2</text><text x="500" y="143" text-anchor="middle" font-size="9">Kafka Broker 2 process</text>
+      <rect x="458" y="150" width="85" height="48" rx="7" fill="#fff" stroke="#9a79b5"/><text x="500" y="170" text-anchor="middle" font-size="10" font-weight="700">Partition 1</text><text x="500" y="187" text-anchor="middle" font-size="9">offset 0…98</text>
+      <rect x="458" y="215" width="85" height="48" rx="7" fill="#fff" stroke="#9a79b5"/><text x="500" y="235" text-anchor="middle" font-size="10" font-weight="700">P2 replica</text><text x="500" y="252" text-anchor="middle" font-size="9">backup copy</text>
+
+      <rect x="571" y="105" width="115" height="185" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="628" y="129" text-anchor="middle" font-size="12" font-weight="700">Machine 3</text><text x="628" y="143" text-anchor="middle" font-size="9">Kafka Broker 3 process</text>
+      <rect x="586" y="150" width="85" height="48" rx="7" fill="#fff" stroke="#56a27c"/><text x="628" y="170" text-anchor="middle" font-size="10" font-weight="700">Partition 2</text><text x="628" y="187" text-anchor="middle" font-size="9">offset 0…110</text>
+      <rect x="586" y="215" width="85" height="48" rx="7" fill="#fff" stroke="#56a27c"/><text x="628" y="235" text-anchor="middle" font-size="10" font-weight="700">P0 replica</text><text x="628" y="252" text-anchor="middle" font-size="9">backup copy</text>
+
+      <line x1="710" y1="132" x2="785" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kArrow)"/>
+      <rect x="795" y="75" width="150" height="115" rx="12" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="870" y="102" text-anchor="middle" font-size="14" font-weight="700">Consumer Group</text>
+      <text x="870" y="125" text-anchor="middle" font-size="11">Flink subtask 1 → P0</text>
+      <text x="870" y="143" text-anchor="middle" font-size="11">Flink subtask 2 → P1</text>
+      <text x="870" y="161" text-anchor="middle" font-size="11">Flink subtask 3 → P2</text>
+
+      <rect x="70" y="370" width="840" height="90" rx="10" fill="#f7f7f5" stroke="#c9c9c5"/>
+      <text x="490" y="395" text-anchor="middle" font-size="12" font-weight="700">Ordering and parallelism rule</text>
+      <text x="490" y="418" text-anchor="middle" font-size="11">Kafka guarantees order only inside one partition. More partitions allow more consumers to process in parallel.</text>
+      <text x="490" y="440" text-anchor="middle" font-size="11">Use a stable key such as seller_id when all events for the same seller must stay in order.</text>
+    </svg>`
+  });
+
+  html += renderCard({
+    title:'K2.5 Physical deployment and scheduling — where each process runs',
+    desc:'Kafka does not dynamically launch a machine for every message. Kafka brokers are long-running processes deployed on fixed machines or Kubernetes pods. Topic partitions are assigned across brokers. Flink is a separate compute cluster: its JobManager schedules Kafka source subtasks onto TaskManagers, and the Kafka consumer group assigns partitions to those subtasks.',
+    zh:'Kafka不会为每条消息临时启动机器。Kafka Broker是长期运行在固定服务器、虚拟机或Kubernetes Pod上的进程；Topic Partition分布在不同Broker上。Flink是独立的计算集群：JobManager把Kafka Source子任务调度到TaskManager，Kafka Consumer Group再把Partition分配给这些子任务。',
+    html:`<svg viewBox="0 0 1080 610" role="img" aria-label="Kafka and Flink physical deployment" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs><marker id="deployArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="540" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#1f2d3d">Physical deployment: Kafka stores data; Flink schedules computation</text>
+
+      <rect x="30" y="60" width="470" height="260" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="265" y="86" text-anchor="middle" font-size="15" font-weight="700">Kafka cluster — long-running storage nodes</text>
+      <rect x="55" y="110" width="125" height="160" rx="10" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="117" y="132" text-anchor="middle" font-size="12" font-weight="700">Machine K1</text><text x="117" y="149" text-anchor="middle" font-size="9">Kafka Broker 1</text>
+      <rect x="70" y="168" width="95" height="38" rx="6" fill="#fff" stroke="#c9a45b"/><text x="117" y="191" text-anchor="middle" font-size="10">P0 leader</text>
+      <rect x="70" y="216" width="95" height="38" rx="6" fill="#fff" stroke="#c9a45b"/><text x="117" y="239" text-anchor="middle" font-size="10">P2 replica</text>
+
+      <rect x="202" y="110" width="125" height="160" rx="10" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="264" y="132" text-anchor="middle" font-size="12" font-weight="700">Machine K2</text><text x="264" y="149" text-anchor="middle" font-size="9">Kafka Broker 2</text>
+      <rect x="217" y="168" width="95" height="38" rx="6" fill="#fff" stroke="#9a79b5"/><text x="264" y="191" text-anchor="middle" font-size="10">P1 leader</text>
+      <rect x="217" y="216" width="95" height="38" rx="6" fill="#fff" stroke="#9a79b5"/><text x="264" y="239" text-anchor="middle" font-size="10">P0 replica</text>
+
+      <rect x="349" y="110" width="125" height="160" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="411" y="132" text-anchor="middle" font-size="12" font-weight="700">Machine K3</text><text x="411" y="149" text-anchor="middle" font-size="9">Kafka Broker 3</text>
+      <rect x="364" y="168" width="95" height="38" rx="6" fill="#fff" stroke="#56a27c"/><text x="411" y="191" text-anchor="middle" font-size="10">P2 leader</text>
+      <rect x="364" y="216" width="95" height="38" rx="6" fill="#fff" stroke="#56a27c"/><text x="411" y="239" text-anchor="middle" font-size="10">P1 replica</text>
+      <text x="265" y="295" text-anchor="middle" font-size="10" fill="#57564f">Kafka controller assigns partition leaders/replicas across brokers</text>
+
+      <rect x="540" y="60" width="510" height="390" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="795" y="86" text-anchor="middle" font-size="15" font-weight="700">Flink cluster — compute processes on separate machines</text>
+      <rect x="690" y="105" width="210" height="70" rx="10" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="795" y="130" text-anchor="middle" font-size="12" font-weight="700">Machine F1: JobManager</text>
+      <text x="795" y="150" text-anchor="middle" font-size="10">builds execution graph and schedules subtasks</text>
+
+      <rect x="575" y="220" width="205" height="155" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="677" y="244" text-anchor="middle" font-size="12" font-weight="700">Machine F2: TaskManager A</text>
+      <rect x="596" y="265" width="163" height="40" rx="6" fill="#fff" stroke="#56a27c"/><text x="677" y="289" text-anchor="middle" font-size="10">Kafka Source subtask 1 → P0</text>
+      <rect x="596" y="316" width="163" height="40" rx="6" fill="#fff" stroke="#56a27c"/><text x="677" y="340" text-anchor="middle" font-size="10">Window / ETL subtask 1</text>
+
+      <rect x="810" y="220" width="205" height="155" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="912" y="244" text-anchor="middle" font-size="12" font-weight="700">Machine F3: TaskManager B</text>
+      <rect x="831" y="265" width="163" height="40" rx="6" fill="#fff" stroke="#56a27c"/><text x="912" y="289" text-anchor="middle" font-size="10">Kafka Source subtask 2 → P1</text>
+      <rect x="831" y="316" width="163" height="40" rx="6" fill="#fff" stroke="#56a27c"/><text x="912" y="340" text-anchor="middle" font-size="10">Window / ETL subtask 2</text>
+
+      <line x1="795" y1="175" x2="677" y2="220" stroke="#2971a8" stroke-width="1.8" marker-end="url(#deployArrow)"/>
+      <line x1="795" y1="175" x2="912" y2="220" stroke="#2971a8" stroke-width="1.8" marker-end="url(#deployArrow)"/>
+      <text x="795" y="205" text-anchor="middle" font-size="10" fill="#2971a8">JobManager scheduling</text>
+
+      <line x1="500" y1="185" x2="575" y2="285" stroke="#69757f" stroke-width="2" marker-end="url(#deployArrow)"/>
+      <line x1="500" y1="210" x2="810" y2="285" stroke="#69757f" stroke-width="2" marker-end="url(#deployArrow)"/>
+      <text x="650" y="405" text-anchor="middle" font-size="10" fill="#57564f">Consumer Group assignment: one partition is consumed by one subtask within the same group</text>
+
+      <rect x="55" y="485" width="970" height="90" rx="10" fill="#f7f7f5" stroke="#c9c9c5"/>
+      <text x="540" y="510" text-anchor="middle" font-size="12" font-weight="700">Who is responsible for what?</text>
+      <text x="540" y="535" text-anchor="middle" font-size="11">Kafka deployment decides where partitions and replicas live. Flink JobManager decides where operators run. Kafka Consumer Group decides which source subtask reads which partition.</text>
+      <text x="540" y="557" text-anchor="middle" font-size="11" fill="#57564f">Kafka machines store data persistently; Flink TaskManagers mainly execute computation and recover state from checkpoints.</text>
+    </svg>`,
+    tip:'Do not mix up Kafka Broker and Flink TaskManager. They are different long-running processes, normally deployed on different machine pools.',
+    tipZh:'不要把Kafka Broker和Flink TaskManager混在一起。它们是不同的长期运行进程，通常部署在不同的机器池。'
+  });
+
+  html += renderCard({
+    title:'K3. Basic Kafka terms',
+    html: table(['Term','Beginner explanation','E-commerce security example'],[
+      ['Producer','Application that sends records to Kafka.||向Kafka发送消息的应用','Order service publishes order_created or refund_requested.||订单服务发送下单或退款事件'],
+      ['Topic','Named stream/category of events.||有名称的事件流或消息类别','security_events, payment_events, seller_updates'],
+      ['Partition','A topic slice used for ordering and parallel processing.||Topic的分片，用于保证局部顺序和并行处理','seller_id hash decides P0, P1 or P2.||按seller_id哈希决定进入哪个Partition'],
+      ['Broker','Kafka server that stores partitions.||保存Partition的Kafka服务器','A three-broker cluster distributes leaders and replicas.||三个Broker分布保存主副本'],
+      ['Record key','Controls partition assignment when present.||通常用于决定消息进入哪个Partition','key=seller_id keeps one seller’s events ordered.||以seller_id为Key保证同一商家事件有序'],
+      ['Offset','Increasing record position inside one partition.||消息在单个Partition中的递增位置','Flink resumes P1 from offset 98 after recovery.||Flink恢复后从P1的offset 98继续'],
+      ['Consumer','Application that reads records.||读取Kafka消息的应用','A Flink source consumes security_events.||Flink Source消费安全事件'],
+      ['Consumer Group','Consumers cooperating so each partition is assigned to only one member in that group.||同组消费者协作，每个Partition在组内只分配给一个成员','Three Flink subtasks consume three partitions in parallel.||三个Flink并行实例分别消费三个Partition'],
+      ['Replication','Extra partition copies for availability.||Partition的额外副本，用于容错','If the leader broker fails, an in-sync replica can become leader.||Leader故障时由同步副本接管'],
+      ['Retention','How long Kafka keeps records, independent of whether they were consumed.||Kafka保留消息的时长，与是否已消费无关','Keep seven days for recovery or replay.||保留7天用于恢复或回放']
+    ])
+  });
+
+  html += renderCard({
+    title:'K4. Partition, ordering and Consumer Group — a concrete example',
+    desc:'Assume the topic has three partitions and the Flink job has three source subtasks. Kafka assigns one partition to each subtask. If Flink parallelism becomes six, only three subtasks can actively consume because the topic still has only three partitions.',
+    zh:'假设Topic有3个Partition，Flink Source并行度也是3，每个Subtask消费一个Partition。如果并行度改为6，但Partition仍只有3个，就只有3个Subtask能实际消费。',
+    html: table(['Input event','Record key','Partition result','Why'],[
+      ['seller_100 creates order A','seller_100','P1','All seller_100 events use the same hash key.||同一商家使用相同Hash Key'],
+      ['seller_200 requests refund','seller_200','P0','Different seller can be processed in parallel.||不同商家可以并行处理'],
+      ['seller_100 updates shipment','seller_100','P1','It follows order A inside P1.||仍进入P1，保持同一商家事件顺序']
+    ]) + `<div class="flow">Topic partitions = 3<br>Flink source parallelism = 3 → all three subtasks are active<br>Flink source parallelism = 6 → only three subtasks receive partitions</div>`,
+    warn:'Kafka does not guarantee global ordering across all partitions. It only guarantees ordering inside each partition.'
+  });
+
+  html += renderCard({
+    title:'K5. Offset, replay and delivery semantics',
+    desc:'Kafka records are not deleted immediately after consumption. A consumer tracks its position using offsets. This enables restart, replay and independent consumers.',
+    html: table(['Scenario','What happens'],[
+      ['Normal processing','Flink reads records and checkpoints its Kafka offsets together with operator state.||Flink消费消息，并把Kafka Offset和算子状态一起Checkpoint'],
+      ['Job failure','Flink restores the latest successful checkpoint and resumes from the corresponding offsets.||任务失败后从最近成功Checkpoint及对应Offset恢复'],
+      ['New risk rule','A separate consumer group or replay topic can reprocess retained historical events.||新规则可通过新Consumer Group或Replay Topic重放历史事件'],
+      ['At-least-once external sink','A retry may write the same result again, so the sink needs a stable event_id or version.||外部Sink重试可能重复写，需要稳定event_id或version']
+    ]),
+    tip:'In Flink, Kafka offsets should normally be managed through checkpoints rather than manually committed after every record.',
+    tipZh:'在Flink中，Kafka Offset通常应跟随Checkpoint统一管理，而不是每处理一条就手动提交。'
+  });
+
+  html += renderCard({
+    title:'K6. Kafka → Flink → ClickHouse: complete responsibility split',
+    desc:'Kafka is not the database used by analysts. It is the durable event log between producers and stream-processing jobs. Flink transforms the stream, while ClickHouse serves analytical queries.',
+    html:`<svg viewBox="0 0 980 370" role="img" aria-label="Kafka Flink ClickHouse pipeline" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs><marker id="kfcArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="490" y="30" text-anchor="middle" font-size="18" font-weight="700">From business event to real-time analytical dashboard</text>
+      <rect x="35" y="85" width="170" height="95" rx="12" fill="#fff" stroke="#b14a3f"/>
+      <text x="120" y="112" text-anchor="middle" font-size="14" font-weight="700">Business Services</text><text x="120" y="136" text-anchor="middle" font-size="11">order / refund / seller</text><text x="120" y="155" text-anchor="middle" font-size="11">produce immutable events</text>
+      <line x1="205" y1="132" x2="270" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kfcArrow)"/>
+      <rect x="275" y="75" width="165" height="115" rx="12" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="357" y="105" text-anchor="middle" font-size="14" font-weight="700">Kafka</text><text x="357" y="130" text-anchor="middle" font-size="11">buffer + retention</text><text x="357" y="149" text-anchor="middle" font-size="11">partitioned ordered log</text><text x="357" y="168" text-anchor="middle" font-size="11">replay by offset</text>
+      <line x1="440" y1="132" x2="505" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kfcArrow)"/>
+      <rect x="510" y="65" width="195" height="135" rx="12" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="607" y="95" text-anchor="middle" font-size="14" font-weight="700">Flink</text><text x="607" y="119" text-anchor="middle" font-size="11">dedup + event time</text><text x="607" y="138" text-anchor="middle" font-size="11">window aggregation</text><text x="607" y="157" text-anchor="middle" font-size="11">risk tags + enrichment</text><text x="607" y="176" text-anchor="middle" font-size="11">checkpoint state + offsets</text>
+      <line x1="705" y1="132" x2="770" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kfcArrow)"/>
+      <rect x="775" y="75" width="170" height="115" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="860" y="105" text-anchor="middle" font-size="14" font-weight="700">ClickHouse</text><text x="860" y="130" text-anchor="middle" font-size="11">detail + minute metrics</text><text x="860" y="149" text-anchor="middle" font-size="11">fast GROUP BY / drill-down</text><text x="860" y="168" text-anchor="middle" font-size="11">dashboard serving</text>
+      <rect x="90" y="255" width="800" height="70" rx="10" fill="#f7f7f5" stroke="#c9c9c5"/>
+      <text x="490" y="280" text-anchor="middle" font-size="12" font-weight="700">Example: one-minute seller risk metric</text>
+      <text x="490" y="302" text-anchor="middle" font-size="11">Kafka receives raw order events continuously → Flink calculates seller_id × minute → the sink batches many rows → ClickHouse supports dashboards and investigation queries</text>
+    </svg>`,
+    tip:'Kafka should absorb and retain the raw event stream. Do not use ClickHouse as the message queue, and do not use Kafka as the final BI query database.'
+  });
 
   html += `<div class="level-header"><span class="level-emoji">🟢</span><div><div class="level-label">L1 — ClickHouse fundamentals</div><div class="level-desc">What it is, why it exists, how it developed, and which problems it solves.</div></div></div>`;
 
@@ -4490,21 +4856,21 @@ function renderClickHouseTab() {
       <text x="265" y="198" text-anchor="middle" font-size="14" font-weight="700" fill="#69418a">Shard 1 — one slice of the data</text>
       <rect x="112" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#9a79b5"/>
       <rect x="283" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#9a79b5"/>
-      <text x="180" y="239" text-anchor="middle" font-size="12" font-weight="700">Replica 1A</text><text x="180" y="258" text-anchor="middle" font-size="10" fill="#57564f">same shard data</text>
-      <text x="350" y="239" text-anchor="middle" font-size="12" font-weight="700">Replica 1B</text><text x="350" y="258" text-anchor="middle" font-size="10" fill="#57564f">fault tolerance</text>
+      <text x="180" y="239" text-anchor="middle" font-size="12" font-weight="700">Machine C1</text><text x="180" y="254" text-anchor="middle" font-size="9">ClickHouse Replica 1A</text><text x="180" y="270" text-anchor="middle" font-size="10" fill="#57564f">same shard data</text>
+      <text x="350" y="239" text-anchor="middle" font-size="12" font-weight="700">Machine C2</text><text x="350" y="254" text-anchor="middle" font-size="9">ClickHouse Replica 1B</text><text x="350" y="270" text-anchor="middle" font-size="10" fill="#57564f">fault tolerance</text>
 
       <rect x="540" y="175" width="350" height="125" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/>
       <text x="715" y="198" text-anchor="middle" font-size="14" font-weight="700" fill="#17613c">Shard 2 — another slice of the data</text>
       <rect x="562" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#56a27c"/>
       <rect x="733" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#56a27c"/>
-      <text x="630" y="239" text-anchor="middle" font-size="12" font-weight="700">Replica 2A</text><text x="630" y="258" text-anchor="middle" font-size="10" fill="#57564f">same shard data</text>
-      <text x="800" y="239" text-anchor="middle" font-size="12" font-weight="700">Replica 2B</text><text x="800" y="258" text-anchor="middle" font-size="10" fill="#57564f">fault tolerance</text>
+      <text x="630" y="239" text-anchor="middle" font-size="12" font-weight="700">Machine C3</text><text x="630" y="254" text-anchor="middle" font-size="9">ClickHouse Replica 2A</text><text x="630" y="270" text-anchor="middle" font-size="10" fill="#57564f">same shard data</text>
+      <text x="800" y="239" text-anchor="middle" font-size="12" font-weight="700">Machine C4</text><text x="800" y="254" text-anchor="middle" font-size="9">ClickHouse Replica 2B</text><text x="800" y="270" text-anchor="middle" font-size="10" fill="#57564f">fault tolerance</text>
 
       <line x1="490" y1="325" x2="490" y2="350" stroke="#69757f" stroke-width="2" marker-end="url(#chArrow)"/>
       <text x="505" y="342" font-size="10" fill="#57564f">zoom into one replica</text>
 
       <rect x="55" y="355" width="870" height="225" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
-      <text x="490" y="380" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2d3d">One node: Database → MergeTree table → Partition → Data Part → Granules</text>
+      <text x="490" y="380" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2d3d">Inside one ClickHouse machine: Database → MergeTree table → Partition → Data Part → Granules</text>
 
       <rect x="82" y="405" width="120" height="55" rx="9" fill="#e8f2fa" stroke="#2971a8"/>
       <text x="142" y="428" text-anchor="middle" font-size="12" font-weight="700">Database</text><text x="142" y="447" text-anchor="middle" font-size="10">security</text>
@@ -4528,8 +4894,38 @@ function renderClickHouseTab() {
       <path d="M270 562 C390 590,570 590,690 562" fill="none" stroke="#9a6b1e" stroke-width="1.6" marker-end="url(#chArrow)"/>
       <text x="480" y="575" text-anchor="middle" font-size="10" fill="#8a6d1f">background merge combines small parts into larger sorted parts</text>
     </svg>`,
-    tip:'Shard means horizontal data distribution. Replica means another copy of the same shard for availability. They solve different problems.',
-    tipZh:'Shard 是水平拆分数据；Replica 是同一份分片数据的副本，用于高可用。'
+    tip:'Each replica normally runs as a ClickHouse server process on one machine, VM or Kubernetes pod. Shard means horizontal data distribution; replica means another copy of the same shard for availability.',
+    tipZh:'每个Replica通常是运行在一台服务器、虚拟机或Kubernetes Pod上的ClickHouse Server进程。Shard负责水平拆分数据，Replica负责同一Shard的高可用副本。'
+  });
+
+  html += renderCard({
+    title:'4.1 How queries and inserts are routed across ClickHouse machines',
+    desc:'A Distributed table is usually the logical entry point. It routes an insert to a shard and sends a query to all required shards. Each shard stores data in a local MergeTree table. Replicas keep another copy of the same shard and can serve reads or take over after a failure.',
+    zh:'Distributed表通常是逻辑入口。写入时它把数据路由到某个Shard；查询时把SQL发送到需要访问的各个Shard。每个Shard内部由本地MergeTree表保存数据；Replica保存同一Shard的另一份副本，可承担查询或故障切换。',
+    html:`<svg viewBox="0 0 1000 430" role="img" aria-label="ClickHouse request routing across machines" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs><marker id="routeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="500" y="28" text-anchor="middle" font-size="17" font-weight="700">ClickHouse deployment: routing layer + persistent storage machines</text>
+      <rect x="365" y="55" width="270" height="65" rx="10" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="500" y="80" text-anchor="middle" font-size="13" font-weight="700">Client / Flink Sink / BI</text><text x="500" y="101" text-anchor="middle" font-size="10">INSERT or SELECT</text>
+      <line x1="500" y1="120" x2="500" y2="155" stroke="#69757f" stroke-width="2" marker-end="url(#routeArrow)"/>
+      <rect x="350" y="160" width="300" height="65" rx="10" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="500" y="185" text-anchor="middle" font-size="13" font-weight="700">Distributed Table / Query Coordinator</text><text x="500" y="205" text-anchor="middle" font-size="10">routes by sharding key; fans out SELECT</text>
+
+      <rect x="55" y="270" width="410" height="125" rx="12" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="260" y="294" text-anchor="middle" font-size="13" font-weight="700">Shard 1</text>
+      <rect x="78" y="315" width="165" height="58" rx="8" fill="#fff" stroke="#9a79b5"/><text x="160" y="338" text-anchor="middle" font-size="11" font-weight="700">Machine C1</text><text x="160" y="357" text-anchor="middle" font-size="9">local MergeTree + Replica 1A</text>
+      <rect x="277" y="315" width="165" height="58" rx="8" fill="#fff" stroke="#9a79b5"/><text x="359" y="338" text-anchor="middle" font-size="11" font-weight="700">Machine C2</text><text x="359" y="357" text-anchor="middle" font-size="9">same shard + Replica 1B</text>
+
+      <rect x="535" y="270" width="410" height="125" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="740" y="294" text-anchor="middle" font-size="13" font-weight="700">Shard 2</text>
+      <rect x="558" y="315" width="165" height="58" rx="8" fill="#fff" stroke="#56a27c"/><text x="640" y="338" text-anchor="middle" font-size="11" font-weight="700">Machine C3</text><text x="640" y="357" text-anchor="middle" font-size="9">local MergeTree + Replica 2A</text>
+      <rect x="757" y="315" width="165" height="58" rx="8" fill="#fff" stroke="#56a27c"/><text x="839" y="338" text-anchor="middle" font-size="11" font-weight="700">Machine C4</text><text x="839" y="357" text-anchor="middle" font-size="9">same shard + Replica 2B</text>
+
+      <line x1="440" y1="225" x2="260" y2="270" stroke="#7b4fa0" stroke-width="2" marker-end="url(#routeArrow)"/>
+      <line x1="560" y1="225" x2="740" y2="270" stroke="#1e7a4c" stroke-width="2" marker-end="url(#routeArrow)"/>
+    </svg>`,
+    tip:'ClickHouse does not have a Spark-style central scheduler that launches executors for each query. Every ClickHouse server is already running; the coordinator distributes query fragments to the relevant shard machines, which execute them in parallel.',
+    tipZh:'ClickHouse没有Spark那种每个作业临时启动Executor的中央调度方式。各ClickHouse Server长期在线，协调节点把查询片段发送到相关Shard机器并行执行。'
   });
 
   html += renderCard({
