@@ -104,6 +104,26 @@
   .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
   .listen-btn.speaking { background:var(--accent); color:white; }
   .listen-btn svg { width:12px; height:12px; }
+
+
+  /* --- Flink detailed learning cards --- */
+  .flink-inline-svg { width:100%; height:auto; display:block; }
+  .flink-map { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; margin:10px 0; }
+  .flink-map-item { border:1px solid var(--border); border-radius:9px; padding:10px 12px; background:#FBFBFA; }
+  .flink-map-item strong { display:block; font-size:12.5px; margin-bottom:3px; }
+  .flink-map-item span { display:block; color:var(--text-secondary); font-size:11.5px; line-height:1.5; }
+  .case-label { display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:700; margin:4px 0 8px; }
+  .case-label.blue { color:var(--accent); background:var(--accent-bg); }
+  .case-label.green { color:var(--success); background:var(--success-bg); }
+  .example-box { background:#F7F7F5; border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:10px 12px; margin:9px 0; font-size:12.5px; }
+  .answer-box { background:var(--purple-bg); color:#4E2D68; border-radius:8px; padding:10px 12px; margin-top:10px; font-size:12.5px; line-height:1.65; }
+  .answer-box strong { display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:3px; }
+  .flow-steps { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:9px 0; }
+  .flow-node { padding:5px 9px; border:1px solid var(--border-strong); border-radius:7px; background:var(--surface); font-size:11.5px; font-weight:600; }
+  .flow-arrow { color:var(--text-muted); font-weight:700; }
+  .tiny-note { color:var(--text-muted); font-size:11px; margin-top:5px; }
+  @media (max-width:620px) { .flink-map { grid-template-columns:1fr; } }
+
 </style>
 </head>
 <body>
@@ -124,6 +144,7 @@
     <button class="tab-btn active" data-tab="hdfs">🧶🗄️🐝 YARN &amp; HDFS &amp; Hive</button>
     <button class="tab-btn" data-tab="spark">⚡ Spark Memory</button>
     <button class="tab-btn" data-tab="flink">🌊 Flink Basics</button>
+    <button class="tab-btn" data-tab="clickhouse">🏎️ ClickHouse</button>
     <button class="tab-btn" data-tab="k8s">🐳 Docker &amp; K8S</button>
     <button class="tab-btn" data-tab="linux">🐧 Linux</button>
     <button class="tab-btn" data-tab="sla">🔥 SLA</button>
@@ -136,6 +157,7 @@
   <div id="hdfs" class="tab-panel active"></div>
   <div id="spark" class="tab-panel"></div>
   <div id="flink" class="tab-panel"></div>
+  <div id="clickhouse" class="tab-panel"></div>
   <div id="k8s" class="tab-panel"></div>
   <div id="linux" class="tab-panel"></div>
   <div id="sla" class="tab-panel"><div class="star-banner" style="background:var(--danger-bg); color:var(--danger);">⭐ Full Story</div><div class="intro-note">Two ready-to-say versions, broken into short segments so you can practice and recall them piece by piece. Each segment has its own Listen button; the card title also plays the whole thing.</div><div class="quote-card">
@@ -1168,7 +1190,7 @@ function table(headers, rows) {
   function renderCell(c) {
     if (typeof c === 'string' && c.includes('||')) {
       const [en, zh] = c.split('||');
-      return `${en}<br><span class="cell-zh">🇨🇳 ${zh}</span>`;
+      return `${en}<br><span class="cell-zh"> ${zh}</span>`;
     }
     return c;
   }
@@ -1177,10 +1199,10 @@ function table(headers, rows) {
   html += '</tbody></table>';
   return html;
 }
-const KW = new Set(['SET','SELECT','FROM','WHERE','if','else','for','while','def','class','return','import','from','as','true','false','TRUE','FALSE']);
+const KW = new Set(['SET','SELECT','FROM','WHERE','if','else','for','while','def','class','return','import','from','as','true','false','TRUE','FALSE','CREATE','TABLE','INSERT','INTO','WITH','CONNECTOR','PRIMARY','KEY','NOT','ENFORCED','WATERMARK','FOR','AS','INTERVAL','TIMESTAMP','STRING','DECIMAL','BIGINT','LEFT','JOIN','SYSTEM_TIME','OF','ON','IS','NULL','ROW_NUMBER','OVER','PARTITION','BY','ORDER','DATE_FORMAT','COUNT','SUM','GROUP','TUMBLE','DESCRIPTOR','AND','OR','CASE','WHEN','THEN','END','CAST','PROCTIME','CURRENT_TIMESTAMP']);
 const FN = new Set(['spark-submit','yarn','hdfs','jstack','jmap','top','htop']);
 function highlightCode(code) {
-  const tokenRe = /(#[^\n]*)|('[^'\n]*'|"[^"\n]*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_.-]*)|([\s\S])/g;
+  const tokenRe = /((?:#|--)[^\n]*)|('[^'\n]*'|"[^"\n]*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_.-]*)|([\s\S])/g;
   let out = ''; let m;
   while ((m = tokenRe.exec(code)) !== null) {
     const [, comment, str, num, word, other] = m;
@@ -1204,16 +1226,17 @@ function renderCard(item) {
       ${listenBtn(speakText)}
     </div>`;
   if (item.desc) html += `<p class="q-desc">${item.desc}</p>`;
-  if (item.zh) html += `<p class="q-desc zh-desc">🇨🇳 ${item.zh}</p>`;
+  if (item.zh) html += `<p class="q-desc zh-desc"> ${item.zh}</p>`;
+  if (item.html) html += item.html;
   if (item.diagram) html += `<div style="margin:10px 0;">${item.diagram}</div>`;
   if (item.table) html += item.table;
   if (item.code) html += `<div class="codeblock">${highlightCode(item.code)}</div>`;
   if (item.collapsibleCode) html += `<details class="diagram-details"><summary>${item.collapsibleLabel || '▶ 展开查看文件'}</summary><div class="codeblock">${highlightCode(item.collapsibleCode)}</div></details>`;
   if (item.collapsibleHtml) html += `<details class="diagram-details"><summary>${item.collapsibleLabel || '▶ 展开查看详情'}</summary>${item.collapsibleHtml}</details>`;
   if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
-  if (item.tipZh) html += `<div class="tip zh-desc">💡🇨🇳 ${item.tipZh}</div>`;
+  if (item.tipZh) html += `<div class="tip zh-desc">💡 ${item.tipZh}</div>`;
   if (item.warn) html += `<div class="warn">⚠️ ${item.warn}</div>`;
-  if (item.warnZh) html += `<div class="warn zh-desc">⚠️🇨🇳 ${item.warnZh}</div>`;
+  if (item.warnZh) html += `<div class="warn zh-desc">⚠️ ${item.warnZh}</div>`;
   html += `</div>`;
   return html;
 }
@@ -1693,84 +1716,942 @@ spark.memory.storageFraction   # % of Unified Memory reserved for Storage (defau
 
 
 const flinkLevelMeta = {
-  basics: {emoji:"🌱", label:"Level 1 — Flink vs Spark", desc:"The single most important conceptual difference."},
-  arch: {emoji:"🏗️", label:"Level 2 — Architecture", desc:"JobManager, TaskManager, and how a Flink job actually runs."},
-  state: {emoji:"💾", label:"Level 3 — State & fault tolerance", desc:"How Flink survives failures without losing data — this is its signature feature."},
+  basics: {emoji:"🌱", label:"Level 1 — Build the mental model", desc:"First understand what Flink is doing to one payment event."},
+  concepts: {emoji:"🧠", label:"Level 2 — Time, state, connectors & recovery", desc:"The four concepts that make Flink different from ordinary SQL."},
+  cases: {emoji:"🧪", label:"Level 3 — Two end-to-end examples", desc:"Use real payment examples to connect deduplication, lookup joins, windows, late data and fault tolerance."},
 };
 
 const flinkData = [
-  {level:"basics", title:"The core difference: true streaming vs micro-batching", desc:"Spark Streaming (and Structured Streaming) processes data in small BATCHES on a timer. Flink processes each event AS IT ARRIVES — true record-at-a-time streaming.",
-   zh:"中文：Spark(结构化流)是按固定时间间隔处理「小批次」数据；Flink是每条数据一到就立刻处理，是真正的「逐条流式」处理。",
-   speak:"Spark processes streaming data in small batches on a timer. Flink processes each event as it arrives, true record-at-a-time streaming, which gives it lower latency.",
-   table: table(["","Spark (Structured Streaming)","Flink"], [
-     ["Processing model","Micro-batch (even 'continuous mode' has limits)||微批处理(即使「continuous mode」也有限制)","True streaming, event-at-a-time||真正的流式处理，逐条事件处理"],
-     ["Latency","Seconds (batch interval)||秒级(取决于批次间隔)","Milliseconds||毫秒级"],
-     ["Origin","Batch engine extended to streaming||批处理引擎扩展支持流处理","Streaming engine, batch is a special case||流处理引擎，批处理是特例"],
-     ["Common use in finance/payments","Batch ETL, daily/hourly aggregation||批处理ETL，日/小时级聚合","Real-time fraud detection, real-time risk scoring||实时反欺诈检测，实时风险评分"],
+  {level:"basics", title:"Flink in one sentence: a continuously running data pipeline", desc:"A Flink streaming job stays alive, reads events continuously, transforms them, keeps necessary state, and writes results continuously.",
+   zh:"中文：Flink 作业不是每天跑一次就结束，而是长期运行。Kafka 来一条支付事件，它就处理一条；需要记住历史时，就把历史放在 State 里。",
+   speak:"A Flink streaming job stays alive, continuously reads events, transforms them, keeps state when needed, and writes results downstream.",
+   html:`<div class="flow-steps"><span class="flow-node">MySQL payment</span><span class="flow-arrow">→</span><span class="flow-node">CDC</span><span class="flow-arrow">→</span><span class="flow-node">Kafka</span><span class="flow-arrow">→</span><span class="flow-node">Flink</span><span class="flow-arrow">→</span><span class="flow-node">Kafka / HBase / ClickHouse</span></div>
+<div class="example-box"><b>最小例子：</b>用户 u_7001 在 09:05 支付 ¥5,000。Flink 可以立即判断它是不是今天第一笔、是不是历史首次支付，或者把它累加到 09:00–10:00 的小时窗口里。</div>`,
+   tip:"先把 Flink 理解成“会记忆的、一直运行的 SQL 引擎”，后面的 State、Watermark、Checkpoint 就容易理解了。"},
+
+  {level:"basics", title:"Flink vs Spark Structured Streaming — do not overstate the difference", desc:"Spark Structured Streaming uses micro-batch by default; Flink is designed around continuous stateful stream processing. Both can process streams, so choose by workload rather than slogans.",
+   zh:"中文：不要简单背“Spark是假流、Flink是真流”。更准确的说法是：Spark Structured Streaming 默认采用 micro-batch；Flink 从架构上以持续流处理、事件时间和有状态计算为核心。",
+   speak:"Spark Structured Streaming uses micro-batch by default, while Flink is designed around continuous stateful stream processing. The choice depends on latency, state, and operational requirements.",
+   table: table(["Question","Spark Structured Streaming","Flink"], [
+     ["Default execution","Micro-batch||默认把新数据组成小批次执行","Continuous streaming pipeline||持续运行的流式 pipeline"],
+     ["Typical strength","Unified batch and stream pipelines||批流统一、复用 Spark 生态","Event time, large state, low-latency streaming||事件时间、大状态、低延迟流处理"],
+     ["Good example","Hourly ETL / incremental lakehouse||小时 ETL、增量湖仓","Per-event fraud / real-time rules||逐笔风控、实时规则判断"],
    ]),
-   tip:"Say this if asked 'why would you use Flink instead of Spark': 'When the business requirement is millisecond-level latency — like real-time fraud scoring on each transaction — not just fast batch refresh.'"},
+   tip:"面试说法：I would choose Flink when the requirement depends heavily on event-time correctness, long-running keyed state, and low-latency reactions per event."},
 
-  {level:"arch", title:"JobManager vs TaskManager", desc:"Same conceptual split as Spark's Driver/Executor, different names.",
-   zh:"中文：跟Spark的Driver/Executor是同一种角色划分思路，只是换了个名字。",
-   speak:"JobManager is Flink's equivalent of Spark's Driver — it coordinates the job. TaskManagers are Flink's equivalent of Executors — they actually run the work.",
-   diagram: `<svg width="100%" viewBox="0 0 680 200" style="max-width:600px; display:block; margin:8px auto;">
-<defs><marker id="fl1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
-<rect x="250" y="15" width="180" height="55" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.5"/>
-<text x="340" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">JobManager</text>
-<text x="340" y="55" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">coordinates checkpoints,</text>
-<text x="340" y="68" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">schedules tasks, tracks state</text>
+  {level:"basics", title:"One event passes through Source → Operators → Sink", desc:"Every Flink job can be understood as three parts. Operators may be stateless or stateful.",
+   zh:"中文：任何 Flink 作业都可以拆成三段：从哪里读、途中怎么算、最后写到哪里。",
+   html:`<div class="flink-map">
+<div class="flink-map-item"><strong>1. Source</strong><span>Kafka / CDC / Filesystem。负责读数据和恢复消费位置。</span></div>
+<div class="flink-map-item"><strong>2. Operator</strong><span>Filter、Join、Window、Dedup。需要记历史的算子会使用 State。</span></div>
+<div class="flink-map-item"><strong>3. Sink</strong><span>Kafka、HBase、JDBC、文件系统或第三方 ClickHouse connector。</span></div>
+</div>`,
+   table: table(["Operator","Does it need state?","Payment example"], [
+     ["Filter","Usually no||通常不需要","Keep only SUCCESS payments||只保留支付成功事件"],
+     ["Dedup / Top-1","Yes||需要","Remember the earliest payment per user/day||记住每个用户当天最早一笔"],
+     ["TUMBLE window","Yes||需要","Accumulate count and amount for one hour||累加一个小时的笔数和金额"],
+     ["Lookup Join","External lookup + cache||外部点查+缓存","Check whether the user exists in HBase history||查询用户是否存在于历史首付表"],
+   ])},
 
-<line x1="340" y1="70" x2="150" y2="115" stroke="#888" stroke-width="1.2" marker-end="url(#fl1)"/>
-<line x1="340" y1="70" x2="530" y2="115" stroke="#888" stroke-width="1.2" marker-end="url(#fl1)"/>
-
-<rect x="60" y="115" width="180" height="60" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
-<text x="150" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">TaskManager</text>
-<text x="150" y="155" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">runs 'task slots' —</text>
-<text x="150" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">parallel processing units</text>
-
-<rect x="440" y="115" width="180" height="60" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
-<text x="530" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">TaskManager</text>
-<text x="530" y="155" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">runs 'task slots' —</text>
-<text x="530" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">parallel processing units</text>
+  {level:"concepts", title:"JobManager, TaskManager, parallelism and task slots", desc:"JobManager coordinates the job; TaskManagers execute operators. Parallel subtasks let multiple Kafka partitions and keys be processed concurrently.",
+   zh:"中文：JobManager 像总指挥；TaskManager 真正执行。Parallelism=4，通常表示同一个算子有4个并行实例一起处理。",
+   speak:"The JobManager coordinates scheduling and checkpoints, while TaskManagers execute parallel subtasks. Task slots are resource-sharing units, not simply identical to CPU cores.",
+   diagram: `<svg width="100%" viewBox="0 0 680 210" style="max-width:620px; display:block; margin:8px auto;">
+<defs><marker id="flinkArchArrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="245" y="15" width="190" height="58" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="340" y="39" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">JobManager</text>
+<text x="340" y="57" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">schedule · checkpoints · recovery</text>
+<line x1="340" y1="74" x2="150" y2="118" stroke="#888" marker-end="url(#flinkArchArrow)"/><line x1="340" y1="74" x2="530" y2="118" stroke="#888" marker-end="url(#flinkArchArrow)"/>
+<rect x="45" y="118" width="210" height="68" rx="8" fill="var(--success-bg)" stroke="var(--success)"/><text x="150" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">TaskManager A</text><text x="150" y="161" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">slot 1: Kafka source</text><text x="150" y="176" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">slot 2: dedup subtask</text>
+<rect x="425" y="118" width="210" height="68" rx="8" fill="var(--success-bg)" stroke="var(--success)"/><text x="530" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">TaskManager B</text><text x="530" y="161" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">slot 1: Kafka source</text><text x="530" y="176" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">slot 2: dedup subtask</text>
 </svg>`,
-   tip:"'Task slot' is Flink's unit of parallelism — analogous to a Spark executor core, but specifically tied to memory-isolated slices of a TaskManager."},
+   warn:"Task slot 是资源共享/调度单位，不应简单说成“一个 slot 就等于一个 CPU core”。"},
 
-  {level:"state", title:"Checkpointing — how Flink recovers from failure without losing data", desc:"Flink periodically takes a consistent snapshot of ALL operator state across the whole pipeline, using a technique called the Chandy-Lamport algorithm (via 'checkpoint barriers').",
-   zh:"中文：Flink会定期给整条pipeline里所有算子的状态拍一张「一致性快照」，用的是Chandy-Lamport算法，具体实现是往数据流里插入「checkpoint barrier」标记。",
-   speak:"Flink periodically takes a consistent snapshot of all operator state across the whole pipeline by injecting checkpoint barriers into the data stream, which flow through the pipeline just like normal records.",
-   diagram: `<svg width="100%" viewBox="0 0 680 180" style="max-width:600px; display:block; margin:8px auto;">
-<text x="10" y="20" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">Checkpoint barriers flow through the pipeline like special markers in the data stream:</text>
+  {level:"concepts", title:"Event Time, Processing Time and Watermark — use one payment to understand all three", desc:"Event Time is when the business event happened. Processing Time is when Flink sees it. Watermark is Flink's progress estimate in Event Time.",
+   zh:"中文：支付 09:55 发生、10:03 才到 Flink：09:55 是 Event Time，10:03 是 Processing Time。Watermark 用来判断“我大概已经等到哪个业务时间了”。",
+   speak:"Event Time comes from the event, Processing Time comes from the machine clock, and a Watermark is Flink's estimate that most events earlier than that point have arrived.",
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="wm1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="520" fill="#fafafa"/>
+  <text x="500" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">ProcTime vs EventTime + Watermark 到底是什么</text>
 
-<rect x="20" y="40" width="140" height="40" rx="6" fill="var(--accent-bg)" stroke="var(--accent)"/>
-<text x="90" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Source</text>
+  <!-- 上半部分：两条时间线对比 -->
+  <text x="60" y="70" font-size="13" font-weight="700" fill="#3b6ea5">① EventTime（事件时间）：数据自己带的业务时间戳</text>
+  <line x1="60" y1="100" x2="920" y2="100" stroke="#c9d2dc" stroke-width="2"/>
+  <circle cx="150" cy="100" r="5" fill="#3b6ea5"/>
+  <text x="150" y="120" text-anchor="middle" font-size="10">09:00:00</text>
+  <text x="150" y="135" text-anchor="middle" font-size="9" fill="#5b6472">支付真实发生时间</text>
 
-<rect x="200" y="40" width="30" height="40" rx="4" fill="var(--warning-bg)" stroke="var(--warning)"/>
-<text x="215" y="65" text-anchor="middle" font-size="9" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">CP</text>
+  <circle cx="350" cy="100" r="5" fill="#3b6ea5"/>
+  <text x="350" y="120" text-anchor="middle" font-size="10">09:00:03</text>
+  <text x="350" y="135" text-anchor="middle" font-size="9" fill="#5b6472">另一笔支付</text>
 
-<rect x="270" y="40" width="140" height="40" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
-<text x="340" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Operator (map/agg)</text>
+  <!-- 网络延迟箭头，到达时间不同 -->
+  <path d="M150,100 C 200,160 350,180 480,200" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#wm1)"/>
+  <path d="M350,100 C 380,150 420,170 440,195" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#wm1)"/>
+  <text x="300" y="165" font-size="10" fill="#c0392b">网络延迟/乱序，实际到达 Flink 的顺序可能颠倒</text>
 
-<rect x="450" y="40" width="140" height="40" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
-<text x="520" y="65" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Sink</text>
+  <text x="60" y="230" font-size="13" font-weight="700" fill="#2f9e6e">② ProcTime（处理时间）：Flink 处理这条数据那一刻，机器的墙上时钟</text>
+  <line x1="60" y1="260" x2="920" y2="260" stroke="#c9d2dc" stroke-width="2"/>
+  <circle cx="440" cy="260" r="5" fill="#2f9e6e"/>
+  <text x="440" y="280" text-anchor="middle" font-size="10">10:15:22.103</text>
+  <text x="440" y="295" text-anchor="middle" font-size="9" fill="#5b6472">Flink 真正算这条数据的系统时刻</text>
+  <circle cx="480" cy="260" r="5" fill="#2f9e6e"/>
+  <text x="480" y="280" text-anchor="middle" font-size="10">10:15:22.108</text>
 
-<line x1="160" y1="60" x2="196" y2="60" stroke="#888" stroke-width="1.5"/>
-<line x1="230" y1="60" x2="266" y2="60" stroke="#888" stroke-width="1.5"/>
-<line x1="410" y1="60" x2="446" y2="60" stroke="#888" stroke-width="1.5"/>
+  <rect x="60" y="320" width="880" height="70" rx="8" fill="#fff" stroke="#c9d2dc"/>
+  <text x="80" y="345" font-size="12" font-weight="700" fill="#1f2d3d">关键区别</text>
+  <text x="80" y="365" font-size="11" fill="#5b6472">EventTime 反映"业务上到底啥时候发生的"，可能乱序、可重放；ProcTime 只反映"Flink 现在算到这了"，不可重放，每次运行结果可能不同</text>
+  <text x="80" y="382" font-size="11" fill="#5b6472">本方案里：pay_time 是 EventTime；proctime 是专门给 Lookup Join 用的系统时钟</text>
 
-<text x="340" y="120" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Each operator snapshots its state to durable storage (e.g. S3/HDFS) when the barrier passes through</text>
-<text x="340" y="140" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">On failure: restart from the LAST completed checkpoint, replay source data after that point</text>
-<text x="340" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">This is how Flink achieves exactly-once processing semantics</text>
+  <!-- Watermark 部分 -->
+  <text x="60" y="425" font-size="13" font-weight="700" fill="#8e44ad">③ Watermark：给 EventTime 用的"我不再等更早数据了"的水位线</text>
+  <line x1="60" y1="450" x2="920" y2="450" stroke="#c9d2dc" stroke-width="2"/>
+  <circle cx="600" cy="450" r="5" fill="#3b6ea5"/>
+  <text x="600" y="470" text-anchor="middle" font-size="10">当前最大 EventTime = 10:00:05</text>
+  <line x1="595" y1="450" x2="450" y2="450" stroke="#8e44ad" stroke-width="3"/>
+  <polygon points="450,450 460,444 460,456" fill="#8e44ad"/>
+  <text x="500" y="490" text-anchor="middle" font-size="10" fill="#8e44ad">Watermark = 10:00:05 - 5秒 = 10:00:00</text>
+  <text x="500" y="505" text-anchor="middle" font-size="10" fill="#8e44ad">意思：EventTime 早于10:00:00的数据，之后来了也不再等，直接算迟到</text>
 </svg>`,
-   tip:"Interview follow-up to expect: 'What's the difference between checkpoints and savepoints?' — checkpoints are automatic and lightweight (for failure recovery), savepoints are manually triggered and portable (for planned upgrades/migrations)."},
-
-  {level:"state", title:"State backends — where does Flink actually store state?", desc:"For jobs with large state (e.g. tracking millions of active users), the choice of state backend matters a lot for performance.",
-   zh:"中文：如果job的状态很大(比如要追踪几百万活跃用户)，选哪种state backend对性能影响很大。",
-   speak:"HashMapStateBackend keeps everything in JVM heap memory, fast but limited by memory size. RocksDBStateBackend stores state on local disk, using memory only as a cache, so it scales to much larger state at the cost of some latency.",
-   table: table(["State backend","Where state lives","Best for"], [
-     ["HashMapStateBackend","JVM heap (in-memory)||JVM堆内存(纯内存)","Small state, need lowest possible latency||状态小、需要最低延迟的场景"],
-     ["RocksDBStateBackend","Local disk (embedded RocksDB), memory as cache||本地磁盘(内嵌RocksDB)，内存作为缓存","Large state (GBs+) that won't fit in heap||状态很大(GB级以上)、堆内存放不下的场景"],
+   table: table(["Concept","Simple meaning","Used in our cases"], [
+     ["Event Time","业务实际发生时间，例如 pay_time","Case 2 小时窗口"],
+     ["Processing Time","Flink 当前机器时间，例如 PROCTIME()","Case 1 HBase Lookup Join"],
+     ["Watermark","事件时间进度线，不是数据本身","决定小时窗口何时可以输出"],
    ]),
-   tip:"If asked about 'a job with huge state causing memory pressure' — RocksDBStateBackend is the go-to answer, directly analogous to 'spill to disk' concepts you already know from Spark."},
+   code:`WATERMARK FOR pay_time AS pay_time - INTERVAL '5' SECOND
+
+-- 最大已观察到的 Event Time = 10:02:00
+-- 当前 Watermark 大约 = 10:01:55
+-- 所以 [09:00, 10:00) 窗口可以关闭`,
+   warn:"Watermark 不是“机器现在几点”。它通常会周期性发出，但只有观察到的最大 Event Time 前进时，水位值才会前进。"},
+
+  {level:"concepts", title:"Keyed State — Flink's memory for each business key", desc:"After partitioning by a key, each parallel subtask keeps state for the keys it owns. This is how deduplication and windows remember previous events.",
+   zh:"中文：按 user_id 分区后，同一个用户的事件会进入同一个 keyed state。Flink 可以记住“这个用户今天最早订单是谁”。",
+   html:`<div class="example-box"><b>例子：</b>u_7001 先来 order_88214（15:30），随后因为乱序又来了更早的 order_88213（09:00）。Top-1 State 会把当前最早值从 15:30 更新成 09:00，并产生更新记录。</div>`,
+   table: table(["State type","What it remembers","Example"], [
+     ["ValueState","One value per key||每个 key 一个值","Earliest order for u_7001||u_7001 最早订单"],
+     ["MapState","A map per key||每个 key 一张小 Map","Rules or attributes by code||按 code 保存规则/属性"],
+     ["Window state","Data/aggregate for a time window||窗口内数据或聚合值","09:00–10:00 count and amount||9点到10点笔数金额"],
+   ]),
+   tip:"State TTL 很重要。按“用户+日期”去重时可设置约 25 小时 TTL，避免状态无限增长。"},
+
+  {level:"concepts", title:"Checkpoint, Savepoint and end-to-end delivery semantics", desc:"Checkpoint automatically protects state and source positions. Savepoint is a user-managed snapshot for planned upgrades. End-to-end guarantees still depend on the sink.",
+   zh:"中文：Checkpoint 是故障自动恢复；Savepoint 是升级/迁移时人工保存。Flink 内部状态一致，不代表外部发券服务一定不会重复。",
+   speak:"Checkpoints are automatic recovery snapshots, while savepoints are user-managed snapshots for planned operations. End-to-end exactly-once depends on the source, state, and sink protocol together.",
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <rect width="1000" height="460" fill="#fafafa"/>
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">At-most-once / At-least-once / Exactly-once 对比</text>
+
+  <!-- 三列 -->
+  <rect x="40" y="60" width="290" height="220" rx="10" fill="#fff" stroke="#c0392b" stroke-width="2"/>
+  <text x="185" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#c0392b">At-most-once</text>
+  <text x="185" y="108" text-anchor="middle" font-size="10" fill="#7a2119">最多一次</text>
+  <text x="60" y="140" font-size="11" fill="#5b6472">✓ 出故障时不重试</text>
+  <text x="60" y="160" font-size="11" fill="#5b6472">✗ 可能丢消息</text>
+  <text x="60" y="180" font-size="11" fill="#5b6472">✗ 绝不重复</text>
+  <text x="60" y="210" font-size="11" fill="#c0392b" font-weight="600">代价：数据可能丢失</text>
+  <text x="60" y="230" font-size="10" fill="#7a2119">很少用在关键业务上</text>
+
+  <rect x="355" y="60" width="290" height="220" rx="10" fill="#fff" stroke="#e67e22" stroke-width="2"/>
+  <text x="500" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#e67e22">At-least-once</text>
+  <text x="500" y="108" text-anchor="middle" font-size="10" fill="#7a5416">至少一次</text>
+  <text x="375" y="140" font-size="11" fill="#5b6472">✓ 出故障会重试</text>
+  <text x="375" y="160" font-size="11" fill="#5b6472">✓ 保证不丢</text>
+  <text x="375" y="180" font-size="11" fill="#5b6472">✗ 可能重复投递</text>
+  <text x="375" y="210" font-size="11" fill="#e67e22" font-weight="600">代价：下游要自己幂等</text>
+  <text x="375" y="230" font-size="10" fill="#7a5416">Kafka默认语义，本方案采用</text>
+
+  <rect x="670" y="60" width="290" height="220" rx="10" fill="#fff" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="815" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#2f9e6e">Exactly-once</text>
+  <text x="815" y="108" text-anchor="middle" font-size="10" fill="#155d3a">精确一次</text>
+  <text x="690" y="140" font-size="11" fill="#5b6472">✓ 不丢不重</text>
+  <text x="690" y="160" font-size="11" fill="#5b6472">✓ 靠Checkpoint+两阶段提交</text>
+  <text x="690" y="180" font-size="11" fill="#5b6472">✗ 实现复杂，有性能开销</text>
+  <text x="690" y="210" font-size="11" fill="#2f9e6e" font-weight="600">Flink内部计算能做到</text>
+  <text x="690" y="230" font-size="10" fill="#155d3a">跨系统边界很难做到</text>
+
+  <!-- 本方案落地情况 -->
+  <rect x="60" y="310" width="880" height="130" rx="8" fill="white" stroke="#c9d2dc"/>
+  <text x="500" y="335" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2d3d">本方案实际落地情况（面试常问）</text>
+  <text x="80" y="360" font-size="11" fill="#5b6472">① Flink内部计算（去重、Lookup Join）：靠 Checkpoint 机制做到 Exactly-once，状态不丢不重</text>
+  <text x="80" y="382" font-size="11" fill="#5b6472">② 写 upsert-kafka：投递可能是 at-least-once（重复写），但因为按 user_id 主键覆盖，最终效果等价于精确一次</text>
+  <text x="80" y="404" font-size="11" fill="#5b6472">③ 下游发券服务：Kafka消费是 at-least-once，必须自己用 Redis SETNX 做幂等兜底，防止重复发券</text>
+  <text x="80" y="426" font-size="11" fill="#c0392b">结论：跨系统端到端精确一次很难做到，实际都是"at-least-once + 下游幂等"组合实现</text>
+</svg>`,
+   code:`SET 'execution.checkpointing.interval' = '60 s';
+SET 'execution.checkpointing.mode' = 'EXACTLY_ONCE';
+SET 'execution.checkpointing.dir' = 'hdfs:///flink-checkpoints/first-pay';
+SET 'execution.checkpointing.min-pause' = '30 s';
+SET 'execution.checkpointing.timeout' = '10 min';`,
+   table: table(["Item","Purpose","Who manages it"], [
+     ["Checkpoint","Unexpected failure recovery||意外故障恢复","Flink automatically||Flink 自动管理"],
+     ["Savepoint","Upgrade, migration, planned restart||升级、迁移、计划重启","User/operator||用户或运维人员"],
+     ["Downstream idempotency","Stop duplicate business side effects||防止重复发券等副作用","Application design||业务系统设计"],
+   ]),
+   tip:"Case 1 最终仍使用 event_id / Redis SETNX 幂等，因为“发券”是不可随意撤回的外部副作用。"},
+
+  {level:"concepts", title:"State backend — where the working state lives", desc:"Small state can stay on the JVM heap. Large keyed state commonly uses EmbeddedRocksDBStateBackend; newer Flink versions also expose ForSt for disaggregated state scenarios.",
+   zh:"中文：状态小可以放 JVM Heap；状态很大通常用 EmbeddedRocksDBStateBackend，把工作状态放本地磁盘、内存做缓存。",
+   table: table(["Backend","Working state","Use when"], [
+     ["HashMapStateBackend","JVM heap||JVM 堆内存","State is small and latency is critical||状态小、追求最低延迟"],
+     ["EmbeddedRocksDBStateBackend","Local disk + memory cache||本地磁盘+内存缓存","State is too large for heap||状态大、堆内存放不下"],
+     ["ForStStateBackend","Disaggregated / remote-primary design||解耦式/远端主存储设计","Advanced large-state deployments; verify platform support||高级大状态场景，需确认平台支持"],
+   ]),
+   warn:"State backend 保存的是“运行中的工作状态”；Checkpoint storage 才是故障后可恢复的持久化快照位置。两者不要混为一谈。"},
+
+  {level:"concepts", title:"Connector roles and Lookup Join", desc:"A connector can be a Source, Sink, or Lookup source. A processing-time temporal lookup join asks an external system for the dimension value visible at processing time.",
+   zh:"中文：Kafka 适合事件流，HBase 适合按 user_id 点查，ClickHouse 适合 BI 聚合查询。Lookup Join 就是每来一条流事件，按 key 去外部维表查一次。",
+   table: table(["System","Typical role in our examples","Why"], [
+     ["Kafka","Event Source / intermediate stream||事件源/中间流","High-throughput ordered log + consumer groups"],
+     ["HBase","Lookup dimension||点查维表","Fast random lookup by row key"],
+     ["Hive / ODS","Authoritative batch history||权威离线历史","Complete data for backfill and calibration"],
+     ["ClickHouse","Analytics Sink||分析型结果库","Fast time-range aggregation for BI"],
+   ]),
+   code:`SELECT t.user_id, h.first_pay_time
+FROM payment_stream AS t
+LEFT JOIN hbase_first_pay
+  FOR SYSTEM_TIME AS OF t.proctime AS h
+ON t.rowkey = h.rowkey;`,
+   tip:"Lookup Join 通常需要左表有 Processing Time 属性，右表 connector 支持 lookup。"},
+
+  {level:"cases", title:"Level 3 roadmap — two cases, each teaches a different part of Flink", desc:"Case 1 is event-by-event decisioning. Case 2 is event-time aggregation. Learn the business question first, then the SQL.",
+   zh:"中文：不要一上来背代码。先问“这条支付来了，我要立刻判断什么？”或者“这一小时结束后，我要统计什么？”",
+   html:`<div class="flink-map">
+<div class="flink-map-item"><strong>🔵 Case 1 — 首次支付发券</strong><span>去重 → Keyed State → HBase Lookup Join → 幂等发券。重点是“逐条判断”。</span></div>
+<div class="flink-map-item"><strong>🟢 Case 2 — 小时缴费大盘</strong><span>Event Time → Watermark → TUMBLE Window → 迟到数据校准。重点是“按时间聚合”。</span></div>
+</div>`,
+   table: table(["Question","Case 1","Case 2"], [
+     ["Output timing","Every qualifying payment||每条符合条件的支付立刻输出","When the hourly window closes||小时窗口关闭时输出"],
+     ["Main state","Earliest payment per user/day||用户每天最早支付","Count and sum per hour||每小时笔数与金额"],
+     ["External system","HBase historical lookup||HBase 历史点查","ClickHouse BI result||ClickHouse 大盘结果"],
+     ["Accuracy safeguard","Idempotent coupon service||发券服务幂等","T-1 batch calibration||T-1 离线校准"],
+   ])},
+
+  {level:"cases", title:"Case 1.1 — Business question and data flow", desc:"When a successful study-abroad payment arrives, determine whether this is the user's first-ever payment and trigger a coupon only once.",
+   zh:"中文：支付事件到达后，先找出用户当天第一笔，再查历史首付快照；历史没有这个用户，才触发首付优惠券。",
+   speak:"When a payment arrives, deduplicate to the user's first payment of the day, look up historical first-payment data in HBase, and emit a coupon command only if no historical record exists.",
+   html:`<span class="case-label blue">CASE 1 · PER-EVENT DECISION</span>`,
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="ap1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="980" height="380" fill="#fafafa"/>
+  <text x="490" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">数据源全景：从 MySQL 缴费表到 Flink 作业</text>
+
+  <!-- MySQL -->
+  <rect x="30" y="80" width="180" height="70" rx="8" fill="#3b6ea5"/>
+  <text x="120" y="108" text-anchor="middle" fill="white" font-size="13" font-weight="600">MySQL</text>
+  <text x="120" y="127" text-anchor="middle" fill="#dce8f7" font-size="11">study_abroad_payment 表</text>
+  <text x="120" y="142" text-anchor="middle" fill="#dce8f7" font-size="10">每次缴费一条 INSERT</text>
+
+  <path d="M210,115 L280,115" stroke="#5b6472" stroke-width="2" marker-end="url(#ap1)"/>
+  <text x="245" y="100" text-anchor="middle" font-size="10" fill="#5b6472">binlog</text>
+
+  <!-- Canal/CDC -->
+  <rect x="280" y="80" width="150" height="70" rx="8" fill="#8e44ad"/>
+  <text x="355" y="108" text-anchor="middle" fill="white" font-size="13" font-weight="600">CDC 采集</text>
+  <text x="355" y="127" text-anchor="middle" fill="#f0e0f7" font-size="10">Canal / Debezium</text>
+  <text x="355" y="142" text-anchor="middle" fill="#f0e0f7" font-size="10">解析 binlog 生成事件</text>
+
+  <path d="M430,115 L500,115" stroke="#5b6472" stroke-width="2" marker-end="url(#ap1)"/>
+
+  <!-- Kafka -->
+  <rect x="500" y="80" width="200" height="70" rx="8" fill="#2f9e6e"/>
+  <text x="600" y="108" text-anchor="middle" fill="white" font-size="13" font-weight="600">Kafka Topic</text>
+  <text x="600" y="127" text-anchor="middle" fill="#dcf5e8" font-size="10">study_abroad_payment_events</text>
+  <text x="600" y="142" text-anchor="middle" fill="#dcf5e8" font-size="10">唯一数据入口，全公司共享</text>
+
+  <path d="M600,150 L600,190" stroke="#5b6472" stroke-width="2" marker-end="url(#ap1)"/>
+
+  <!-- 消费者分叉 -->
+  <text x="600" y="205" text-anchor="middle" font-size="11" fill="#c0392b" font-weight="600">两个独立 Consumer Group 各读一份</text>
+
+  <rect x="380" y="220" width="200" height="60" rx="8" fill="#eaf1fb" stroke="#3b6ea5"/>
+  <text x="480" y="245" text-anchor="middle" font-size="12" fill="#1f3a5f" font-weight="600">批处理：Hive/Spark</text>
+  <text x="480" y="263" text-anchor="middle" font-size="10" fill="#1f3a5f">落 ODS → 聚合 DWD T-1 表</text>
+
+  <rect x="620" y="220" width="200" height="60" rx="8" fill="#e8f8ef" stroke="#2f9e6e"/>
+  <text x="720" y="245" text-anchor="middle" font-size="12" fill="#155d3a" font-weight="600">实时：Flink SQL 作业</text>
+  <text x="720" y="263" text-anchor="middle" font-size="10" fill="#155d3a">今天0点起，判断首次支付</text>
+
+  <path d="M600,190 L480,220" stroke="#5b6472" stroke-width="1.5"/>
+  <path d="M600,190 L720,220" stroke="#5b6472" stroke-width="1.5"/>
+
+  <text x="490" y="330" text-anchor="middle" font-size="12" fill="#5b6472">MySQL 是唯一权威来源；Kafka 是所有下游共享的"数据总线"；批和实时各自独立消费，互不阻塞</text>
+</svg>`,
+   table: table(["order_id","user_id","pay_time","amount","Meaning"], [
+     ["order_88213","u_7001","09:00","5,000","Deposit — first payment today||订金，当天第一笔"],
+     ["order_88214","u_7001","15:30","45,000","Balance — must not issue again||尾款，不能再次发券"],
+     ["order_91002","u_8002","10:00","30,000","History already exists in HBase||历史已支付过"],
+   ]),
+   tip:"CDC 只负责把 MySQL 变更可靠地送到 Kafka；“是不是首次支付”由 Flink 和历史维表共同判断。"},
+
+  {level:"cases", title:"Case 1.2 — Step A: deduplicate to the earliest payment per user per day", desc:"ROW_NUMBER is not just a SQL function here. Flink maintains keyed state and emits a changelog when the current earliest row changes.",
+   zh:"中文：同一个用户一天可能有订金和尾款，只保留当天最早一笔。因为乱序数据可能改写最早值，所以中间结果是更新流，不是永远 append-only。",
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="ap2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="900" height="380" fill="#fafafa"/>
+  <text x="450" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">流内去重：同一用户今天分订金+尾款两笔缴费</text>
+
+  <text x="220" y="65" text-anchor="middle" font-size="13" font-weight="600" fill="#3b6ea5">Kafka 流入的原始缴费事件</text>
+  <rect x="60" y="80" width="320" height="150" fill="white" stroke="#c9d2dc"/>
+  <line x1="60" y1="110" x2="380" y2="110" stroke="#c9d2dc"/>
+  <line x1="60" y1="140" x2="380" y2="140" stroke="#c9d2dc"/>
+  <line x1="60" y1="170" x2="380" y2="170" stroke="#c9d2dc"/>
+  <line x1="60" y1="200" x2="380" y2="200" stroke="#c9d2dc"/>
+  <line x1="220" y1="80" x2="220" y2="230" stroke="#c9d2dc"/>
+  <text x="140" y="100" text-anchor="middle" font-size="11" font-weight="600">user_id</text>
+  <text x="300" y="100" text-anchor="middle" font-size="11" font-weight="600">pay_time / order</text>
+
+  <rect x="62" y="142" width="316" height="28" fill="#fff3cd"/>
+  <text x="140" y="160" text-anchor="middle" font-size="11" font-weight="700">u_7001</text>
+  <text x="300" y="160" text-anchor="middle" font-size="11" font-weight="700">09:00 订金 ⭐最早</text>
+
+  <text x="140" y="190" text-anchor="middle" font-size="11">u_7001</text>
+  <text x="300" y="190" text-anchor="middle" font-size="11">15:30 尾款</text>
+
+  <text x="140" y="220" text-anchor="middle" font-size="11">u_8002</text>
+  <text x="300" y="220" text-anchor="middle" font-size="11">10:00 全款</text>
+
+  <path d="M400,155 L500,155" stroke="#5b6472" stroke-width="2" marker-end="url(#ap2)"/>
+  <text x="450" y="140" text-anchor="middle" font-size="10" fill="#5b6472">ROW_NUMBER 取最早一条</text>
+
+  <text x="700" y="65" text-anchor="middle" font-size="13" font-weight="600" fill="#2f9e6e">去重后：每人只留最早一笔</text>
+  <rect x="540" y="80" width="320" height="110" fill="white" stroke="#c9d2dc"/>
+  <line x1="540" y1="110" x2="860" y2="110" stroke="#c9d2dc"/>
+  <line x1="540" y1="140" x2="860" y2="140" stroke="#c9d2dc"/>
+  <line x1="700" y1="80" x2="700" y2="190" stroke="#c9d2dc"/>
+  <text x="620" y="100" text-anchor="middle" font-size="11" font-weight="600">user_id</text>
+  <text x="780" y="100" text-anchor="middle" font-size="11" font-weight="600">today_first_pay_time</text>
+
+  <rect x="542" y="112" width="316" height="26" fill="#d4f4e2"/>
+  <text x="620" y="130" text-anchor="middle" font-size="11" font-weight="700">u_7001</text>
+  <text x="780" y="130" text-anchor="middle" font-size="11" font-weight="700">09:00（订金那笔）</text>
+
+  <text x="620" y="160" text-anchor="middle" font-size="11">u_8002</text>
+  <text x="780" y="160" text-anchor="middle" font-size="11">10:00</text>
+
+  <text x="450" y="270" text-anchor="middle" font-size="12" fill="#c0392b">⚠️ 业务含义：判断"首次支付"通常看第一笔实际到账记录（订金），</text>
+  <text x="450" y="290" text-anchor="middle" font-size="12" fill="#c0392b">而不是等尾款付完才算，具体口径需要和业务方确认</text>
+  <text x="450" y="330" text-anchor="middle" font-size="11" fill="#5b6472">这个输出同样是 changelog 流（可能撤回再更新），不是纯追加流</text>
+</svg>`,
+   code:`SET 'table.exec.state.ttl' = '25 h';
+
+CREATE TABLE ft_sink_first_pay_dedup (
+  user_id STRING,
+  pay_date STRING,
+  order_id STRING,
+  today_first_pay_time TIMESTAMP(3),
+  PRIMARY KEY (user_id, pay_date) NOT ENFORCED
+) WITH (
+  'connector' = 'upsert-kafka',
+  'topic' = 'today_first_pay_dedup',
+  'key.format' = 'json',
+  'value.format' = 'json'
+);
+
+INSERT INTO ft_sink_first_pay_dedup
+SELECT user_id, pay_date, order_id, pay_time
+FROM (
+  SELECT *,
+    DATE_FORMAT(pay_time, 'yyyy-MM-dd') AS pay_date,
+    ROW_NUMBER() OVER (
+      PARTITION BY user_id, DATE_FORMAT(pay_time, 'yyyy-MM-dd')
+      ORDER BY pay_time ASC
+    ) AS rn
+  FROM ft_src_payment_events
+)
+WHERE rn = 1;`,
+   html:`<div class="example-box"><b>状态变化：</b>先收到 15:30 尾款 → 当前最早=15:30；随后迟到的 09:00 订金到达 → 当前最早更新为09:00。Upsert-Kafka 用复合主键 (user_id, pay_date) 覆盖旧值。</div>`,
+   warn:"若中间表用 Upsert-Kafka，下游注册 Source 时也应按 Upsert-Kafka/changelog 语义读取，不能把它当普通 append Kafka 随便消费。"},
+
+  {level:"cases", title:"Case 1.3 — Step B: look up HBase history and emit the coupon command", desc:"The T-1 Hive snapshot is synchronized to HBase for fast point lookups. No HBase row means the user has no historical first-payment record.",
+   zh:"中文：Hive 是权威历史，但不适合每条支付都整表查；每天把快照同步到 HBase，Flink 根据 user_id 计算 rowkey 做毫秒级点查。",
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 900 380" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="ap3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="900" height="380" fill="#fafafa"/>
+  <text x="450" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">最后一步：判定首次支付 → 触发发券 → 幂等兜底</text>
+
+  <rect x="60" y="70" width="220" height="55" rx="8" fill="#2f9e6e"/>
+  <text x="170" y="93" text-anchor="middle" fill="white" font-size="12" font-weight="600">Flink 判定：is_first_pay_today</text>
+  <text x="170" y="111" text-anchor="middle" fill="white" font-size="11">= true</text>
+
+  <path d="M280,97 L340,97" stroke="#5b6472" stroke-width="2" marker-end="url(#ap3)"/>
+
+  <rect x="340" y="70" width="220" height="55" rx="8" fill="#3b6ea5"/>
+  <text x="450" y="93" text-anchor="middle" fill="white" font-size="12" font-weight="600">写入 upsert-kafka</text>
+  <text x="450" y="111" fill="white" text-anchor="middle" font-size="11">first_pay_coupon_trigger</text>
+
+  <path d="M560,97 L620,97" stroke="#5b6472" stroke-width="2" marker-end="url(#ap3)"/>
+
+  <rect x="620" y="70" width="220" height="55" rx="8" fill="#8e44ad"/>
+  <text x="730" y="93" text-anchor="middle" fill="white" font-size="12" font-weight="600">发券服务消费</text>
+  <text x="730" y="111" fill="white" text-anchor="middle" font-size="11">收到一条即触发发券</text>
+
+  <path d="M730,125 L730,165" stroke="#5b6472" stroke-width="2" marker-end="url(#ap3)"/>
+
+  <rect x="560" y="165" width="340" height="80" rx="8" fill="#fdecea" stroke="#c0392b"/>
+  <text x="730" y="190" text-anchor="middle" font-size="12" font-weight="700" fill="#c0392b">⚠️ Kafka at-least-once 可能重复消费</text>
+  <text x="580" y="212" font-size="11" fill="#7a2119">发券服务收到消息后，先查 Redis：</text>
+  <text x="580" y="230" font-size="11" fill="#7a2119">SETNX coupon:user_id:活动ID  → 已存在则跳过，不重复发</text>
+
+  <rect x="60" y="270" width="780" height="80" rx="8" fill="#fff" stroke="#c9d2dc"/>
+  <text x="450" y="295" text-anchor="middle" font-size="12" font-weight="700" fill="#1f2d3d">全链路一致性小结</text>
+  <text x="80" y="318" font-size="11" fill="#5b6472">Flink 侧：Hive/HBase 保证"首次支付"判断本身准确（最终一致，容忍T-1修正）</text>
+  <text x="80" y="338" font-size="11" fill="#5b6472">发券侧：用轻量级 Redis SETNX 做最后一道幂等闸门，防止消息重复导致重复发券</text>
+</svg>`,
+   code:`CREATE TABLE ft_dim_hbase_first_pay (
+  rowkey STRING,
+  cf ROW<first_pay_time STRING, first_order_id STRING>,
+  PRIMARY KEY (rowkey) NOT ENFORCED
+) WITH (
+  'connector' = 'hbase-2.2',
+  'table-name' = 'hbt_dm_user_first_payment_d',
+  'zookeeper.quorum' = 'zk1:2181,zk2:2181,zk3:2181',
+  'lookup.cache.max-rows' = '500000',
+  'lookup.cache.ttl' = '30 min'
+);
+
+INSERT INTO ft_sink_coupon_trigger
+SELECT t.user_id, t.order_id, t.today_first_pay_time
+FROM ft_src_first_pay_dedup AS t
+LEFT JOIN ft_dim_hbase_first_pay
+  FOR SYSTEM_TIME AS OF t.proctime AS h
+ON CONCAT(SUBSTRING(MD5(t.user_id), 1, 2), '_', t.user_id) = h.rowkey
+WHERE h.rowkey IS NULL;`,
+   table: table(["User","Today's dedup result","HBase history","Decision"], [
+     ["u_7001","09:00 order_88213","No row||无记录","Emit coupon command||触发发券"],
+     ["u_8002","10:00 order_91002","Existing first pay in 2025||2025年已有首付","Do nothing||不发券"],
+     ["u_7001 second payment","Filtered by daily dedup||被当天去重过滤","Not queried again||不再查询","No duplicate coupon||不会重复发"],
+   ]),
+   tip:"`FOR SYSTEM_TIME AS OF t.proctime` 表示按处理时刻做外部维表点查，不是把整张 HBase 表加载进 Flink。"},
+
+  {level:"cases", title:"Case 1.4 — Why Hive + HBase, and how the daily jobs fit together", desc:"Hive remains the authoritative history; HBase is only the online lookup copy. Keeping those roles separate makes the design easier to operate.",
+   zh:"中文：Hive 负责“全、准、可重算”，HBase 负责“快、按 key 查”。不要把 HBase 当最终权威数据源。",
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="tl1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="480" fill="#fafafa"/>
+  <text x="500" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">4 个作业的运行方式：谁常驻、谁定时</text>
+
+  <!-- 时间轴 -->
+  <line x1="80" y1="80" x2="920" y2="80" stroke="#c9d2dc" stroke-width="2"/>
+  <text x="80" y="65" font-size="11" fill="#5b6472">00:00</text>
+  <text x="280" y="65" font-size="11" fill="#5b6472">02:00</text>
+  <text x="380" y="65" font-size="11" fill="#5b6472">02:30</text>
+  <text x="920" y="65" text-anchor="end" font-size="11" fill="#5b6472">24:00（次日 00:00）</text>
+
+  <circle cx="280" cy="80" r="4" fill="#3b6ea5"/>
+  <circle cx="380" cy="80" r="4" fill="#8e44ad"/>
+
+  <!-- 常驻作业①去重 -->
+  <rect x="80" y="110" width="840" height="60" rx="8" fill="#e8f8ef" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="100" y="132" font-size="13" font-weight="700" fill="#155d3a">🟢 作业① DedupFirstPayJob（常驻，7×24小时不停）</text>
+  <text x="100" y="152" font-size="11" fill="#155d3a">从 Kafka 原始缴费流实时去重，一次提交，永久运行，靠 Checkpoint 记录消费进度</text>
+
+  <!-- 常驻作业②判断触发 -->
+  <rect x="80" y="180" width="840" height="60" rx="8" fill="#e8f8ef" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="100" y="202" font-size="13" font-weight="700" fill="#155d3a">🟢 作业② FirstPayCouponTriggerJob（常驻，7×24小时不停）</text>
+  <text x="100" y="222" font-size="11" fill="#155d3a">实时查 HBase 判断首次支付并触发发券，一次提交，永久运行</text>
+
+  <!-- 定时批处理③ Hive T-1 -->
+  <rect x="230" y="260" width="200" height="60" rx="8" fill="#eaf1fb" stroke="#3b6ea5" stroke-width="2"/>
+  <text x="330" y="282" text-anchor="middle" font-size="12" font-weight="700" fill="#1f3a5f">🔵 作业③ Hive T-1 批合并</text>
+  <text x="330" y="300" text-anchor="middle" font-size="11" fill="#1f3a5f">每天 02:00 定时触发一次</text>
+  <path d="M280,260 L280,90" stroke="#3b6ea5" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#tl1)"/>
+
+  <!-- 定时批处理④ Bulk Load -->
+  <rect x="450" y="260" width="200" height="60" rx="8" fill="#f0e6f7" stroke="#8e44ad" stroke-width="2"/>
+  <text x="550" y="282" text-anchor="middle" font-size="12" font-weight="700" fill="#5b2c73">🟣 作业④ Spark Bulk Load</text>
+  <text x="550" y="300" text-anchor="middle" font-size="11" fill="#5b2c73">每天 02:30 定时触发一次</text>
+  <path d="M380,260 L380,90" stroke="#8e44ad" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#tl1)"/>
+
+  <path d="M330,260 L330,240" stroke="#5b6472" stroke-width="1.5" marker-end="url(#tl1)"/>
+  <text x="390" y="252" text-anchor="middle" font-size="10" fill="#5b6472">③完成后触发④</text>
+
+  <!-- 说明框 -->
+  <rect x="80" y="350" width="840" height="110" rx="8" fill="#fff" stroke="#c9d2dc"/>
+  <text x="100" y="375" font-size="12" font-weight="700" fill="#1f2d3d">关键区别</text>
+  <text x="100" y="398" font-size="11" fill="#5b6472">🟢 常驻作业（①②）：只提交一次，Flink 集群持续运行，不需要每天重启，靠 group-offsets 自动接续消费</text>
+  <text x="100" y="418" font-size="11" fill="#5b6472">🔵🟣 定时作业（③④）：用调度平台（Airflow/DolphinScheduler）每天定时触发一次，跑完即结束，不常驻</text>
+  <text x="100" y="438" font-size="11" fill="#c0392b">③④ 的产出（更新后的HBase数据）会被 ①②"自动"用上——因为①②是常驻查询，不需要重启就能读到最新维表</text>
+</svg>`,
+   collapsibleLabel:"▶ 展开：Hive 与 HBase 架构图",
+   collapsibleHtml:`<div class="embedded-svg"><svg class="flink-inline-svg" viewBox="0 0 980 520" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="a1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="980" height="520" fill="#fafafa"/>
+  <text x="490" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">方案对比：Flink 直连 Hive Lookup Join  vs  经过 HBase 中转</text>
+
+  <!-- 左：旧方案 -->
+  <rect x="40" y="60" width="420" height="420" rx="10" fill="#fff" stroke="#c0392b" stroke-width="2"/>
+  <text x="250" y="90" text-anchor="middle" font-size="14" font-weight="700" fill="#c0392b">❌ 旧方案：Flink 直查 Hive</text>
+
+  <rect x="80" y="110" width="340" height="50" rx="6" fill="#fdecea"/>
+  <text x="250" y="140" text-anchor="middle" font-size="12" fill="#7a2119">dwd_user_first_payment_t1（Hive）</text>
+
+  <path d="M250,160 L250,190" stroke="#5b6472" stroke-width="2" marker-end="url(#a1)"/>
+  <text x="330" y="180" font-size="11" fill="#c0392b">每条流数据都要查一次</text>
+
+  <rect x="80" y="190" width="340" height="60" rx="6" fill="#fdecea"/>
+  <text x="250" y="215" text-anchor="middle" font-size="12" font-weight="600" fill="#7a2119">Flink Lookup Join</text>
+  <text x="250" y="233" text-anchor="middle" font-size="11" fill="#7a2119">streaming-source.enable=false</text>
+
+  <rect x="80" y="280" width="340" height="180" rx="6" fill="#fff5f4" stroke="#e8a49b"/>
+  <text x="250" y="305" text-anchor="middle" font-size="12" font-weight="700" fill="#c0392b">问题清单</text>
+  <text x="100" y="330" font-size="11" fill="#7a2119">① 全表/整分区加载进 TM 内存</text>
+  <text x="100" y="352" font-size="11" fill="#7a2119">② 千万级以上用户 → OOM 风险</text>
+  <text x="100" y="374" font-size="11" fill="#7a2119">③ 缓存过期要重新扫一次 HDFS</text>
+  <text x="100" y="396" font-size="11" fill="#7a2119">④ Hive 为批量扫描设计，不是为</text>
+  <text x="110" y="414" font-size="11" fill="#7a2119">高频点查设计</text>
+  <text x="100" y="436" font-size="11" fill="#7a2119">⑤ 作业冷启动慢（等维表全量加载）</text>
+
+  <!-- 右：新方案 -->
+  <rect x="520" y="60" width="420" height="420" rx="10" fill="#fff" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="730" y="90" text-anchor="middle" font-size="14" font-weight="700" fill="#2f9e6e">✅ 新方案：中间加一层 HBase</text>
+
+  <rect x="560" y="110" width="340" height="50" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="140" text-anchor="middle" font-size="12" fill="#155d3a">dwd_user_first_payment_t1（Hive）</text>
+
+  <path d="M730,160 L730,185" stroke="#5b6472" stroke-width="2" marker-end="url(#a1)"/>
+  <text x="820" y="177" font-size="11" fill="#2f9e6e">每天同步一次（批量）</text>
+
+  <rect x="560" y="185" width="340" height="50" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="215" text-anchor="middle" font-size="12" font-weight="600" fill="#155d3a">HBase 表：dim:user_first_pay</text>
+
+  <path d="M730,235 L730,260" stroke="#5b6472" stroke-width="2" marker-end="url(#a1)"/>
+  <text x="850" y="252" font-size="11" fill="#2f9e6e">毫秒级点查</text>
+
+  <rect x="560" y="260" width="340" height="50" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="290" text-anchor="middle" font-size="12" font-weight="600" fill="#155d3a">Flink Lookup Join（查 HBase）</text>
+
+  <rect x="560" y="330" width="340" height="130" rx="6" fill="#f4fcf7" stroke="#a8dbc0"/>
+  <text x="730" y="355" text-anchor="middle" font-size="12" font-weight="700" fill="#155d3a">收益清单</text>
+  <text x="580" y="380" font-size="11" fill="#155d3a">① 按 RowKey 精确查，不用整表加载</text>
+  <text x="580" y="402" font-size="11" fill="#155d3a">② 延迟从"秒级扫描"降到"毫秒点查"</text>
+  <text x="580" y="424" font-size="11" fill="#155d3a">③ HBase 原生支持水平扩展，抗高 QPS</text>
+  <text x="580" y="446" font-size="11" fill="#155d3a">④ 跟 Hadoop 生态一体，无额外运维成本</text>
+
+  <text x="490" y="500" text-anchor="middle" font-size="12" fill="#5b6472">Hive T-1 表依然是"权威数据源"，HBase 只是它面向 Flink 的一份"高速查询副本"</text>
+</svg></div><div class="embedded-svg"><svg class="flink-inline-svg" viewBox="0 0 980 460" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="a2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="980" height="460" fill="#fafafa"/>
+  <text x="490" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">每天把 Hive T-1 表灌进 HBase：两种方式对比</text>
+
+  <!-- 左：Put方式 -->
+  <rect x="40" y="60" width="420" height="370" rx="10" fill="#fff" stroke="#e67e22" stroke-width="2"/>
+  <text x="250" y="90" text-anchor="middle" font-size="14" font-weight="700" fill="#e67e22">方式一：逐行 Put（简单但慢）</text>
+
+  <rect x="70" y="110" width="360" height="40" rx="6" fill="#fef2e6"/>
+  <text x="250" y="135" text-anchor="middle" font-size="12">Spark 读 Hive T-1 表</text>
+  <path d="M250,150 L250,175" stroke="#5b6472" stroke-width="2" marker-end="url(#a2)"/>
+
+  <rect x="70" y="175" width="360" height="40" rx="6" fill="#fef2e6"/>
+  <text x="250" y="200" text-anchor="middle" font-size="12">每一行调用 HBase Put API</text>
+  <path d="M250,215 L250,240" stroke="#5b6472" stroke-width="2" marker-end="url(#a2)"/>
+
+  <rect x="70" y="240" width="360" height="40" rx="6" fill="#fef2e6"/>
+  <text x="250" y="265" text-anchor="middle" font-size="12">走 RegionServer 正常写路径</text>
+
+  <rect x="70" y="300" width="360" height="115" rx="6" fill="#fffaf3" stroke="#f0c896"/>
+  <text x="250" y="322" text-anchor="middle" font-size="12" font-weight="700" fill="#c07a1f">特点</text>
+  <text x="90" y="345" font-size="11" fill="#7a5416">✓ 代码简单，SparkContext 直接写</text>
+  <text x="90" y="365" font-size="11" fill="#7a5416">✗ 全量刷新时对 RegionServer 压力大</text>
+  <text x="90" y="385" font-size="11" fill="#7a5416">✗ 触发大量 WAL 写入 + Compaction</text>
+  <text x="90" y="405" font-size="11" fill="#7a5416">适合：增量小、数据量不大的表</text>
+
+  <!-- 右：Bulk Load方式 -->
+  <rect x="520" y="60" width="420" height="370" rx="10" fill="#fff" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="730" y="90" text-anchor="middle" font-size="14" font-weight="700" fill="#2f9e6e">方式二：Bulk Load（大厂全量刷新首选）</text>
+
+  <rect x="550" y="110" width="360" height="40" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="135" text-anchor="middle" font-size="12">Spark 读 Hive T-1 表</text>
+  <path d="M730,150 L730,175" stroke="#5b6472" stroke-width="2" marker-end="url(#a2)"/>
+
+  <rect x="550" y="175" width="360" height="40" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="200" text-anchor="middle" font-size="12">直接生成 HFile 文件（绕过写路径）</text>
+  <path d="M730,215 L730,240" stroke="#5b6472" stroke-width="2" marker-end="url(#a2)"/>
+
+  <rect x="550" y="240" width="360" height="40" rx="6" fill="#e8f8ef"/>
+  <text x="730" y="265" text-anchor="middle" font-size="12">LoadIncrementalHFiles 秒级挂载</text>
+
+  <rect x="550" y="300" width="360" height="115" rx="6" fill="#f4fcf7" stroke="#a8dbc0"/>
+  <text x="730" y="322" text-anchor="middle" font-size="12" font-weight="700" fill="#155d3a">特点</text>
+  <text x="570" y="345" font-size="11" fill="#155d3a">✓ 不经过 RegionServer 写路径，压力极小</text>
+  <text x="570" y="365" font-size="11" fill="#155d3a">✓ 千万/亿级全量刷新也能几分钟完成</text>
+  <text x="570" y="385" font-size="11" fill="#155d3a">✓ 大厂做"T-1 全量刷新"的标准姿势</text>
+  <text x="570" y="405" font-size="11" fill="#155d3a">适合：每天全量/大批量刷新场景</text>
+
+  <text x="490" y="448" text-anchor="middle" font-size="12" fill="#5b6472">你这个场景是"每天全量刷新一份 T-1 快照" → 选 Bulk Load</text>
+</svg></div><div class="embedded-svg"><svg class="flink-inline-svg" viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <rect width="980" height="380" fill="#fafafa"/>
+  <text x="490" y="32" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">HBase RowKey 设计：为什么不能直接用 user_id</text>
+
+  <!-- 左：直接用user_id -->
+  <rect x="40" y="60" width="420" height="290" rx="10" fill="#fff" stroke="#c0392b" stroke-width="2"/>
+  <text x="250" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#c0392b">❌ RowKey = user_id（自增ID场景下会热点）</text>
+
+  <rect x="70" y="110" width="360" height="130" fill="white" stroke="#c9d2dc"/>
+  <text x="250" y="130" text-anchor="middle" font-size="11" fill="#5b6472">若 user_id 是自增数字：1000001, 1000002...</text>
+  <rect x="80" y="140" width="100" height="25" fill="#fdecea"/>
+  <text x="130" y="157" text-anchor="middle" font-size="10">Region A</text>
+  <rect x="190" y="140" width="100" height="25" fill="#fdecea"/>
+  <text x="240" y="157" text-anchor="middle" font-size="10">Region B</text>
+  <rect x="300" y="140" width="100" height="25" fill="#c0392b"/>
+  <text x="350" y="157" text-anchor="middle" font-size="10" fill="white">Region C ← 最新数据全落这</text>
+  <text x="250" y="200" text-anchor="middle" font-size="11" fill="#c0392b">新用户 ID 连续递增，写入全部打到</text>
+  <text x="250" y="218" text-anchor="middle" font-size="11" fill="#c0392b">同一个 Region，形成"热点写"</text>
+
+  <text x="250" y="270" text-anchor="middle" font-size="11" fill="#7a2119">其他 Region 空闲，一个 Region 扛全部压力</text>
+  <text x="250" y="290" text-anchor="middle" font-size="11" fill="#7a2119">大表全量刷新时尤其明显</text>
+  <text x="250" y="325" text-anchor="middle" font-size="12" font-weight="700" fill="#c0392b">👎 RegionServer 负载不均衡</text>
+
+  <!-- 右：加盐 -->
+  <rect x="520" y="60" width="420" height="290" rx="10" fill="#fff" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="730" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="#2f9e6e">✅ RowKey = hash前缀(2位) + user_id</text>
+
+  <rect x="550" y="110" width="360" height="130" fill="white" stroke="#c9d2dc"/>
+  <text x="730" y="130" text-anchor="middle" font-size="11" fill="#5b6472">例：MD5(user_id) 取前2位当前缀</text>
+  <rect x="560" y="140" width="100" height="25" fill="#e8f8ef"/>
+  <text x="610" y="157" text-anchor="middle" font-size="10">Region A ← 3f_1000002</text>
+  <rect x="670" y="140" width="100" height="25" fill="#e8f8ef"/>
+  <text x="720" y="157" text-anchor="middle" font-size="10">Region B ← 8a_1000001</text>
+  <rect x="780" y="140" width="100" height="25" fill="#e8f8ef"/>
+  <text x="830" y="157" text-anchor="middle" font-size="10">Region C ← c2_1000003</text>
+  <text x="730" y="200" text-anchor="middle" font-size="11" fill="#155d3a">同样连续递增的 user_id，加盐之后</text>
+  <text x="730" y="218" text-anchor="middle" font-size="11" fill="#155d3a">被均匀打散到不同 Region</text>
+
+  <text x="730" y="270" text-anchor="middle" font-size="11" fill="#155d3a">代价：按前缀范围扫描会变复杂</text>
+  <text x="730" y="290" text-anchor="middle" font-size="11" fill="#155d3a">但你这个场景只做单点查询，不受影响</text>
+  <text x="730" y="325" text-anchor="middle" font-size="12" font-weight="700" fill="#155d3a">👍 写入均匀分布，推荐使用</text>
+</svg></div>`,
+   table: table(["Job","Run mode","Responsibility"], [
+     ["① DedupFirstPayJob","Always-on Flink||常驻 Flink","Keep first payment per user/day"],
+     ["② CouponTriggerJob","Always-on Flink||常驻 Flink","HBase lookup and emit command"],
+     ["③ HiveFirstPayMergeJob","Daily batch||每日批处理","Build authoritative T-1 first-pay snapshot"],
+     ["④ BulkLoadHBaseJob","Daily after ③||每日依赖③","Refresh online lookup copy"],
+   ]),
+   warn:"T-1 HBase 快照看不到“今天刚首付”的用户，所以 Case 1 必须同时依赖“当天去重 State”来阻止同日第二笔再次触发。"},
+
+  {level:"cases", title:"Case 1.5 — Reliability: why Redis SETNX or a unique event_id is still required", desc:"A coupon command is a business side effect. Retries, restarts, or consumer redelivery must not issue a second coupon.",
+   zh:"中文：Flink 恢复时可能重新发送外部消息；Kafka 消费者也可能重复处理。发券系统必须用唯一业务键兜底。",
+   code:`event_id = activity_2026Q3 + ':' + user_id
+
+SETNX coupon:activity_2026Q3:u_7001 1
+EXPIRE coupon:activity_2026Q3:u_7001 86400
+
+-- SETNX returns 1: issue coupon
+-- SETNX returns 0: already processed, skip`,
+   html:`<div class="answer-box"><strong>Interview answer</strong>I would not claim that checkpointing alone makes coupon issuance exactly-once. Checkpointing protects Flink state and source offsets, while the external coupon service uses a deterministic event ID or a unique constraint to make the side effect idempotent.</div>`,
+   tip:"这句话很重要：Exactly-once state consistency ≠ every external business side effect is automatically exactly-once."},
+
+  {level:"cases", title:"Case 1 design review — the example is good, with four production cautions", desc:"The example is strong for interviews because it connects real-time state with authoritative batch history. These cautions make it technically credible.",
+   zh:"中文：这个案例整体很好，业务目标明确，也能同时讲 Flink、Kafka、Hive、HBase 和幂等。但生产实现要补上下面四点。",
+   table: table(["Caution","Why it matters"], [
+     ["Use composite key (user_id, pay_date) in daily dedup","避免跨天覆盖；TTL 才能安全清理昨天 State"],
+     ["Read Upsert-Kafka with changelog semantics","Top-1 可能更新/撤回，不能假设只有 append"],
+     ["Define the late-event policy","立即发券追求低延迟；等待 Watermark 追求事件时间准确，需要业务取舍"],
+     ["Make the coupon sink idempotent","外部副作用必须按 activity_id + user_id 唯一"],
+   ]),
+   tip:"作为面试案例，建议先讲业务链路，再主动补充这些 trade-off；这样比只展示一段 SQL 更像高级工程师。"},
+
+  {level:"cases", title:"Case 2.1 — Business question: hourly payment dashboard", desc:"Operations wants payment count and amount for every event-time hour, while still handling out-of-order and late events.",
+   zh:"中文：运营想看每小时缴费笔数和金额。这里不能简单按“Flink 收到时间”统计，而要按支付真正发生的 pay_time 统计。",
+   speak:"The hourly dashboard groups payments by event time, closes each one-hour window when the watermark passes the window end, and later calibrates yesterday from complete offline data.",
+   html:`<span class="case-label green">CASE 2 · EVENT-TIME AGGREGATION</span>`,
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="wa1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="460" fill="#fafafa"/>
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">滚动窗口（TUMBLE）：按小时统计缴费笔数和金额</text>
+
+  <!-- 时间轴 -->
+  <line x1="60" y1="80" x2="940" y2="80" stroke="#c9d2dc" stroke-width="2"/>
+  <text x="200" y="65" text-anchor="middle" font-size="11" fill="#5b6472">09:00</text>
+  <text x="500" y="65" text-anchor="middle" font-size="11" fill="#5b6472">10:00</text>
+  <text x="800" y="65" text-anchor="middle" font-size="11" fill="#5b6472">11:00</text>
+
+  <!-- 窗口1 -->
+  <rect x="200" y="60" width="300" height="40" fill="#eaf1fb" opacity="0.6"/>
+  <text x="350" y="115" text-anchor="middle" font-size="11" fill="#3b6ea5" font-weight="600">窗口①：[09:00, 10:00)</text>
+
+  <!-- events in window1 -->
+  <circle cx="240" cy="80" r="5" fill="#3b6ea5"/>
+  <text x="240" y="140" text-anchor="middle" font-size="9">09:05 ¥5000</text>
+  <circle cx="320" cy="80" r="5" fill="#3b6ea5"/>
+  <text x="320" y="140" text-anchor="middle" font-size="9">09:30 ¥30000</text>
+  <circle cx="460" cy="80" r="5" fill="#3b6ea5"/>
+  <text x="460" y="140" text-anchor="middle" font-size="9">09:58 ¥8000</text>
+
+  <!-- 窗口2 -->
+  <rect x="500" y="60" width="300" height="40" fill="#e8f8ef" opacity="0.6"/>
+  <text x="650" y="115" text-anchor="middle" font-size="11" fill="#2f9e6e" font-weight="600">窗口②：[10:00, 11:00)</text>
+  <circle cx="540" cy="80" r="5" fill="#2f9e6e"/>
+  <text x="540" y="140" text-anchor="middle" font-size="9">10:02 ¥45000</text>
+  <circle cx="700" cy="80" r="5" fill="#2f9e6e"/>
+  <text x="700" y="140" text-anchor="middle" font-size="9">10:40 ¥12000</text>
+
+  <!-- 迟到数据 -->
+  <circle cx="480" cy="80" r="5" fill="#c0392b"/>
+  <text x="480" y="160" text-anchor="middle" font-size="9" fill="#c0392b">⚠️ 09:55事件</text>
+  <text x="480" y="175" text-anchor="middle" font-size="9" fill="#c0392b">网络延迟到10:03才到达</text>
+  <path d="M480,90 L480,105" stroke="#c0392b" stroke-width="1.5" marker-end="url(#wa1)"/>
+
+  <!-- Watermark 推进线 -->
+  <line x1="60" y1="200" x2="940" y2="200" stroke="#c9d2dc" stroke-width="2"/>
+  <text x="70" y="195" font-size="11" fill="#8e44ad" font-weight="600">Watermark 推进（= 已见最大EventTime - 5秒）</text>
+  <path d="M460,80 C 470,180 500,190 505,200" stroke="#8e44ad" stroke-width="1.5" stroke-dasharray="3,2"/>
+  <polygon points="505,200 498,192 512,192" fill="#8e44ad"/>
+  <text x="505" y="220" text-anchor="middle" font-size="10" fill="#8e44ad">Watermark到达10:00时，</text>
+  <text x="505" y="235" text-anchor="middle" font-size="10" fill="#8e44ad">触发窗口①计算并输出结果</text>
+
+  <!-- 结果表 -->
+  <rect x="150" y="270" width="700" height="150" rx="8" fill="white" stroke="#c9d2dc"/>
+  <text x="500" y="295" text-anchor="middle" font-size="12" font-weight="700" fill="#1f2d3d">窗口①触发时的计算结果</text>
+  <line x1="150" y1="305" x2="850" y2="305" stroke="#c9d2dc"/>
+  <line x1="150" y1="335" x2="850" y2="335" stroke="#c9d2dc"/>
+  <line x1="380" y1="305" x2="380" y2="420" stroke="#c9d2dc"/>
+  <line x1="580" y1="305" x2="580" y2="420" stroke="#c9d2dc"/>
+  <text x="265" y="322" text-anchor="middle" font-size="11" font-weight="600">window</text>
+  <text x="480" y="322" text-anchor="middle" font-size="11" font-weight="600">pay_count</text>
+  <text x="715" y="322" text-anchor="middle" font-size="11" font-weight="600">pay_amount</text>
+  <text x="265" y="352" text-anchor="middle" font-size="11">[09:00, 10:00)</text>
+  <text x="480" y="352" text-anchor="middle" font-size="11">3笔</text>
+  <text x="715" y="352" text-anchor="middle" font-size="11">¥43000</text>
+
+  <text x="500" y="395" text-anchor="middle" font-size="11" fill="#c0392b">⚠️ 09:55那笔延迟到10:03才到，此时窗口①早已触发计算并输出，</text>
+  <text x="500" y="412" text-anchor="middle" font-size="11" fill="#c0392b">默认会被直接丢弃，不会补算进窗口①的结果里</text>
+</svg>`,
+   table: table(["user_id","Event Time","Arrival Time","Amount","Result"], [
+     ["u_7001","09:05:00","09:05:02","5,000","09:00 window"],
+     ["u_8002","09:30:00","09:30:01","30,000","09:00 window"],
+     ["u_9003","09:58:00","09:58:03","8,000","09:00 window"],
+     ["u_9003","09:55:00","10:03:00","12,000","Late after window closed||窗口关闭后迟到"],
+     ["u_7001","10:02:00","10:02:01","45,000","Advances watermark past 10:00||推动水位越过10点"],
+   ])},
+
+  {level:"cases", title:"Case 2.2 — TUMBLE window SQL and the exact trigger sequence", desc:"The 09:00–10:00 window outputs when the Watermark passes 10:00, not simply because the wall clock reaches 10:00.",
+   zh:"中文：触发窗口的不是“系统时间到了10点”，而是 Event Time 水位线越过10点。",
+   code:`SET 'table.exec.source.idle-timeout' = '1 min';
+
+CREATE TABLE ft_src_payment_events_stats (
+  order_id STRING,
+  user_id STRING,
+  pay_time TIMESTAMP(3),
+  pay_amount DECIMAL(10,2),
+  WATERMARK FOR pay_time AS pay_time - INTERVAL '5' SECOND
+) WITH (
+  'connector' = 'kafka',
+  'topic' = 'study_abroad_payment_events',
+  'properties.group.id' = 'hourly-stats-job-group',
+  'format' = 'json',
+  'scan.startup.mode' = 'group-offsets'
+);
+
+INSERT INTO ft_sink_pay_hourly_stats
+SELECT window_start, window_end,
+       COUNT(*) AS pay_count,
+       SUM(pay_amount) AS pay_amount
+FROM TABLE(
+  TUMBLE(TABLE ft_src_payment_events_stats,
+         DESCRIPTOR(pay_time), INTERVAL '1' HOUR)
+)
+GROUP BY window_start, window_end;`,
+   html:`<div class="example-box"><b>时间线：</b><br>09:58 事件后，Watermark≈09:57:55，窗口还不能关。<br>10:02 事件到达后，Watermark≈10:01:55，越过10:00，输出 3笔 / ¥43,000。<br>10:03 才到的 Event Time=09:55 事件已经晚于水位，默认不会进入已关闭窗口。</div>`,
+   warn:"空闲检测应通过 `table.exec.source.idle-timeout` 配置。它解决“某个 Kafka 分区长时间无数据，拖住全局最小 Watermark”的问题。"},
+
+  {level:"cases", title:"Case 2.3 — Late data, historical backfill and T-1 calibration", desc:"Real-time output is fast but may be incomplete. Complete ODS data is used once for history and daily for yesterday's correction.",
+   zh:"中文：实时层先给“快的近似值”；离线层再给“慢但完整的准确值”。昨天及更早的数据最终都会被校准。",
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="bc1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="420" fill="#fafafa"/>
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">大盘数据来源三段拼接：历史回刷 + 实时 + 每天T-1校准</text>
+
+  <!-- 时间轴 -->
+  <line x1="60" y1="90" x2="940" y2="90" stroke="#c9d2dc" stroke-width="2"/>
+  <text x="150" y="75" text-anchor="middle" font-size="11" fill="#5b6472">2026-01-01</text>
+  <text x="450" y="75" text-anchor="middle" font-size="11" fill="#5b6472">2026-07-01(上线)</text>
+  <text x="800" y="75" text-anchor="middle" font-size="11" fill="#5b6472">昨天</text>
+  <text x="920" y="75" text-anchor="middle" font-size="11" fill="#5b6472">今天</text>
+
+  <!-- 段1：历史回刷 -->
+  <rect x="60" y="100" width="390" height="50" rx="6" fill="#eaf1fb" stroke="#3b6ea5"/>
+  <text x="255" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#1f3a5f">① 一次性历史回刷</text>
+  <text x="255" y="140" text-anchor="middle" font-size="10" fill="#1f3a5f">从ODS明细算1-6月，只跑一次，永久准确</text>
+
+  <!-- 段2：实时+校准 -->
+  <rect x="450" y="100" width="350" height="50" rx="6" fill="#e8f8ef" stroke="#2f9e6e"/>
+  <text x="625" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#155d3a">② 实时写入 + 每天凌晨T-1校准覆盖</text>
+  <text x="625" y="140" text-anchor="middle" font-size="10" fill="#155d3a">昨天及更早的每一天，都已被校准成准确值</text>
+
+  <!-- 段3：今天 -->
+  <rect x="800" y="100" width="140" height="50" rx="6" fill="#fff3cd" stroke="#e6a817"/>
+  <text x="870" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="#8a6d1f">③ 今天</text>
+  <text x="870" y="140" text-anchor="middle" font-size="10" fill="#8a6d1f">只有实时近似值</text>
+
+  <!-- 详细说明 -->
+  <rect x="60" y="180" width="880" height="90" rx="8" fill="white" stroke="#c9d2dc"/>
+  <text x="80" y="205" font-size="12" font-weight="700" fill="#1f2d3d">作业⑤ HourlyPayStatsJob（常驻实时）</text>
+  <text x="80" y="225" font-size="11" fill="#5b6472">Watermark只等5秒，超过5秒才到的迟到数据默认丢弃，所以实时算出来的数字是"近似值"</text>
+  <text x="80" y="248" font-size="12" font-weight="700" fill="#1f2d3d">作业⑥ HourlyStatsCalibrationJob（每天02:00定时批处理，新增）</text>
+  <text x="80" y="265" font-size="11" fill="#5b6472">用完整的ODS明细重算"昨天"，INSERT OVERWRITE覆盖掉实时写入的近似值，变成准确值</text>
+
+  <!-- 覆盖箭头 -->
+  <path d="M870,150 C 870,300 625,300 625,150" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#bc1)"/>
+  <text x="750" y="320" text-anchor="middle" font-size="11" fill="#c0392b">明天凌晨，今天这段会被覆盖修正</text>
+
+  <text x="500" y="370" text-anchor="middle" font-size="12" fill="#1f2d3d" font-weight="700">越往前的数据越"沉淀"成准确值，只有"今天"是唯一还没定稿的一天</text>
+  <text x="500" y="392" text-anchor="middle" font-size="11" fill="#5b6472">Sink表必须支持按 window_start 覆盖写入，不能是纯追加，否则会重复</text>
+</svg>`,
+   table: table(["Task","When","Input","Output"], [
+     ["Historical backfill","Once at launch||上线时一次","Complete ODS history||完整 ODS 历史","Jan–Jun hourly results||1–6月小时结果"],
+     ["Flink real-time window","Always-on||常驻","Kafka events||Kafka 事件","Today's near-real-time result||今天实时近似值"],
+     ["T-1 calibration","Daily 02:00||每天02:00","Complete yesterday ODS||完整昨日 ODS","Overwrite yesterday with accurate values||准确值覆盖昨天"],
+   ]),
+   code:`INSERT OVERWRITE TABLE dm.dm_pay_hourly_stats_d
+PARTITION (dt='\${yesterday}')
+SELECT DATE_FORMAT(pay_time, 'yyyy-MM-dd HH:00:00') AS window_start,
+       COUNT(*) AS pay_count,
+       SUM(pay_amount) AS pay_amount
+FROM ods.ods_payment_detail
+WHERE dt = '\${yesterday}'
+GROUP BY DATE_FORMAT(pay_time, 'yyyy-MM-dd HH:00:00');`,
+   tip:"这就是 Lambda 思路的简化版：实时层负责快，批处理层负责最终准确。"},
+
+  {level:"cases", title:"Case 2.4 — Why ClickHouse is the final serving table", desc:"HBase is optimized for point lookups by key; ClickHouse is optimized for analytical scans and aggregation used by BI dashboards.",
+   zh:"中文：Case 1 的读者是程序，每条事件按 user_id 点查；Case 2 的读者是 BI/人，需要按时间范围聚合，所以最终落 ClickHouse。",
+   diagram: `<svg class="flink-inline-svg" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="ck1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6472"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="520" fill="#fafafa"/>
+  <text x="500" y="30" text-anchor="middle" font-size="16" font-weight="700" fill="#1f2d3d">统一写入 ClickHouse：两个写入方 + 一个读取方</text>
+
+  <!-- 写入方1: Flink -->
+  <rect x="40" y="60" width="280" height="90" rx="8" fill="#e8f8ef" stroke="#2f9e6e" stroke-width="2"/>
+  <text x="180" y="85" text-anchor="middle" font-size="12" font-weight="700" fill="#155d3a">作业⑤ Flink实时窗口</text>
+  <text x="180" y="105" text-anchor="middle" font-size="11" fill="#155d3a">每个TUMBLE窗口只在</text>
+  <text x="180" y="122" text-anchor="middle" font-size="11" fill="#155d3a">Watermark越过窗口结束线时</text>
+  <text x="180" y="139" text-anchor="middle" font-size="11" fill="#155d3a">触发一次，即"每小时写1条"</text>
+
+  <!-- 写入方2: 离线 -->
+  <rect x="40" y="170" width="280" height="90" rx="8" fill="#eaf1fb" stroke="#3b6ea5" stroke-width="2"/>
+  <text x="180" y="195" text-anchor="middle" font-size="12" font-weight="700" fill="#1f3a5f">作业⑥ 离线校准</text>
+  <text x="180" y="215" text-anchor="middle" font-size="11" fill="#1f3a5f">每天02:00跑一次</text>
+  <text x="180" y="232" text-anchor="middle" font-size="11" fill="#1f3a5f">一次性写入"昨天"24个小时</text>
+  <text x="180" y="249" text-anchor="middle" font-size="11" fill="#1f3a5f">的准确值（24条记录）</text>
+
+  <path d="M320,105 C 400,105 400,200 480,200" stroke="#5b6472" stroke-width="2" marker-end="url(#ck1)"/>
+  <path d="M320,215 L480,215" stroke="#5b6472" stroke-width="2" marker-end="url(#ck1)"/>
+
+  <!-- ClickHouse表 -->
+  <rect x="480" y="150" width="300" height="130" rx="8" fill="#fff3cd" stroke="#e6a817" stroke-width="2"/>
+  <text x="630" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#8a6d1f">ClickHouse表</text>
+  <text x="630" y="193" text-anchor="middle" font-size="11" fill="#8a6d1f">dws_pay_hourly_stats</text>
+  <text x="630" y="212" text-anchor="middle" font-size="10" fill="#8a6d1f">ENGINE = ReplacingMergeTree</text>
+  <text x="630" y="228" text-anchor="middle" font-size="10" fill="#8a6d1f">ORDER BY window_start</text>
+  <text x="630" y="248" text-anchor="middle" font-size="10" fill="#c0392b">同一window_start写两次，</text>
+  <text x="630" y="264" text-anchor="middle" font-size="10" fill="#c0392b">后台merge时只保留最新版本</text>
+
+  <path d="M780,215 C 830,215 830,215 860,215" stroke="#5b6472" stroke-width="2" marker-end="url(#ck1)"/>
+
+  <!-- BI工具 -->
+  <rect x="820" y="150" width="140" height="130" rx="8" fill="#f0e6f7" stroke="#8e44ad" stroke-width="2"/>
+  <text x="890" y="180" text-anchor="middle" font-size="12" font-weight="700" fill="#5b2c73">BI 工具</text>
+  <text x="890" y="200" text-anchor="middle" font-size="10" fill="#5b2c73">Grafana /</text>
+  <text x="890" y="216" text-anchor="middle" font-size="10" fill="#5b2c73">Superset /</text>
+  <text x="890" y="232" text-anchor="middle" font-size="10" fill="#5b2c73">自建大盘网页</text>
+  <text x="890" y="255" text-anchor="middle" font-size="9" fill="#5b2c73">JDBC/HTTP连接</text>
+  <text x="890" y="268" text-anchor="middle" font-size="9" fill="#5b2c73">运行SQL查询</text>
+
+  <!-- 说明区 -->
+  <rect x="40" y="310" width="920" height="180" rx="8" fill="white" stroke="#c9d2dc"/>
+  <text x="60" y="335" font-size="13" font-weight="700" fill="#1f2d3d">时间线示例（以2026-07-03 09:00这个小时为例）</text>
+  <text x="60" y="360" font-size="11" fill="#5b6472">10:00左右 —— 作业⑤触发窗口计算，写入 (09:00, 3笔, ¥43000) —— 这是"近似值"（09:55那笔延迟数据没算进去）</text>
+  <text x="60" y="382" font-size="11" fill="#5b6472">当天全天 —— BI工具查询到的都是这条近似值，大盘上显示 ¥43000</text>
+  <text x="60" y="404" font-size="11" fill="#5b6472">次日02:00 —— 作业⑥用完整ODS重算，写入 (09:00, 4笔, ¥55000) —— 这是"准确值"</text>
+  <text x="60" y="426" font-size="11" fill="#5b6472">ReplacingMergeTree后台merge —— 旧的近似值行被清理，只留准确值</text>
+  <text x="60" y="448" font-size="11" fill="#c0392b">⚠️ merge是异步的，不是立刻发生；查询时如果merge还没跑完，需要加 FINAL 关键字强制去重，或用 argMax() 聚合查询</text>
+  <text x="60" y="470" font-size="11" fill="#5b6472">次日之后 —— BI工具查到的09:00这个小时，变成准确值¥55000，大盘自动更新，不需要人工干预</text>
+</svg>`,
+   code:`CREATE TABLE dws_pay_hourly_stats (
+  window_start DateTime,
+  pay_count UInt64,
+  pay_amount Decimal(18,2),
+  update_time DateTime DEFAULT now()
+)
+ENGINE = ReplacingMergeTree(update_time)
+ORDER BY window_start;
+
+-- Dashboard query: explicitly take the latest version
+SELECT window_start,
+       argMax(pay_count, update_time) AS pay_count,
+       argMax(pay_amount, update_time) AS pay_amount
+FROM dws_pay_hourly_stats
+GROUP BY window_start
+ORDER BY window_start;`,
+   table: table(["At time","Stored version for 09:00","Dashboard result"], [
+     ["Jul 3 around 10:02","Real-time: 3 / ¥43,000||实时近似值","43,000"],
+     ["Jul 4 at 02:00","Calibration: 4 / ¥55,000||离线准确值","55,000 via argMax"],
+     ["After background merge","Old version physically removed||旧版本后台清理","55,000"],
+   ]),
+   warn:"ReplacingMergeTree 的去重是后台异步发生的；查询端应使用 argMax 或在可接受性能代价时使用 FINAL，不能假设旧行立即消失。"},
+
+  {level:"cases", title:"Case 2.5 — Why the dashboard job should be separate from the coupon job", desc:"They read the same Kafka topic with different consumer groups, but have different business criticality, state, change frequency and scaling requirements.",
+   zh:"中文：发券是 P0，小时大盘可能是 P2。把它们放在一个 Job 里，大盘改口径也会重启发券链路，故障域太大。",
+   table: table(["Dimension","Coupon job","Hourly dashboard job"], [
+     ["Priority","P0 business action||P0业务动作","P2 analytics||P2分析"],
+     ["Change frequency","Low and controlled||低频、谨慎变更","Often adds dimensions/metrics||经常加维度指标"],
+     ["State pattern","Per-user dedup + lookup||用户去重+点查","Time-window aggregate||时间窗口聚合"],
+     ["Scaling","Based on event lookup QPS||按事件点查 QPS","Based on aggregation throughput||按聚合吞吐"],
+   ]),
+   tip:"Kafka 支持多个 Consumer Group 独立消费同一 Topic。多读一次通常比把两个不同 SLA 的业务耦合起来更合理。"},
+
+  {level:"cases", title:"Level 3 final checklist — explain the pipeline before troubleshooting it", desc:"For any Flink incident, follow the event from source to state to sink, and verify time semantics separately from processing health.",
+   zh:"中文：排查时不要只看“Job 是 Running”。要确认数据有没有进、Watermark 有没有走、State 有没有暴涨、Checkpoint 是否成功、Sink 是否真正落地。",
+   table: table(["Layer","What to check","Typical symptom"], [
+     ["Kafka Source","Consumer lag, partition idleness, deserialization","Job running but no output||作业运行但没输出"],
+     ["Watermark","Current watermark and idle partitions","Window never fires||窗口一直不触发"],
+     ["State","State size, TTL, RocksDB disk, skewed keys","Checkpoint grows or one subtask is slow||Checkpoint变大或单个subtask慢"],
+     ["Checkpoint","Duration, failures, alignment/backpressure","Repeated recovery or stale offsets||反复恢复或offset停滞"],
+     ["Sink","Retries, duplicate keys, transaction/idempotency","Duplicate coupon or duplicate dashboard rows||重复发券或重复行"],
+   ]),
+   html:`<div class="answer-box"><strong>60-second summary</strong>Case 1 uses keyed state to keep each user's first payment of the day, a processing-time HBase lookup to check historical first payment, and an idempotent coupon service for the external side effect. Case 2 uses event-time tumbling windows and watermarks for hourly metrics, then backfills history and recalibrates T-1 from complete ODS data before serving BI from ClickHouse.</div>`,
+   tip:"能完整说出这段，你就已经不是只会背 Flink 定义，而是能把概念落到真实数据链路。"},
 ];
 
 
@@ -3252,7 +4133,7 @@ def safe_parse_amount(s):
   html += `<div class="star-banner" style="background:var(--success-bg); color:var(--success);" id="case4-anchor">💰 Case 4 — 成本优化 (Cluster Cost Optimization)</div>`;
   html += `<div class="card">
     <p class="q-desc" style="margin-bottom:10px;">面试官可能这样问：<i>"Tell me about a time you optimized cluster costs."</i></p>
-    <p class="q-desc zh-desc">🇨🇳 这是JD明确要求的"Optimise big data cluster costs"，前3个Case是"救火"，这个Case是"主动优化"，是不同性质的能力展示。</p>
+    <p class="q-desc zh-desc"> 这是JD明确要求的"Optimise big data cluster costs"，前3个Case是"救火"，这个Case是"主动优化"，是不同性质的能力展示。</p>
 
     <div class="steps-list">
       <div class="step-item">
@@ -3478,7 +4359,7 @@ function renderSupplementaryReference() {
   html += `<div class="card">
     <p class="q-title">Executor OOM — 面试可以直接用的完整讲解</p>
     <p class="q-desc">Connects directly to the SLA case study content — this is worth having as a complete, fluent 60-second answer.</p>
-    <p class="q-desc zh-desc">🇨🇳 这段内容直接对应之前SLA案例的完整逻辑，建议练到能流畅讲60秒。</p>
+    <p class="q-desc zh-desc"> 这段内容直接对应之前SLA案例的完整逻辑，建议练到能流畅讲60秒。</p>
     <div class="codeblock">${highlightCode(`# Diagnosis sequence:
 # 1. Confirm it's actually OOM (not just slow) - check executor logs for:
 #    "java.lang.OutOfMemoryError" or "Container killed by YARN for exceeding memory limits"
@@ -3495,13 +4376,13 @@ function renderSupplementaryReference() {
 #    - Code change: two-stage aggregation to avoid one giant HashSet
 #    - Last resort: targeted salting on the specific hot key`)}</div>
     <div class="tip">💡 This is literally the same escalation ladder from the SLA case study (config first, code second, salting last) — reuse that exact story if this comes up.</div>
-    <div class="tip zh-desc">💡🇨🇳 这跟SLA案例的升级逻辑完全一样（先配置、再改代码、最后才加盐），可以直接复用那个故事。</div>
+    <div class="tip zh-desc">💡 这跟SLA案例的升级逻辑完全一样（先配置、再改代码、最后才加盐），可以直接复用那个故事。</div>
   </div>`;
 
   html += `<div class="card">
     <p class="q-title">"Job很慢但没卡死" — 跟"卡住"是不同的诊断路径</p>
     <p class="q-desc">Don't confuse this with a hard block — a slow-but-progressing job usually means resource contention or inefficient execution plan.</p>
-    <p class="q-desc zh-desc">🇨🇳 别把这个跟Case 1"卡住"搞混——一直在慢慢跑，通常是资源竞争或者执行计划不优，不是真的block。</p>
+    <p class="q-desc zh-desc"> 别把这个跟Case 1"卡住"搞混——一直在慢慢跑，通常是资源竞争或者执行计划不优，不是真的block。</p>
     ${table(["Symptom","Likely cause","Fix"], [
       ["Every task is uniformly slow (not one outlier)","Under-provisioned resources, or too few executors||资源配置不足，或executor数量太少","Increase executor count/cores, check cluster-wide contention||增加executor数量/核数，检查集群整体资源争抢"],
       ["Huge number of very small tasks","Over-partitioned data (too many small files)||数据分区过细(小文件太多)","Repartition/coalesce input data; compact small files upstream||重分区/合并输入数据；上游先合并小文件"],
@@ -3509,13 +4390,13 @@ function renderSupplementaryReference() {
       ["Shuffle read/write time dominates","Too much data movement across the network||网络间数据搬运量太大","Reduce shuffle via partitioning; filter/project earlier||用合理分区减少shuffle；尽早filter/projection"],
     ])}
     <div class="tip">💡 Key question: "is progress happening at all, just slowly, or has it truly stalled?" — that determines which playbook you're in.</div>
-    <div class="tip zh-desc">💡🇨🇳 关键自问："到底是完全没进展，还是只是慢"——这句话决定了你该用哪套排查流程</div>
+    <div class="tip zh-desc">💡 关键自问："到底是完全没进展，还是只是慢"——这句话决定了你该用哪套排查流程</div>
   </div>`;
 
   html += `<div class="card">
     <p class="q-title">HDFS存储层的运维问题</p>
     <p class="q-desc">Storage-layer problems that show up as application-layer symptoms if you don't know where to look.</p>
-    <p class="q-desc zh-desc">🇨🇳 存储层的问题，如果不知道往哪查，表现出来的症状会像是"应用层"的问题，容易误判方向。</p>
+    <p class="q-desc zh-desc"> 存储层的问题，如果不知道往哪查，表现出来的症状会像是"应用层"的问题，容易误判方向。</p>
     <div class="codeblock">${highlightCode(`# Check overall HDFS health
 hdfs dfsadmin -report                    # per-DataNode capacity/usage summary
 hdfs fsck / -files -blocks -locations    # find corrupt/under-replicated blocks
@@ -3531,12 +4412,353 @@ hdfs dfsadmin -safemode get`)}</div>
       ["Cluster in read-only mode unexpectedly","NameNode stuck in Safe Mode||NameNode卡在安全模式(Safe Mode)","hdfs dfsadmin -safemode get / -safemode leave||用这两个命令查看/退出安全模式"],
     ])}
     <div class="tip">💡 'Safe Mode' is HDFS's built-in protective state on startup — forcing it off too early can cause HDFS to think blocks are missing when they aren't.</div>
-    <div class="tip zh-desc">💡🇨🇳 "Safe Mode"是HDFS启动时的保护性状态——太早强制退出可能导致HDFS误以为block丢失了(其实还没上报完)</div>
+    <div class="tip zh-desc">💡 "Safe Mode"是HDFS启动时的保护性状态——太早强制退出可能导致HDFS误以为block丢失了(其实还没上报完)</div>
   </div>`;
 
   el.innerHTML += html;
 }
 
+
+function renderClickHouseTab() {
+  const el = document.getElementById('clickhouse');
+  let html = `<div class="intro-note"><b>Learning path:</b> start from zero and move from basic concepts to internal architecture, MergeTree table design, production ingestion, and a complete Flink + ClickHouse e-commerce security example.</div>`;
+
+  html += `<div class="level-header"><span class="level-emoji">🟢</span><div><div class="level-label">L1 — ClickHouse fundamentals</div><div class="level-desc">What it is, why it exists, how it developed, and which problems it solves.</div></div></div>`;
+
+  html += renderCard({
+    title:'1. What is ClickHouse?',
+    desc:'ClickHouse is a distributed, column-oriented OLAP database designed for high-speed analytical queries over very large datasets. It is mainly used when data is continuously appended and users need fast aggregation, filtering, drill-down and dashboard queries.',
+    zh:'ClickHouse 是一个分布式列式 OLAP 数据库。它擅长持续接收大量数据，并对海量明细做聚合、过滤、下钻和实时大盘查询。',
+    html: table(['Concept','Beginner explanation','Example'],[
+      ['OLAP','Online Analytical Processing: scan many rows and calculate trends, totals, ratios and distributions.||联机分析处理：扫描大量行，计算趋势、总量、比例和分布','Count risky orders by seller, hour and country.||按商家、小时和国家统计风险订单数'],
+      ['Column-oriented','Values from the same column are stored together. A query reads only the required columns.||同一列的数据放在一起，查询只读取需要的列','A risk dashboard reads seller_id, risk_type and event_time without loading a large payload column.||风险大盘无需读取大字段payload'],
+      ['Append-heavy','It performs best when data is inserted in batches and updated less frequently.||适合批量追加写入，不擅长高频逐行修改','Flink writes a batch of risk events every few seconds.||Flink每几秒批量写入风险事件'],
+      ['Near-real-time analytics','Fresh data can usually become queryable within seconds.||新数据通常数秒内可查询','Operations can see abnormal seller activity shortly after it happens.||运营能快速看到商家异常行为']
+    ]),
+    tip:'A simple sentence: Flink is used to calculate streaming data; ClickHouse is used to store the analytical result and let people query it quickly.',
+    tipZh:'一句话理解：Flink负责实时计算，ClickHouse负责保存分析结果并让人快速查询。'
+  });
+
+  html += renderCard({
+    title:'2. Why ClickHouse was created — key milestones',
+    desc:'ClickHouse was created to solve a concrete engineering problem: interactive analytics over extremely large streams of website events. Traditional analytical systems could store the data, but they could not return complex aggregation results quickly enough for an interactive web analytics product.',
+    zh:'ClickHouse 的产生源于一个非常具体的问题：网站每天产生海量点击事件，分析人员需要按时间、来源、地区和页面进行交互式聚合查询，而传统分析系统难以同时满足海量写入和快速查询。',
+    html: table(['Period','Key milestone','Why it mattered'],[
+      ['2009','Yandex began developing a new analytical database for Yandex.Metrica.||Yandex开始为Yandex.Metrica开发新的分析数据库','Metrica had to process massive clickstream data and return multi-dimensional reports interactively.||需要处理海量点击流，并快速返回多维统计报告'],
+      ['2012','The new column-oriented system entered production for large-scale web analytics.||列式分析系统开始用于大规模网站分析','The workload required continuous inserts, strong compression, time-range filtering and fast GROUP BY queries.||业务要求持续写入、高压缩、时间范围过滤和快速聚合'],
+      ['2016','ClickHouse was released as an open-source project.||ClickHouse正式开源','Other companies could adopt the same architecture for logs, product analytics, advertising and security data.||其他公司开始用于日志、产品分析、广告和安全数据'],
+      ['2021','ClickHouse, Inc. was established around the open-source project.||围绕开源项目成立ClickHouse, Inc.','Commercial cloud services and enterprise support accelerated adoption while the core project remained open source.||云服务与企业支持推动普及，核心项目继续开源'],
+      ['Today','ClickHouse is widely used as a real-time analytical serving layer.||ClickHouse广泛用于实时分析服务层','Typical workloads include observability, user behavior, ad analytics, risk monitoring and real-time BI.||典型场景包括可观测性、用户行为、广告分析、风险监控和实时BI']
+    ]),
+    tip:'The original problem shaped the product: ClickHouse is optimized for huge event tables, append-heavy ingestion, time-based filtering and aggregation—not for frequent single-row transactions.',
+    tipZh:'最初的问题决定了它今天的优势：海量事件表、持续追加写入、按时间过滤和聚合分析，而不是高频单行事务。'
+  });
+
+  html += renderCard({
+    title:'3. When ClickHouse is a good fit — and when it is not',
+    html: table(['Good fit','Why'],[
+      ['Real-time dashboards||实时大盘','Fast GROUP BY, filters and time-series aggregation.||快速聚合、过滤和时间序列分析'],
+      ['User or event analytics||用户与事件分析','Large append-only event tables compress well.||海量追加事件压缩效率高'],
+      ['Security and risk monitoring||安全与风险监控','Fast drill-down from a summary metric to detailed events.||可从汇总指标快速下钻到明细事件'],
+      ['Logs and observability||日志与可观测性','High ingestion throughput and fast range queries.||写入吞吐高，时间范围查询快']
+    ]) + table(['Not the first choice','Reason'],[
+      ['High-frequency single-row updates||高频单行更新','ClickHouse stores immutable parts and handles changes asynchronously.||ClickHouse以不可变part为基础，更新通常是异步处理'],
+      ['Strict multi-row transactions||严格多行事务','Its design prioritizes analytical throughput rather than transactional semantics.||设计目标是分析吞吐，而不是复杂事务'],
+      ['Pure RowKey point lookup||纯RowKey点查','HBase is usually more natural for millisecond key-value access.||毫秒级Key-Value点查通常HBase更合适']
+    ])
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🟡</span><div><div class="level-label">L2 — ClickHouse internal architecture</div><div class="level-desc">Understand cluster, shard, replica, table, partition, part, granule, mark and sparse index.</div></div></div>`;
+
+  html += renderCard({
+    title:'4. ClickHouse overall structure',
+    desc:'The upper half shows distributed deployment. The lower half zooms into how one MergeTree table is physically organized on a node.',
+    zh:'上半部分表示分布式部署；下半部分放大一个节点内部 MergeTree 表的物理组织方式。',
+    html:`<svg viewBox="0 0 980 620" role="img" aria-label="ClickHouse internal architecture" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs>
+        <marker id="chArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker>
+      </defs>
+      <text x="490" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#1f2d3d">ClickHouse: distributed cluster + on-disk MergeTree structure</text>
+      <rect x="350" y="50" width="280" height="54" rx="10" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="490" y="73" text-anchor="middle" font-size="14" font-weight="700" fill="#245d87">Clients / BI / Flink / API</text>
+      <text x="490" y="91" text-anchor="middle" font-size="11" fill="#57564f">SQL query or batched inserts</text>
+      <line x1="490" y1="104" x2="490" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#chArrow)"/>
+
+      <rect x="55" y="135" width="870" height="190" rx="14" fill="#ffffff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="490" y="159" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2d3d">ClickHouse Cluster</text>
+      <rect x="90" y="175" width="350" height="125" rx="12" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="265" y="198" text-anchor="middle" font-size="14" font-weight="700" fill="#69418a">Shard 1 — one slice of the data</text>
+      <rect x="112" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#9a79b5"/>
+      <rect x="283" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#9a79b5"/>
+      <text x="180" y="239" text-anchor="middle" font-size="12" font-weight="700">Replica 1A</text><text x="180" y="258" text-anchor="middle" font-size="10" fill="#57564f">same shard data</text>
+      <text x="350" y="239" text-anchor="middle" font-size="12" font-weight="700">Replica 1B</text><text x="350" y="258" text-anchor="middle" font-size="10" fill="#57564f">fault tolerance</text>
+
+      <rect x="540" y="175" width="350" height="125" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="715" y="198" text-anchor="middle" font-size="14" font-weight="700" fill="#17613c">Shard 2 — another slice of the data</text>
+      <rect x="562" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#56a27c"/>
+      <rect x="733" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#56a27c"/>
+      <text x="630" y="239" text-anchor="middle" font-size="12" font-weight="700">Replica 2A</text><text x="630" y="258" text-anchor="middle" font-size="10" fill="#57564f">same shard data</text>
+      <text x="800" y="239" text-anchor="middle" font-size="12" font-weight="700">Replica 2B</text><text x="800" y="258" text-anchor="middle" font-size="10" fill="#57564f">fault tolerance</text>
+
+      <line x1="490" y1="325" x2="490" y2="350" stroke="#69757f" stroke-width="2" marker-end="url(#chArrow)"/>
+      <text x="505" y="342" font-size="10" fill="#57564f">zoom into one replica</text>
+
+      <rect x="55" y="355" width="870" height="225" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="490" y="380" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2d3d">One node: Database → MergeTree table → Partition → Data Part → Granules</text>
+
+      <rect x="82" y="405" width="120" height="55" rx="9" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="142" y="428" text-anchor="middle" font-size="12" font-weight="700">Database</text><text x="142" y="447" text-anchor="middle" font-size="10">security</text>
+      <line x1="202" y1="432" x2="240" y2="432" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <rect x="245" y="405" width="140" height="55" rx="9" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="315" y="428" text-anchor="middle" font-size="12" font-weight="700">MergeTree Table</text><text x="315" y="447" text-anchor="middle" font-size="10">risk_events</text>
+      <line x1="385" y1="432" x2="423" y2="432" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <rect x="428" y="405" width="120" height="55" rx="9" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="488" y="428" text-anchor="middle" font-size="12" font-weight="700">Partition</text><text x="488" y="447" text-anchor="middle" font-size="10">2026-07</text>
+      <line x1="548" y1="432" x2="586" y2="432" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <rect x="591" y="405" width="125" height="55" rx="9" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="653" y="428" text-anchor="middle" font-size="12" font-weight="700">Data Part</text><text x="653" y="447" text-anchor="middle" font-size="10">immutable batch</text>
+      <line x1="716" y1="432" x2="754" y2="432" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <rect x="759" y="405" width="135" height="55" rx="9" fill="#fbecea" stroke="#b14a3f"/>
+      <text x="826" y="428" text-anchor="middle" font-size="12" font-weight="700">Column Files</text><text x="826" y="447" text-anchor="middle" font-size="10">seller_id.bin ...</text>
+
+      <rect x="245" y="490" width="470" height="62" rx="10" fill="#f7f7f5" stroke="#b9b9b4"/>
+      <text x="480" y="512" text-anchor="middle" font-size="12" font-weight="700">Inside a Data Part</text>
+      <text x="480" y="532" text-anchor="middle" font-size="11" fill="#57564f">sorted rows → granules → marks → sparse primary index</text>
+      <line x1="653" y1="460" x2="653" y2="490" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <path d="M270 562 C390 590,570 590,690 562" fill="none" stroke="#9a6b1e" stroke-width="1.6" marker-end="url(#chArrow)"/>
+      <text x="480" y="575" text-anchor="middle" font-size="10" fill="#8a6d1f">background merge combines small parts into larger sorted parts</text>
+    </svg>`,
+    tip:'Shard means horizontal data distribution. Replica means another copy of the same shard for availability. They solve different problems.',
+    tipZh:'Shard 是水平拆分数据；Replica 是同一份分片数据的副本，用于高可用。'
+  });
+
+  html += renderCard({
+    title:'5. Basic internal terms',
+    html: table(['Term','Meaning','Beginner analogy','Closest Spark comparison'],[
+      ['Cluster','A group of ClickHouse servers working together.||一组协同工作的ClickHouse服务器','The whole library system.||整个图书馆系统','A Spark cluster managed by YARN or Kubernetes. ClickHouse servers remain online and also store data.||类似由YARN或Kubernetes管理的Spark集群，但ClickHouse节点长期在线并负责保存数据'],
+      ['Shard','A horizontal slice of data stored on one group of nodes.||一部分水平切分的数据','Different library branches hold different books.||不同分馆保存不同图书','Similar to distributing different data partitions across executors, but a ClickHouse shard is a persistent storage boundary.||类似把不同数据分区分配到Executor，但ClickHouse Shard是长期存在的存储边界'],
+      ['Replica','Another copy of the same shard.||同一个Shard的数据副本','A backup branch with the same books.||保存相同图书的备份分馆','Spark executors do not normally keep permanent replicas. It is closer to replicated storage such as HDFS blocks.||Spark Executor通常没有永久副本，更接近HDFS Block副本机制'],
+      ['Partition','A coarse physical boundary, often month or day.||通常按月或天划分的粗粒度物理边界','A shelf for one month.||一个月份的书架','Closest to a partitioned table directory such as dt=2026-07, not to one temporary Spark task partition.||更接近dt=2026-07这类分区表目录，不等同于临时的Spark Task Partition'],
+      ['Data Part','An immutable, sorted data package created by one insert batch.||一次批量写入形成的不可变、有序数据包','A sealed box of sorted books.||一箱已排序并封装好的书','Similar to one immutable output file created by a Spark write task, but it also contains indexes, marks and column files.||类似Spark写任务产生的一个不可变输出文件，但还包含索引、Mark和列文件'],
+      ['Merge','Background process that combines small parts into larger parts.||后台将小Part合并成更大Part','Combine many small boxes into a larger organized box.||把许多小箱子合成大箱子','Similar in purpose to small-file compaction, but ClickHouse performs it continuously in the background.||作用类似小文件合并，但ClickHouse会在后台持续执行'],
+      ['Granule','The smallest block normally addressed by the sparse index, often around index_granularity rows.||稀疏索引定位的基本数据块','A section inside the box.||箱子中的一个小区域','Roughly comparable to a row group or a scan block, not to a full Spark partition.||大致类似Row Group或扫描块，不是完整的Spark Partition'],
+      ['Mark','A file offset pointing to the start of a granule in column files.||指向列文件中某个Granule起点的偏移','A bookmark.||书签','Similar to file metadata that lets a reader jump directly to a block instead of scanning from the beginning.||类似文件元数据中的定位点，让读取器直接跳到数据块'],
+      ['Sparse index','Stores key values only for marks, not one index entry per row.||只为Mark保存索引值，不是每行一个索引','A table of contents, not an index for every sentence.||目录，而不是每句话都有索引','Closest to Parquet statistics and data skipping, but ClickHouse relies heavily on ORDER BY and marks.||类似Parquet统计信息与Data Skipping，但ClickHouse更依赖ORDER BY和Mark']
+    ])
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🟠</span><div><div class="level-label">L3 — Why ClickHouse is fast</div><div class="level-desc">Column storage, compression, vectorized execution, sorted data and sparse-index skipping.</div></div></div>`;
+
+  html += renderCard({
+    title:'6. Column storage and vectorized execution',
+    desc:'Analytical queries usually need a few columns but many rows. ClickHouse reads those columns in compressed blocks and processes many values per CPU instruction batch.',
+    zh:'分析查询通常只需要少量列，但会扫描很多行。ClickHouse以压缩块读取列数据，并通过向量化方式一次处理一批值。',
+    html:`<svg viewBox="0 0 900 300" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px">
+      <text x="450" y="26" text-anchor="middle" font-size="16" font-weight="700">Query: SUM(risk_score) GROUP BY seller_id</text>
+      <text x="215" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#b14a3f">Row-oriented layout</text>
+      <text x="675" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#1e7a4c">ClickHouse column layout</text>
+      <g font-size="11"><rect x="45" y="75" width="340" height="155" rx="8" fill="#fff" stroke="#c9c9c5"/>
+      <text x="62" y="100">row1: time | seller | type | score | payload</text><text x="62" y="128">row2: time | seller | type | score | payload</text><text x="62" y="156">row3: time | seller | type | score | payload</text><text x="62" y="191" fill="#b14a3f">Must pass through unrelated fields</text><text x="62" y="211" fill="#57564f">Less efficient for wide analytical scans</text></g>
+      <rect x="515" y="75" width="340" height="155" rx="8" fill="#fff" stroke="#c9c9c5"/>
+      <rect x="535" y="95" width="130" height="95" rx="6" fill="#e8f2fa" stroke="#2971a8"/><text x="600" y="116" text-anchor="middle" font-size="11" font-weight="700">seller_id column</text><text x="600" y="141" text-anchor="middle" font-size="10">S1, S1, S2...</text>
+      <rect x="705" y="95" width="130" height="95" rx="6" fill="#e4f5ec" stroke="#1e7a4c"/><text x="770" y="116" text-anchor="middle" font-size="11" font-weight="700">risk_score column</text><text x="770" y="141" text-anchor="middle" font-size="10">80, 70, 20...</text>
+      <text x="685" y="211" text-anchor="middle" font-size="11" fill="#1e7a4c">Read only 2 required columns</text>
+      <path d="M535 255 H835" stroke="#2971a8" stroke-width="6" stroke-linecap="round"/><text x="685" y="279" text-anchor="middle" font-size="11">compressed blocks processed in vectors</text>
+    </svg>`,
+    tip:'Column storage reduces I/O. Vectorized execution reduces CPU overhead. Compression helps both storage and I/O.'
+  });
+
+  html += renderCard({
+    title:'7. Sorted data and sparse-index skipping',
+    desc:'ClickHouse does not normally keep a B-tree entry for every row. Instead, MergeTree data is sorted by ORDER BY, and the sparse primary index stores representative key values for granules.',
+    zh:'ClickHouse通常不会为每一行建立B-Tree索引。MergeTree数据按ORDER BY排序，稀疏主键索引只记录各Granule的代表键值。',
+    html:`<div class="flow">ORDER BY (seller_id, event_date, event_time)<br><br>S001 rows → S002 rows → S003 rows → S004 rows<br>marks:　　　 ▲　　　　 ▲　　　　 ▲　　　　 ▲<br>query seller_id='S003' can skip the S001, S002 and S004 ranges</div>`,
+    tip:'ORDER BY is powerful because it controls three things together: row locality, sparse-index skipping and compression efficiency.'
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🔵</span><div><div class="level-label">L4 — Core MergeTree table design</div><div class="level-desc">PARTITION BY, ORDER BY, PRIMARY KEY, Data Part and background Merge.</div></div></div>`;
+
+  html += renderCard({
+    title:'8. MergeTree: write parts first, merge later',
+    desc:'A batch insert does not modify one large file in place. It creates a new immutable Data Part. Each part is sorted independently by ORDER BY. Background merge tasks later combine compatible small parts.',
+    zh:'一次批量写入不会原地修改一个大文件，而是创建新的不可变Data Part。每个Part内部按ORDER BY独立排序，后台Merge再逐步合并相同分区中的小Part。',
+    html:`<svg viewBox="0 0 900 270" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px">
+      <defs><marker id="mergeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="450" y="26" text-anchor="middle" font-size="16" font-weight="700">MergeTree write and background merge</text>
+      <rect x="35" y="68" width="140" height="62" rx="9" fill="#e8f2fa" stroke="#2971a8"/><text x="105" y="91" text-anchor="middle" font-size="12" font-weight="700">Flink batch A</text><text x="105" y="111" text-anchor="middle" font-size="10">5,000 rows</text>
+      <rect x="35" y="160" width="140" height="62" rx="9" fill="#e8f2fa" stroke="#2971a8"/><text x="105" y="183" text-anchor="middle" font-size="12" font-weight="700">Flink batch B</text><text x="105" y="203" text-anchor="middle" font-size="10">6,000 rows</text>
+      <line x1="175" y1="99" x2="245" y2="99" stroke="#69757f" marker-end="url(#mergeArrow)"/><line x1="175" y1="191" x2="245" y2="191" stroke="#69757f" marker-end="url(#mergeArrow)"/>
+      <rect x="250" y="68" width="145" height="62" rx="9" fill="#fbf0dd" stroke="#9a6b1e"/><text x="322" y="91" text-anchor="middle" font-size="12" font-weight="700">Data Part A</text><text x="322" y="111" text-anchor="middle" font-size="10">sorted, immutable</text>
+      <rect x="250" y="160" width="145" height="62" rx="9" fill="#fbf0dd" stroke="#9a6b1e"/><text x="322" y="183" text-anchor="middle" font-size="12" font-weight="700">Data Part B</text><text x="322" y="203" text-anchor="middle" font-size="10">sorted, immutable</text>
+      <path d="M395 99 C470 99,470 130,535 140" fill="none" stroke="#69757f" marker-end="url(#mergeArrow)"/><path d="M395 191 C470 191,470 160,535 150" fill="none" stroke="#69757f" marker-end="url(#mergeArrow)"/>
+      <rect x="540" y="108" width="150" height="72" rx="10" fill="#f1e9f7" stroke="#7b4fa0"/><text x="615" y="132" text-anchor="middle" font-size="12" font-weight="700">Background Merge</text><text x="615" y="152" text-anchor="middle" font-size="10">read + merge-sort</text><text x="615" y="168" text-anchor="middle" font-size="10">old parts later removed</text>
+      <line x1="690" y1="144" x2="750" y2="144" stroke="#69757f" marker-end="url(#mergeArrow)"/>
+      <rect x="755" y="108" width="120" height="72" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/><text x="815" y="132" text-anchor="middle" font-size="12" font-weight="700">Larger Part</text><text x="815" y="152" text-anchor="middle" font-size="10">11,000 rows</text><text x="815" y="168" text-anchor="middle" font-size="10">still immutable</text>
+    </svg>`,
+    warn:'Too many tiny inserts create too many tiny parts. The server then spends excessive CPU, disk I/O and metadata work on merges.'
+  });
+
+  html += renderCard({
+    title:'9. PARTITION BY, ORDER BY and PRIMARY KEY',
+    desc:'These clauses look similar but solve different problems. For ClickHouse beginners, ORDER BY is the most important one to understand.',
+    html: table(['Clause','What it controls','Typical choice','Common mistake'],[
+      ['PARTITION BY','Coarse physical grouping, lifecycle operations and coarse pruning.||粗粒度物理分组、生命周期管理和分区裁剪','Month or day, depending on volume and retention.||根据数据量和保留周期按月或按天','Partition by seller_id, creating too many partitions.||按seller_id分区，产生海量分区'],
+      ['ORDER BY','Physical row order inside every part, sparse index, locality and compression.||Part内部物理排序、稀疏索引、局部性和压缩','Frequent equality filters first, then common range/time fields.||高频等值过滤字段靠前，再放范围或时间字段','Choose columns only because they are unique.||仅因字段唯一就放入排序键'],
+      ['PRIMARY KEY','Sparse-index expression; defaults to ORDER BY and may be its prefix.||稀疏索引表达式，默认等于ORDER BY，也可为其前缀','Usually omit it initially and use ORDER BY as the primary key.||初学时通常可省略，让其默认等于ORDER BY','Assume it enforces uniqueness.||误以为它保证唯一性']
+    ]),
+    tip:'PARTITION BY helps manage chunks of data. ORDER BY determines how efficiently ClickHouse can find rows inside those chunks.',
+    warn:'ClickHouse PRIMARY KEY normally does not prevent duplicate rows.'
+  });
+
+  html += renderCard({
+    title:'10. Complete table-design example',
+    desc:'Assume the main queries filter by seller and date, then aggregate by risk type or drill down by event time.',
+    code:`CREATE TABLE security.risk_event_local
+(
+    event_date   Date,
+    event_time   DateTime64(3),
+    seller_id    String,
+    order_id     String,
+    risk_type    LowCardinality(String),
+    country_code LowCardinality(String),
+    risk_score   Float32,
+    event_id     String,
+    payload      String
+)
+ENGINE = MergeTree
+PARTITION BY toYYYYMM(event_date)
+ORDER BY (seller_id, event_date, risk_type, event_time)
+TTL event_date + INTERVAL 365 DAY DELETE
+SETTINGS index_granularity = 8192;`,
+    html: table(['Design choice','Reason'],[
+      ['MergeTree','The table is an append-heavy analytical fact table.||这是追加写为主的分析事实表'],
+      ['Monthly partition','Easy monthly lifecycle management without creating excessive partitions.||便于按月管理生命周期，同时避免过多分区'],
+      ['seller_id first','Most investigations start from a seller. Rows for one seller stay close together.||多数调查从商家开始，同一商家数据相邻存储'],
+      ['event_date next','Common date-range filters can skip unrelated ranges inside seller data.||日期范围过滤可以继续跳过无关数据'],
+      ['risk_type before event_time','Supports common grouping/filtering by risk category, then time-range drill-down.||支持按风险类型过滤或聚合，再按时间下钻'],
+      ['LowCardinality(String)','Useful for repeated string categories such as risk type and country.||适合风险类型和国家等重复字符串类别'],
+      ['TTL','Automatically removes data after the retention period.||保留期结束后自动清理数据']
+    ]),
+    tip:'There is no universally correct ORDER BY. Start from the dominant WHERE conditions and query paths, then validate with actual scan ratios.'
+  });
+
+  html += renderCard({
+    title:'11. ReplacingMergeTree — understand eventual replacement',
+    desc:'ReplacingMergeTree is useful when the same business key arrives with multiple versions. During background merges, it keeps one row, usually the highest version.',
+    zh:'同一业务键会到达多个版本时，可以使用ReplacingMergeTree。后台Merge时通常保留version最大的记录。',
+    code:`CREATE TABLE security.seller_risk_profile
+(
+    seller_id   String,
+    risk_level  LowCardinality(String),
+    risk_score  Float32,
+    updated_at  DateTime64(3),
+    version     UInt64
+)
+ENGINE = ReplacingMergeTree(version)
+ORDER BY seller_id;`,
+    html:`<div class="flow">version 1: seller_01, LOW, 20<br>version 2: seller_01, HIGH, 90<br><br>Before merge: both rows may be visible<br>After merge: version 2 is retained</div>`,
+    warn:'ReplacingMergeTree is eventual deduplication, not an immediate unique constraint. Avoid relying on FINAL for every large query; argMax or a latest-state aggregate is often more scalable.'
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🔴</span><div><div class="level-label">L5 — Flink + ClickHouse production example</div><div class="level-desc">Why Flink computes the stream and ClickHouse becomes the analytical serving layer.</div></div></div>`;
+
+  html += renderCard({
+    title:'12. E-commerce security architecture',
+    desc:'The goal is to identify suspicious seller behavior in real time and support both dashboards and analyst drill-down.',
+    html:`<svg viewBox="0 0 980 430" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px">
+      <defs><marker id="pipeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="490" y="28" text-anchor="middle" font-size="17" font-weight="700">Real-time e-commerce security pipeline</text>
+      <rect x="30" y="78" width="150" height="70" rx="10" fill="#fff" stroke="#b14a3f"/><text x="105" y="101" text-anchor="middle" font-size="12" font-weight="700">Business Events</text><text x="105" y="122" text-anchor="middle" font-size="10">orders / refunds</text><text x="105" y="137" text-anchor="middle" font-size="10">seller / device</text>
+      <line x1="180" y1="113" x2="245" y2="113" stroke="#69757f" stroke-width="2" marker-end="url(#pipeArrow)"/>
+      <rect x="250" y="78" width="125" height="70" rx="10" fill="#fbf0dd" stroke="#9a6b1e"/><text x="312" y="106" text-anchor="middle" font-size="13" font-weight="700">Kafka</text><text x="312" y="127" text-anchor="middle" font-size="10">durable event log</text>
+      <line x1="375" y1="113" x2="440" y2="113" stroke="#69757f" stroke-width="2" marker-end="url(#pipeArrow)"/>
+      <rect x="445" y="58" width="210" height="110" rx="12" fill="#e8f2fa" stroke="#2971a8"/><text x="550" y="84" text-anchor="middle" font-size="14" font-weight="700">Flink</text><text x="550" y="106" text-anchor="middle" font-size="10">deduplication + watermark</text><text x="550" y="123" text-anchor="middle" font-size="10">window aggregation + enrichment</text><text x="550" y="140" text-anchor="middle" font-size="10">risk tags + checkpointed state</text>
+      <line x1="655" y1="113" x2="720" y2="113" stroke="#69757f" stroke-width="2" marker-end="url(#pipeArrow)"/>
+      <rect x="725" y="58" width="220" height="110" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/><text x="835" y="84" text-anchor="middle" font-size="14" font-weight="700">ClickHouse</text><text x="835" y="106" text-anchor="middle" font-size="10">risk_event detail table</text><text x="835" y="123" text-anchor="middle" font-size="10">hourly seller aggregates</text><text x="835" y="140" text-anchor="middle" font-size="10">fast OLAP serving</text>
+
+      <line x1="835" y1="168" x2="835" y2="220" stroke="#69757f" stroke-width="2" marker-end="url(#pipeArrow)"/>
+      <rect x="710" y="225" width="250" height="72" rx="10" fill="#f1e9f7" stroke="#7b4fa0"/><text x="835" y="249" text-anchor="middle" font-size="12" font-weight="700">Dashboard / Analysts / API</text><text x="835" y="270" text-anchor="middle" font-size="10">trend, ranking, drill-down, reports</text>
+
+      <line x1="550" y1="168" x2="550" y2="240" stroke="#69757f" stroke-dasharray="5 4" marker-end="url(#pipeArrow)"/>
+      <rect x="405" y="245" width="290" height="78" rx="10" fill="#fff" stroke="#9a6b1e"/><text x="550" y="269" text-anchor="middle" font-size="12" font-weight="700">Controlled micro-batch sink</text><text x="550" y="289" text-anchor="middle" font-size="10">flush by rows / bytes / time</text><text x="550" y="305" text-anchor="middle" font-size="10">stable event_id for retry handling</text>
+      <line x1="695" y1="284" x2="760" y2="284" stroke="#69757f" marker-end="url(#pipeArrow)"/>
+
+      <rect x="30" y="350" width="915" height="50" rx="9" fill="#f7f7f5" stroke="#c9c9c5"/>
+      <text x="487" y="372" text-anchor="middle" font-size="11" font-weight="700">Responsibility split</text><text x="487" y="390" text-anchor="middle" font-size="10">Kafka transports events → Flink calculates and maintains stream state → ClickHouse stores and serves analytical queries</text>
+    </svg>`
+  });
+
+  html += renderCard({
+    title:'13. Concrete Flink example: hourly seller-risk metrics',
+    desc:'Flink computes event-time windows. ClickHouse stores the final hourly rows so dashboards can query many hours, sellers and risk types efficiently.',
+    code:`-- Simplified Flink SQL result
+SELECT
+    window_start,
+    window_end,
+    seller_id,
+    risk_type,
+    COUNT(*) AS risk_event_count,
+    COUNT(DISTINCT order_id) AS affected_orders,
+    AVG(risk_score) AS avg_risk_score
+FROM TABLE(
+    TUMBLE(
+        TABLE risk_event_stream,
+        DESCRIPTOR(event_time),
+        INTERVAL '1' HOUR
+    )
+)
+GROUP BY window_start, window_end, seller_id, risk_type;`,
+    html: table(['Component','Why it is used'],[
+      ['Kafka','Buffers and replays the source event stream.||缓存并可重放源事件流'],
+      ['Flink','Handles event time, late data, deduplication, joins, state and window calculation.||处理事件时间、迟到、去重、Join、状态和窗口计算'],
+      ['ClickHouse detail table','Supports incident drill-down to individual risk events.||支持下钻到单条风险事件'],
+      ['ClickHouse hourly table','Serves dashboard aggregation with much less scanned data.||以更少扫描量服务大盘聚合查询']
+    ])
+  });
+
+  html += renderCard({
+    title:'14. Why the final result is stored in ClickHouse',
+    html: table(['Requirement','Why ClickHouse fits'],[
+      ['Dashboard queries across time ranges||跨时间范围的大盘查询','Columnar scans and GROUP BY are fast.||列式扫描和GROUP BY速度快'],
+      ['Filter by seller, date and risk type||按商家、日期和风险类型过滤','A matching ORDER BY key allows sparse-index skipping.||匹配的ORDER BY可利用稀疏索引跳读'],
+      ['Drill down from metric to detail||从指标下钻到明细','It can hold both aggregate tables and detailed event tables.||可同时保存聚合表和事件明细表'],
+      ['Many concurrent analyst queries||多人并发分析查询','Parallel execution and pre-aggregation support interactive analysis.||并行执行和预聚合支持交互分析'],
+      ['Continuous Flink output||持续接收Flink结果','Controlled micro-batch ingestion gives good throughput and near-real-time freshness.||可控微批写入兼顾吞吐和实时性']
+    ]) + `<div class="answer-box"><strong>Key explanation</strong>Flink is a stream-processing engine, not an analytical database. It can calculate the latest risk metrics, but it is not designed to retain months of results and serve flexible SQL dashboards. HBase is excellent for looking up one seller profile by RowKey, but it is weak at large GROUP BY and time-range analytical scans. ClickHouse is therefore the serving layer for storing and querying the calculated results.</div>`
+  });
+
+  html += renderCard({
+    title:'15. ClickHouse vs StarRocks vs HBase',
+    desc:'Choose based on access pattern. No system is universally better.',
+    html: table(['System','Core positioning','Strongest capabilities','Main limitations','Typical role in this example'],[
+      ['ClickHouse','Real-time / near-real-time OLAP database.||实时或近实时OLAP数据库','Large scans, aggregation, time-series queries, compression and observability-style workloads.||大扫描、聚合、时间序列、压缩和可观测性场景','Frequent row-level updates and strict transactions are not its strength.||不擅长频繁行更新和严格事务','Risk dashboards, hourly metrics and event drill-down.||风险大盘、小时指标和事件下钻'],
+      ['StarRocks','Real-time analytical data warehouse.||实时分析型数据仓库','Complex joins, BI semantic workloads, primary-key updates and lakehouse-style acceleration.||复杂Join、BI语义查询、主键更新和湖仓加速','Model and operational complexity may be higher for some workloads.||部分场景建模与运维复杂度更高','A good alternative when frequent updates and complex multi-table BI joins are central.||高频更新和复杂多表BI Join较多时可优先考虑'],
+      ['HBase','Distributed wide-column key-value store.||分布式宽列Key-Value存储','High-throughput writes and low-latency RowKey point lookup.||高吞吐写入和低延迟RowKey点查','Weak for ad-hoc SQL, broad scans, GROUP BY and joins.||不擅长即席SQL、大扫描、聚合和Join','Lookup seller blacklist or latest profile by seller_id inside Flink.||Flink中按seller_id点查黑名单或最新画像']
+    ]),
+    tip:'Simple decision: analytical aggregation → ClickHouse; update-heavy complex BI → consider StarRocks; RowKey lookup → HBase.'
+  });
+
+  html += renderCard({
+    title:'16. Production write rules and common failures',
+    html: table(['Problem','Root cause','Fix'],[
+      ['Too many parts','Flink or the application writes tiny batches too frequently.||Flink或应用写入批次太小、过于频繁','Increase batch rows/bytes or flush interval; reduce excessive sink parallelism.||增大行数、字节数或刷新间隔，降低过高并行度'],
+      ['Duplicate rows','Retries occur after an uncertain external commit result.||外部提交结果不确定时发生重试','Use stable event_id, version strategy, dedup query or reconciliation.||使用稳定event_id、版本策略、去重查询或离线校准'],
+      ['Slow queries','ORDER BY does not match dominant filters; too many rows are scanned.||ORDER BY不匹配主要过滤条件，扫描行数过多','Use EXPLAIN indexes=1, inspect read_rows and redesign the sorting key.||用EXPLAIN检查索引和read_rows，重新设计排序键'],
+      ['Merge backlog','Too many small parts, slow disk or excessive ingestion concurrency.||小Part过多、磁盘慢或写入并发过高','Inspect system.parts and system.merges; control batch and concurrency.||检查system.parts和system.merges，控制批次及并发'],
+      ['ReplacingMergeTree still shows duplicates','Background merge has not completed.||后台Merge尚未完成','Use argMax for latest state or design a materialized latest-state table.||用argMax获取最新状态或设计最新状态物化表']
+    ]),
+    tip:'Monitor active parts, merge duration, disk I/O, insert latency, read_rows, memory usage and replication queues.'
+  });
+
+  html += renderCard({
+    title:'17. Interview-ready 60-second answer',
+    html:`<div class="quote-card"><p class="quote-text">“In this security platform, Kafka carries order and seller-risk events, while Flink handles event-time processing, deduplication, enrichment and hourly aggregation. I would write both detailed risk events and hourly seller metrics into ClickHouse using controlled micro-batches. ClickHouse is a good final serving layer because dashboards and analysts need fast time-range filters, GROUP BY queries and drill-down across a very large event table. For the MergeTree design, I would partition by month for lifecycle management and choose an ORDER BY key based on the main filters, for example seller ID, event date, risk type and event time. ORDER BY is especially important because it controls physical sorting, sparse-index skipping and compression. I would avoid row-by-row writes because every insert can create a new data part, and I would use stable event IDs plus reconciliation to handle retries and possible duplicates.”</p></div>`,
+    speak:'In this security platform, Kafka carries order and seller-risk events, while Flink handles event-time processing, deduplication, enrichment and hourly aggregation. I would write both detailed risk events and hourly seller metrics into ClickHouse using controlled micro-batches. ClickHouse is a good final serving layer because dashboards and analysts need fast time-range filters, GROUP BY queries and drill-down across a very large event table. For the MergeTree design, I would partition by month for lifecycle management and choose an ORDER BY key based on the main filters, for example seller ID, event date, risk type and event time. ORDER BY is especially important because it controls physical sorting, sparse-index skipping and compression. I would avoid row-by-row writes because every insert can create a new data part, and I would use stable event IDs plus reconciliation to handle retries and possible duplicates.'
+  });
+
+  el.innerHTML = html;
+}
+renderClickHouseTab();
 renderCasesTab();
 renderYarnFAQ();
 renderMasterDiagram();
