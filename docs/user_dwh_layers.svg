@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="450" viewBox="0 0 1800 450">
+  <style>
+    .title { font: 600 18px Arial, sans-serif; fill:#3b3b3b; }
+    .label { font: 500 16px Arial, sans-serif; }
+    .sub { font: 500 15px Arial, sans-serif; fill:#333; }
+    .outer { fill:#fffedb; stroke:#c8b94a; stroke-width:1.2; }
+    .inner { fill:#fffedb; stroke:#c8b94a; stroke-width:1.1; }
+    .purple { fill:#5548b8; }
+    .purple2 { fill:#413a92; }
+    .green1 { fill:#176147; }
+    .green2 { fill:#1b9d74; }
+    .green3 { fill:#0f6b4a; }
+    .device { fill:#f2f7ff; stroke:#bfd2ff; }
+    .market { fill:#ecfbf5; stroke:#a6e6cc; }
+    .category { fill:#f4f5f8; stroke:#d2d5dc; }
+    .white { fill:#fff; }
+    .blue { fill:#2450c5; }
+    .teal { fill:#176147; }
+  </style>
+
+  <!-- Capability Layer 3 -->
+  <rect x="285" y="25" width="1230" height="120" class="outer"/>
+  <text x="900" y="45" text-anchor="middle" class="title">Capability Layer 3: User Behavior Journey</text>
+
+  <rect x="320" y="62" width="130" height="50" class="purple"/>
+  <rect x="480" y="62" width="130" height="50" class="purple2"/>
+  <rect x="640" y="62" width="130" height="50" class="purple2"/>
+  <rect x="800" y="62" width="130" height="50" class="green1"/>
+  <rect x="960" y="62" width="130" height="50" class="green1"/>
+  <rect x="1120" y="62" width="130" height="50" class="green2"/>
+  <rect x="1280" y="62" width="130" height="50" class="green3"/>
+  <rect x="1440" y="62" width="130" height="50" class="green3"/>
+
+  <text x="385" y="94" text-anchor="middle" class="label white">🌐 Browse</text>
+  <text x="545" y="94" text-anchor="middle" class="label white">📝 Register</text>
+  <text x="705" y="94" text-anchor="middle" class="label white">🔑 Login</text>
+  <text x="865" y="94" text-anchor="middle" class="label white">🛒 Add to Cart</text>
+  <text x="1025" y="94" text-anchor="middle" class="label white">📦 Place Order</text>
+  <text x="1185" y="94" text-anchor="middle" class="label white">💳 Payment</text>
+  <text x="1345" y="94" text-anchor="middle" class="label white">🆕 First Purchase</text>
+  <text x="1505" y="94" text-anchor="middle" class="label white">🔁 Repurchase</text>
+
+  <!-- Capability Layer 2 -->
+  <rect x="15" y="190" width="1770" height="215" class="outer"/>
+  <text x="900" y="212" text-anchor="middle" class="title">Capability Layer 2: Analysis Dimensions</text>
+
+  <!-- Device Dimension -->
+  <rect x="50" y="225" width="420" height="145" class="inner"/>
+  <text x="260" y="248" text-anchor="middle" class="sub">Device Dimension</text>
+  <rect x="85" y="275" width="90" height="50" class="device"/>
+  <rect x="215" y="275" width="115" height="50" class="device"/>
+  <rect x="375" y="275" width="80" height="50" class="device"/>
+  <text x="130" y="307" text-anchor="middle" class="label blue">iOS</text>
+  <text x="272.5" y="307" text-anchor="middle" class="label blue">Android</text>
+  <text x="415" y="307" text-anchor="middle" class="label blue">PC</text>
+
+  <!-- Market Dimension -->
+  <rect x="520" y="225" width="430" height="145" class="inner"/>
+  <text x="735" y="248" text-anchor="middle" class="sub">Market Dimension</text>
+  <rect x="555" y="275" width="110" height="50" class="market"/>
+  <rect x="705" y="275" width="110" height="50" class="market"/>
+  <rect x="855" y="275" width="80" height="50" class="market"/>
+  <text x="610" y="307" text-anchor="middle" class="label teal">Southeast Asia</text>
+  <text x="760" y="307" text-anchor="middle" class="label teal">Western Europe</text>
+  <text x="895" y="307" text-anchor="middle" class="label teal">Middle East</text>
+
+  <!-- Category Dimension -->
+  <rect x="995" y="225" width="760" height="145" class="inner"/>
+  <text x="1375" y="248" text-anchor="middle" class="sub">Category Dimension: Multi-Level Filtering</text>
+  <rect x="1025" y="275" width="120" height="50" class="category"/>
+  <rect x="1190" y="275" width="120" height="50" class="category"/>
+  <rect x="1355" y="275" width="120" height="50" class="category"/>
+  <rect x="1520" y="275" width="120" height="50" class="category"/>
+  <rect x="1675" y="275" width="65" height="50" class="category"/>
+  <text x="1085" y="307" text-anchor="middle" class="label">All Categories</text>
+  <text x="1250" y="307" text-anchor="middle" class="label">Level 1 Category</text>
+  <text x="1415" y="307" text-anchor="middle" class="label">Level 2 Category</text>
+  <text x="1580" y="307" text-anchor="middle" class="label">Level 3 Category</text>
+  <text x="1707.5" y="307" text-anchor="middle" class="label">SPU</text>
+</svg>
