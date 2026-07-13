@@ -368,8 +368,26 @@ SELECT
     ) AS pay_time
 FROM ft_src_first_pay_dedup AS t
 LEFT JOIN ft_dim_hbase_first_pay
-    FOR SYSTEM_TIME AS OF t.proctime AS h
+    FOR SYSTEM_TIME AS OF t.proctime AS h   # 因为这是 Flink lookup join 的用法，左侧是流，右侧是 Hbase ，不是流；  如果 2侧都是流，采用 LEFT JOIN 等等，没有  FOR SYSTEM_TIME AS OF t.proctime
 ON CONCAT(md5_prefix(t.user_id), '_', t.user_id) = h.rowkey;
+```
+
+Flink 执行过程：
+
+```
+作业启动
+   ↓
+持续监听 Kafka topic
+   ↓
+新消息到达
+   ↓
+Lookup HBase
+   ↓
+执行 COALESCE
+   ↓
+写入 upsert-kafka
+   ↓
+继续等待下一条消息
 ```
 
 <a id="sec-1-8"></a>
