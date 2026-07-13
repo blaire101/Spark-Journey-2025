@@ -353,7 +353,7 @@ INSERT INTO ft_sink_coupon_trigger
 SELECT t.user_id, t.order_id, t.today_first_pay_time
 FROM ft_src_first_pay_dedup AS t
 LEFT JOIN ft_dim_hbase_first_pay
-    FOR SYSTEM_TIME AS OF t.proctime AS h
+    FOR SYSTEM_TIME AS OF t.proctime AS h # 每条 Kafka 流记录被 Flink 处理时，按照它的 key 查询 HBase 当前最新可见的维表数据
     ON CONCAT(md5_prefix(t.user_id), '_', t.user_id) = h.rowkey
 WHERE h.rowkey IS NULL;
 
