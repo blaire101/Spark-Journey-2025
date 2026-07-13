@@ -348,6 +348,7 @@ CREATE TABLE ft_sink_coupon_trigger (
     'key.format' = 'json', 'value.format' = 'json'
 );
 
+# 需求 A：只给真正首次支付用户发券
 INSERT INTO ft_sink_coupon_trigger
 SELECT t.user_id, t.order_id, t.today_first_pay_time
 FROM ft_src_first_pay_dedup AS t
@@ -355,6 +356,20 @@ LEFT JOIN ft_dim_hbase_first_pay
     FOR SYSTEM_TIME AS OF t.proctime AS h
     ON CONCAT(md5_prefix(t.user_id), '_', t.user_id) = h.rowkey
 WHERE h.rowkey IS NULL;
+
+# 需求 B：输出用户权威的历史首次支付信息 - 使用 HBase 优先：
+INSERT INTO ft_sink_coupon_trigger
+SELECT
+    t.user_id,
+    COALESCE(h.cf.first_order_id, t.order_id) AS order_id,
+    COALESCE(
+        TO_TIMESTAMP(h.cf.first_pay_time),
+        t.today_first_pay_time
+    ) AS pay_time
+FROM ft_src_first_pay_dedup AS t
+LEFT JOIN ft_dim_hbase_first_pay
+    FOR SYSTEM_TIME AS OF t.proctime AS h
+ON CONCAT(md5_prefix(t.user_id), '_', t.user_id) = h.rowkey;
 ```
 
 <a id="sec-1-8"></a>
