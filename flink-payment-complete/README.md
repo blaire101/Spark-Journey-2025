@@ -479,10 +479,43 @@ SELECT
     COUNT(*)          AS pay_count,
     SUM(pay_amount)    AS pay_amount
 FROM TABLE(
-    TUMBLE(TABLE ft_src_payment_events_stats, DESCRIPTOR(pay_time), INTERVAL '1' HOUR)
+    TUMBLE(TABLE ft_src_payment_events_stats, DESCRIPTOR(pay_time), INTERVAL '1' HOUR) # 就是把流里的每条记录按照事件时间放进对应的一小时滚动窗口。
 )
-GROUP BY window_start, window_end;
+GROUP BY window_start, window_end; # 按每个小时窗口聚合
+
+# DESCRIPTOR(pay_time) 是使用 pay_time 这一列作为窗口划分的时间字段
 ```
+
+原始 Table 数据 
+
+| order_id | user_id | pay_time | pay_amount |
+| -------- | -------- | -------- | ---------: |
+| O1       | U1 | 10:05    |        100 |
+| O2       | U2 | 10:20    |        200 |
+| O3       | U3 | 10:55    |         50 |
+| O4       | U4 | 11:10    |        300 |
+
+经过：
+
+```
+FROM TABLE(
+    TUMBLE(
+        TABLE ft_src_payment_events_stats,
+        DESCRIPTOR(pay_time),
+        INTERVAL '1' HOUR
+    )
+)
+```
+
+逻辑上会变成：
+
+| order_id | pay_time | pay_amount | window_start | window_end |
+| -------- | -------- | ---------: | ------------ | ---------- |
+| O1       | 10:05    |        100 | 10:00        | 11:00      |
+| O2       | 10:20    |        200 | 10:00        | 11:00      |
+| O3       | 10:55    |         50 | 10:00        | 11:00      |
+| O4       | 11:10    |        300 | 11:00        | 12:00      |
+
 
 ### 📌 Watermark 怎么触发窗口计算
 
