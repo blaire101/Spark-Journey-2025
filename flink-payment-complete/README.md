@@ -379,7 +379,9 @@ Flink 执行过程：
    ↓
 持续监听 Kafka topic
    ↓
-新消息到达
+新消息到达 - Kafka 记录进入 Flink - Flink 给它一个 proctime
+   ↓
+Flink 在这个处理时刻，用 rowkey 查询 HBase
    ↓
 Lookup HBase
    ↓
