@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AWS vs Azure / Microsoft Fabric — Chanel Data Platform &amp; Engineering Manager</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#657089;--line:#dfe5ef;--azure:#1769aa;--aws:#d97706;--accent:#6d28d9;--green:#087f5b;--red:#b42318;--shadow:0 10px 30px rgba(23,32,51,.08)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+a{color:var(--azure);text-decoration:none}a:hover{text-decoration:underline}
+.hero{background:linear-gradient(120deg,#111827 0%,#243b67 55%,#472d73 100%);color:#fff;padding:54px 24px 42px}.wrap{max-width:1220px;margin:auto}.eyebrow{font-size:13px;letter-spacing:.13em;text-transform:uppercase;opacity:.78}.hero h1{font-size:clamp(30px,5vw,52px);line-height:1.15;margin:10px 0 16px}.hero p{max-width:930px;font-size:18px;color:#dce5f5;margin:0}.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.badge{padding:7px 12px;border:1px solid rgba(255,255,255,.26);border-radius:999px;background:rgba(255,255,255,.08);font-size:13px}
+nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}nav .wrap{display:flex;gap:22px;overflow:auto;padding:12px 22px;white-space:nowrap}nav a{font-size:14px;font-weight:650;color:#344054}
+main{padding:30px 22px 70px}section{margin:28px 0 44px}.section-title{font-size:28px;line-height:1.25;margin:0 0 8px}.section-sub{color:var(--muted);margin:0 0 20px}.grid{display:grid;gap:18px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}.card h3{margin:0 0 10px;font-size:19px}.card p{margin:7px 0;color:#4b5565}.azure{border-top:5px solid var(--azure)}.aws{border-top:5px solid var(--aws)}.role{border-top:5px solid var(--accent)}
+.kpi{font-size:34px;font-weight:800;margin:3px 0}.small{font-size:13px;color:var(--muted)}
+.table-wrap{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}table{width:100%;border-collapse:collapse;min-width:980px}th,td{padding:14px 15px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}th{position:sticky;top:48px;background:#edf2f8;font-size:13px;letter-spacing:.02em;z-index:2}tr:last-child td{border-bottom:none}.azure-t{color:var(--azure);font-weight:750}.aws-t{color:#a85600;font-weight:750}.priority{display:inline-block;min-width:76px;text-align:center;border-radius:999px;padding:4px 9px;font-size:12px;font-weight:750}.p10{background:#fee4e2;color:#b42318}.p9{background:#fff0d5;color:#9a5700}.p8{background:#e7f7ef;color:#087f5b}.p6{background:#edf2f7;color:#596579}
+.callout{border-left:5px solid var(--accent);background:#f3efff;padding:18px 20px;border-radius:10px;margin:16px 0}.callout strong{color:#4c1d95}.flow{display:flex;align-items:stretch;gap:10px;overflow:auto;padding:8px 0}.node{min-width:150px;padding:14px;border-radius:12px;text-align:center;background:#fff;border:1px solid var(--line);font-weight:700}.arrow{align-self:center;font-size:25px;color:#8792a8}.azure-node{border-color:#83bce4;background:#eff8ff}.aws-node{border-color:#f3ba6c;background:#fff8e9}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab-btn{border:1px solid var(--line);background:#fff;padding:9px 13px;border-radius:9px;cursor:pointer;font-weight:700}.tab-btn.active{background:#172033;color:#fff}.tab-panel{display:none}.tab-panel.active{display:block}.tag{display:inline-block;margin:3px 5px 3px 0;padding:3px 8px;border-radius:7px;background:#eef2f7;font-size:12px}.yes{color:var(--green);font-weight:750}.gap{color:var(--red);font-weight:750}.scorebar{height:10px;background:#e9edf3;border-radius:999px;overflow:hidden;margin:8px 0 2px}.scorebar span{display:block;height:100%;background:linear-gradient(90deg,#1769aa,#6d28d9);border-radius:999px}
+pre{background:#111827;color:#e5edf8;padding:18px;border-radius:14px;overflow:auto;font-size:13px;line-height:1.55}.checklist{padding-left:20px}.checklist li{margin:8px 0}.source-list li{margin:8px 0;color:#4b5565}.footer{color:#6b7280;font-size:13px;border-top:1px solid var(--line);padding-top:20px}.zh{display:block;margin-top:4px;color:#7a8498;font-size:12px;line-height:1.45;font-weight:400}.speak{display:inline-flex;align-items:center;gap:4px;border:1px solid #cfd7e5;background:#fff;border-radius:999px;padding:2px 8px;margin-left:5px;font-size:11px;color:#344054;cursor:pointer;vertical-align:middle}.speak:hover{background:#eef4ff}.diagram{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);overflow:auto}.diagram svg{min-width:900px;width:100%;height:auto}.term{font-weight:700}
+@media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr}.hero{padding-top:38px}th{top:47px}.section-title{font-size:24px}}
+@media print{nav,.tabs{display:none}.tab-panel{display:block!important}.card,.table-wrap{box-shadow:none}.hero{background:#1f2937!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* --- Flink-style pronunciation controls --- */
+.voice-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 22px;font-size:13px;color:var(--muted);box-shadow:var(--shadow)}
+.voice-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#344054}
+.voice-bar select{font-size:13px;padding:5px 8px;border-radius:7px;border:1px solid #cfd7e5;background:#fff;color:#344054;max-width:280px}
+.voice-bar input[type=range]{width:110px}
+.listen-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px;border:1px solid var(--azure);background:#eef6ff;color:var(--azure);cursor:pointer;vertical-align:middle;transition:transform .12s ease,background .12s ease,color .12s ease}
+.listen-btn:hover{transform:translateY(-1px);background:#e2f0ff}
+.listen-btn.speaking{background:var(--azure);color:#fff}
+.listen-btn svg{width:12px;height:12px;flex:none}
+.term-listen{margin:4px 6px 4px 0}
+.audio-note{font-size:12px;color:var(--muted);margin:8px 0 0}
+@media(max-width:700px){.voice-bar{align-items:flex-start}.voice-bar label{width:100%}.voice-bar select{max-width:100%;width:100%}.voice-bar #stopAllBtn{margin-left:0!important}}
+
+
+.paragraph-listen{margin-left:8px;margin-top:6px}
+p.has-listen{position:relative}
+pre.has-listen{position:relative;padding-top:48px}
+pre.has-listen>.paragraph-listen{position:absolute;top:10px;right:12px;margin:0}
+
+
+/* --- Azure beginner and role interview tabs --- */
+.learning-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 16px;padding:8px;background:#e9eef7;border:1px solid var(--line);border-radius:14px}
+.learning-tab-btn{border:0;background:transparent;padding:10px 15px;border-radius:10px;cursor:pointer;font-weight:750;color:#44506a}
+.learning-tab-btn.active{background:#172033;color:#fff;box-shadow:0 5px 16px rgba(23,32,51,.15)}
+.learning-tab-panel{display:none}.learning-tab-panel.active{display:block}
+.concept-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0}
+.concept-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:17px;box-shadow:var(--shadow)}
+.concept-card h4{margin:0 0 7px;font-size:16px}.concept-card p{margin:5px 0;font-size:13.5px}
+.map-chip{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef6ff;color:var(--azure);font-size:11.5px;font-weight:750;margin:3px 4px 3px 0}
+.diagram-title{font-size:15px;font-weight:800;margin:18px 0 8px}.mini-diagram{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);overflow:auto;margin:10px 0 20px}.mini-diagram svg{min-width:860px;width:100%;height:auto}
+.qa-card{background:#fff;border:1px solid var(--line);border-radius:14px;margin:12px 0;overflow:hidden;box-shadow:var(--shadow)}
+.qa-question{width:100%;border:0;background:#fff;padding:16px 18px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;text-align:left;font-size:14px;font-weight:800;color:#27344d;cursor:pointer}
+.qa-question:hover{background:#f7f9fd}.qa-question .qa-plus{font-size:20px;color:var(--azure);line-height:1}.qa-answer{display:none;padding:0 18px 17px;border-top:1px solid var(--line);background:#fbfcfe}.qa-card.open .qa-answer{display:block}.qa-card.open .qa-plus{transform:rotate(45deg)}
+.answer-framework{display:grid;grid-template-columns:90px 1fr;gap:7px 12px;margin:10px 0;font-size:13px}.answer-framework b{color:var(--accent)}
+.role-focus{border-left:5px solid var(--azure);background:#eef7ff;border-radius:10px;padding:14px 16px;margin:14px 0}
+@media(max-width:850px){.concept-grid{grid-template-columns:1fr}.answer-framework{grid-template-columns:1fr}.learning-tab-btn{flex:1;min-width:180px}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<div class="eyebrow">Role-focused cloud data engineering guide</div>
+<h1>AWS vs Azure / Microsoft Fabric</h1>
+<p>A role-focused comparison for the <strong>Chanel Data Platform &amp; Engineering Manager, SEAA</strong>, covering data pipelines, data modelling, semantic layers, Power BI, governance, data quality, and AI-ready data.<span class="zh">面向 Chanel 岗位，重点比较数据管道、建模、语义层、Power BI、治理、数据质量和 AI-ready data。</span></p>
+<div class="badges"><span class="badge">SQL &amp; ETL/ELT</span><span class="badge">Lakehouse &amp; Warehouse</span><span class="badge">Power BI &amp; Semantic Model</span><span class="badge">Governance &amp; Lineage</span><span class="badge">RAG / AI-ready Data</span></div>
+<div class="card" style="margin-top:18px;background:rgba(255,255,255,.96);color:#172033"><h3 style="margin-bottom:8px">Click to hear key terms <span class="zh">点击朗读核心术语</span></h3><div><button class="listen-btn term-listen" data-action="speak" data-text="Microsoft%20Fabric" type="button"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>Microsoft Fabric</button><button class="listen-btn term-listen" data-action="speak" data-text="OneLake" type="button"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>OneLake</button><button class="listen-btn term-listen" data-action="speak" data-text="semantic%20layer" type="button"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>Semantic Layer</button><button class="listen-btn term-listen" data-action="speak" data-text="Power%20B%20I" type="button"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>Power BI</button><button class="listen-btn term-listen" data-action="speak" data-text="data%20warehouse" type="button"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>Data Warehouse</button><button class="listen-btn term-listen" data-action="speak" data-text="lakehouse" type="button"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>Lakehouse</button><button class="listen-btn term-listen" data-action="speak" data-text="data%20governance" type="button"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>Data Governance</button><button class="listen-btn term-listen" data-action="speak" data-text="retrieval%20augmented%20generation" type="button"><svg aria-hidden="true" fill="currentColor" viewbox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>RAG</button></div><p class="small">Choose an English voice and speed above, then click a term to listen. Click the active button again or use Stop to end playback.<span class="zh">可在页面顶部选择英文语音和语速；再次点击正在播放的按钮或点击 Stop 即可停止。</span></p></div>
+</div></header>
+<nav><div class="wrap"><a href="#summary">Summary</a><a href="#architecture">Architecture</a><a href="#matrix">Service Map</a><a href="#role">Role Skills</a><a href="#semantic">Semantic Layer</a><a href="#governance">Governance</a><a href="#ai">AI / RAG</a><a href="#interview">Interview Prep</a><a href="#azure-learning">Azure Learning</a><a href="#role-qa">Role Q&amp;A</a></div></nav>
+<main class="wrap">
+<div aria-label="English pronunciation controls" class="voice-bar">
+<label>🔊 Voice: <select id="voiceSelect"><option>Default English voice</option></select></label>
+<label>Speed: <input id="rateSlider" max="1.2" min="0.7" step="0.05" type="range" value="0.92"/></label>
+<span id="rateLabel">0.92x</span>
+<button class="listen-btn" id="stopAllBtn" style="margin-left:auto" type="button">⏹ Stop</button>
+</div>
+<section id="summary"><h2 class="section-title">Executive Summary</h2><p class="section-sub">The role prefers Azure and Microsoft Fabric, but your AWS and data engineering experience remains highly transferable.<span class="zh">岗位偏向 Azure/Fabric，但你的 AWS 与数据工程能力高度可迁移。</span></p>
+<div class="grid grid-3">
+<div class="card role"><h3>Best Platform Fit</h3><div class="kpi">Azure + Fabric</div><p>The job description explicitly prefers Microsoft Fabric or Databricks and requires Power BI, semantic modelling, data marts, and consistent KPI definitions.<span class="zh">JD 明确偏好 Fabric/Databricks，并要求 Power BI、语义模型、数据集市和统一 KPI。</span></p></div>
+<div class="card azure"><h3>Azure Advantage</h3><div class="kpi">Integrated</div><p>Fabric combines ingestion, Spark, Lakehouse, Warehouse, semantic models, and Power BI in one SaaS platform backed by OneLake.<span class="zh">Fabric 把数据接入、Spark、湖仓、数仓、语义模型和 Power BI 整合在统一平台中。</span></p></div>
+<div class="card aws"><h3>AWS Advantage</h3><div class="kpi">Modular</div><p>S3, Glue, Redshift, Athena, Lake Formation, and QuickSight can be combined flexibly, offering finer platform control but usually requiring more integration work.<span class="zh">AWS 组合更灵活、控制更细，但通常需要更多平台集成工作。</span></p></div>
+</div>
+<div class="callout"><strong>Your positioning:</strong> Avoid saying “I do not have Fabric experience.” Say that your existing Spark, SQL, Hive/Iceberg, AWS, modelling, and governance skills map directly to OneLake, Delta Lake, Fabric Data Factory, Fabric Warehouse, and Power BI semantic models.<span class="zh">不要只说没有 Fabric 经验；强调已有能力可以直接映射到 Fabric 技术栈。</span></div>
+</section>
+<section id="architecture"><h2 class="section-title">Architecture Comparison</h2><p class="section-sub">The two platforms solve similar business problems through different product structures.<span class="zh">两者解决的问题相似，但产品组合方式不同。</span></p><div aria-label="AWS and Azure Fabric architecture comparison diagram" class="diagram"><svg role="img" viewbox="0 0 1180 380"><defs><marker id="arrA" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L0,6 L9,3 z" fill="#1769aa"></path></marker><marker id="arrB" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L0,6 L9,3 z" fill="#d97706"></path></marker></defs><text fill="#1769aa" font-size="22" font-weight="700" x="20" y="35">Azure / Microsoft Fabric</text><g font-size="14" text-anchor="middle"><rect fill="#eff8ff" height="68" rx="12" stroke="#1769aa" width="170" x="20" y="60"></rect><text x="105" y="88">Source Systems</text><text fill="#657089" font-size="12" x="105" y="109">ERP · CRM · E-commerce</text><rect fill="#eff8ff" height="68" rx="12" stroke="#1769aa" width="175" x="235" y="60"></rect><text x="322" y="88">Fabric Data Factory</text><text fill="#657089" font-size="12" x="322" y="109">Ingestion · Orchestration</text><rect fill="#eff8ff" height="68" rx="12" stroke="#1769aa" width="155" x="455" y="60"></rect><text x="532" y="88">OneLake</text><text fill="#657089" font-size="12" x="532" y="109">Unified storage</text><rect fill="#eff8ff" height="68" rx="12" stroke="#1769aa" width="205" x="655" y="60"></rect><text x="758" y="88">Lakehouse / Warehouse</text><text fill="#657089" font-size="12" x="758" y="109">Delta · Spark · SQL</text><rect fill="#eff8ff" height="68" rx="12" stroke="#1769aa" width="245" x="905" y="60"></rect><text x="1028" y="88">Semantic Model + Power BI</text><text fill="#657089" font-size="12" x="1028" y="109">Trusted KPIs · Reports · AI</text></g><g marker-end="url(#arrA)" stroke="#1769aa" stroke-width="2.5"><line x1="190" x2="230" y1="94" y2="94"></line><line x1="410" x2="450" y1="94" y2="94"></line><line x1="610" x2="650" y1="94" y2="94"></line><line x1="860" x2="900" y1="94" y2="94"></line></g><text fill="#a85600" font-size="22" font-weight="700" x="20" y="205">AWS Modern Data Architecture</text><g font-size="14" text-anchor="middle"><rect fill="#fff8e9" height="68" rx="12" stroke="#d97706" width="170" x="20" y="230"></rect><text x="105" y="258">Source Systems</text><text fill="#657089" font-size="12" x="105" y="279">ERP · CRM · E-commerce</text><rect fill="#fff8e9" height="68" rx="12" stroke="#d97706" width="175" x="235" y="230"></rect><text x="322" y="258">Glue / DMS / Kinesis</text><text fill="#657089" font-size="12" x="322" y="279">Ingestion · CDC · Streaming</text><rect fill="#fff8e9" height="68" rx="12" stroke="#d97706" width="155" x="455" y="230"></rect><text x="532" y="258">Amazon S3</text><text fill="#657089" font-size="12" x="532" y="279">Object storage</text><rect fill="#fff8e9" height="68" rx="12" stroke="#d97706" width="205" x="655" y="230"></rect><text x="758" y="258">EMR / Redshift / Athena</text><text fill="#657089" font-size="12" x="758" y="279">Spark · MPP · Serverless SQL</text><rect fill="#fff8e9" height="68" rx="12" stroke="#d97706" width="245" x="905" y="230"></rect><text x="1028" y="258">QuickSight / External BI</text><text fill="#657089" font-size="12" x="1028" y="279">Dashboards · Metrics · AI</text></g><g marker-end="url(#arrB)" stroke="#d97706" stroke-width="2.5"><line x1="190" x2="230" y1="264" y2="264"></line><line x1="410" x2="450" y1="264" y2="264"></line><line x1="610" x2="650" y1="264" y2="264"></line><line x1="860" x2="900" y1="264" y2="264"></line></g><text fill="#657089" font-size="13" text-anchor="middle" x="590" y="350">Fabric integrates the stack around OneLake and Power BI; AWS composes independent services around S3.</text><text fill="#7a8498" font-size="12" text-anchor="middle" x="590" y="370">Fabric 围绕 OneLake 和 Power BI 一体化；AWS 围绕 S3 组合独立服务。</text></svg></div>
+<div class="grid grid-2">
+<div class="card azure"><h3>Azure / Microsoft Fabric</h3><div class="flow"><div class="node azure-node">Source Systems</div><div class="arrow">→</div><div class="node azure-node">Fabric Data Factory</div><div class="arrow">→</div><div class="node azure-node">OneLake</div><div class="arrow">→</div><div class="node azure-node">Lakehouse / Warehouse</div><div class="arrow">→</div><div class="node azure-node">Semantic Model / Power BI</div></div><p><strong>Key characteristic:</strong> A unified workspace, data lake, BI semantic layer, and lower integration overhead.<span class="zh">统一工作区、统一数据湖和 BI 语义层，平台拼装成本较低。</span></p></div>
+<div class="card aws"><h3>AWS Modern Data Architecture</h3><div class="flow"><div class="node aws-node">Source Systems</div><div class="arrow">→</div><div class="node aws-node">Glue / DMS / Kinesis</div><div class="arrow">→</div><div class="node aws-node">Amazon S3</div><div class="arrow">→</div><div class="node aws-node">EMR / Redshift / Athena</div><div class="arrow">→</div><div class="node aws-node">QuickSight / External BI</div></div><p><strong>Key characteristic:</strong> Independent services, flexible composition, and a mature ecosystem; catalog, permissions, semantic modelling, and BI often span multiple services.<span class="zh">服务独立且组合灵活，但目录、权限、语义层和 BI 往往需要多个服务协作。</span></p></div>
+</div></section>
+<section id="matrix"><h2 class="section-title">AWS vs Azure / Fabric Service Mapping</h2><p class="section-sub">Priorities are ranked for the Chanel role rather than for a general cloud certification exam.<span class="zh">重要度依据 Chanel 岗位，而不是云认证考试。</span></p>
+<div class="table-wrap"><table><thead><tr><th>Capability</th><th>Azure / Fabric</th><th>AWS</th><th>Key Difference</th><th>Role Priority</th></tr></thead><tbody>
+<tr><td><strong>Unified analytics platform</strong></td><td class="azure-t">Microsoft Fabric</td><td class="aws-t">No exact one-to-one service; composed from S3, Glue, Redshift, Athena, Lake Formation, and QuickSight</td><td>Fabric is more integrated; AWS is more modular.<span class="zh">Fabric 更一体化；AWS 更模块化。</span></td><td><span class="priority p9">9/10</span></td></tr>
+<tr><td><strong>Data lake storage</strong></td><td class="azure-t">OneLake / ADLS Gen2</td><td class="aws-t">Amazon S3</td><td>OneLake is Fabric’s tenant-wide logical data lake; S3 is a general-purpose object store.<span class="zh">OneLake 是 Fabric 统一逻辑数据湖；S3 是通用对象存储。</span></td><td><span class="priority p8">8/10</span></td></tr>
+<tr><td><strong>Batch ingestion / orchestration</strong></td><td class="azure-t">Fabric Data Factory / Azure Data Factory</td><td class="aws-t">AWS Glue Workflows, Step Functions, MWAA, AppFlow</td><td>ADF and Fabric Data Factory emphasize low-code pipelines, while AWS commonly selects different services by use case.<span class="zh">ADF/Fabric 强调低代码管道；AWS 通常按场景组合服务。</span></td><td><span class="priority p10">10/10</span></td></tr>
+<tr><td><strong>CDC / 数据库迁移</strong></td><td class="azure-t">ADF connectors, Fabric Mirroring, Azure Database Migration</td><td class="aws-t">AWS DMS</td><td>AWS DMS is a dedicated CDC and migration service; Fabric emphasizes integrated replication and mirroring.<span class="zh">AWS DMS 专注 CDC/迁移；Fabric 更强调统一复制和镜像。</span></td><td><span class="priority p8">8/10</span></td></tr>
+<tr><td><strong>Spark 数据工程</strong></td><td class="azure-t">Fabric Spark / Azure Databricks / Synapse Spark</td><td class="aws-t">Amazon EMR / AWS Glue Spark</td><td>Databricks is cross-cloud and feature-rich; Fabric Spark integrates more tightly with BI.<span class="zh">Databricks 跨云且功能完整；Fabric Spark 与 BI 集成更紧。</span></td><td><span class="priority p8">8/10</span></td></tr>
+<tr><td><strong>Lakehouse 表格式</strong></td><td class="azure-t">Delta Lake（Fabric 默认核心格式）</td><td class="aws-t">Apache Iceberg / Hudi / Delta Lake</td><td>Fabric has the deepest native Delta integration; AWS offers more flexibility across open table formats.<span class="zh">Fabric 深度整合 Delta；AWS 对开放表格式选择更自由。</span></td><td><span class="priority p9">9/10</span></td></tr>
+<tr><td><strong>Cloud data warehouse</strong></td><td class="azure-t">Fabric Warehouse / Azure Synapse Dedicated SQL Pool</td><td class="aws-t">Amazon Redshift</td><td>Both support MPP warehousing; Fabric Warehouse is more tightly integrated with OneLake and Power BI.<span class="zh">两者都支持 MPP 数仓；Fabric 与 OneLake、Power BI 集成更紧。</span></td><td><span class="priority p10">10/10</span></td></tr>
+<tr><td><strong>Serverless SQL</strong></td><td class="azure-t">Fabric SQL endpoint / Synapse Serverless SQL</td><td class="aws-t">Amazon Athena / Redshift Spectrum</td><td>Both can query lake files directly; Athena is the closest AWS serverless SQL equivalent.<span class="zh">两者都能直接查询数据湖文件；Athena 是最接近的 AWS 对应服务。</span></td><td><span class="priority p8">8/10</span></td></tr>
+<tr><td><strong>Metadata Catalog</strong></td><td class="azure-t">Fabric Catalog / Microsoft Purview</td><td class="aws-t">AWS Glue Data Catalog / Amazon DataZone</td><td>Purview 偏企业治理、血缘和发现；Glue Catalog 是技术元数据基础，DataZone 增强业务目录。</td><td><span class="priority p9">9/10</span></td></tr>
+<tr><td><strong>Data governance / access</strong></td><td class="azure-t">Microsoft Purview, Fabric governance, Entra ID</td><td class="aws-t">Lake Formation, IAM, DataZone</td><td>Lake Formation 重点管理 S3 湖上表/列/行权限；微软侧与 Entra、Power BI 和 Fabric lineage 更统一。</td><td><span class="priority p9">9/10</span></td></tr>
+<tr><td><strong>Semantic Layer</strong></td><td class="azure-t">Power BI Semantic Model, DAX, Direct Lake</td><td class="aws-t">QuickSight datasets / SPICE；常结合 dbt MetricFlow、Cube、Looker 等</td><td>Microsoft is stronger in enterprise semantic modelling, DAX, and the Power BI ecosystem, which is central to this role.<span class="zh">微软在企业语义模型、DAX 和 Power BI 生态上更强，也是岗位重点。</span></td><td><span class="priority p10">10/10</span></td></tr>
+<tr><td><strong>Dashboard / BI</strong></td><td class="azure-t">Power BI</td><td class="aws-t">Amazon QuickSight（现部分文档称 Amazon Quick）</td><td>Power BI 的企业采用度、建模和微软办公生态整合通常更强。</td><td><span class="priority p10">10/10</span></td></tr>
+<tr><td><strong>Streaming ingestion</strong></td><td class="azure-t">Event Hubs / Fabric Real-Time Intelligence</td><td class="aws-t">Kinesis Data Streams / MSK</td><td>Event Hubs 和 Kinesis 接近；MSK 对应托管 Kafka。</td><td><span class="priority p6">6/10</span></td></tr>
+<tr><td><strong>Stream processing</strong></td><td class="azure-t">Fabric Eventstream / Eventhouse / Stream Analytics / Databricks</td><td class="aws-t">Managed Service for Apache Flink / Glue Streaming / EMR</td><td>This role focuses more on batch processing, BI, and curated data; streaming is not the main theme.<span class="zh">岗位更偏批处理、BI 和 curated data，流处理不是主线。</span></td><td><span class="priority p6">6/10</span></td></tr>
+<tr><td><strong>Data quality</strong></td><td class="azure-t">Fabric Data Factory rules, notebooks, Purview capabilities, custom SQL</td><td class="aws-t">AWS Glue Data Quality, Deequ, custom SQL/Spark</td><td>Both platforms require pipeline checks, reconciliation, and observability.<span class="zh">两边都需要管道检查、对账和可观测性。</span></td><td><span class="priority p9">9/10</span></td></tr>
+<tr><td><strong>ML / AI platform</strong></td><td class="azure-t">Azure Machine Learning / Fabric Data Science / Azure AI Foundry</td><td class="aws-t">Amazon SageMaker / Amazon Bedrock</td><td>The role is not focused on model training; it prepares structured, governed, consumable data.<span class="zh">岗位重点不是训练模型，而是准备结构化、受治理的数据。</span></td><td><span class="priority p6">6/10</span></td></tr>
+<tr><td><strong>RAG</strong></td><td class="azure-t">Azure AI Search + Azure OpenAI / Fabric data</td><td class="aws-t">Bedrock Knowledge Bases + OpenSearch Serverless / supported vector stores</td><td>Both require clean data, metadata, chunking, permissions, and lineage.<span class="zh">两者都要求干净数据、元数据、切分、权限和血缘。</span></td><td><span class="priority p6">6.5/10</span></td></tr>
+<tr><td><strong>Monitoring</strong></td><td class="azure-t">Azure Monitor / Fabric Monitoring Hub</td><td class="aws-t">CloudWatch / CloudTrail</td><td>The role emphasizes pipeline timeliness, completeness, refresh reliability, and dashboard stability.<span class="zh">岗位重点是及时性、完整性、刷新可靠性和报表稳定性。</span></td><td><span class="priority p8">8/10</span></td></tr>
+<tr><td><strong>Identity / secrets</strong></td><td class="azure-t">Microsoft Entra ID / Managed Identity / Key Vault</td><td class="aws-t">IAM / IAM Roles / Secrets Manager / KMS</td><td>The concepts transfer directly: least privilege, service identity, and secret rotation.<span class="zh">最小权限、服务身份和密钥轮换等概念可直接迁移。</span></td><td><span class="priority p8">8/10</span></td></tr>
+</tbody></table></div></section>
+<section id="role"><h2 class="section-title">Chanel Role Skill Priorities</h2><div class="grid grid-2">
+<div class="card"><h3>1. SQL、Pipeline、ETL/ELT</h3><div class="scorebar"><span style="width:100%"></span></div><p><span class="yes">Your strength:</span>SQL, Spark, Hive, Iceberg, complex ETL, SLA management, and data troubleshooting.<span class="zh">SQL、Spark、Hive、Iceberg、复杂 ETL、SLA 和数据排查。</span></p><span class="tag">Incremental Load</span><span class="tag">Idempotency</span><span class="tag">Retry</span><span class="tag">Monitoring</span><span class="tag">Reconciliation</span></div>
+<div class="card"><h3>2. Data Modelling &amp; Data Mart</h3><div class="scorebar"><span style="width:100%"></span></div><p><span class="yes">Your strength:</span>ODS→DWD→DM/ADS, facts and dimensions, KPI frameworks, and payment/e-commerce domains.<span class="zh">分层数仓、事实维度、指标体系，以及支付和电商主题域。</span></p><span class="tag">Star Schema</span><span class="tag">SCD</span><span class="tag">Curated Dataset</span><span class="tag">KPI Definition</span></div>
+<div class="card"><h3>3. Power BI &amp; Semantic Model</h3><div class="scorebar"><span style="width:90%"></span></div><p><span class="gap">Main gap:</span>Build hands-on capability in DAX, Power Query, Import, DirectQuery, Direct Lake, RLS, incremental refresh, and performance tuning.<span class="zh">需要补 DAX、Power Query、三种连接模式、RLS、增量刷新和性能优化。</span></p></div>
+<div class="card"><h3>4. Data Quality &amp; Governance</h3><div class="scorebar"><span style="width:90%"></span></div><p><span class="yes">Your strength:</span>Regulatory reconciliation, data asset scoring, AML governance, consistent definitions, quality controls, and SLA management.<span class="zh">监管对账、数据资产评分、AML 治理、口径一致性、质量检查和 SLA。</span></p></div>
+<div class="card"><h3>5. Microsoft Fabric / Databricks</h3><div class="scorebar"><span style="width:80%"></span></div><p><span class="gap">Product experience gap:</span>Your Spark, Lakehouse, and Iceberg knowledge can transfer quickly to Fabric Spark, Delta Lake, and OneLake.<span class="zh">你的 Spark、Lakehouse 和 Iceberg 知识可快速迁移。</span></p></div>
+<div class="card"><h3>6. Stakeholder &amp; Technical Partnership</h3><div class="scorebar"><span style="width:85%"></span></div><p>Explain requirement clarification, metric conflicts, dependency assessment, delivery planning, acceptance, and regional collaboration from a manager’s perspective.<span class="zh">要用 Manager 视角讲清需求、口径冲突、依赖、计划、验收和跨区域协作。</span></p></div>
+</div></section>
+<section id="semantic"><h2 class="section-title">Core Concept: What Is a Semantic Layer?</h2>
+<div class="grid grid-2"><div class="card azure"><h3>Azure / Fabric Path</h3><pre>OneLake Delta Tables
+       ↓
+Fabric Lakehouse / Warehouse
+       ↓
+Power BI Semantic Model
+  • Facts &amp; Dimensions
+  • Relationships
+  • DAX Measures
+  • KPI definitions
+  • Row-level security
+       ↓
+Power BI Reports / AI consumption</pre></div>
+<div class="card aws"><h3>AWS Path</h3><pre>S3 Iceberg / Redshift Tables
+       ↓
+Athena / Redshift / Data Marts
+       ↓
+QuickSight Dataset / SPICE
+or external semantic layer
+  • Calculated fields
+  • Metrics
+  • Permissions
+       ↓
+QuickSight / External BI / AI</pre></div></div>
+<div class="callout"><strong>Why Chanel emphasizes it:</strong> Metrics such as “Net Sales,” “Active Customer,” and “Conversion Rate” must return consistent results across divisions, dashboards, and AI products. The semantic layer acts as a stable contract between business definitions and physical data tables.<span class="zh">同一指标必须在各部门、报表和 AI 产品中保持一致；语义层是业务口径与底层表之间的稳定契约。</span></div>
+</section>
+<section id="governance"><h2 class="section-title">Data Quality and Governance</h2>
+<div class="tabs"><button class="tab-btn active" data-tab="quality">Quality</button><button class="tab-btn" data-tab="lineage">Lineage</button><button class="tab-btn" data-tab="security">Security</button></div>
+<div class="tab-panel active" id="quality"><div class="table-wrap"><table><thead><tr><th>Check Type</th><th>Azure / Fabric 实现</th><th>AWS 实现</th><th>Your Example</th></tr></thead><tbody>
+<tr><td>Completeness</td><td>Pipeline activity + SQL/Notebook checks</td><td>Glue Data Quality / SQL / Spark</td><td>Source-to-target row counts, amounts, and partition completeness</td></tr><tr><td>Accuracy</td><td>Warehouse/Lakehouse reconciliation</td><td>Redshift/Athena reconciliation</td><td>T1–T5 regulatory reconciliation and discrepancy tables</td></tr><tr><td>Timeliness</td><td>Fabric Monitoring Hub / refresh monitoring</td><td>CloudWatch / Glue job metrics</td><td>SLA 95%→99%+</td></tr><tr><td>Consistency</td><td>Semantic model + governed KPI</td><td>Curated marts + catalog + BI datasets</td><td>Unified metric definitions, domains, and naming standards</td></tr></tbody></table></div></div>
+<div class="tab-panel" id="lineage"><div class="grid grid-2"><div class="card azure"><h3>Azure</h3><p>Fabric lineage view 与 Microsoft Purview 可覆盖 Source → Pipeline → Lakehouse/Warehouse → Semantic Model → Power BI Report。</p></div><div class="card aws"><h3>AWS</h3><p>Glue Data Catalog、Lake Formation、DataZone 与第三方 observability/lineage 工具共同覆盖资产发现和治理。</p></div></div></div>
+<div class="tab-panel" id="security"><div class="grid grid-2"><div class="card azure"><h3>Azure</h3><p>Entra ID、Managed Identity、RBAC、OneLake/Fabric permissions、Power BI RLS/OLS、Key Vault。</p></div><div class="card aws"><h3>AWS</h3><p>IAM Roles、Lake Formation table/column/row permissions、S3 policies、KMS、Secrets Manager、QuickSight RLS。</p></div></div></div>
+</section>
+<section id="ai"><h2 class="section-title">AI-Ready Data and RAG</h2><p class="section-sub">This is not an AI engineering role, but it must provide secure, reliable, and well-documented data for AI teams.<span class="zh">这不是 AI 工程岗位，但需要为 AI 团队提供安全、可靠、文档清晰的数据。</span></p>
+<div class="table-wrap"><table><thead><tr><th>Requirement</th><th>Azure / Fabric</th><th>AWS</th><th>Interview Focus</th></tr></thead><tbody>
+<tr><td>Structured business data</td><td>OneLake + Lakehouse/Warehouse + Semantic Model</td><td>S3/Redshift + Glue Catalog + curated marts</td><td>Clear tables, fields, relationships, KPIs, and business definitions</td></tr>
+<tr><td>Unstructured documents</td><td>OneLake/ADLS + Azure AI Search</td><td>S3 + Bedrock Knowledge Bases</td><td>Document parsing, chunking, metadata, versions, and permissions</td></tr>
+<tr><td>Vector search</td><td>Azure AI Search / supported vector stores</td><td>OpenSearch Serverless / supported vector stores</td><td>Embeddings do not replace governance; source metadata must be retained</td></tr>
+<tr><td>Permission inheritance</td><td>Entra/Fabric/Power BI permissions</td><td>IAM/Lake Formation/Bedrock configuration</td><td>AI must not bypass existing access controls</td></tr>
+<tr><td>Answer trustworthiness</td><td>Lineage + curated data + semantic definitions</td><td>Catalog + lineage + governed datasets</td><td>Reduce conflicting metrics and incorrect context</td></tr>
+</tbody></table></div></section>
+
+<section id="azure-learning">
+<h2 class="section-title">Azure / Fabric Learning Center</h2>
+<p class="section-sub">Learn Microsoft Fabric through the AWS services and data-engineering patterns you already know.<span class="zh">用你熟悉的 AWS、Spark、Hive、Iceberg 和数仓经验理解 Azure/Fabric。</span></p>
+<div class="learning-tabs">
+<button class="learning-tab-btn active" data-learning-tab="fabric101">1. Fabric Fundamentals</button>
+<button class="learning-tab-btn" data-learning-tab="awsbridge">2. AWS → Azure Bridge</button>
+<button class="learning-tab-btn" data-learning-tab="roleqa">3. Chanel Role Interview Q&amp;A</button>
+</div>
+<div class="learning-tab-panel active" id="fabric101">
+<div class="role-focus"><strong>First mental model:</strong> Microsoft Fabric is not one database. It is an integrated analytics platform where ingestion, Spark, SQL warehouse, semantic models, Power BI and governance work over OneLake.<span class="zh">Fabric 不是一个数据库，而是围绕 OneLake 整合数据接入、Spark、SQL 数仓、语义层、Power BI 和治理的平台。</span></div>
+<div class="diagram-title">Picture 1 — The Fabric building</div>
+<div class="mini-diagram"><svg aria-label="Microsoft Fabric building mental model" role="img" viewbox="0 0 1120 500">
+<defs><marker id="fa" markerheight="9" markerwidth="9" orient="auto" refx="7" refy="3"><path d="M0,0 L0,6 L8,3 z" fill="#1769aa"></path></marker></defs>
+<rect fill="#f7faff" height="420" rx="24" stroke="#9fc5e6" stroke-width="2" width="1060" x="30" y="35"></rect>
+<text fill="#173d68" font-size="25" font-weight="800" text-anchor="middle" x="560" y="70">Microsoft Fabric Tenant</text>
+<rect fill="#e6f3ff" height="70" rx="14" stroke="#1769aa" width="980" x="70" y="105"></rect>
+<text fill="#1769aa" font-size="20" font-weight="800" text-anchor="middle" x="560" y="135">OneLake — one logical data lake for the organization</text>
+<text fill="#657089" font-size="13" text-anchor="middle" x="560" y="158">Like S3 as the storage foundation, but integrated across Fabric workspaces and workloads</text>
+<g font-size="14" text-anchor="middle">
+<rect fill="#fff" height="92" rx="13" stroke="#1769aa" width="160" x="70" y="225"></rect><text font-weight="800" x="150" y="255">Data Factory</text><text font-size="12" x="150" y="278">Pipelines · Copy</text><text font-size="12" x="150" y="296">Dataflow Gen2</text>
+<rect fill="#fff" height="92" rx="13" stroke="#1769aa" width="160" x="265" y="225"></rect><text font-weight="800" x="345" y="255">Lakehouse</text><text font-size="12" x="345" y="278">Delta tables</text><text font-size="12" x="345" y="296">Spark + SQL endpoint</text>
+<rect fill="#fff" height="92" rx="13" stroke="#1769aa" width="160" x="460" y="225"></rect><text font-weight="800" x="540" y="255">Warehouse</text><text font-size="12" x="540" y="278">T-SQL · star schema</text><text font-size="12" x="540" y="296">BI-serving layer</text>
+<rect fill="#fff" height="92" rx="13" stroke="#1769aa" width="160" x="655" y="225"></rect><text font-weight="800" x="735" y="255">Semantic Model</text><text font-size="12" x="735" y="278">Relationships · DAX</text><text font-size="12" x="735" y="296">RLS · trusted KPIs</text>
+<rect fill="#fff" height="92" rx="13" stroke="#1769aa" width="160" x="850" y="225"></rect><text font-weight="800" x="930" y="255">Power BI</text><text font-size="12" x="930" y="278">Reports · dashboards</text><text font-size="12" x="930" y="296">Business consumption</text>
+</g>
+<g marker-end="url(#fa)" stroke="#1769aa" stroke-width="2.2"><line x1="230" x2="260" y1="271" y2="271"></line><line x1="425" x2="455" y1="271" y2="271"></line><line x1="620" x2="650" y1="271" y2="271"></line><line x1="815" x2="845" y1="271" y2="271"></line></g>
+<rect fill="#f3efff" height="55" rx="12" stroke="#6d28d9" width="760" x="180" y="365"></rect><text fill="#4c1d95" font-size="15" font-weight="800" text-anchor="middle" x="560" y="389">Shared platform services: Entra ID · Security · Monitoring · Lineage · Purview governance</text><text fill="#657089" font-size="12" text-anchor="middle" x="560" y="408">Comparable AWS concepts: IAM · CloudWatch · Glue Catalog/DataZone · Lake Formation</text>
+</svg></div>
+<div class="concept-grid">
+<div class="concept-card"><h4>Workspace</h4><p>A collaboration and security container holding lakehouses, warehouses, pipelines, notebooks, semantic models and reports.<span class="zh">类似项目空间，放置数据资产并管理成员和权限。</span></p><span class="map-chip">AWS analogy: project/account boundary</span></div>
+<div class="concept-card"><h4>Capacity</h4><p>The shared compute pool that runs Fabric workloads. Workspaces are assigned to a capacity.<span class="zh">Fabric 的共享算力池，Workspace 运行在 Capacity 上。</span></p><span class="map-chip">Think: shared compute budget</span></div>
+<div class="concept-card"><h4>OneLake</h4><p>The organization-wide logical lake used by Fabric workloads. Data can be accessed by multiple engines without creating many copies.<span class="zh">统一逻辑数据湖，多种计算引擎共享同一份数据。</span></p><span class="map-chip">Closest concept: Amazon S3</span></div>
+<div class="concept-card"><h4>Lakehouse</h4><p>Delta tables and files in OneLake, used through Spark and a SQL analytics endpoint. Best for engineering and mixed structured/unstructured data.<span class="zh">适合 Spark 数据工程、Delta 表和结构化/非结构化混合数据。</span></p><span class="map-chip">S3 + Iceberg + EMR/Athena</span></div>
+<div class="concept-card"><h4>Warehouse</h4><p>A relational, T-SQL-first serving layer built on the lake foundation, well suited to dimensional models and BI workloads.<span class="zh">偏 T-SQL、维度建模和 BI 服务层。</span></p><span class="map-chip">Closest concept: Redshift</span></div>
+<div class="concept-card"><h4>Semantic Model</h4><p>The business-facing model containing relationships, measures, security and standardized KPI definitions for Power BI.<span class="zh">把事实表、维表、DAX 指标和权限包装成业务可理解的数据模型。</span></p><span class="map-chip">Stronger than a BI dataset</span></div>
+</div>
+<div class="diagram-title">Picture 2 — End-to-end retail data flow for this role</div>
+<div class="mini-diagram"><svg aria-label="Fabric retail data pipeline" role="img" viewbox="0 0 1160 430">
+<defs><marker id="fb" markerheight="9" markerwidth="9" orient="auto" refx="7" refy="3"><path d="M0,0 L0,6 L8,3 z" fill="#6d28d9"></path></marker></defs>
+<g font-size="13" text-anchor="middle">
+<rect fill="#fff" height="70" rx="12" stroke="#6d28d9" width="145" x="20" y="80"></rect><text font-weight="800" x="92" y="108">Retail Sources</text><text font-size="11" x="92" y="130">POS · CRM · ERP · E-commerce</text>
+<rect fill="#eef7ff" height="70" rx="12" stroke="#1769aa" width="160" x="205" y="80"></rect><text font-weight="800" x="285" y="108">Data Factory</text><text font-size="11" x="285" y="130">Copy · CDC · orchestration</text>
+<rect fill="#eef7ff" height="70" rx="12" stroke="#1769aa" width="165" x="405" y="45"></rect><text font-weight="800" x="488" y="73">Bronze Lakehouse</text><text font-size="11" x="488" y="95">Raw Delta · source history</text>
+<rect fill="#eef7ff" height="70" rx="12" stroke="#1769aa" width="165" x="405" y="145"></rect><text font-weight="800" x="488" y="173">Silver Lakehouse</text><text font-size="11" x="488" y="195">Clean · conformed · quality</text>
+<rect fill="#fff8e9" height="70" rx="12" stroke="#d97706" width="165" x="620" y="95"></rect><text font-weight="800" x="703" y="123">Gold Warehouse</text><text font-size="11" x="703" y="145">Facts · dimensions · marts</text>
+<rect fill="#f3efff" height="70" rx="12" stroke="#6d28d9" width="150" x="835" y="95"></rect><text font-weight="800" x="910" y="123">Semantic Model</text><text font-size="11" x="910" y="145">DAX · RLS · KPIs</text>
+<rect fill="#e7f7ef" height="70" rx="12" stroke="#087f5b" width="115" x="1025" y="95"></rect><text font-weight="800" x="1082" y="123">Power BI</text><text font-size="11" x="1082" y="145">SEAA reports</text>
+</g>
+<g marker-end="url(#fb)" stroke="#6d28d9" stroke-width="2.3"><line x1="165" x2="200" y1="115" y2="115"></line><line x1="365" x2="400" y1="115" y2="83"></line><line x1="488" x2="488" y1="115" y2="140"></line><line x1="570" x2="615" y1="180" y2="135"></line><line x1="785" x2="830" y1="130" y2="130"></line><line x1="985" x2="1020" y1="130" y2="130"></line></g>
+<rect fill="#fbfcfe" height="95" rx="14" stroke="#cbd5e1" width="745" x="205" y="270"></rect><text fill="#27344d" font-size="15" font-weight="800" text-anchor="middle" x="578" y="296">Manager responsibilities across the flow</text><text fill="#657089" font-size="13" text-anchor="middle" x="578" y="323">Data contracts · ownership · quality checks · orchestration · SLA · cost · lineage · access control · KPI consistency</text><text fill="#7a8498" font-size="12" text-anchor="middle" x="578" y="347">你的优势集中在数据建模、质量、SLA、治理和业务指标；需要补的是 Fabric 产品操作与 Power BI。</text>
+</svg></div>
+<div class="callout"><strong>Lakehouse or Warehouse?</strong> Use a Lakehouse when Spark, files, notebooks, Delta engineering and flexible data are central. Use a Warehouse when SQL developers, dimensional modelling, governed data marts and BI serving are central. A real solution commonly uses both.<span class="zh">Lakehouse 偏工程和 Spark；Warehouse 偏 T-SQL、维度模型和 BI。真实项目常常两者结合。</span></div>
+</div>
+<div class="learning-tab-panel" id="awsbridge">
+<div class="role-focus"><strong>Your fastest learning method:</strong> do not memorize Azure product names independently. Start from a problem you solved on AWS or Hadoop, then map storage, compute, orchestration, catalog, security and consumption to Fabric.<span class="zh">不要孤立背 Azure 产品名；从熟悉的问题出发，逐层映射存储、计算、调度、目录、权限和消费层。</span></div>
+<div class="diagram-title">Picture 1 — Service translation map</div>
+<div class="mini-diagram"><svg aria-label="AWS to Microsoft Fabric service translation" role="img" viewbox="0 0 1160 610">
+<defs><marker id="fc" markerheight="9" markerwidth="9" orient="auto" refx="7" refy="3"><path d="M0,0 L0,6 L8,3 z" fill="#8792a8"></path></marker></defs>
+<text fill="#a85600" font-size="22" font-weight="800" text-anchor="middle" x="260" y="42">What you know on AWS</text><text fill="#1769aa" font-size="22" font-weight="800" text-anchor="middle" x="900" y="42">Closest Fabric / Azure concept</text>
+<g font-size="14" text-anchor="middle">
+<rect fill="#fff8e9" height="58" rx="12" stroke="#d97706" width="360" x="80" y="75"></rect><text font-weight="800" x="260" y="110">Amazon S3</text>
+<rect fill="#eef7ff" height="58" rx="12" stroke="#1769aa" width="360" x="720" y="75"></rect><text font-weight="800" x="900" y="100">OneLake / ADLS Gen2</text><text font-size="11" x="900" y="119">Fabric's integrated analytics storage</text>
+<rect fill="#fff8e9" height="58" rx="12" stroke="#d97706" width="360" x="80" y="155"></rect><text font-weight="800" x="260" y="190">Glue Jobs / Step Functions / MWAA</text>
+<rect fill="#eef7ff" height="58" rx="12" stroke="#1769aa" width="360" x="720" y="155"></rect><text font-weight="800" x="900" y="180">Fabric Data Factory</text><text font-size="11" x="900" y="199">Pipeline · Copy · Dataflow Gen2 · scheduling</text>
+<rect fill="#fff8e9" height="58" rx="12" stroke="#d97706" width="360" x="80" y="235"></rect><text font-weight="800" x="260" y="270">EMR / Glue Spark + Iceberg</text>
+<rect fill="#eef7ff" height="58" rx="12" stroke="#1769aa" width="360" x="720" y="235"></rect><text font-weight="800" x="900" y="260">Fabric Spark + Delta Lake</text><text font-size="11" x="900" y="279">Notebook · job · Lakehouse</text>
+<rect fill="#fff8e9" height="58" rx="12" stroke="#d97706" width="360" x="80" y="315"></rect><text font-weight="800" x="260" y="350">Redshift / Athena</text>
+<rect fill="#eef7ff" height="58" rx="12" stroke="#1769aa" width="360" x="720" y="315"></rect><text font-weight="800" x="900" y="340">Fabric Warehouse / SQL endpoint</text><text font-size="11" x="900" y="359">T-SQL serving and lake querying</text>
+<rect fill="#fff8e9" height="58" rx="12" stroke="#d97706" width="360" x="80" y="395"></rect><text font-weight="800" x="260" y="430">Glue Catalog / DataZone / Lake Formation</text>
+<rect fill="#eef7ff" height="58" rx="12" stroke="#1769aa" width="360" x="720" y="395"></rect><text font-weight="800" x="900" y="420">Fabric Catalog / Purview / Entra ID</text><text font-size="11" x="900" y="439">Discovery · lineage · governance · identity</text>
+<rect fill="#fff8e9" height="58" rx="12" stroke="#d97706" width="360" x="80" y="475"></rect><text font-weight="800" x="260" y="510">QuickSight / external BI</text>
+<rect fill="#eef7ff" height="58" rx="12" stroke="#1769aa" width="360" x="720" y="475"></rect><text font-weight="800" x="900" y="500">Power BI Semantic Model + Reports</text><text font-size="11" x="900" y="519">DAX · RLS · Direct Lake · enterprise BI</text>
+</g>
+<g marker-end="url(#fc)" stroke="#8792a8" stroke-width="2.1"><line x1="440" x2="715" y1="104" y2="104"></line><line x1="440" x2="715" y1="184" y2="184"></line><line x1="440" x2="715" y1="264" y2="264"></line><line x1="440" x2="715" y1="344" y2="344"></line><line x1="440" x2="715" y1="424" y2="424"></line><line x1="440" x2="715" y1="504" y2="504"></line></g>
+<text fill="#657089" font-size="13" text-anchor="middle" x="580" y="576">The mapping is conceptual, not always one-to-one. Fabric deliberately integrates several capabilities into one platform.</text>
+</svg></div>
+<div class="table-wrap"><table><thead><tr><th>Your existing experience</th><th>How to express it in a Fabric interview</th><th>What to learn hands-on</th></tr></thead><tbody>
+<tr><td>S3 + Hive/Iceberg lakehouse</td><td>I understand open lakehouse table design, partitioning, schema evolution, compaction and medallion-style layers.</td><td>OneLake shortcuts, Lakehouse explorer, Delta tables, SQL analytics endpoint.</td></tr>
+<tr><td>Glue / Airflow / workflow orchestration</td><td>I design idempotent pipelines with dependencies, retries, SLA monitoring and incremental loads.</td><td>Fabric Pipeline activities, Copy activity, parameters, schedules, monitoring hub.</td></tr>
+<tr><td>Spark SQL / PySpark</td><td>The transformation engine changes little; my Spark tuning and data modelling skills transfer directly.</td><td>Fabric notebooks, Spark job definitions, workspace environments, Delta optimization.</td></tr>
+<tr><td>Redshift / Athena / Hive SQL</td><td>I know when to use MPP warehouse serving versus lake SQL and Spark processing.</td><td>Warehouse T-SQL, SQL endpoint, Lakehouse vs Warehouse design.</td></tr>
+<tr><td>Data governance and reconciliation</td><td>I can own KPI definitions, lineage, data quality, access governance and regulatory reconciliation.</td><td>Purview integration, Fabric lineage view, endorsement, sensitivity labels, RLS.</td></tr>
+<tr><td>Dashboard consumers</td><td>I build curated facts and dimensions as a stable contract for BI and AI users.</td><td>Power BI star schema, relationships, DAX measures, Direct Lake and performance tuning.</td></tr>
+</tbody></table></div>
+<div class="diagram-title">Picture 2 — Translate one of your projects</div>
+<div class="mini-diagram"><svg aria-label="Translate Tencent or Xiaomi project to Fabric" role="img" viewbox="0 0 1120 470">
+<defs><marker id="fd" markerheight="9" markerwidth="9" orient="auto" refx="7" refy="3"><path d="M0,0 L0,6 L8,3 z" fill="#1769aa"></path></marker></defs>
+<text fill="#27344d" font-size="22" font-weight="800" text-anchor="middle" x="560" y="38">Your Xiaomi / Tencent pattern rebuilt on Fabric</text>
+<g font-size="13" text-anchor="middle">
+<rect fill="#fff" height="70" rx="12" stroke="#1769aa" width="140" x="25" y="85"></rect><text font-weight="800" x="95" y="112">Source systems</text><text font-size="11" x="95" y="134">orders · users · payments</text>
+<rect fill="#eef7ff" height="70" rx="12" stroke="#1769aa" width="150" x="205" y="85"></rect><text font-weight="800" x="280" y="112">Data Factory</text><text font-size="11" x="280" y="134">incremental ingestion</text>
+<rect fill="#eef7ff" height="70" rx="12" stroke="#1769aa" width="150" x="395" y="85"></rect><text font-weight="800" x="470" y="112">Bronze Delta</text><text font-size="11" x="470" y="134">raw ODS history</text>
+<rect fill="#eef7ff" height="70" rx="12" stroke="#1769aa" width="150" x="585" y="85"></rect><text font-weight="800" x="660" y="112">Spark transform</text><text font-size="11" x="660" y="134">DWD · DIM · quality</text>
+<rect fill="#fff8e9" height="70" rx="12" stroke="#d97706" width="150" x="775" y="85"></rect><text font-weight="800" x="850" y="112">Gold Warehouse</text><text font-size="11" x="850" y="134">DM · ADS · star schema</text>
+<rect fill="#f3efff" height="70" rx="12" stroke="#6d28d9" width="130" x="965" y="85"></rect><text font-weight="800" x="1030" y="112">Power BI</text><text font-size="11" x="1030" y="134">semantic KPIs</text>
+</g>
+<g marker-end="url(#fd)" stroke="#1769aa" stroke-width="2.2"><line x1="165" x2="200" y1="120" y2="120"></line><line x1="355" x2="390" y1="120" y2="120"></line><line x1="545" x2="580" y1="120" y2="120"></line><line x1="735" x2="770" y1="120" y2="120"></line><line x1="925" x2="960" y1="120" y2="120"></line></g>
+<g font-size="12"><rect fill="#fbfcfe" height="150" rx="16" stroke="#cbd5e1" width="930" x="95" y="235"></rect><text fill="#27344d" font-size="15" font-weight="800" x="125" y="267">What remains identical across AWS/Hadoop and Fabric</text><text fill="#657089" x="145" y="298">✓ Grain definition, primary keys, facts and dimensions</text><text fill="#657089" x="145" y="326">✓ Incremental loading, idempotency, late-arriving data and backfills</text><text fill="#657089" x="145" y="354">✓ Quality rules, reconciliation, SLA, cost and observability</text><text fill="#657089" x="595" y="298">✓ Spark/SQL transformation logic and performance thinking</text><text fill="#657089" x="595" y="326">✓ Governance, lineage, ownership and access controls</text><text fill="#657089" x="595" y="354">✓ Business KPI consistency and stakeholder alignment</text></g>
+<text fill="#087f5b" font-size="13" font-weight="800" text-anchor="middle" x="560" y="430">Your gap is mainly product operation and Power BI—not the core data-engineering principles.</text>
+</svg></div>
+</div>
+<div class="learning-tab-panel" id="roleqa">
+<div class="role-focus" id="role-qa"><strong>Interview strategy:</strong> answer as a regional data-platform owner, not only as an individual SQL developer. Connect every technical decision to trusted metrics, user adoption, delivery reliability, governance and stakeholder outcomes.<span class="zh">回答时体现区域平台负责人视角：技术决策要连接指标可信度、用户采用、交付稳定性、治理和 stakeholder 结果。</span></div>
+<div class="diagram-title">Picture — What this manager role is evaluated on</div>
+<div class="mini-diagram"><svg aria-label="Chanel data platform manager interview evaluation model" role="img" viewbox="0 0 1060 430">
+<circle cx="530" cy="210" fill="#172033" r="82"></circle><text fill="#fff" font-size="17" font-weight="800" text-anchor="middle" x="530" y="198">Data Platform &amp;</text><text fill="#fff" font-size="17" font-weight="800" text-anchor="middle" x="530" y="224">Engineering Manager</text>
+<g font-size="14" font-weight="800" text-anchor="middle">
+<rect fill="#eef7ff" height="72" rx="14" stroke="#1769aa" width="210" x="55" y="65"></rect><text x="160" y="95">Platform architecture</text><text font-size="11" font-weight="500" x="160" y="117">Fabric · Lakehouse · Warehouse</text>
+<rect fill="#eef7ff" height="72" rx="14" stroke="#1769aa" width="210" x="795" y="65"></rect><text x="900" y="95">Business value</text><text font-size="11" font-weight="500" x="900" y="117">KPI · adoption · decision support</text>
+<rect fill="#f3efff" height="72" rx="14" stroke="#6d28d9" width="210" x="55" y="290"></rect><text x="160" y="320">Delivery leadership</text><text font-size="11" font-weight="500" x="160" y="342">roadmap · dependencies · SLA</text>
+<rect fill="#f3efff" height="72" rx="14" stroke="#6d28d9" width="210" x="795" y="290"></rect><text x="900" y="320">Governance &amp; trust</text><text font-size="11" font-weight="500" x="900" y="342">quality · lineage · access</text>
+<rect fill="#e7f7ef" height="62" rx="14" stroke="#087f5b" width="310" x="375" y="340"></rect><text x="530" y="368">People &amp; stakeholder influence</text><text font-size="11" font-weight="500" x="530" y="388">regional + global + business + vendors</text>
+</g>
+<g stroke="#8792a8" stroke-width="2"><line x1="265" x2="458" y1="120" y2="176"></line><line x1="795" x2="602" y1="120" y2="176"></line><line x1="265" x2="460" y1="315" y2="244"></line><line x1="795" x2="600" y1="315" y2="244"></line><line x1="530" x2="530" y1="340" y2="295"></line></g>
+</svg></div>
+<h3>Platform and architecture questions</h3>
+<div class="qa-card"><button class="qa-question">1. How would you design a regional data platform for Southeast Asia and Australia?<span class="qa-plus">+</span></button><div class="qa-answer"><p>I would start from business domains and consumption needs, then design an integrated Fabric architecture: Data Factory for ingestion, OneLake and Lakehouse for raw and conformed Delta data, Warehouse for governed dimensional marts, and Power BI semantic models for trusted regional KPIs. I would define ownership, data contracts, security boundaries, quality SLAs and lineage from the beginning rather than treating governance as a later add-on.<span class="zh">先按业务域和消费需求设计，再落到 Data Factory、OneLake/Lakehouse、Warehouse 和 Power BI，并从一开始定义责任、数据契约、权限、质量 SLA 与血缘。</span></p><div class="answer-framework"><b>Emphasize</b><span>Regional standards with controlled local flexibility.</span><b>Your evidence</b><span>Cross-border payments across countries and currencies; domain-driven warehouse experience.</span></div></div></div>
+<div class="qa-card"><button class="qa-question">2. When would you use a Fabric Lakehouse versus a Warehouse?<span class="qa-plus">+</span></button><div class="qa-answer"><p>I would use a Lakehouse for Spark-based engineering, Delta tables, data science and mixed file or table workloads. I would use a Warehouse for T-SQL-centric dimensional modelling, governed data marts and predictable BI serving. For this role, a common pattern is to refine data in a Lakehouse and publish trusted facts and dimensions through a Warehouse and semantic model.<span class="zh">Lakehouse 用于 Spark、Delta 和灵活数据工程；Warehouse 用于 T-SQL、维度模型和 BI 服务。常见做法是湖仓加工、数仓发布。</span></p></div></div>
+<div class="qa-card"><button class="qa-question">3. You have stronger AWS experience. Why can you succeed with Microsoft Fabric?<span class="qa-plus">+</span></button><div class="qa-answer"><p>The product interfaces are different, but the engineering principles are the same: ingestion patterns, incremental processing, medallion layers, dimensional modelling, Spark and SQL transformations, data quality, governance and cost control. My S3, Iceberg, Spark, Hive and warehouse experience maps directly to OneLake, Delta Lake, Fabric Spark and Warehouse. My focused learning gap is Fabric operations and advanced Power BI, not the underlying architecture.<span class="zh">强调底层原则高度可迁移，差距主要是产品操作和 Power BI，而不是数据工程能力。</span></p></div></div>
+<h3>Semantic layer, BI and governance questions</h3>
+<div class="qa-card"><button class="qa-question">4. What is a semantic model, and why is it important for Chanel?<span class="qa-plus">+</span></button><div class="qa-answer"><p>A semantic model translates physical tables into a governed business model with relationships, measures, security and agreed definitions. For Chanel, metrics such as net sales, active customers, conversion and inventory performance must be consistent across markets and dashboards. The semantic model prevents each report from rebuilding business logic independently.<span class="zh">语义模型统一关系、指标和权限，避免不同国家和报表重复定义净销售、活跃客户、转化率等指标。</span></p></div></div>
+<div class="qa-card"><button class="qa-question">5. How would you improve data quality and trust?<span class="qa-plus">+</span></button><div class="qa-answer"><p>I would define controls at multiple layers: schema and contract checks at ingestion, completeness and duplicate checks in the Lakehouse, source-to-target reconciliation for curated marts, semantic KPI validation before report release, and operational monitoring for freshness and SLA. Every critical issue should have an owner, severity, remediation workflow and measurable recurrence trend.<span class="zh">质量控制要覆盖接入、湖仓、数据集市、语义指标和运行监控，并明确 owner、严重级别和整改流程。</span></p><div class="answer-framework"><b>Your evidence</b><span>T1–T5 regulatory reconciliation, AML governance and SLA improvement from 95% to above 99%.</span></div></div></div>
+<div class="qa-card"><button class="qa-question">6. How would you manage lineage, access and sensitive customer data?<span class="qa-plus">+</span></button><div class="qa-answer"><p>I would combine Entra identities and least-privilege workspace or item permissions with sensitivity classification, Power BI row-level security and auditable lineage in Fabric and Purview. Access should follow business roles, and sensitive attributes should be minimized, masked or separated where appropriate. Lineage must connect the source, pipeline, curated table, semantic model and report so impact analysis is practical.<span class="zh">用 Entra、最小权限、敏感度标签、RLS 和 Purview/Fabric 血缘管理敏感数据，并确保能做端到端影响分析。</span></p></div></div>
+<h3>Leadership and delivery questions</h3>
+<div class="qa-card"><button class="qa-question">7. How do you prioritize a regional data roadmap?<span class="qa-plus">+</span></button><div class="qa-answer"><p>I would score initiatives by business impact, regulatory or operational risk, number of markets and users affected, dependency complexity, data readiness and delivery cost. I would balance foundational platform work with visible business outcomes, publishing a roadmap with milestones, owners, assumptions and measurable success criteria.<span class="zh">按业务价值、风险、覆盖市场、依赖、数据成熟度和成本排序，并平衡平台基础建设与可见业务成果。</span></p></div></div>
+<div class="qa-card"><button class="qa-question">8. What would you do when two teams define the same KPI differently?<span class="qa-plus">+</span></button><div class="qa-answer"><p>I would first document the business purpose, grain, filters, time logic and edge cases behind each definition. Then I would bring the owners together, quantify the downstream impact, agree on a canonical definition or clearly named variants, and publish the decision through the semantic layer and data catalog. The goal is not to force technical uniformity without understanding the business context.<span class="zh">先拆解口径差异和业务目的，再推动 owner 决策，形成标准口径或清晰命名的变体，并发布到语义层和目录。</span></p></div></div>
+<div class="qa-card"><button class="qa-question">9. Describe a major data-platform incident and how you handled it.<span class="qa-plus">+</span></button><div class="qa-answer"><p>I would use my Spark SLA case: a critical job suffered severe skew, long garbage-collection pauses and occasional out-of-memory failures. I diagnosed hot keys and a large distinct aggregation, then applied configuration tuning, two-stage aggregation, targeted salting and monitoring improvements. Runtime fell from 75 to 13 minutes and on-time SLA improved from about 95% to above 99%.<span class="zh">使用你的 Spark 倾斜与 OOM 案例，突出诊断、分阶段修复和量化结果。</span></p></div></div>
+<div class="qa-card"><button class="qa-question">10. What would be your first 90 days in this role?<span class="qa-plus">+</span></button><div class="qa-answer"><p>In the first 30 days, I would map stakeholders, data products, platform architecture, incidents, costs and critical KPIs. By day 60, I would establish a prioritized risk and improvement backlog, clarify ownership, and deliver one visible reliability or quality improvement. By day 90, I would propose the regional roadmap, operating model, governance cadence and measurable platform KPIs.<span class="zh">30 天理解现状，60 天形成优先级并交付一个改进，90 天给出区域路线图、运营机制和平台指标。</span></p></div></div>
+<h3>Concise answers to likely gap questions</h3>
+<div class="table-wrap"><table><thead><tr><th>Question</th><th>Recommended answer direction</th></tr></thead><tbody>
+<tr><td>Do you have hands-on Fabric experience?</td><td>Be honest: limited production exposure, but show structured learning and direct mapping from Spark, SQL, lakehouse and governance experience. Mention a small hands-on Fabric project if completed.</td></tr>
+<tr><td>How strong is your Power BI?</td><td>Say your strength is building trusted data marts and KPI layers; you are actively strengthening DAX, Direct Lake, RLS and model performance.</td></tr>
+<tr><td>Have you managed people?</td><td>Separate direct line management from technical leadership. Explain project ownership, mentoring, cross-team coordination, standards and delivery accountability without overstating direct reports.</td></tr>
+<tr><td>Why Chanel?</td><td>Connect premium retail, regional complexity, customer experience, governed data and the opportunity to turn fragmented data into trusted products—not only brand admiration.</td></tr>
+<tr><td>Why leave your current role?</td><td>Keep it neutral: organizational and responsibility changes, followed by a deliberate search for a role better aligned with long-term data-platform leadership.</td></tr>
+</tbody></table></div>
+</div>
+</section>
+<section id="interview"><h2 class="section-title">Seven-Day Interview Preparation</h2><div class="grid grid-2">
+<div class="card role"><h3>Must Learn</h3><ol class="checklist"><li>Fabric 总体架构：Workspace、Capacity、OneLake。</li><li>Lakehouse vs Warehouse：Spark/SQL、Delta、使用场景。</li><li>Fabric Data Factory：Copy、Pipeline、incremental load。</li><li>Power BI Semantic Model：Star schema、relationship、measure、DAX。</li><li>Import vs DirectQuery vs Direct Lake。</li><li>Power BI：RLS、incremental refresh、性能优化。</li><li>Purview、lineage、data ownership、access control。</li></ol></div>
+<div class="card"><h3>Lower Priority</h3><ol class="checklist"><li>Advanced Kubernetes and Terraform.</li><li>Deep Kafka and Flink internals.</li><li>Low-level HDFS/YARN operations.</li><li>Training complex machine learning models.</li><li>Deep Azure Functions, VM, and networking topics.</li></ol></div>
+</div>
+<h3>Interview Answer Template</h3>
+<pre>My core experience is highly transferable to Microsoft Fabric.
+I have built domain-driven data warehouses, reusable data marts,
+quality controls and governed KPI layers using SQL, Spark, Hive and Iceberg.
+
+In Fabric, I would map these capabilities to Data Factory for ingestion,
+OneLake and Delta Lake for storage, Lakehouse or Warehouse for curated data,
+and Power BI semantic models for consistent business metrics and reporting.
+
+My main upskilling focus is hands-on Power BI and Fabric-specific operations,
+while the underlying data engineering, modelling and governance principles
+are already a strong match.</pre>
+</section>
+<section><h2 class="section-title">Learning Path</h2><div class="grid grid-3"><div class="card"><h3>Phase 1: Fabric</h3><p>OneLake → Lakehouse → Warehouse → Data Factory → Spark → Delta Lake。</p></div><div class="card"><h3>Phase 2: Power BI</h3><p>Power Query → Star schema → DAX → RLS → Incremental Refresh → Performance Analyzer。</p></div><div class="card"><h3>Phase 3: Role Cases</h3><p>Prepare four STAR stories: pipeline reliability, semantic KPI design, quality reconciliation, and stakeholder conflict.<span class="zh">准备管道稳定性、语义指标、质量对账和 stakeholder 冲突四个 STAR 案例。</span></p></div></div></section>
+<section class="footer"><h3>Official References</h3><ul class="source-list"><li><a href="https://learn.microsoft.com/en-us/fabric/fundamentals/microsoft-fabric-overview">Microsoft Fabric overview</a></li><li><a href="https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview">Fabric Lakehouse overview</a></li><li><a href="https://learn.microsoft.com/en-us/fabric/data-warehouse/data-warehousing">Fabric Data Warehouse</a></li><li><a href="https://learn.microsoft.com/en-us/fabric/data-warehouse/semantic-models">Power BI semantic models in Fabric</a></li><li><a href="https://learn.microsoft.com/en-us/fabric/fundamentals/direct-lake-overview">Direct Lake overview</a></li><li><a href="https://docs.aws.amazon.com/decision-guides/latest/analytics-on-aws-how-to-choose/analytics-on-aws-how-to-choose.html">Choosing an AWS analytics service</a></li><li><a href="https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html">AWS Lake Formation</a></li><li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html">Amazon Bedrock Knowledge Bases</a></li></ul><p>Updated: 14 July 2026. Cloud product names and capabilities change frequently, so verify official documentation before the interview.<span class="zh">更新日期：2026年7月14日；面试前请再次核对官方文档。</span></p></section>
+</main>
+<script>
+// Tabs
+// Scope activation to the clicked tab group so unrelated panels are not reset incorrectly.
+document.querySelectorAll('.tabs').forEach(tabGroup => {
+  tabGroup.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+    const target = document.getElementById(btn.dataset.tab);
+    if (!target) return;
+    tabGroup.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const section = tabGroup.parentElement;
+    if (section) section.querySelectorAll(':scope > .tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    target.classList.add('active');
+  }));
+});
+
+// Text-to-speech
+let voices = [];
+let currentBtn = null;
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+function loadVoices(){
+  if(!speechSupported) return;
+  try{
+    voices = window.speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().startsWith('en'));
+    const select = document.getElementById('voiceSelect');
+    if(!select) return;
+    select.innerHTML = '';
+    if(voices.length === 0){
+      select.innerHTML = '<option value="">Default English voice</option>';
+      return;
+    }
+    let preferredIndex = voices.findIndex(v => v.name === 'Google UK English Female');
+    if(preferredIndex < 0){
+      preferredIndex = voices.findIndex(v =>
+        /google/i.test(v.name) && /uk|british/i.test(v.name) && /female/i.test(v.name)
+      );
+    }
+    if(preferredIndex < 0){
+      preferredIndex = voices.findIndex(v =>
+        /^en-GB$/i.test(v.lang) && /female|serena|kate|martha|susan|hazel/i.test(v.name)
+      );
+    }
+    if(preferredIndex < 0){
+      preferredIndex = voices.findIndex(v => /^en-GB$/i.test(v.lang));
+    }
+    if(preferredIndex < 0) preferredIndex = 0;
+
+    voices.forEach((v,i)=>{
+      const opt=document.createElement('option');
+      opt.value=String(i);
+      opt.textContent=`${v.name} (${v.lang})`;
+      opt.selected = i === preferredIndex;
+      select.appendChild(opt);
+    });
+    select.value = String(preferredIndex);
+  }catch(e){console.warn('Voice loading failed:',e);}
+}
+if(speechSupported){
+  window.speechSynthesis.onvoiceschanged=loadVoices;
+  loadVoices();
+}
+
+const rateSlider=document.getElementById('rateSlider');
+const rateLabel=document.getElementById('rateLabel');
+if(rateSlider && rateLabel){
+  rateSlider.addEventListener('input',()=>{rateLabel.textContent=rateSlider.value+'x';});
+}
+
+function stopSpeech(){
+  if(speechSupported) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-btn.speaking').forEach(b=>b.classList.remove('speaking'));
+  currentBtn=null;
+}
+
+function toggleSpeak(btn){
+  if(!speechSupported){alert('Text-to-speech is not supported in this browser.');return;}
+  try{
+    if(btn.classList.contains('speaking')){stopSpeech();return;}
+    stopSpeech();
+    const text=decodeURIComponent(btn.dataset.text || '');
+    if(!text) return;
+    const utter=new SpeechSynthesisUtterance(text);
+    const select=document.getElementById('voiceSelect');
+    const voiceIdx=select ? Number(select.value) : -1;
+    if(Number.isInteger(voiceIdx) && voices[voiceIdx]){
+      utter.voice=voices[voiceIdx];
+      utter.lang=voices[voiceIdx].lang || 'en-GB';
+    }else{
+      utter.lang='en-GB';
+    }
+    utter.rate=rateSlider ? parseFloat(rateSlider.value) : 0.92;
+    utter.onstart=()=>{btn.classList.add('speaking');currentBtn=btn;};
+    utter.onend=()=>{btn.classList.remove('speaking');if(currentBtn===btn) currentBtn=null;};
+    utter.onerror=()=>{btn.classList.remove('speaking');if(currentBtn===btn) currentBtn=null;};
+    window.speechSynthesis.speak(utter);
+  }catch(e){console.warn('Speech playback failed:',e);}
+}
+
+
+const SPEAKER_ICON='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>';
+function englishTextOnly(el){
+  const clone=el.cloneNode(true);
+  clone.querySelectorAll('.zh, button, script, style').forEach(n=>n.remove());
+  return clone.textContent.replace(/\s+/g,' ').trim();
+}
+function addListenButtons(){
+  document.querySelectorAll('main p, .hero p, main pre').forEach(el=>{
+    if(el.closest('.voice-bar') || el.querySelector(':scope > .paragraph-listen')) return;
+    const text=englishTextOnly(el);
+    if(!text || text.length<3) return;
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='listen-btn paragraph-listen';
+    btn.dataset.action='speak';
+    btn.dataset.text=encodeURIComponent(text);
+    btn.innerHTML=SPEAKER_ICON+'Listen';
+    el.classList.add('has-listen');
+    el.appendChild(btn);
+  });
+}
+addListenButtons();
+
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-action="speak"]');
+  if(btn) toggleSpeak(btn);
+});
+const stopAllBtn=document.getElementById('stopAllBtn');
+if(stopAllBtn) stopAllBtn.addEventListener('click',stopSpeech);
+
+
+// Azure learning center top-level tabs
+const learningButtons=document.querySelectorAll('.learning-tab-btn');
+learningButtons.forEach(btn=>btn.addEventListener('click',()=>{
+  learningButtons.forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.learning-tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const panel=document.getElementById(btn.dataset.learningTab);
+  if(panel) panel.classList.add('active');
+}));
+
+// Expandable role Q&A cards
+ document.querySelectorAll('.qa-question').forEach(q=>q.addEventListener('click',()=>{
+   q.closest('.qa-card')?.classList.toggle('open');
+ }));
+</script>
+</body></html>
