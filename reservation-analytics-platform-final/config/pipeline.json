@@ -1,0 +1,16 @@
+{
+  "sql_files": [
+    "sql/dwd/10_dwd_reservation_event.sql",
+    "sql/dwd/20_dwd_paid_order.sql",
+    "sql/dm/30_dm_reservation_conversion.sql",
+    "sql/ads/40_ads_campaign_conversion.sql",
+    "sql/ads/50_ads_crm_reserved_not_paid.sql"
+  ],
+  "output_tables": [
+    "dwd_reservation_event",
+    "dwd_paid_order",
+    "dm_reservation_conversion",
+    "ads_campaign_conversion",
+    "ads_crm_reserved_not_paid"
+  ]
+}
