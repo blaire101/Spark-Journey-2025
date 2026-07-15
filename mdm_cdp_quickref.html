@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MDM &amp; CDP — Quick Reference</title>
+<style>
+  :root {
+    --bg:#FAFAF9; --surface:#FFFFFF; --border:#E5E5E3; --border-strong:#D4D4D0;
+    --text-primary:#1A1A18; --text-secondary:#57564F; --text-muted:#8A8985;
+    --accent:#2971A8; --accent-bg:#E8F2FA;
+    --success:#1E7A4C; --success-bg:#E4F5EC;
+    --warning:#9A6B1E; --warning-bg:#FBF0DD;
+    --danger:#B14A3F; --danger-bg:#FBECEA;
+    --purple:#7B4FA0; --purple-bg:#F1E9F7;
+    --radius:10px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.55; }
+  .app { max-width:900px; margin:0 auto; padding:24px 20px 80px; }
+  header h1 { font-size:21px; font-weight:600; margin:0 0 4px; }
+  header p { font-size:13.5px; color:var(--text-secondary); margin:0 0 20px; }
+
+  .time-badge { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; padding:4px 12px; border-radius:999px; margin-bottom:4px; }
+  .time-badge.mdm { background:var(--danger-bg); color:var(--danger); }
+  .time-badge.cdp { background:var(--warning-bg); color:var(--warning); }
+
+  .section-header { display:flex; align-items:center; gap:10px; margin:32px 0 14px; padding-bottom:10px; border-bottom:2px solid var(--border-strong); }
+  .section-header:first-of-type { margin-top:8px; }
+  .section-emoji { font-size:24px; }
+  .section-title { font-size:18px; font-weight:700; }
+  .section-sub { font-size:12.5px; color:var(--text-secondary); margin-top:2px; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+  .q-title { font-size:14.5px; font-weight:600; margin:0 0 6px; }
+  .q-desc { font-size:13px; color:var(--text-secondary); margin:4px 0 8px; }
+  .zh-desc { color:var(--text-secondary); font-size:12.5px; background:#F7F7F5; border-radius:6px; padding:6px 10px; margin-top:4px; }
+
+  table.datatbl { border-collapse:collapse; font-size:12px; margin:8px 0; width:100%; overflow-x:auto; display:block; }
+  table.datatbl th, table.datatbl td { border:1px solid var(--border); padding:5px 9px; text-align:left; vertical-align:top; }
+  table.datatbl th { background:var(--accent-bg); color:var(--accent); font-weight:600; }
+  .cell-zh { color:var(--text-muted); font-size:10.5px; }
+
+  .tip { font-size:12px; color:var(--success); background:var(--success-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .warn { font-size:12px; color:var(--warning); background:var(--warning-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+
+  .voice-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; margin-bottom:18px; font-size:13px; color:var(--text-secondary); }
+  .voice-bar select { font-size:13px; padding:4px 8px; border-radius:6px; border:1px solid var(--border-strong); }
+  .voice-bar input[type=range] { width:100px; }
+  .q-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:2px; }
+  .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
+  .listen-btn.speaking { background:var(--accent); color:white; }
+  .listen-btn svg { width:12px; height:12px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>MDM &amp; CDP — Quick Reference</h1>
+    <p>Two concepts to fill before the interview — Master Data Management and Cloudera Data Platform, examples framed around a utility/energy company (SP Group-style JD)</p>
+  </header>
+
+  <div class="voice-bar">
+    <label>🔊 Voice: <select id="voiceSelect"></select></label>
+    <label>Speed: <input type="range" id="rateSlider" min="0.7" max="1.2" step="0.05" value="0.92"></label>
+    <span id="rateLabel">0.92x</span>
+    <button class="listen-btn" id="stopAllBtn" style="margin-left:auto">⏹ Stop</button>
+  </div>
+
+  <div class="section-header">
+    <span class="section-emoji">🗂️</span>
+    <div>
+      <div class="section-title">Master Data Management (MDM)</div>
+      <div class="section-sub"><span class="time-badge mdm">⏱ ~1 hour</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">What problem does MDM actually solve?</p>
+      <button class="listen-btn" data-action="speak" data-text="The same real-world entity, a customer, a product, a supplier, ends up with different, slightly inconsistent records across different systems. MDM is the discipline of consolidating these into one trusted, authoritative version.">🔊 Listen</button>
+    </div>
+    <p class="q-desc">The same real-world entity (a customer, a product, a supplier) ends up with DIFFERENT, slightly inconsistent records across different systems — CRM has one spelling of a customer's name, the billing system has another, the support system has a third. MDM is the discipline of consolidating these into ONE trusted, authoritative version.</p>
+    <p class="zh-desc">中文：同一个真实世界的实体(客户/商品/供应商)，在不同系统里往往有不一致的记录——CRM里客户名字一个写法，账单系统另一个写法，客服系统又一个写法。MDM就是把这些整合成一份可信的、权威的版本。</p>
+    <div class="tip">💡 One-liner: MDM answers the question "which record do we actually trust?" when multiple systems disagree about the same real-world thing.</div>
+  </div>
+
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">The core concept: Golden Record</p>
+      <button class="listen-btn" data-action="speak" data-text="The Golden Record is the single, merged, de-duplicated, most trustworthy version of an entity's data, built by matching and consolidating records from every source system.">🔊 Listen</button>
+    </div>
+    <p class="q-desc">The "Golden Record" is the single, merged, de-duplicated, most-trustworthy version of an entity's data — built by matching and consolidating records from every source system. Example below uses a utility/energy company context (matching an SP Group-style JD).</p>
+    <p class="zh-desc">中文："黄金记录"是把各个来源系统的记录匹配、合并、去重之后，得到的那份最可信的唯一版本。下面例子用的是能源/公用事业公司场景(对应SP Group这类JD)。</p>
+
+    <svg width="100%" viewBox="0 0 680 240" style="max-width:600px; display:block; margin:12px auto;">
+<defs><marker id="m1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="10" y="15" width="180" height="55" rx="7" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="100" y="35" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Metering System</text>
+<text x="100" y="52" text-anchor="middle" font-size="9" fill="var(--danger)" font-family="-apple-system,sans-serif">"J Tan" — Meter #M-88213</text>
+<text x="100" y="64" text-anchor="middle" font-size="9" fill="var(--danger)" font-family="-apple-system,sans-serif">Address: 12 Ang Mo Kio Ave 3</text>
+
+<rect x="10" y="85" width="180" height="55" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="100" y="105" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Billing System</text>
+<text x="100" y="122" text-anchor="middle" font-size="9" fill="var(--warning)" font-family="-apple-system,sans-serif">"Jane Tan" — Account #88213</text>
+<text x="100" y="134" text-anchor="middle" font-size="9" fill="var(--warning)" font-family="-apple-system,sans-serif">Tariff plan: Residential-A</text>
+
+<rect x="10" y="155" width="180" height="55" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="100" y="175" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Customer Service (CRM)</text>
+<text x="100" y="192" text-anchor="middle" font-size="9" fill="var(--purple)" font-family="-apple-system,sans-serif">"Jane W. Tan"</text>
+<text x="100" y="204" text-anchor="middle" font-size="9" fill="var(--purple)" font-family="-apple-system,sans-serif">jane.tan@new-email.com</text>
+
+<line x1="190" y1="42" x2="330" y2="110" stroke="#888" stroke-width="1.3" marker-end="url(#m1)"/>
+<line x1="190" y1="112" x2="330" y2="115" stroke="#888" stroke-width="1.3" marker-end="url(#m1)"/>
+<line x1="190" y1="182" x2="330" y2="120" stroke="#888" stroke-width="1.3" marker-end="url(#m1)"/>
+
+<text x="260" y="95" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">match +</text>
+<text x="260" y="107" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">merge</text>
+
+<rect x="340" y="70" width="330" height="100" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="2"/>
+<text x="505" y="93" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">⭐ Golden Record</text>
+<text x="505" y="112" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">Name: Jane W. Tan</text>
+<text x="505" y="126" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">Account #: 88213 | Meter #: M-88213</text>
+<text x="505" y="140" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">Address: 12 Ang Mo Kio Ave 3</text>
+<text x="505" y="154" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">Email: jane.tan@new-email.com (most recent)</text>
+
+<text x="340" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="-apple-system,sans-serif" text-anchor="start">Survivorship rules decide which field wins when sources disagree</text>
+<text x="340" y="211" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="-apple-system,sans-serif" text-anchor="start">(e.g. "most recently updated" or "most complete" wins)</text>
+</svg>
+    <p class="zh-desc">中文：图里展示3个系统(电表系统/账单系统/客服CRM)对同一个客户有不同记录——名字拼写不同、账号和电表号分开存——经过匹配+合并后得到唯一的黄金记录，把meter #和account #关联到同一个客户身上。"幸存者规则"(Survivorship rules)决定字段冲突时用哪个来源的数据。</p>
+    <div class="tip">💡 If asked "how would you build a golden record", the answer is: match records across sources (by fuzzy name/address/meter ID matching), then apply survivorship rules to decide which field wins per attribute. In a utility context, correctly linking a customer's account ID to their meter ID across systems is exactly this kind of matching problem.</div>
+  </div>
+
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">Master Data vs. Transactional Data</p>
+      <button class="listen-btn" data-action="speak" data-text="This distinction is the most commonly tested MDM concept. Master data describes who or what is involved, while transactional data describes what happened.">🔊 Listen</button>
+    </div>
+    <p class="q-desc">This distinction is the most commonly tested MDM concept — know it cold.</p>
+    <table class="datatbl">
+      <tr><th>Master Data</th><th>Transactional Data</th></tr>
+      <tr><td>Describes WHO/WHAT — customer, meter, asset, supplier<br><span class="cell-zh">描述"谁/什么"——客户、电表、资产、供应商</span></td><td>Describes WHAT HAPPENED — a bill, a meter reading, an outage event<br><span class="cell-zh">描述"发生了什么"——一张账单、一次抄表读数、一次停电事件</span></td></tr>
+      <tr><td>Changes rarely (a customer's name rarely changes)<br><span class="cell-zh">很少变化(客户名字很少改)</span></td><td>Changes constantly, high volume, high velocity<br><span class="cell-zh">持续变化，量大，速度快</span></td></tr>
+      <tr><td>Needs to be the SAME everywhere it's referenced<br><span class="cell-zh">在任何被引用的地方都应该一致</span></td><td>References master data (an order references a customer_id)<br><span class="cell-zh">引用主数据(订单引用customer_id)</span></td></tr>
+    </table>
+    <p class="zh-desc">中文：这个区分是MDM里最常被考的概念——一定要记牢。</p>
+    <div class="tip">💡 Simple test: "does this describe WHO/WHAT is involved, or WHAT HAPPENED?" — the former is master data, the latter is transactional.</div>
+  </div>
+
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">Data Matching / Deduplication — the mechanics</p>
+      <button class="listen-btn" data-action="speak" data-text="How does a system know two records are the same person? Exact matching uses a precise key like email or ID. Fuzzy matching uses similarity scoring across multiple fields, matched above a confidence threshold.">🔊 Listen</button>
+    </div>
+    <p class="q-desc">How does a system know "John A. Smith" and "J. Smith" are the same person? Two broad approaches:</p>
+    <table class="datatbl">
+      <tr><th>Approach</th><th>How it works</th><th>Tradeoff</th></tr>
+      <tr><td>Exact/Deterministic matching<br><span class="cell-zh">精确匹配</span></td><td>Match on an exact key (email, national ID, phone number)<br><span class="cell-zh">按精确字段匹配(邮箱/身份证号/电话)</span></td><td>Simple &amp; fast, but misses variations (typos, format differences)<br><span class="cell-zh">简单快速，但漏掉拼写变体/格式差异</span></td></tr>
+      <tr><td>Fuzzy/Probabilistic matching<br><span class="cell-zh">模糊匹配</span></td><td>Similarity scoring algorithms (e.g. Levenshtein distance) across multiple fields, matched above a confidence threshold<br><span class="cell-zh">用相似度算法(如编辑距离)对多字段打分，超过置信度阈值即判定匹配</span></td><td>Catches more true duplicates, but risks false-positive merges if the threshold is too loose<br><span class="cell-zh">能抓到更多真实重复，但阈值太松会误判合并</span></td></tr>
+    </table>
+    <p class="zh-desc">中文：系统怎么知道"John A. Smith"和"J. Smith"是同一个人？两种主流方法：精确匹配(简单快但漏检多)和模糊匹配(用相似度算法，能抓到拼写变体，但需要调阈值防止误判)。</p>
+    <div class="warn">⚠️ Common interview trap: fuzzy matching threshold is a tradeoff — too loose and you merge different people into one record (false positive); too strict and you miss real duplicates (false negative). Mention this tradeoff explicitly if asked.</div>
+  </div>
+
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">Common MDM tools (name recognition only)</p>
+      <button class="listen-btn" data-action="speak" data-text="You don't need hands-on experience with these tools, just recognize the names if they come up: Informatica MDM, Reltio, SAP Master Data Governance, and Microsoft Purview.">🔊 Listen</button>
+    </div>
+    <p class="q-desc">You don't need hands-on experience with these — just recognize the names if they come up.</p>
+    <table class="datatbl">
+      <tr><th>Tool</th><th>One-line note</th></tr>
+      <tr><td>Informatica MDM</td><td>One of the most widely deployed enterprise MDM platforms<br><span class="cell-zh">最广泛部署的企业MDM平台之一</span></td></tr>
+      <tr><td>Reltio</td><td>Cloud-native MDM, often used for customer 360 use cases<br><span class="cell-zh">云原生MDM，常用于客户360视图场景</span></td></tr>
+      <tr><td>SAP Master Data Governance (MDG)</td><td>MDM tightly integrated into SAP ERP environments<br><span class="cell-zh">跟SAP ERP环境紧密集成的MDM</span></td></tr>
+      <tr><td>Microsoft Purview / Azure Purview</td><td>More focused on data governance/catalog, MDM-adjacent<br><span class="cell-zh">更偏数据治理/目录，跟MDM相邻的领域</span></td></tr>
+    </table>
+  </div>
+
+  <!-- ══════════════ CDP SECTION ══════════════ -->
+
+  <div class="section-header">
+    <span class="section-emoji">☁️</span>
+    <div>
+      <div class="section-title">Cloudera Data Platform (CDP)</div>
+      <div class="section-sub"><span class="time-badge cdp">⏱ ~30 min</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">The one-sentence version</p>
+      <button class="listen-btn" data-action="speak" data-text="CDP is Cloudera's commercial, packaged, enterprise-supported distribution of the Hadoop ecosystem, the exact same open-source components you already know, bundled together with management tooling, security, and vendor support.">🔊 Listen</button>
+    </div>
+    <p class="q-desc">CDP is Cloudera's commercial, packaged, enterprise-supported distribution of the Hadoop ecosystem — the exact same open-source components you already know (HDFS, YARN, Hive, Spark, HBase), bundled together with management tooling, security, and vendor support.</p>
+    <p class="zh-desc">中文：CDP就是Cloudera把你已经熟悉的开源Hadoop生态(HDFS/YARN/Hive/Spark/HBase)打包成企业级发行版，加上管理工具、安全组件和厂商支持服务。</p>
+    <div class="tip">💡 If asked "have you used CDP", the honest and strong answer: "I haven't used Cloudera's specific packaging, but I have deep hands-on experience with the exact components inside it — HDFS, YARN, Hive, Spark, HBase — so the ramp-up would mainly be learning Cloudera's management layer, not the underlying technology."</div>
+  </div>
+
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">What CDP adds on top of the open-source stack you know</p>
+      <button class="listen-btn" data-action="speak" data-text="Only two things are genuinely CDP-specific: Cloudera Manager, the ops GUI, and SDX, the shared governance layer. Everything below that, HDFS, YARN, Hive, Spark, and HBase, is exactly what you already work with daily.">🔊 Listen</button>
+    </div>
+    <svg width="100%" viewBox="0 0 680 260" style="max-width:600px; display:block; margin:8px auto;">
+<rect x="20" y="15" width="640" height="60" rx="8" fill="var(--purple-bg)" stroke="var(--purple)" stroke-width="1.5"/>
+<text x="340" y="38" text-anchor="middle" font-size="12" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Cloudera Manager</text>
+<text x="340" y="56" text-anchor="middle" font-size="9.5" fill="var(--purple)" font-family="-apple-system,sans-serif">Cluster provisioning, monitoring, upgrades — a GUI layer over the whole stack</text>
+
+<rect x="20" y="85" width="640" height="60" rx="8" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="1.5"/>
+<text x="340" y="108" text-anchor="middle" font-size="12" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">SDX (Shared Data Experience)</text>
+<text x="340" y="126" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">Unified security + governance layer shared across all the engines below</text>
+
+<rect x="20" y="155" width="200" height="90" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="120" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">HDFS + YARN</text>
+<text x="120" y="196" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">Storage + resource</text>
+<text x="120" y="209" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">scheduling</text>
+<text x="120" y="228" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">← you know this</text>
+
+<rect x="240" y="155" width="200" height="90" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Hive + Spark</text>
+<text x="340" y="196" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">Query + compute</text>
+<text x="340" y="209" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">engines</text>
+<text x="340" y="228" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">← you know this deeply</text>
+
+<rect x="460" y="155" width="200" height="90" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="560" y="178" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">HBase</text>
+<text x="560" y="196" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">NoSQL wide-column</text>
+<text x="560" y="209" text-anchor="middle" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">store</text>
+<text x="560" y="228" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">← you know this</text>
+</svg>
+    <p class="zh-desc">中文：CDP在你已经熟悉的开源组件(HDFS/YARN/Hive/Spark/HBase，绿色标注"你已经会了")之上，额外加了Cloudera Manager(集群管理GUI)和SDX(统一的安全+治理层)——这两个是CDP独有的，其余的底座都是你的强项。</p>
+    <div class="tip">💡 Only 2 things are genuinely CDP-specific: Cloudera Manager (the ops GUI) and SDX (the shared governance layer). Everything below that is exactly what you already work with daily.</div>
+  </div>
+
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">Why this connects directly to your governance experience</p>
+      <button class="listen-btn" data-action="speak" data-text="SDX's core job, unified metadata, lineage, and access control across every engine, is conceptually the same problem a data asset scoring framework you built at a previous company solved, just implemented as Cloudera's own product instead of something built in-house.">🔊 Listen</button>
+    </div>
+    <p class="q-desc">SDX's core job — unified metadata, lineage, and access control across every engine — is conceptually the SAME problem a Data Asset Scoring Framework you built at a previous company solved (Standards/DQC/Security/Cost), just implemented as Cloudera's own product instead of something built in-house.</p>
+    <p class="zh-desc">中文：SDX的核心工作——跨所有引擎的统一元数据/血缘/权限管理——本质上跟你之前公司自建的Data Asset Scoring Framework是同一类问题，只是CDP把它做成了产品化的功能。</p>
+    <div class="tip">💡 This is a strong thing to say in an interview: "SDX's governance goals are exactly what I already built manually in a previous role — I'd expect to pick up the CDP-specific tooling quickly since I already understand the underlying problem it solves."</div>
+  </div>
+
+</div>
+
+<script>
+let voices = [];
+let currentBtn = null;
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+function loadVoices() {
+  if (!speechSupported) return;
+  try {
+    voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    const select = document.getElementById('voiceSelect');
+    if (!select) return;
+    select.innerHTML = '';
+    if (voices.length === 0) { select.innerHTML = '<option>Default English voice</option>'; return; }
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Google US English')) opt.selected = true;
+      select.appendChild(opt);
+    });
+  } catch (e) { console.warn('Voice loading failed:', e); }
+}
+try { if (speechSupported) { window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); } } catch (e) { console.warn(e); }
+
+const rateSlider = document.getElementById('rateSlider');
+const rateLabel = document.getElementById('rateLabel');
+if (rateSlider) rateSlider.addEventListener('input', () => { rateLabel.textContent = rateSlider.value + 'x'; });
+
+function toggleSpeak(btn) {
+  if (!speechSupported) { alert('Text-to-speech is not supported in this browser.'); return; }
+  try {
+    const text = btn.dataset.text;
+    if (btn.classList.contains('speaking')) { window.speechSynthesis.cancel(); btn.classList.remove('speaking'); btn.textContent = '🔊 Listen'; currentBtn = null; return; }
+    window.speechSynthesis.cancel();
+    if (currentBtn) { currentBtn.classList.remove('speaking'); currentBtn.textContent = '🔊 Listen'; }
+    const utter = new SpeechSynthesisUtterance(text);
+    const voiceIdx = document.getElementById('voiceSelect').value;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+    utter.lang = 'en-US';
+    utter.rate = parseFloat(rateSlider.value);
+    utter.onstart = () => { btn.classList.add('speaking'); btn.textContent = '⏸ Playing'; currentBtn = btn; };
+    utter.onend = () => { btn.classList.remove('speaking'); btn.textContent = '🔊 Listen'; currentBtn = null; };
+    utter.onerror = () => { btn.classList.remove('speaking'); btn.textContent = '🔊 Listen'; currentBtn = null; };
+    window.speechSynthesis.speak(utter);
+  } catch (e) { console.warn('toggleSpeak failed:', e); }
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="speak"]');
+  if (btn) toggleSpeak(btn);
+});
+
+const stopAllBtn = document.getElementById('stopAllBtn');
+if (stopAllBtn) stopAllBtn.addEventListener('click', () => {
+  if (speechSupported) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-btn.speaking').forEach(b => { b.classList.remove('speaking'); b.textContent = '🔊 Listen'; });
+  currentBtn = null;
+});
+</script>
+</body>
+</html>
