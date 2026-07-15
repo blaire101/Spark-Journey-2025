@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Big Data Platform Ops — Interview Prep</title>
+<style>
+  :root {
+    --bg:#FAFAF9; --surface:#FFFFFF; --border:#E5E5E3; --border-strong:#D4D4D0;
+    --text-primary:#1A1A18; --text-secondary:#57564F; --text-muted:#8A8985;
+    --accent:#2971A8; --accent-bg:#E8F2FA;
+    --success:#1E7A4C; --success-bg:#E4F5EC;
+    --warning:#9A6B1E; --warning-bg:#FBF0DD;
+    --danger:#B14A3F; --danger-bg:#FBECEA;
+    --purple:#7B4FA0; --purple-bg:#F1E9F7;
+    --radius:10px;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background:var(--bg); color:var(--text-primary); line-height:1.55; }
+  .app { max-width:980px; margin:0 auto; padding:24px 20px 80px; }
+  header h1 { font-size:21px; font-weight:600; margin:0 0 4px; }
+  header p { font-size:13.5px; color:var(--text-secondary); margin:0 0 16px; }
+
+  .voice-bar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 14px; margin-bottom:18px; font-size:13px; color:var(--text-secondary); }
+  .voice-bar select { font-size:13px; padding:4px 8px; border-radius:6px; border:1px solid var(--border-strong); }
+  .voice-bar input[type=range] { width:100px; }
+
+  .tabs { display:flex; gap:4px; margin-bottom:18px; border-bottom:1px solid var(--border); overflow-x:auto; }
+  .tab-btn { padding:9px 13px; font-size:12.5px; font-weight:600; color:var(--text-secondary); background:none; border:none; border-bottom:3px solid transparent; cursor:pointer; white-space:nowrap; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .level-header { display:flex; align-items:flex-start; gap:12px; margin:24px 0 12px; padding-bottom:8px; border-bottom:2px solid var(--border-strong); }
+  .level-header:first-of-type { margin-top:4px; }
+  .level-emoji { font-size:20px; line-height:1.3; }
+  .level-label { font-size:14.5px; font-weight:700; color:var(--text-primary); }
+  .level-desc { font-size:12px; color:var(--text-secondary); margin-top:2px; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+
+  .star-banner { display:flex; align-items:center; gap:10px; font-size:13px; font-weight:700; padding:9px 14px; border-radius:var(--radius); margin:18px 0 10px; }
+  .star-banner.S { background:var(--danger-bg); color:var(--danger); }
+  .star-banner.T { background:var(--warning-bg); color:var(--warning); }
+  .star-banner.A { background:var(--purple-bg); color:var(--purple); }
+
+  .kw-badge { display:inline-block; font-size:11.5px; font-weight:600; padding:1px 8px; border-radius:999px; background:var(--accent-bg); color:var(--accent); font-family:"SF Mono",Menlo,monospace; }
+
+  .steps-list { margin:14px 0; }
+  .step-item { display:flex; gap:12px; margin-bottom:14px; align-items:flex-start; }
+  .step-item:last-child { margin-bottom:0; }
+  .step-num { flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--accent); color:white; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .step-item div:last-child { font-size:13px; line-height:1.6; color:var(--text-primary); }
+  .step-item code { background:#F4F4F2; padding:1px 5px; border-radius:4px; font-family:"SF Mono",Menlo,monospace; font-size:11.5px; }
+  .where-label { font-weight:700; color:var(--accent); }
+  .toc-btn { font-size:12px; font-weight:600; padding:7px 14px; border-radius:999px; border:1.3px solid; cursor:pointer; background:var(--surface); transition:transform 0.1s; }
+  .toc-btn:hover { transform:translateY(-1px); }
+  .toc-btn-s { border-color:var(--danger); color:var(--danger); }
+  .toc-btn-t { border-color:var(--warning); color:var(--warning); }
+  .toc-btn-a { border-color:var(--purple); color:var(--purple); }
+  .zh-desc { color:var(--text-secondary); font-size:12.5px; background:#F7F7F5; border-radius:6px; padding:6px 10px; margin-top:4px !important; }
+  .cell-zh { color:var(--text-muted); font-size:10.5px; }
+
+  /* --- Imported from sla_prep_star.html --- */
+  .flow { font-family:"SF Mono",Menlo,monospace; font-size:12px; background:var(--accent-bg); color:var(--accent); border-radius:8px; padding:8px 12px; margin:8px 0; }
+  .metric-row { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; }
+  .metric { flex:1; min-width:110px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px; text-align:center; }
+  .metric .label { font-size:11px; color:var(--text-muted); }
+  .metric .before { font-size:13.5px; color:var(--danger); font-weight:600; }
+  .metric .after { font-size:13.5px; color:var(--success); font-weight:600; }
+  .quote-card { background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius); padding:16px 18px; margin-bottom:14px; }
+  .quote-text { font-size:13.5px; color:var(--text-primary); font-style:italic; line-height:1.7; }
+
+  /* --- Imported from sql_prep.html --- */
+  .diagram-details { margin:10px 0 0; }
+  .diagram-details summary {
+    cursor:pointer; font-size:12.5px; font-weight:600; color:var(--accent);
+    padding:6px 10px; background:var(--accent-bg); border-radius:8px; list-style:none;
+    display:inline-block; user-select:none;
+  }
+  .diagram-details summary::-webkit-details-marker { display:none; }
+  .diagram-details[open] summary { margin-bottom:6px; }
+  table.datatbl td.hl { background:var(--success-bg); color:var(--success); font-weight:600; }
+
+  .q-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:6px; }
+  .q-title { font-size:14.5px; font-weight:600; margin:0; }
+  .q-desc { font-size:13px; color:var(--text-secondary); margin:4px 0 8px; }
+
+  table.datatbl { border-collapse:collapse; font-size:12px; margin:8px 0; width:100%; overflow-x:auto; display:block; }
+  table.datatbl th, table.datatbl td { border:1px solid var(--border); padding:5px 9px; text-align:left; vertical-align:top; }
+  table.datatbl th { background:var(--accent-bg); color:var(--accent); font-weight:600; }
+
+  .codeblock { background:#F4F4F2; border-radius:8px; padding:10px 14px; font-family:"SF Mono",Menlo,monospace; font-size:11.5px; color:var(--text-primary); white-space:pre; overflow-x:auto; margin:8px 0; line-height:1.55; }
+  .kw { color:#AF3A83; font-weight:600; }
+  .fn { color:#2971A8; font-weight:600; }
+  .str { color:#1E7A4C; }
+  .num { color:#B5651D; }
+  .cmt { color:#8A8985; font-style:italic; }
+
+  .tip { font-size:12px; color:var(--success); background:var(--success-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .warn { font-size:12px; color:var(--warning); background:var(--warning-bg); border-radius:6px; padding:6px 10px; margin-top:8px; }
+  .step-label { font-size:12px; font-weight:700; color:var(--accent); margin:10px 0 2px; display:block; }
+  .intro-note { font-size:13px; color:var(--text-secondary); background:var(--accent-bg); border-radius:var(--radius); padding:10px 14px; margin-bottom:16px; }
+
+  .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
+  .listen-btn.speaking { background:var(--accent); color:white; }
+  .listen-btn svg { width:12px; height:12px; }
+
+
+  /* --- Flink detailed learning cards --- */
+  .flink-inline-svg { width:100%; height:auto; display:block; }
+  .flink-map { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; margin:10px 0; }
+  .flink-map-item { border:1px solid var(--border); border-radius:9px; padding:10px 12px; background:#FBFBFA; }
+  .flink-map-item strong { display:block; font-size:12.5px; margin-bottom:3px; }
+  .flink-map-item span { display:block; color:var(--text-secondary); font-size:11.5px; line-height:1.5; }
+  .case-label { display:inline-block; padding:3px 9px; border-radius:999px; font-size:11px; font-weight:700; margin:4px 0 8px; }
+  .case-label.blue { color:var(--accent); background:var(--accent-bg); }
+  .case-label.green { color:var(--success); background:var(--success-bg); }
+  .example-box { background:#F7F7F5; border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:10px 12px; margin:9px 0; font-size:12.5px; }
+  .answer-box { background:var(--purple-bg); color:#4E2D68; border-radius:8px; padding:10px 12px; margin-top:10px; font-size:12.5px; line-height:1.65; }
+  .answer-box strong { display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:3px; }
+  .flow-steps { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:9px 0; }
+  .flow-node { padding:5px 9px; border:1px solid var(--border-strong); border-radius:7px; background:var(--surface); font-size:11.5px; font-weight:600; }
+  .flow-arrow { color:var(--text-muted); font-weight:700; }
+  .tiny-note { color:var(--text-muted); font-size:11px; margin-top:5px; }
+  @media (max-width:620px) { .flink-map { grid-template-columns:1fr; } }
+
+</style>
+<body>
+<div class="app">
+  <header>
+    <h1>Big Data Platform Ops — Interview Prep</h1>
+    <p>HDFS &middot; YARN &middot; Spark memory internals &middot; Kafka &amp; ClickHouse &middot; Docker &amp; K8S &middot; Linux &mdash; from fundamentals to diagnosis, with diagrams</p>
+  </header>
+
+  <div class="voice-bar">
+    <label>🔊 Voice: <select id="voiceSelect"></select></label>
+    <label>Speed: <input type="range" id="rateSlider" min="0.7" max="1.2" step="0.05" value="0.92"></label>
+    <span id="rateLabel">0.92x</span>
+    <button class="listen-btn" id="stopAllBtn" style="margin-left:auto">⏹ Stop</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="hdfs">🧶🗄️🐝 YARN &amp; HDFS &amp; Hive</button>
+    <button class="tab-btn" data-tab="spark">⚡ Spark Memory</button>
+    <button class="tab-btn" data-tab="clickhouse">📨 MQ &amp; ClickHouse</button>
+    <button class="tab-btn" data-tab="k8s">🐳 Docker &amp; K8S</button>
+    <button class="tab-btn" data-tab="linux">🐧 Linux</button>
+    <button class="tab-btn" data-tab="ref">📋 Quick Reference</button>
+  </div>
+
+  <div id="hdfs" class="tab-panel active"></div>
+  <div id="spark" class="tab-panel"></div>
+  <div id="clickhouse" class="tab-panel"></div>
+  <div id="k8s" class="tab-panel"></div>
+  <div id="linux" class="tab-panel"></div>
+  <div id="ref" class="tab-panel"></div>
+</div>
+
+<script>
+const speakIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1-3.29-2.5-4.03v8.05c1.5-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
+function listenBtn(text) { return `<button class="listen-btn" data-action="speak" data-text="${encodeURIComponent(text)}">${speakIcon}Listen</button>`; }
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function table(headers, rows) {
+  function renderCell(c) {
+    if (typeof c === 'string' && c.includes('||')) {
+      const [en, zh] = c.split('||');
+      return `${en}<br><span class="cell-zh"> ${zh}</span>`;
+    }
+    return c;
+  }
+  let html = '<table class="datatbl"><thead><tr>' + headers.map(h=>`<th>${h}</th>`).join('') + '</tr></thead><tbody>';
+  rows.forEach(r => { html += '<tr>' + r.map(c=>`<td>${renderCell(c)}</td>`).join('') + '</tr>'; });
+  html += '</tbody></table>';
+  return html;
+}
+const KW = new Set(['SET','SELECT','FROM','WHERE','if','else','for','while','def','class','return','import','from','as','true','false','TRUE','FALSE','CREATE','TABLE','INSERT','INTO','WITH','CONNECTOR','PRIMARY','KEY','NOT','ENFORCED','WATERMARK','FOR','AS','INTERVAL','TIMESTAMP','STRING','DECIMAL','BIGINT','LEFT','JOIN','SYSTEM_TIME','OF','ON','IS','NULL','ROW_NUMBER','OVER','PARTITION','BY','ORDER','DATE_FORMAT','COUNT','SUM','GROUP','TUMBLE','DESCRIPTOR','AND','OR','CASE','WHEN','THEN','END','CAST','PROCTIME','CURRENT_TIMESTAMP']);
+const FN = new Set(['spark-submit','yarn','hdfs','jstack','jmap','top','htop']);
+function highlightCode(code) {
+  const tokenRe = /((?:#|--)[^\n]*)|('[^'\n]*'|"[^"\n]*")|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_.-]*)|([\s\S])/g;
+  let out = ''; let m;
+  while ((m = tokenRe.exec(code)) !== null) {
+    const [, comment, str, num, word, other] = m;
+    if (comment) out += `<span class="cmt">${esc(comment)}</span>`;
+    else if (str) out += `<span class="str">${esc(str)}</span>`;
+    else if (num) out += `<span class="num">${esc(num)}</span>`;
+    else if (word) {
+      if (FN.has(word)) out += `<span class="fn">${esc(word)}</span>`;
+      else if (KW.has(word)) out += `<span class="kw">${esc(word)}</span>`;
+      else out += esc(word);
+    } else out += esc(other);
+  }
+  return out;
+}
+
+function renderCard(item) {
+  const speakText = item.speak || `${item.title}. ${item.desc || ''}`;
+  let html = `<div class="card">
+    <div class="q-head">
+      <p class="q-title">${item.title}</p>
+      ${listenBtn(speakText)}
+    </div>`;
+  if (item.desc) html += `<p class="q-desc">${item.desc}</p>`;
+  if (item.zh) html += `<p class="q-desc zh-desc"> ${item.zh}</p>`;
+  if (item.html) html += item.html;
+  if (item.diagram) html += `<div style="margin:10px 0;">${item.diagram}</div>`;
+  if (item.table) html += item.table;
+  if (item.code) html += `<div class="codeblock">${highlightCode(item.code)}</div>`;
+  if (item.collapsibleCode) html += `<details class="diagram-details"><summary>${item.collapsibleLabel || '▶ 展开查看文件'}</summary><div class="codeblock">${highlightCode(item.collapsibleCode)}</div></details>`;
+  if (item.collapsibleHtml) html += `<details class="diagram-details"><summary>${item.collapsibleLabel || '▶ 展开查看详情'}</summary>${item.collapsibleHtml}</details>`;
+  if (item.tip) html += `<div class="tip">💡 ${item.tip}</div>`;
+  if (item.tipZh) html += `<div class="tip zh-desc">💡 ${item.tipZh}</div>`;
+  if (item.warn) html += `<div class="warn">⚠️ ${item.warn}</div>`;
+  if (item.warnZh) html += `<div class="warn zh-desc">⚠️ ${item.warnZh}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+function renderByLevel(containerId, data, levelMetaMap, append) {
+  const el = document.getElementById(containerId);
+  let html = '';
+  let currentLevel = null;
+  data.forEach(item => {
+    if (item.level !== currentLevel) {
+      currentLevel = item.level;
+      const meta = levelMetaMap[currentLevel];
+      html += `<div class="level-header"><span class="level-emoji">${meta.emoji}</span><div><div class="level-label">${meta.label}</div><div class="level-desc">${meta.desc}</div></div></div>`;
+    }
+    html += renderCard(item);
+  });
+  if (append) el.innerHTML += html; else el.innerHTML = html;
+}
+
+// ============================================================
+// DATA
+// ============================================================
+
+const hdfsLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Fundamentals", desc:"What HDFS is, and its two core node types."},
+  internals: {emoji:"⚙️", label:"Level 2 — How reads/writes actually work", desc:"The mechanics interviewers actually probe."},
+  ha: {emoji:"🛡️", label:"Level 3 — High Availability & failure modes", desc:"What happens when things break, and how HDFS survives it."},
+};
+
+const hdfsData = [
+  {level:"basics", title:"What is HDFS, and why does it exist?", desc:"HDFS (Hadoop Distributed File System) stores huge files by splitting them into fixed-size blocks and spreading those blocks across many cheap machines, with replication for fault tolerance.",
+   zh:"中文：HDFS把超大文件切成固定大小的block，分散存到很多台便宜的机器上，并且做多副本(replication)保证容错。",
+   speak:"HDFS stores huge files by splitting them into fixed-size blocks and spreading those blocks across many cheap machines, with replication for fault tolerance.",
+   table: table(["Property","Typical default"], [
+     ["Block size","128 MB (was 64MB in older Hadoop 1.x)||128MB(旧版Hadoop 1.x是64MB)"],
+     ["Replication factor","3 copies of every block||每个block默认3份副本"],
+     ["Design goal","High throughput for large files, NOT low-latency small reads||为大文件高吞吐设计，不是为低延迟小读设计"],
+   ]),
+   tip:"HDFS is optimized for 'write once, read many times' — it's bad at handling millions of tiny files (the 'small file problem')."},
+
+  {level:"basics", title:"NameNode vs DataNode — the two core roles", desc:"NameNode is the 'librarian' who knows WHERE every book is. DataNodes are the actual 'shelves' holding the books.",
+   zh:"中文：NameNode是「图书管理员」，只知道每本书放在哪；DataNode才是真正放书的「书架」，存实际数据。",
+   speak:"NameNode is the librarian who knows where every book is. DataNodes are the actual shelves holding the books.",
+   diagram: `<svg width="100%" viewBox="0 0 680 260" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="hd1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="250" y="15" width="180" height="55" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="340" y="37" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">NameNode</text>
+<text x="340" y="55" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-family="-apple-system,sans-serif">Metadata only: filenames,</text>
+<text x="340" y="68" text-anchor="middle" font-size="10.5" fill="var(--accent)" font-family="-apple-system,sans-serif">block locations, permissions</text>
+
+<line x1="340" y1="70" x2="120" y2="130" stroke="#888" stroke-width="1.2" marker-end="url(#hd1)"/>
+<line x1="340" y1="70" x2="340" y2="130" stroke="#888" stroke-width="1.2" marker-end="url(#hd1)"/>
+<line x1="340" y1="70" x2="560" y2="130" stroke="#888" stroke-width="1.2" marker-end="url(#hd1)"/>
+
+<rect x="40" y="130" width="160" height="70" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="120" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode 1</text>
+<text x="120" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">Block A, Block C</text>
+<text x="120" y="184" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">(actual data)</text>
+
+<rect x="260" y="130" width="160" height="70" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode 2</text>
+<text x="340" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">Block B, Block A</text>
+<text x="340" y="184" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">(actual data)</text>
+
+<rect x="480" y="130" width="160" height="70" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="560" y="150" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode 3</text>
+<text x="560" y="168" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">Block C, Block B</text>
+<text x="560" y="184" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">(actual data)</text>
+
+<text x="340" y="225" text-anchor="middle" font-size="11" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Each block replicated 3x across DIFFERENT DataNodes</text>
+<text x="340" y="243" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">DataNodes also send periodic Heartbeats + Block Reports to NameNode</text>
+</svg>`,
+   tip:"If NameNode dies with no backup, the CLUSTER IS BLIND — it still has all the data blocks, but has no idea what file they belong to. This is why NameNode HA exists (see Level 3)."},
+
+  {level:"internals", title:"Write path — what happens when a client writes a file", desc:"The client never sends data through the NameNode — only metadata requests go there. Actual bytes flow directly to DataNodes.",
+   zh:"中文：客户端写数据时，数据本身不经过NameNode——只有「元数据请求」(问block该写哪)会经过它，真正的字节流直接发给DataNode。",
+   speak:"The client never sends data through the NameNode, only metadata requests go there. Actual bytes flow directly to DataNodes in a pipeline.",
+   diagram: `<svg width="100%" viewBox="0 0 680 240" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="hd2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="20" y="15" width="110" height="40" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="75" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Client</text>
+
+<rect x="280" y="15" width="140" height="40" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="350" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">NameNode</text>
+
+<line x1="130" y1="35" x2="272" y2="35" stroke="#888" stroke-width="1.2" marker-end="url(#hd2)"/>
+<text x="200" y="26" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" font-family="-apple-system,sans-serif">1. "create file X"</text>
+<line x1="272" y1="50" x2="130" y2="50" stroke="#888" stroke-width="1.2" marker-end="url(#hd2)"/>
+<text x="200" y="65" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" font-family="-apple-system,sans-serif">2. returns list of DataNodes to write to</text>
+
+<text x="75" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">3. Client streams data</text>
+<text x="75" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">directly into a PIPELINE:</text>
+
+<rect x="40" y="130" width="120" height="50" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="100" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode A</text>
+<line x1="160" y1="155" x2="270" y2="155" stroke="#888" stroke-width="1.2" marker-end="url(#hd2)"/>
+
+<rect x="280" y="130" width="120" height="50" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode B</text>
+<line x1="400" y1="155" x2="510" y2="155" stroke="#888" stroke-width="1.2" marker-end="url(#hd2)"/>
+
+<rect x="520" y="130" width="120" height="50" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="580" y="160" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">DataNode C</text>
+
+<text x="340" y="210" text-anchor="middle" font-size="11" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Acknowledgments flow BACKWARD through the pipeline once each node confirms the write</text>
+</svg>`,
+   tip:"NameNode is only involved at the START (getting block locations) — it never sees the actual bytes. This is exactly why HDFS scales: metadata traffic is tiny compared to data traffic."},
+
+  {level:"internals", title:"Read path — simpler than the write path", desc:"Client asks NameNode 'where are the blocks for this file', then reads directly from the CLOSEST available DataNode for each block (rack-awareness).",
+   zh:"中文：客户端先问NameNode「这个文件的block都在哪」，然后直接从最近的DataNode读取每个block(基于机架感知rack-awareness选最近节点)。",
+   speak:"Client asks the NameNode where the blocks for this file are, then reads directly from the closest available DataNode for each block.",
+   tip:"'Closest' is determined by HDFS rack-awareness — same node, then same rack, then a different rack — minimizing cross-rack network traffic."},
+
+  {level:"ha", title:"NameNode High Availability (HA)", desc:"A single NameNode is a single point of failure. HA solves this with an Active/Standby pair kept in sync via a shared edit log.",
+   zh:"中文：单个NameNode是单点故障隐患。HA用一主一备(Active/Standby)的方式解决，两者通过共享的编辑日志(edit log)保持同步。",
+   speak:"A single NameNode is a single point of failure. HA solves this with an Active/Standby pair kept in sync via a shared edit log written to JournalNodes.",
+   diagram: `<svg width="100%" viewBox="0 0 680 220" style="max-width:600px; display:block; margin:8px auto;">
+<rect x="40" y="20" width="160" height="50" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.5"/>
+<text x="120" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Active NameNode</text>
+<text x="120" y="58" text-anchor="middle" font-size="10" fill="var(--success)" font-family="-apple-system,sans-serif">serving all requests</text>
+
+<rect x="480" y="20" width="160" height="50" rx="8" fill="var(--warning-bg)" stroke="var(--warning)" stroke-width="1.5"/>
+<text x="560" y="42" text-anchor="middle" font-size="12" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Standby NameNode</text>
+<text x="560" y="58" text-anchor="middle" font-size="10" fill="var(--warning)" font-family="-apple-system,sans-serif">hot backup, ready to take over</text>
+
+<rect x="220" y="110" width="240" height="60" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="132" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">JournalNodes (quorum, usually 3-5)</text>
+<text x="340" y="150" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">Shared edit log both NameNodes write/read</text>
+
+<line x1="120" y1="70" x2="300" y2="108" stroke="#888" stroke-width="1.2"/>
+<line x1="560" y1="70" x2="380" y2="108" stroke="#888" stroke-width="1.2"/>
+
+<text x="340" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">ZKFC (ZooKeeper Failover Controller) monitors health and triggers automatic failover</text>
+</svg>`,
+   tip:"Interview tip: know that ZooKeeper is used for LEADER ELECTION here (deciding which NameNode is Active), not for storing the actual file metadata."},
+
+  {level:"ha", title:"Common HDFS failure modes you should be able to name", desc:"The classic 'what could go wrong' list for an ops interview.",
+   zh:"中文：运维面试里经典的「可能出什么问题」清单。",
+   speak:"Common HDFS failure modes: DataNode disk full, the small file problem, under-replicated blocks, and NameNode memory pressure.",
+   table: table(["Failure mode","What happens","How to detect"], [
+     ["DataNode disk full","That DataNode stops accepting new blocks, may go into 'dead' state||该节点停止接收新block，可能变成dead状态","hdfs dfsadmin -report shows disk usage per node||用这个命令看每个节点的磁盘占用"],
+     ["Small file problem","Millions of tiny files bloat NameNode memory (each file+block = ~150 bytes of RAM)||海量小文件会撑爆NameNode内存(每个文件+block约占150字节)","NameNode heap usage climbing; slow metadata ops||NameNode堆内存持续上升，元数据操作变慢"],
+     ["Under-replicated blocks","A DataNode died before its blocks could be re-replicated elsewhere||某DataNode挂掉，它的block还没来得及在别处补副本","hdfs fsck / reports under-replicated block count||用这个命令查副本不足的block数量"],
+     ["NameNode GC pauses","Huge metadata in JVM heap causes long GC stop-the-world pauses||元数据太多导致JVM堆内存GC时长时间卡顿(stop-the-world)","NameNode UI shows slow response, GC logs show long pauses||NameNode界面响应变慢，GC日志显示长时间停顿"],
+   ]),
+   tip:"'Small file problem' is a favorite interview question — the fix is usually: merge small files (e.g. via Hive/Spark compaction, or HAR archives), or use a format like Iceberg/Hudi that manages file compaction automatically."},
+];
+
+
+const yarnLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Fundamentals", desc:"The three core roles in YARN, and what a 'container' actually is."},
+  scheduling: {emoji:"📐", label:"Level 2 — Scheduling & resource allocation", desc:"How YARN decides who gets resources, and how queues work."},
+  blocking: {emoji:"🚧", label:"Level 3 — Why jobs get stuck / cluster blocking", desc:"The exact scenario you asked about — root causes and fixes."},
+};
+
+const yarnData = [
+  {level:"basics", title:"YARN's 3 core roles", desc:"YARN (Yet Another Resource Negotiator) separates 'who manages cluster resources' from 'who runs the actual job logic'.",
+   zh:"中文：YARN把「谁来管集群资源」和「谁来跑具体job逻辑」这两件事拆开，分别交给不同角色负责。",
+   speak:"YARN separates who manages cluster resources from who runs the actual job logic, using three core roles: ResourceManager, NodeManager, and ApplicationMaster.",
+   diagram: `<svg width="100%" viewBox="0 0 680 260" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="yn1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="250" y="15" width="180" height="55" rx="8" fill="var(--danger-bg)" stroke="var(--danger)" stroke-width="1.5"/>
+<text x="340" y="37" text-anchor="middle" font-size="12" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">ResourceManager (RM)</text>
+<text x="340" y="55" text-anchor="middle" font-size="10" fill="var(--danger)" font-family="-apple-system,sans-serif">ONE per cluster — global resource boss</text>
+
+<line x1="340" y1="70" x2="150" y2="115" stroke="#888" stroke-width="1.2" marker-end="url(#yn1)"/>
+<line x1="340" y1="70" x2="530" y2="115" stroke="#888" stroke-width="1.2" marker-end="url(#yn1)"/>
+
+<rect x="60" y="115" width="180" height="55" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="150" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">NodeManager (NM)</text>
+<text x="150" y="155" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">ONE per worker machine</text>
+
+<rect x="440" y="115" width="180" height="55" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="530" y="137" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">NodeManager (NM)</text>
+<text x="530" y="155" text-anchor="middle" font-size="10" fill="var(--accent)" font-family="-apple-system,sans-serif">ONE per worker machine</text>
+
+<line x1="150" y1="170" x2="150" y2="200" stroke="#888" stroke-width="1.2" marker-end="url(#yn1)"/>
+<rect x="70" y="200" width="160" height="45" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="150" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">ApplicationMaster</text>
+<text x="150" y="236" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">ONE per running job/app</text>
+
+<rect x="440" y="200" width="160" height="45" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="520" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Container</text>
+<text x="520" y="236" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">unit of allocated CPU+RAM</text>
+</svg>`,
+   table: table(["Role","Analogy"], [
+     ["ResourceManager","The building manager who decides which company (job) gets which office (resources)||大楼管理员，决定哪家公司(job)分到哪间办公室(资源)"],
+     ["NodeManager","The floor supervisor on ONE specific floor (machine), reporting available space to the manager||某一层楼(机器)的主管，向大楼管理员汇报空闲空间"],
+     ["ApplicationMaster","Each company's own on-site coordinator, negotiating for more office space (containers) as needed||每家公司自己的现场协调员，按需申请更多办公空间(container)"],
+     ["Container","An actual allocated office (a fixed slice of CPU + memory) where real work runs||实际分配到的办公室(固定的CPU+内存切片)，真正干活的地方"],
+   ]),
+   tip:"Interview trap: people often forget ApplicationMaster ITSELF runs inside a Container too — it's not a separate free resource."},
+
+  {level:"scheduling", title:"How a job actually gets resources — the full flow", desc:"Client submits → RM allocates a container just for the ApplicationMaster → AM then requests MORE containers from RM for the actual work → NM launches those containers.",
+   zh:"中文：客户端提交job → RM先分配一个container专门用来启动ApplicationMaster → AM再向RM申请更多container用于实际计算 → NodeManager负责真正启动这些container。",
+   speak:"Client submits a job to the ResourceManager, which allocates a container just for the ApplicationMaster. The ApplicationMaster then requests more containers for the actual work, and NodeManagers launch those containers.",
+   diagram: `<svg width="100%" viewBox="0 0 680 300" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="yn2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="20" y="10" width="620" height="34" rx="6" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="330" y="31" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--text-primary)" font-family="-apple-system,sans-serif">1. Client submits job to ResourceManager</text>
+<line x1="330" y1="44" x2="330" y2="66" stroke="#888" stroke-width="1.2" marker-end="url(#yn2)"/>
+
+<rect x="20" y="66" width="620" height="34" rx="6" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="330" y="87" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--accent)" font-family="-apple-system,sans-serif">2. RM allocates ONE container to launch the ApplicationMaster</text>
+<line x1="330" y1="100" x2="330" y2="122" stroke="#888" stroke-width="1.2" marker-end="url(#yn2)"/>
+
+<rect x="20" y="122" width="620" height="34" rx="6" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="330" y="143" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--success)" font-family="-apple-system,sans-serif">3. ApplicationMaster registers with RM, requests MORE containers</text>
+<line x1="330" y1="156" x2="330" y2="178" stroke="#888" stroke-width="1.2" marker-end="url(#yn2)"/>
+
+<rect x="20" y="178" width="620" height="34" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="330" y="199" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--warning)" font-family="-apple-system,sans-serif">4. RM negotiates with NodeManagers, grants containers back to AM</text>
+<line x1="330" y1="212" x2="330" y2="234" stroke="#888" stroke-width="1.2" marker-end="url(#yn2)"/>
+
+<rect x="20" y="234" width="620" height="34" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="330" y="255" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--danger)" font-family="-apple-system,sans-serif">5. AM tells NodeManagers to LAUNCH the actual work in those containers</text>
+
+<text x="330" y="288" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">If step 4 can never allocate enough containers -&gt; job appears "stuck"</text>
+</svg>`,
+   tip:"This 5-step flow is the exact thing to draw on a whiteboard if asked 'walk me through what happens when a Spark job is submitted to YARN'."},
+
+  {level:"scheduling", title:"Scheduler types — Capacity vs Fair", desc:"The scheduler decides HOW resources get divided among competing jobs/queues.",
+   zh:"中文：调度器(scheduler)决定资源在多个竞争的job/队列之间该怎么分配。",
+   speak:"Capacity Scheduler guarantees each queue a minimum share of the cluster. Fair Scheduler tries to give every running job an equal share dynamically.",
+   table: table(["Scheduler","How it works","Common use case"], [
+     ["Capacity Scheduler","Cluster divided into queues, each with a guaranteed capacity %; queues can 'borrow' idle capacity from others||集群按队列划分，每个队列保证一定容量比例；队列之间可以互相「借用」空闲容量","Multi-tenant clusters shared by different teams/departments (very common in enterprise Hadoop)||多个团队/部门共享集群时很常用(企业级Hadoop最常见)"],
+     ["Fair Scheduler","All running jobs get roughly equal resource shares, dynamically rebalanced as jobs start/finish||所有运行中的job大致平分资源，随job启停动态调整","Clusters prioritizing fairness over strict guarantees||更看重公平性而非严格资源保证的集群"],
+     ["FIFO","Simple queue, first job in gets everything until done||简单队列，先进先出，先来的job独占资源直到跑完","Rarely used in production — mentioned mainly for historical/interview context||生产环境很少用，主要是面试/历史背景知识"],
+   ]),
+   tip:"Most large enterprises (including bank/finance data platforms) use Capacity Scheduler because it gives predictable guarantees per team — good to mention by name in an interview."},
+
+  {level:"blocking", title:"THE core scenario: 'a job is stuck / not progressing' — diagnosis flow", desc:"This is the single most common big-data-ops interview question. Here's the exact step-by-step you should walk through out loud.",
+   zh:"中文：这是大数据运维面试里最常见的问题，没有之一。下面是你应该能脱口而出的完整排查步骤。",
+   speak:"When a job appears stuck, the diagnosis flow is: check if it's even running, check the queue for resource starvation, check for a specific slow stage, then check individual task logs.",
+   diagram: `<svg width="100%" viewBox="0 0 680 380" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="yn3" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="200" y="10" width="280" height="34" rx="6" fill="var(--surface)" stroke="var(--border-strong)"/>
+<text x="340" y="31" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">Job "appears stuck" — start here</text>
+<line x1="340" y1="44" x2="340" y2="64" stroke="#888" stroke-width="1.2" marker-end="url(#yn3)"/>
+
+<rect x="140" y="64" width="400" height="40" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="340" y="80" text-anchor="middle" font-size="11" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Step 1 — Check YARN UI: is the app even ACCEPTED/RUNNING?</text>
+<text x="340" y="96" text-anchor="middle" font-size="9.5" fill="var(--accent)" font-family="-apple-system,sans-serif">If stuck in ACCEPTED state -&gt; resource starvation, go to Step 2</text>
+<line x1="340" y1="104" x2="340" y2="124" stroke="#888" stroke-width="1.2" marker-end="url(#yn3)"/>
+
+<rect x="140" y="124" width="400" height="46" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="340" y="141" text-anchor="middle" font-size="11" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Step 2 — Check queue capacity (yarn queue -status)</text>
+<text x="340" y="156" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">Is the queue at 100% used? Too many pending apps ahead of yours?</text>
+<text x="340" y="169" text-anchor="middle" font-size="9.5" fill="var(--warning)" font-family="-apple-system,sans-serif">-&gt; if yes, this explains it: not enough resources allocated yet</text>
+<line x1="340" y1="170" x2="340" y2="190" stroke="#888" stroke-width="1.2" marker-end="url(#yn3)"/>
+
+<text x="340" y="206" text-anchor="middle" font-size="10" fill="var(--text-muted)" font-family="-apple-system,sans-serif">If app IS running but progress bar isn't moving:</text>
+
+<rect x="140" y="216" width="400" height="46" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="340" y="233" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Step 3 — Open Spark/YARN app UI, find the STUCK STAGE</text>
+<text x="340" y="248" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">Look at task duration distribution: is ONE task way longer than others?</text>
+<text x="340" y="261" text-anchor="middle" font-size="9.5" fill="var(--success)" font-family="-apple-system,sans-serif">-&gt; classic DATA SKEW signature</text>
+<line x1="340" y1="262" x2="340" y2="282" stroke="#888" stroke-width="1.2" marker-end="url(#yn3)"/>
+
+<rect x="140" y="282" width="400" height="46" rx="7" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="340" y="299" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Step 4 — Check the slow task's LOGS + jstack thread dump</text>
+<text x="340" y="314" text-anchor="middle" font-size="9.5" fill="var(--danger)" font-family="-apple-system,sans-serif">GC pauses? Waiting on a lock? Waiting on network/disk I/O?</text>
+<text x="340" y="327" text-anchor="middle" font-size="9.5" fill="var(--danger)" font-family="-apple-system,sans-serif">-&gt; this tells you the EXACT root cause</text>
+
+<text x="340" y="356" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">This 4-step narrowing (cluster -&gt; queue -&gt; stage -&gt; task) is the</text>
+<text x="340" y="372" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">standard mental model for ANY "job is stuck" ops question</text>
+</svg>`,
+   code:`# Step 1: is the app running at all?
+yarn application -list -appStates ALL | grep <app_id>
+
+# Step 2: check queue capacity and pending apps
+yarn queue -status <queue_name>
+yarn application -list -appStates ACCEPTED   # apps waiting for resources
+
+# Step 3: open Spark UI -> Stages tab, sort by task duration
+#         look for ONE task much longer than the rest (data skew signature)
+
+# Step 4: thread dump the slow executor to see what it's actually doing
+jstack <executor_pid> > thread_dump.txt
+# look for: BLOCKED (lock contention), long GC, or I/O wait states`,
+   tip:"Say this framing out loud in an interview: 'I narrow down from cluster-level, to queue-level, to stage-level, to task-level — each step either confirms or rules out a category of cause.'"},
+
+  {level:"blocking", title:"Common ROOT CAUSES behind 'stuck' jobs — a name-the-cause table", desc:"Once you've narrowed down WHERE it's stuck, here's what's usually actually wrong.",
+   zh:"中文：确定了「卡在哪一层」之后，这张表列出了通常的真实原因。",
+   speak:"Common root causes behind stuck jobs include queue resource exhaustion, data skew, deadlock or lock contention, and small file explosion overwhelming the scheduler.",
+   table: table(["Symptom","Likely root cause","Typical fix"], [
+     ["App stuck in ACCEPTED state","Queue is full / cluster resources exhausted||队列满了/集群资源耗尽","Kill low-priority jobs, request more queue capacity, or wait||杀掉低优先级job、申请更多队列容量，或等待"],
+     ["One task takes 10x longer than others","Data skew on a hot key||热key导致的数据倾斜","Salting, AQE skew join, repartition, or two-stage aggregation||加盐、AQE倾斜join优化、重分区，或两阶段聚合"],
+     ["ApplicationMaster itself unresponsive","AM container OOM, or AM stuck waiting on RM||AM容器OOM，或者AM卡在等RM响应","Increase yarn.app.mapreduce.am.resource.mb, check RM logs||调大AM内存配置，检查RM日志"],
+     ["Many tiny tasks, scheduler overhead dominates","Too many small input files / over-partitioned data||输入小文件太多/分区过细","Coalesce/repartition before processing, compact small files upstream||处理前先合并分区，上游先做小文件合并"],
+     ["Container allocation requested but never granted","NodeManager unhealthy / disk space threshold breached||NodeManager不健康/磁盘超过阈值","Check NM health via RM UI — NMs can self-mark UNHEALTHY on low disk||通过RM界面查NM健康状态——磁盘不够会自动标记UNHEALTHY"],
+     ["Job hangs at the exact same stage every run","Deadlock or external dependency (e.g., waiting on a lock in Hive Metastore)||死锁或外部依赖(比如卡在Hive Metastore的锁等待)","Thread dump the driver; check for lock contention in shared metastore||对Driver做线程栈分析，检查Metastore的锁竞争"],
+   ]),
+   warn:"NodeManager 'UNHEALTHY' state is an underrated one — YARN automatically stops sending containers to a NodeManager if local disk usage crosses a threshold (default 90%), which can silently shrink your effective cluster capacity."},
+];
+
+
+
+const nestedMemoryDiagram = `<svg width="100%" viewBox="0 0 700 400" style="max-width:640px; display:block; margin:10px auto;">
+<defs><marker id="nm1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="var(--success)"/></marker>
+<marker id="nm2" markerWidth="7" markerHeight="7" refX="2" refY="3.5" orient="auto-start-reverse"><path d="M7,0 L0,3.5 L7,7 Z" fill="var(--success)"/></marker></defs>
+
+<!-- Outer: YARN container total -->
+<rect x="10" y="10" width="680" height="345" rx="10" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="6,3"/>
+<text x="24" y="30" font-size="11.5" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">YARN容器总内存 (heap + overhead)</text>
+
+<!-- Inner: JVM heap -->
+<rect x="28" y="42" width="644" height="230" rx="8" fill="var(--surface)" stroke="var(--border-strong)" stroke-width="1.3"/>
+<text x="42" y="60" font-size="11" font-weight="700" fill="var(--text-primary)" font-family="-apple-system,sans-serif">JVM堆内存 heap (spark.executor.memory, 例如6GB)</text>
+
+<!-- Reserved -->
+<rect x="42" y="72" width="110" height="188" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="97" y="98" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Reserved</text>
+<text x="97" y="113" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Memory</text>
+<text x="97" y="132" text-anchor="middle" font-size="8.5" fill="var(--danger)" font-family="-apple-system,sans-serif">~300MB</text>
+<text x="97" y="145" text-anchor="middle" font-size="8.5" fill="var(--danger)" font-family="-apple-system,sans-serif">固定值</text>
+
+<!-- User Memory -->
+<rect x="162" y="72" width="150" height="188" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="237" y="98" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">User Memory</text>
+<text x="237" y="118" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">你自己代码里的</text>
+<text x="237" y="131" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">对象/数据结构/UDF</text>
+<text x="237" y="150" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">默认约40%</text>
+
+<!-- Unified Memory outer -->
+<rect x="322" y="72" width="336" height="188" rx="6" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.3"/>
+<text x="490" y="92" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Unified Memory (默认约60%, spark.memory.fraction)</text>
+
+<!-- Execution -->
+<rect x="336" y="104" width="140" height="140" rx="5" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="406" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Execution</text>
+<text x="406" y="139" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Memory</text>
+<text x="406" y="160" text-anchor="middle" font-size="8" fill="var(--accent)" font-family="-apple-system,sans-serif">shuffle / join /</text>
+<text x="406" y="172" text-anchor="middle" font-size="8" fill="var(--accent)" font-family="-apple-system,sans-serif">sort / aggregation</text>
+
+<!-- Storage -->
+<rect x="502" y="104" width="140" height="140" rx="5" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="572" y="125" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Storage</text>
+<text x="572" y="139" text-anchor="middle" font-size="10" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Memory</text>
+<text x="572" y="160" text-anchor="middle" font-size="8" fill="var(--accent)" font-family="-apple-system,sans-serif">cached RDD/DF,</text>
+<text x="572" y="172" text-anchor="middle" font-size="8" fill="var(--accent)" font-family="-apple-system,sans-serif">broadcast变量</text>
+
+<!-- Bidirectional borrow arrow -->
+<line x1="478" y1="205" x2="500" y2="205" stroke="var(--success)" stroke-width="2.2" marker-end="url(#nm1)" marker-start="url(#nm2)"/>
+<text x="489" y="222" text-anchor="middle" font-size="7.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">可互相</text>
+<text x="489" y="232" text-anchor="middle" font-size="7.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">借用</text>
+
+<!-- Off-heap overhead bar (outside heap box, inside outer box) -->
+<rect x="28" y="285" width="644" height="56" rx="8" fill="var(--purple-bg)" stroke="var(--purple)" stroke-width="1.5"/>
+<text x="42" y="306" font-size="11" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Off-heap overhead 堆外内存 (spark.executor.memoryOverhead)</text>
+<text x="42" y="322" font-size="9" fill="var(--purple)" font-family="-apple-system,sans-serif">默认 = max(384MB, executor内存的10%) —— 在heap外面，GC完全管不到这里</text>
+<text x="42" y="335" font-size="9" fill="var(--purple)" font-family="-apple-system,sans-serif">用途：网络传输buffer(shuffle)、JVM线程栈、Code Cache、Native库(如压缩库)</text>
+
+<!-- Key fact banner -->
+<rect x="10" y="362" width="680" height="30" rx="6" fill="var(--success-bg)"/>
+<text x="350" y="382" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">KEY FACT: 绿色双向箭头 = Execution和Storage可以动态互相借用空间(但Execution可以强制驱逐Storage缓存)</text>
+</svg>`;
+
+const yarnVsK8sMemoryDiagram = `<svg width="100%" viewBox="0 0 700 340" style="max-width:640px; display:block; margin:10px auto;">
+<text x="10" y="20" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">同一个executor内存模型(heap+off-heap)，YARN和K8s对"容器总内存限制"的执行方式不同：</text>
+
+<!-- YARN column -->
+<rect x="10" y="35" width="330" height="290" rx="10" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="175" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">YARN</text>
+
+<rect x="26" y="70" width="298" height="50" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="175" y="90" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Container = heap + memoryOverhead</text>
+<text x="175" y="105" text-anchor="middle" font-size="8.5" fill="var(--accent)" font-family="-apple-system,sans-serif">由NodeManager强制监控总内存</text>
+
+<rect x="26" y="128" width="298" height="70" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="175" y="148" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">超限行为</text>
+<text x="175" y="165" text-anchor="middle" font-size="8.5" fill="var(--accent)" font-family="-apple-system,sans-serif">NodeManager定期采样进程实际内存</text>
+<text x="175" y="178" text-anchor="middle" font-size="8.5" fill="var(--accent)" font-family="-apple-system,sans-serif">超过 heap+overhead 就直接kill容器</text>
+<text x="175" y="191" text-anchor="middle" font-size="8.5" fill="var(--accent)" font-family="-apple-system,sans-serif">报错: "Container killed by YARN..."</text>
+
+<rect x="26" y="206" width="298" height="50" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="175" y="226" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">调整方式</text>
+<text x="175" y="243" text-anchor="middle" font-size="8.5" fill="var(--accent)" font-family="-apple-system,sans-serif">spark.executor.memoryOverhead</text>
+
+<rect x="26" y="264" width="298" height="50" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="175" y="284" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">排查工具</text>
+<text x="175" y="301" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">yarn logs / NodeManager日志</text>
+
+<!-- K8s column -->
+<rect x="360" y="35" width="330" height="290" rx="10" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.5"/>
+<text x="525" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Kubernetes</text>
+
+<rect x="376" y="70" width="298" height="50" rx="6" fill="var(--surface)" stroke="var(--success)"/>
+<text x="525" y="90" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Pod有独立的resources.limits.memory</text>
+<text x="525" y="105" text-anchor="middle" font-size="8.5" fill="var(--success)" font-family="-apple-system,sans-serif">由kubelet + cgroups强制限制</text>
+
+<rect x="376" y="128" width="298" height="70" rx="6" fill="var(--surface)" stroke="var(--success)"/>
+<text x="525" y="148" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">超限行为</text>
+<text x="525" y="165" text-anchor="middle" font-size="8.5" fill="var(--success)" font-family="-apple-system,sans-serif">Linux cgroups直接强制限制，</text>
+<text x="525" y="178" text-anchor="middle" font-size="8.5" fill="var(--success)" font-family="-apple-system,sans-serif">超限立刻被OS OOM Killer杀掉</text>
+<text x="525" y="191" text-anchor="middle" font-size="8.5" fill="var(--success)" font-family="-apple-system,sans-serif">Pod状态显示: OOMKilled</text>
+
+<rect x="376" y="206" width="298" height="50" rx="6" fill="var(--surface)" stroke="var(--success)"/>
+<text x="525" y="226" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">调整方式</text>
+<text x="525" y="243" text-anchor="middle" font-size="8.5" fill="var(--success)" font-family="-apple-system,sans-serif">spark.kubernetes.memoryOverheadFactor</text>
+
+<rect x="376" y="264" width="298" height="50" rx="6" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="525" y="284" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">排查工具</text>
+<text x="525" y="301" text-anchor="middle" font-size="8.5" fill="var(--warning)" font-family="-apple-system,sans-serif">kubectl describe pod / kubectl logs</text>
+</svg>`;
+
+
+const sparkLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Driver vs Executor", desc:"The two process types in every Spark application."},
+  memory: {emoji:"🧠", label:"Level 2 — Executor memory internals", desc:"The exact memory regions interviewers expect you to name."},
+  oom: {emoji:"💥", label:"Level 3 — OOM diagnosis", desc:"Which OOM is it, and how do you tell?"},
+};
+
+const sparkData = [
+  {level:"basics", title:"Driver vs Executor — who does what", desc:"Driver is the 'brain' that plans the job. Executors are the 'muscle' that actually crunch data.",
+   zh:"中文：Driver是负责「规划任务」的大脑，Executor是真正干活、处理数据的「肌肉」。",
+   speak:"The Driver is the brain that plans the job and coordinates everything. Executors are the muscle that actually crunch data in parallel across the cluster.",
+   table: table(["Process","Runs where","Responsibility"], [
+     ["Driver","1 per application (inside the AM container, or client machine in client mode)||每个应用1个(在AM容器内，或client模式下在客户端机器)","Builds the DAG, schedules stages/tasks, collects final results||构建DAG、调度Stage/Task、收集最终结果"],
+     ["Executor","Many per application, spread across worker nodes||每个应用可以有很多个，分散在多台worker节点","Runs tasks, holds cached data in memory, reports back to Driver||执行task、内存里持有缓存数据、向Driver汇报"],
+   ]),
+   tip:"Interview trap: 'Driver OOM' and 'Executor OOM' are DIFFERENT problems with different causes — see Level 3."},
+
+  {level:"memory", title:"Executor memory layout — the exact regions", desc:"A single executor's JVM heap is NOT one big undivided pool — Spark's Unified Memory Manager splits it into named regions.",
+   zh:"中文：单个executor的JVM堆内存不是一整块不分区的池子——Spark的统一内存管理器(Unified Memory Manager)把它划分成好几个命名区域。",
+   speak:"An executor's JVM heap is split into named regions by Spark's Unified Memory Manager: reserved memory, user memory, and unified memory — which itself splits into execution memory and storage memory that can borrow space from each other.",
+   diagram: nestedMemoryDiagram,
+   code:`# Key Spark memory configs
+spark.executor.memory          # JVM heap size for the executor (e.g. 6g)
+spark.executor.memoryOverhead  # off-heap memory OUTSIDE the JVM heap
+                                # default = max(384MB, 0.10 * executor.memory)
+spark.memory.fraction          # % of (heap - reserved) for Unified Memory (default 0.6)
+spark.memory.storageFraction   # % of Unified Memory reserved for Storage (default 0.5)`,
+   tip:"When an interviewer asks 'why did the executor OOM even though I set executor.memory high enough', the answer is often: the OVERHEAD (off-heap) memory was too small, not the heap itself."},
+
+  {level:"memory", title:"这套内存模型在 YARN 和 K8s 上，容器超限的处理方式不同", desc:"Same heap+off-heap memory model applies whether Spark runs on YARN or Kubernetes — but WHO enforces the total memory limit, and HOW it kills an over-budget executor, differs.",
+   zh:"中文：不管Spark跑在YARN还是K8s上，heap+堆外这套内存模型都是一样的——但是「谁来监控总内存」、「怎么kill超限的executor」，这两个平台的机制不一样。",
+   speak:"The same heap plus off-heap memory model applies on both YARN and Kubernetes, but YARN's NodeManager samples process memory and kills the container, while Kubernetes uses Linux cgroups to enforce the limit directly, resulting in an OOMKilled pod status.",
+   diagram: yarnVsK8sMemoryDiagram,
+   tip:"面试如果问'Spark on K8s跟Spark on YARN内存管理有什么区别'——核心答案就是这张图：内存模型(heap/off-heap/Unified Memory)完全一样，区别只在于外层容器的内存限制是谁在强制执行、超限之后报错信息长什么样。"},
+
+  {level:"oom", title:"Driver OOM vs Executor OOM — how to tell them apart", desc:"Same error message category (OutOfMemoryError), completely different root causes and fixes.",
+   zh:"中文：虽然报错都叫OutOfMemoryError，但Driver OOM和Executor OOM的根因和修复方式完全不同。",
+   speak:"Driver OOM usually means you pulled too much data back to a single machine, like calling collect on a huge dataset. Executor OOM usually means data skew or a HashSet exploding during a distinct aggregation on one hot partition.",
+   table: table(["","Driver OOM","Executor OOM"], [
+     ["Typical cause","collect(), toPandas(), or broadcasting a table that's too large||collect()、toPandas()，或者广播了太大的表","Data skew — one partition/key has way more data than others||数据倾斜——某个partition/key数据量远超其他"],
+     ["Where you see it","Driver logs, application immediately fails||Driver日志里，应用立刻失败","One specific executor dies, task retries, eventually job fails||某个具体executor挂掉，task重试，最终job失败"],
+     ["Fix direction","Avoid pulling full datasets to driver; increase spark.driver.memory only as last resort||避免把全量数据拉到driver；调大driver内存只作为最后手段","Fix the skew: salting, AQE, repartition, or two-stage aggregation||修复倾斜本身：加盐、AQE、重分区，或两阶段聚合"],
+   ]),
+   warn:"A common beginner mistake in interviews: treating ALL OOMs the same and just saying 'increase memory'. Naming the SPECIFIC memory region and SPECIFIC cause is what separates a junior answer from a senior one."},
+
+  {level:"oom", title:"Reading a Spark OOM stack trace — what to look for", desc:"The exact error text tells you which memory region failed.",
+   zh:"中文：报错信息的具体文字，能告诉你到底是哪块内存区域出了问题。",
+   speak:"The exact wording of the OOM error tells you which memory region failed — Java heap space, GC overhead limit exceeded, or a container killed by YARN for exceeding physical memory.",
+   table: table(["Error text contains...","Meaning"], [
+     ["java.lang.OutOfMemoryError: Java heap space","The JVM heap itself is exhausted — classic OOM||JVM堆内存本身耗尽——经典OOM"],
+     ["GC overhead limit exceeded","JVM is spending almost all its time garbage collecting and barely making progress — heap is too small for the working set||JVM几乎所有时间都在做GC、几乎没有实际进展——堆内存对当前工作集太小"],
+     ["Container killed by YARN for exceeding memory limits","This is an OFF-HEAP issue — the container's TOTAL memory (heap + overhead) exceeded what YARN allocated. Increase memoryOverhead, not just executor.memory||这是堆外内存问题——容器总内存(堆+overhead)超过YARN分配的额度。要调大memoryOverhead，不只是executor.memory"],
+   ]),
+   tip:"'Container killed by YARN for exceeding memory limits, X GB used, Y GB requested' — memorize this exact phrase, it's the single most common Spark-on-YARN OOM message you'll see in real logs."},
+
+  {level:"oom", title:"Why COUNT(DISTINCT) under skew is a textbook Executor OOM case", desc:"Ties directly back to the SLA case study — worth being able to explain end-to-end.",
+   zh:"中文：这跟之前SLA案例是同一个根因，建议练到能完整讲一遍机制+修复方案。",
+   speak:"COUNT DISTINCT under skew is a textbook executor OOM case because the hot key's HashAggregate must hold one giant in-memory HashSet, and that HashSet keeps growing as more distinct values are seen, without any way to spill safely to disk.",
+   code:`# The mechanism, step by step:
+# 1. Shuffle groups all rows for a key onto ONE task
+# 2. HashAggregate builds an in-memory HashSet to track seen distinct values
+# 3. Hot key -> HashSet grows toward millions of entries
+# 4. HashAggregate CANNOT spill this HashSet to disk safely
+# 5. Executor memory exhausted -> OOM
+
+# The fix (already covered in the SLA case study):
+#   - SortAggregate CAN spill to disk (slower but stable)
+#   - Two-stage aggregation converts 1 giant HashSet into many small ones
+#   - Salting spreads a specific hot key across multiple partitions`,
+   tip:"This is a great 'connect the dots' answer in an interview: mention the exact mechanism (HashSet can't spill) AND the fix (SortAggregate / two-stage / salting) in one breath — shows depth, not memorization."},
+];
+
+
+
+function renderQuickRef() {
+  const el = document.getElementById('ref');
+  let html = `<div class="intro-note">A single-page cheat sheet pulling together every command and concept from the tabs above — for last-minute review right before the interview.</div>`;
+
+  html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Core architecture, one line each</p>` +
+    table(["Component","One-line definition"], [
+      ["NameNode","Holds HDFS metadata only — filenames, permissions, block locations||只存HDFS元数据——文件名、权限、block位置"],
+      ["DataNode","Stores the actual HDFS data blocks (default 128MB each, 3x replicated)||存储实际HDFS数据block(默认每个128MB，3副本)"],
+      ["ResourceManager","Cluster-wide resource allocator, ONE per YARN cluster||全集群资源分配者，每个YARN集群只有一个"],
+      ["NodeManager","Per-machine agent that launches/monitors containers||每台机器上的代理，负责启动/监控container"],
+      ["ApplicationMaster","Per-job coordinator that requests containers from the RM||每个job的协调者，向RM申请container"],
+      ["Spark Driver","Builds the DAG, schedules tasks, collects results — the 'brain'||构建DAG、调度task、收集结果——「大脑」"],
+      ["Spark Executor","Runs tasks, holds cached data — the 'muscle'||执行task、持有缓存数据——「肌肉」"],
+      ["Flink JobManager","Coordinates checkpoints and task scheduling — Flink's 'Driver'||协调checkpoint和任务调度——Flink版的「Driver」"],
+      ["Flink TaskManager","Runs task slots — Flink's 'Executor'||运行task slot——Flink版的「Executor」"],
+    ]) + `</div>`;
+
+  html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Command cheat sheet</p>` +
+    `<div class="codeblock">${highlightCode(
+`# YARN
+yarn application -list -appStates ALL
+yarn application -status <app_id>
+yarn queue -status <queue_name>
+yarn logs -applicationId <app_id> -containerId <container_id>
+
+# HDFS
+hdfs dfsadmin -report
+hdfs fsck / -files -blocks -locations
+hdfs dfsadmin -safemode get
+
+# Debugging a stuck/slow task
+jstack <executor_pid>            # thread dump
+top / htop                        # CPU/memory at OS level
+# Spark UI: :4040 (or via YARN proxy) -> Stages -> Tasks -> sort by duration`
+    )}</div></div>`;
+
+  html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">The one sentence to say for almost any "what's wrong" question</p>
+    <p style="font-size:13.5px; font-style:italic; color:var(--text-primary);">
+    "I'd narrow down from cluster, to queue, to job, to stage, to task, to code — checking the YARN and Spark UIs at each level, and using thread dumps or logs once I've isolated the specific task or executor involved."
+    </p>
+    ${listenBtn("I'd narrow down from cluster, to queue, to job, to stage, to task, to code — checking the YARN and Spark UIs at each level, and using thread dumps or logs once I've isolated the specific task or executor involved.")}
+    </div>`;
+
+  html += `<div class="card"><p class="q-title" style="margin-bottom:10px;">Memory OOM — the 3-way split to always mention</p>` +
+    table(["OOM type","Root cause","Fix direction"], [
+      ["Driver OOM","Pulled too much data to one machine (collect, toPandas, oversized broadcast)||把太多数据拉到一台机器(collect、toPandas、过大的广播)","Avoid full collects; process distributed, only bring back aggregates||避免全量collect；分布式处理，只把聚合结果拉回来"],
+      ["Executor OOM (skew)","One hot key/partition overwhelms one task's memory||某个热key/分区把单个task内存撑爆","Salting, two-stage aggregation, AQE skew join, repartition||加盐、两阶段聚合、AQE倾斜join、重分区"],
+      ["Container killed by YARN","Off-heap/overhead memory too small relative to total container size||堆外/overhead内存相对容器总大小太小","Increase spark.executor.memoryOverhead, not just executor.memory||调大memoryOverhead，不只是executor.memory"],
+    ]) + `</div>`;
+
+  el.innerHTML = html;
+}
+
+
+
+// ============================================================
+// RENDER CALLS
+
+const hiveLevelMetaSimplified = {
+  basics: {emoji:"🐝", label:"Hive — 基础与存储", desc:"架构、表类型、分区分桶、文件格式 —— 精简版核心知识点。"},
+  ops: {emoji:"🔧", label:"Hive — 运维要点", desc:"Metastore单点、执行引擎选择、数据倾斜处理。"},
+};
+
+const hiveDataSimplified = [
+  {level:"basics", title:"Hive是什么 + 核心架构（4个组件）", desc:"Hive lets you write SQL (HiveQL) against data in HDFS, translating queries into MapReduce/Tez/Spark jobs. Architecture: Client → Driver → Compiler (uses Metastore for schema) → Execution Engine.",
+   zh:"中文：Hive让你用SQL(HiveQL)查HDFS上的数据，背后翻译成MapReduce/Tez/Spark job执行。架构：客户端 → Driver协调 → Compiler借助Metastore生成执行计划 → Execution Engine真正执行。",
+   speak:"Hive lets you write SQL against data in HDFS, translating queries into distributed jobs. The architecture has four pieces: Driver, Compiler, Metastore, and Execution Engine.",
+   diagram: `<svg width="100%" viewBox="0 0 680 240" style="max-width:600px; display:block; margin:8px auto;">
+<defs><marker id="hv1" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+<rect x="20" y="15" width="120" height="40" rx="7" fill="var(--purple-bg)" stroke="var(--purple)"/>
+<text x="80" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--purple)" font-family="-apple-system,sans-serif">Client (HQL)</text>
+<line x1="140" y1="35" x2="172" y2="35" stroke="#888" stroke-width="1.3" marker-end="url(#hv1)"/>
+
+<rect x="176" y="15" width="120" height="40" rx="7" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="236" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Driver</text>
+<line x1="236" y1="55" x2="236" y2="85" stroke="#888" stroke-width="1.3" marker-end="url(#hv1)"/>
+
+<rect x="176" y="90" width="120" height="40" rx="7" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="236" y="115" text-anchor="middle" font-size="12" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Compiler</text>
+<line x1="296" y1="110" x2="330" y2="110" stroke="#888" stroke-width="1.3" marker-end="url(#hv1)"/>
+
+<rect x="334" y="90" width="140" height="40" rx="7" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="404" y="110" text-anchor="middle" font-size="11" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">Metastore</text>
+<text x="404" y="124" text-anchor="middle" font-size="8.5" fill="var(--danger)" font-family="-apple-system,sans-serif">表结构/schema信息</text>
+
+<line x1="236" y1="130" x2="236" y2="160" stroke="#888" stroke-width="1.3" marker-end="url(#hv1)"/>
+<rect x="150" y="165" width="220" height="40" rx="7" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="260" y="185" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Execution Engine</text>
+<text x="260" y="199" text-anchor="middle" font-size="8.5" fill="var(--success)" font-family="-apple-system,sans-serif">MapReduce / Tez / Spark</text>
+
+<text x="340" y="230" text-anchor="middle" font-size="10.5" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">Metastore只存"元数据"，真正的数据依然在HDFS上</text>
+</svg>`,
+   tip:"一句话：Hive把SQL翻译成分布式job，用SQL的易用性换取处理海量数据的能力。Metastore通常是独立MySQL库——挂了所有Hive查询都会失败，哪怕HDFS完全健康。"},
+
+  {level:"basics", title:"Internal vs External Table + Partition/Bucket", desc:"Internal table: DROP TABLE deletes data too. External table: DROP only removes metadata. Partition splits by directory (coarse), Bucket splits by hash within partition (fine, for joins).",
+   zh:"中文：Internal表DROP连数据一起删；External表DROP只删元数据。Partition按目录粗粒度拆分(减少扫描量)，Bucket在分区内部按hash细粒度拆分(主要优化join)。",
+   speak:"Internal tables delete data when dropped, external tables keep the data files. Partitioning splits by directory for scan pruning, bucketing hashes within a partition mainly to speed up joins.",
+   table: table(["概念","关键点"], [
+     ["Internal (Managed)","DROP TABLE 连数据文件一起删除"],
+     ["External","DROP TABLE 只删元数据，数据文件保留 —— 生产核心表首选"],
+     ["Partition","按列值(如日期)拆分HDFS目录，WHERE不带分区列 = 全表扫描"],
+     ["Bucket","分区内部按hash值拆分成固定文件数，两表bucket数相同时可做Bucket Map Join避免shuffle"],
+   ]),
+   tip:"生产环境核心表几乎都用External Table，避免误DROP连数据都没了。这题+分区裁剪追问是Hive面试最常见组合。"},
+
+  {level:"basics", title:"文件格式对比：ORC vs Parquet vs TextFile", desc:"ORC and Parquet are columnar formats with compression and predicate pushdown, far more efficient than plain TextFile.",
+   zh:"中文：ORC和Parquet都是列存格式，带压缩和谓词下推，比默认的TextFile效率高很多——这跟Case 4「成本优化」是同一个逻辑。",
+   speak:"ORC and Parquet are columnar formats with compression and predicate pushdown, much more efficient than plain TextFile for analytical queries.",
+   table: table(["格式","特点"], [
+     ["TextFile","默认格式，行存，无压缩，效率最低但兼容性最好"],
+     ["ORC","列存，Hive原生，压缩比高，支持谓词下推"],
+     ["Parquet","列存，跨生态通用(Spark/Presto都原生支持)，压缩比高"],
+   ]),
+   tip:"面试可以说：生产表一律用ORC/Parquet替代TextFile，列存+压缩能同时降低存储成本和查询耗时，直接对应集群成本优化。"},
+
+  {level:"ops", title:"Hive Metastore — 运维最容易忽视的单点", desc:"The Metastore is a normal RDBMS storing all table/partition metadata. If it goes down or gets overloaded, EVERY Hive query fails — even if HDFS is perfectly healthy.",
+   zh:"中文：Metastore本质是个普通关系型数据库(通常MySQL)，存所有表/分区元数据。它挂了或过载，所有Hive查询都会失败——哪怕HDFS完全正常。",
+   speak:"The Metastore is a normal relational database storing all table and partition metadata. If it goes down, every Hive query fails, even though HDFS itself might be perfectly healthy.",
+   warn:"常见故障：分区数太多(按小时分区跑了几年)导致Metastore数据库变慢，拖慢所有Hive query的编译阶段——排查思路：所有查询卡在编译阶段(不是执行阶段)，第一反应查Metastore数据库健康状态，不是查YARN/HDFS。"},
+
+  {level:"ops", title:"执行引擎选择 + 数据倾斜处理", desc:"Hive on MapReduce writes to disk between stages (slow). Tez/Spark keep data in memory (fast). Skew fixes are conceptually identical to Spark, just exposed as config switches.",
+   zh:"中文：Hive on MapReduce每个stage之间都写磁盘(慢)，Tez/Spark用内存传递数据(快)。数据倾斜的处理跟Spark是同一套原理，Hive只是做成了配置开关。",
+   speak:"MapReduce writes intermediate results to disk between stages, which is slow. Tez and Spark keep data in memory, much faster. Hive's skew handling uses the same concepts as Spark, just exposed as config flags.",
+   code:`-- 切换执行引擎(现代默认推荐Tez)
+SET hive.execution.engine=tez;
+
+-- 倾斜join优化(自动检测热key)
+SET hive.optimize.skewjoin=true;
+SET hive.skewjoin.key=100000;
+
+-- Group By倾斜优化(Hive自动做两阶段聚合)
+SET hive.groupby.skewindata=true;`,
+   tip:"面试问'怎么优化慢查询'，第一句先说：检查是否还在用MapReduce，切到Tez/Spark往往零改动就有大幅提速。倾斜处理的参数背后就是你已经很熟的'两阶段聚合'和'倾斜打散'。"},
+];
+
+
+
+const linuxLevelMeta = {
+  process: {emoji:"⚙️", label:"进程管理 Process Management", desc:"ps, top/htop, kill信号 —— 排查「哪个进程在吃资源」的基本功。"},
+  disk: {emoji:"💽", label:"文件系统 & 磁盘IO File System & Disk I/O", desc:"df, du, mount, iostat —— 排查「磁盘满了/磁盘慢」的基本功。"},
+  net: {emoji:"🌐", label:"网络排查 & systemd Networking & systemd", desc:"netstat/ss, systemctl, journalctl —— 排查「服务连不上/服务挂了」的基本功。"},
+};
+
+const linuxData = [
+  // ---------- Process Management ----------
+  {level:"process", title:"ps / top / htop — 谁在占用CPU和内存", desc:"ps shows a snapshot of processes. top/htop show a live, continuously updating view — htop is the more readable, interactive version.",
+   zh:"中文：ps是进程的一次性快照，top/htop是持续刷新的实时视图——htop是更易读、可交互的升级版。",
+   speak:"ps shows a snapshot of processes. top and htop show a live continuously updating view, with htop being the more readable interactive version.",
+   diagram: `<svg width="100%" viewBox="0 0 680 200" style="max-width:600px; display:block; margin:8px auto; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.12);">
+<rect x="0" y="0" width="680" height="26" fill="#2D2D2D"/>
+<circle cx="13" cy="13" r="4" fill="#FF5F57"/><circle cx="27" cy="13" r="4" fill="#FEBC2E"/><circle cx="41" cy="13" r="4" fill="#28C840"/>
+<text x="340" y="17" text-anchor="middle" font-size="9.5" fill="#CCCCCC" font-family="-apple-system,sans-serif">$ top</text>
+<rect x="0" y="26" width="680" height="174" fill="#1E1E1E"/>
+<text x="12" y="46" font-size="9" fill="#7EC699" font-family="SF Mono,Menlo,monospace">top - 14:32:01 up 12 days,  load average: 4.82, 3.91, 3.20</text>
+<text x="12" y="60" font-size="9" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">Tasks: 245 total,   2 running, 243 sleeping</text>
+<text x="12" y="74" font-size="9" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">%Cpu(s): 78.2 us,  8.1 sy,  0.0 ni, 12.5 id,  1.2 wa</text>
+<text x="12" y="88" font-size="9" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">MiB Mem :  32000 total,   1200 free,  28400 used,   2400 buff/cache</text>
+<rect x="12" y="98" width="656" height="16" fill="#333"/>
+<text x="16" y="110" font-size="9" fill="#7EC699" font-family="SF Mono,Menlo,monospace">PID    USER   %CPU  %MEM  TIME+    COMMAND</text>
+<rect x="12" y="114" width="656" height="16" fill="#3A2020"/>
+<text x="16" y="126" font-size="9" font-weight="700" fill="#E8AA6B" font-family="SF Mono,Menlo,monospace">28471  spark  312%  18.2  45:12   java (executor)</text>
+<text x="16" y="142" font-size="9" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">19203  root    2.1%   0.4  02:11   sshd</text>
+<text x="16" y="158" font-size="9" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">31022  hdfs    5.8%   3.1  18:40   java (datanode)</text>
+<text x="16" y="180" font-size="9" font-weight="700" fill="#E8AA6B" font-family="-apple-system,sans-serif">👆 %CPU=312% 说明这个进程用了3个多核心 —— 典型的Spark executor满载表现</text>
+</svg>`,
+   code:`ps aux | grep java              # 找出所有java进程(Spark/HDFS/YARN都是java)
+ps -ef --sort=-%cpu | head -10  # 按CPU占用排序，看最耗资源的前10个
+top                              # 实时监控，按P按CPU排序，按M按内存排序
+htop                             # 更友好的可视化版本，支持鼠标操作`,
+   tip:"面试常问：Spark executor OOM排查的第一步，往往就是先用top看这个executor的Java进程实际内存占用，跟你预期(spark.executor.memory + overhead)是否吻合。"},
+
+  {level:"process", title:"进程状态 & kill信号 — 不只是'杀掉'那么简单", desc:"Processes have states (Running, Sleeping, Zombie...). kill sends SIGNALS, not just 'terminate' — SIGTERM asks nicely, SIGKILL forces immediately.",
+   zh:"中文：进程有多种状态(运行/睡眠/僵尸等)。kill发送的是「信号」而不是简单粗暴的「杀掉」——SIGTERM是礼貌请求退出，SIGKILL是强制立即终止。",
+   speak:"kill sends signals, not just terminate. SIGTERM asks the process to shut down gracefully, SIGKILL forces it to stop immediately without cleanup.",
+   table: table(["进程状态","符号","含义"], [
+     ["Running","R","正在CPU上执行，或在就绪队列等待调度"],
+     ["Sleeping","S / D","等待某个事件(D=不可中断睡眠，常见于等磁盘IO)"],
+     ["Stopped","T","被暂停(比如Ctrl+Z)"],
+     ["Zombie","Z","进程已结束，但父进程还没回收它的退出状态"],
+   ]),
+   code:`kill -15 <pid>     # SIGTERM，礼貌请求退出(优雅关闭，程序可以先做清理)
+kill -9 <pid>      # SIGKILL，强制立即终止(不给程序任何清理机会)
+kill -l            # 列出所有可用信号
+
+# Spark/YARN场景：先用SIGTERM尝试优雅关闭executor，
+# 如果一段时间没反应，YARN才会用SIGKILL强制杀掉`,
+   warn:"⚠️ 状态是D(不可中断睡眠)的进程数量突然变多，往往意味着磁盘IO出问题了(比如某块磁盘响应很慢)——这时候要去查iostat，不是查CPU。"},
+
+  // ---------- File System & Disk I/O ----------
+  {level:"disk", title:"df / du — 磁盘空间从两个角度看", desc:"df shows disk usage at the FILESYSTEM/mount level. du shows usage at the FILE/DIRECTORY level — they can disagree if a file is deleted but still held open by a process.",
+   zh:"中文：df从「文件系统/挂载点」层面看磁盘使用率。du从「文件/目录」层面看占用大小——两者结果有时会对不上，原因通常是某个文件被删了但还被进程占着没释放。",
+   speak:"df shows disk usage at the filesystem level, du shows usage at the file and directory level. They can disagree when a deleted file is still held open by a running process.",
+   code:`df -h                        # 查看所有挂载点的磁盘使用率(人类可读单位)
+df -h /data/hdfs             # 查看某个具体挂载点
+
+du -sh /data/hdfs/*          # 查看某目录下每个子目录的大小汇总
+du -sh /var/log/* | sort -rh | head -10   # 找出占用最大的日志目录`,
+   warn:"⚠️ 经典陷阱：df显示磁盘快满了，但du加总所有文件却远小于总量——大概率是有进程在写一个「已被删除但还打开着」的大文件(比如日志文件被logrotate删了，但进程还在写)。排查命令：lsof | grep deleted"},
+
+  {level:"disk", title:"iostat — 磁盘到底慢在哪", desc:"iostat shows disk I/O statistics: how busy each disk is (%util), and how long requests wait (await). This is the tool for 'is the disk the bottleneck' questions.",
+   zh:"中文：iostat展示磁盘IO的统计信息：每块盘的繁忙程度(%util)、请求等待时间(await)——这是回答「磁盘是不是瓶颈」这类问题的核心工具。",
+   speak:"iostat shows how busy each disk is and how long I/O requests wait, which is the key tool for determining if disk is the bottleneck.",
+   code:`iostat -x 2                 # 每2秒刷新一次，显示扩展统计信息
+
+# 关键列解读：
+# %util   - 这块盘有多少时间在忙(接近100%说明盘是瓶颈)
+# await   - 每个IO请求平均等待多久(ms)，数值大说明盘响应慢
+# r/s w/s - 每秒读/写次数
+
+iotop                        # 类似top，但按磁盘IO排序，直接看哪个进程在读写`,
+   diagram: `<svg width="100%" viewBox="0 0 680 170" style="max-width:600px; display:block; margin:8px auto; border-radius:8px; overflow:hidden; box-shadow:0 1px 4px rgba(0,0,0,0.12);">
+<rect x="0" y="0" width="680" height="26" fill="#2D2D2D"/>
+<circle cx="13" cy="13" r="4" fill="#FF5F57"/><circle cx="27" cy="13" r="4" fill="#FEBC2E"/><circle cx="41" cy="13" r="4" fill="#28C840"/>
+<text x="340" y="17" text-anchor="middle" font-size="9.5" fill="#CCCCCC" font-family="-apple-system,sans-serif">$ iostat -x 2</text>
+<rect x="0" y="26" width="680" height="144" fill="#1E1E1E"/>
+<text x="12" y="46" font-size="9" fill="#7EC699" font-family="SF Mono,Menlo,monospace">Device   r/s    w/s   rkB/s   wkB/s  await  %util</text>
+<rect x="12" y="52" width="656" height="16" fill="#FFFFFF" fill-opacity="0.05"/>
+<text x="16" y="64" font-size="9" fill="#D4D4D4" font-family="SF Mono,Menlo,monospace">sda      12.0   8.0   240.0   180.0   2.1    8.5%</text>
+<rect x="12" y="70" width="656" height="16" fill="#3A2020"/>
+<text x="16" y="82" font-size="9" font-weight="700" fill="#E8AA6B" font-family="SF Mono,Menlo,monospace">sdb      95.0  120.0  8200.0  9600.0  185.3  98.7%</text>
+<text x="12" y="106" font-size="9.5" font-weight="700" fill="#E8AA6B" font-family="-apple-system,sans-serif">👆 sdb: %util接近100%，await高达185ms —— 这块盘已经是明确瓶颈</text>
+<text x="12" y="124" font-size="9" fill="#D4D4D4" font-family="-apple-system,sans-serif">对照：HDFS DataNode如果数据目录落在sdb上，写block会明显变慢</text>
+<text x="12" y="142" font-size="9" fill="#D4D4D4" font-family="-apple-system,sans-serif">这正是Case场景里"某个task特别慢"的底层硬件级原因之一</text>
+</svg>`,
+   tip:"面试连接点：之前Case里讲的'task耗时异常'，有时候根因不是数据倾斜，而是这个task所在节点的磁盘本身就慢(iostat能验证)——排查要同时看应用层(Spark UI)和系统层(iostat)。"},
+
+  // ---------- Networking & systemd ----------
+  {level:"net", title:"netstat / ss — 端口和连接状态排查", desc:"ss is the modern, faster replacement for netstat — both show which ports are listening and what connections are active/established.",
+   zh:"中文：ss是netstat的现代化替代品，更快——两者都能看哪些端口在监听、哪些连接是活跃的。",
+   speak:"ss is the modern, faster replacement for netstat. Both show which ports are listening and which connections are active.",
+   code:`ss -tlnp                    # 显示所有TCP监听端口 + 对应进程(现代首选)
+netstat -tlnp                # 同样功能的老命令(某些精简系统可能没装)
+
+ss -tlnp | grep 8088         # 检查YARN ResourceManager端口是否在监听
+ss -s                        # 连接状态汇总统计(ESTABLISHED/TIME_WAIT数量等)
+
+# 排查"连不上某个服务"的典型顺序：
+telnet <host> <port>         # 先确认端口能不能通
+nc -zv <host> <port>         # netcat的轻量替代方式，效果类似`,
+   warn:"⚠️ 常见故障：TIME_WAIT连接数量暴涨——通常是短连接创建太频繁(比如没有用连接池)，可能耗尽本地端口资源，导致后续连接失败。"},
+
+  {level:"net", title:"systemd / systemctl — 服务是怎么启停和管理的", desc:"systemd is the modern init system managing services on most Linux distros. systemctl controls services, journalctl reads their logs.",
+   zh:"中文：systemd是现代Linux发行版管理服务的启动系统，systemctl用来控制服务(启动/停止/查状态)，journalctl用来看服务日志。",
+   speak:"systemd is the modern init system that manages services. systemctl controls services, and journalctl reads their logs.",
+   code:`systemctl status hadoop-yarn-resourcemanager   # 查看服务状态(running/failed等)
+systemctl start/stop/restart <service>          # 启停服务
+systemctl enable <service>                      # 设为开机自启
+
+journalctl -u hadoop-yarn-resourcemanager -f    # 实时跟踪某个服务的日志(类似tail -f)
+journalctl -u <service> --since "10 min ago"    # 查最近10分钟的日志
+journalctl -p err -u <service>                  # 只看error级别的日志`,
+   tip:"运维排查思路：如果某个大数据组件(NameNode/ResourceManager等)完全没响应，第一步永远是先用systemctl status确认进程本身是不是还活着，再决定往下查什么。"},
+  {level:"net", title:"补充命令箱：文本处理 / 权限 / SSH / 系统概览", desc:"grep/awk/sed for log parsing, chmod/chown for permissions, SSH for remote access, vmstat/free for a quick system snapshot — the other tools you'll reach for daily.",
+   zh:"中文：grep/awk/sed用来处理日志文本，chmod/chown管权限，SSH做远程/批量操作，vmstat/free快速看系统整体状态——这些是日常排查里同样高频、但前面没提到的工具。",
+   speak:"grep, awk, and sed for log parsing, chmod and chown for permissions, SSH for remote access, and vmstat and free for a quick system snapshot are the other daily-use tools.",
+   diagram: `<svg width="100%" viewBox="0 0 680 260" style="max-width:620px; display:block; margin:8px auto;">
+<text x="10" y="18" font-size="11" fill="var(--text-muted)" font-family="-apple-system,sans-serif">按"遇到什么问题，用什么工具"分类：</text>
+
+<rect x="10" y="30" width="320" height="56" rx="8" fill="var(--accent-bg)" stroke="var(--accent)"/>
+<text x="24" y="50" font-size="10.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">📄 看日志/找关键字 → grep / awk / sed</text>
+<text x="24" y="66" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">grep找行，awk按列提取，sed批量替换</text>
+<text x="24" y="79" font-size="9" fill="var(--accent)" font-family="-apple-system,sans-serif">例：grep "ERROR" app.log | awk '{print $3}'</text>
+
+<rect x="350" y="30" width="320" height="56" rx="8" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="364" y="50" font-size="10.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">🔒 权限报错 → chmod / chown</text>
+<text x="364" y="66" font-size="9" fill="var(--danger)" font-family="-apple-system,sans-serif">chmod改读写执行权限，chown改属主/属组</text>
+<text x="364" y="79" font-size="9" fill="var(--danger)" font-family="-apple-system,sans-serif">例：Permission denied 写HDFS本地目录时常见</text>
+
+<rect x="10" y="96" width="320" height="56" rx="8" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="24" y="116" font-size="10.5" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">🖥️ 远程/批量操作 → SSH</text>
+<text x="24" y="132" font-size="9" fill="var(--warning)" font-family="-apple-system,sans-serif">配免密登录(SSH key)，脚本才能批量登录</text>
+<text x="24" y="145" font-size="9" fill="var(--warning)" font-family="-apple-system,sans-serif">Hadoop集群节点之间必须互相免密才能启停</text>
+
+<rect x="350" y="96" width="320" height="56" rx="8" fill="var(--success-bg)" stroke="var(--success)"/>
+<text x="364" y="116" font-size="10.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">📊 系统整体状态速览 → vmstat / free</text>
+<text x="364" y="132" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">free看内存，vmstat看CPU/内存/IO综合视图</text>
+<text x="364" y="145" font-size="9" fill="var(--success)" font-family="-apple-system,sans-serif">比top更轻量，适合快速"扫一眼"整体健康度</text>
+
+<text x="340" y="180" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">排查顺序建议：先vmstat/free看整体 → 有异常再用top/iostat细查</text>
+<text x="340" y="198" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text-secondary)" font-family="-apple-system,sans-serif">→ 定位到具体进程/文件后，用grep/awk看日志，chmod/chown处理权限问题</text>
+</svg>`,
+   code:`# ---- 文本处理三件套 ----
+grep -n "ERROR" app.log              # 找含ERROR的行(-n显示行号)
+grep -c "OOM" app.log                # 统计出现次数
+awk -F',' '{print $2}' data.csv      # 按逗号分列，打印第2列
+sed 's/old/new/g' file.txt           # 批量替换文本
+
+# ---- 权限管理 ----
+chmod 755 script.sh                   # rwxr-xr-x：属主可读写执行，其他人可读执行
+chown hdfs:hadoop /data/hdfs          # 改属主为hdfs用户，属组为hadoop组
+chmod -R 750 /data/logs               # -R递归修改整个目录
+
+# ---- SSH免密登录(集群批量操作的基础) ----
+ssh-keygen -t rsa                     # 生成密钥对
+ssh-copy-id user@remote-host          # 把公钥拷到目标机器，之后免密登录
+
+# ---- 系统整体状态速览 ----
+free -h                               # 内存使用概况(人类可读单位)
+vmstat 2                              # 每2秒刷新，CPU/内存/IO综合视图`,
+   tip:"这几个工具的共同点：都是日常排查里「用得最勤但最容易被忽略去专门准备」的基本功——面试官有时会直接让你现场用grep/awk从一段日志里提取信息，手要跟得上。"},
+];
+
+
+const k8sLevelMeta = {
+  basics: {emoji:"🌱", label:"Level 1 — Docker Fundamentals", desc:"Image, container, and why big data platforms containerize workloads."},
+  arch: {emoji:"🏗️", label:"Level 2 — Kubernetes Architecture", desc:"Control Plane vs Worker Nodes — the components interviewers expect you to name."},
+  ops: {emoji:"🔧", label:"Level 3 — Big Data on K8s & common interview questions", desc:"Spark-on-K8s, and the troubleshooting commands you'll actually use."},
+};
+
+
+const k8sData = [
+  {level:"basics", title:"Docker Image vs Container — 一个是模板，一个是运行实例", desc:"An image is a read-only, layered template (like a class). A container is a running instance of that image (like an object) — you can run many containers from the same image.",
+   zh:"中文：Image(镜像)是只读的、分层的模板(类似「类」)；Container(容器)是这个镜像的一个运行实例(类似「对象」)——同一个镜像可以同时跑出很多个容器。",
+   speak:"An image is a read-only layered template, like a class. A container is a running instance of that image, like an object — you can run many containers from the same image.",
+   code:`# 常用命令
+docker build -t myapp:v1 .        # 用Dockerfile构建镜像
+docker run -d myapp:v1            # 基于镜像启动一个容器
+docker ps                          # 查看正在运行的容器
+docker logs <container_id>         # 查看容器日志`,
+   tip:"面试一句话：'An image is the blueprint, a container is a running instance of that blueprint — analogous to a class and an object in OOP.'"},
+
+  {level:"basics", title:"为什么大数据平台要容器化？", desc:"Containerization gives consistent environments (no more 'works on my machine'), faster deployment, and resource isolation — increasingly common for running Spark/Flink jobs on shared infrastructure.",
+   zh:"中文：容器化能保证环境一致性(不再有「我本地能跑」的问题)、部署更快、资源隔离更好——现在越来越多大数据平台用容器跑Spark/Flink任务，而不是传统的YARN。",
+   speak:"Containerization gives consistent environments, faster deployment, and resource isolation — increasingly common for running Spark and Flink jobs on shared infrastructure.",
+   tip:"这跟你已经很熟的YARN不是对立关系，而是「平行」关系——YARN和Kubernetes都是资源调度器，只是YARN是大数据生态原生的，K8s是云原生生态的，现在有的公司甚至把两者结合(Spark on K8s)。"},
+
+  {level:"arch", title:"Kubernetes 架构 — Control Plane vs Worker Node", desc:"The Control Plane makes all cluster-wide decisions. Worker Nodes actually run your containers. This maps almost directly onto YARN's ResourceManager/NodeManager split you already know.",
+   zh:"中文：Control Plane负责整个集群的全局决策，Worker Node负责真正跑容器。这个划分方式跟你已经很熟的YARN的ResourceManager/NodeManager几乎是一一对应的。",
+   speak:"The Control Plane makes all cluster-wide decisions. Worker Nodes actually run your containers — this maps almost directly onto YARN's ResourceManager and NodeManager split.",
+   diagram: `<svg width="100%" viewBox="0 0 680 320" style="max-width:620px; display:block; margin:8px auto;">
+<defs><marker id="k8a" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#888"/></marker></defs>
+
+<rect x="140" y="10" width="400" height="130" rx="8" fill="var(--accent-bg)" stroke="var(--accent)" stroke-width="1.5"/>
+<text x="340" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Control Plane (相当于YARN的ResourceManager)</text>
+
+<rect x="155" y="42" width="110" height="40" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="210" y="60" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">API Server</text>
+<text x="210" y="74" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="-apple-system,sans-serif">所有请求的入口</text>
+
+<rect x="275" y="42" width="110" height="40" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="330" y="60" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Scheduler</text>
+<text x="330" y="74" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="-apple-system,sans-serif">决定Pod跑哪个节点</text>
+
+<rect x="395" y="42" width="120" height="40" rx="6" fill="var(--surface)" stroke="var(--accent)"/>
+<text x="455" y="57" text-anchor="middle" font-size="9" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Controller</text>
+<text x="455" y="68" text-anchor="middle" font-size="9" font-weight="700" fill="var(--accent)" font-family="-apple-system,sans-serif">Manager</text>
+<text x="455" y="79" text-anchor="middle" font-size="7.5" fill="var(--accent)" font-family="-apple-system,sans-serif">保持实际=期望状态</text>
+
+<rect x="230" y="92" width="220" height="36" rx="6" fill="var(--danger-bg)" stroke="var(--danger)"/>
+<text x="340" y="108" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--danger)" font-family="-apple-system,sans-serif">etcd</text>
+<text x="340" y="120" text-anchor="middle" font-size="7.5" fill="var(--danger)" font-family="-apple-system,sans-serif">存储整个集群的状态数据(分布式KV)</text>
+
+<line x1="220" y1="140" x2="150" y2="175" stroke="#888" stroke-width="1.3" marker-end="url(#k8a)"/>
+<line x1="460" y1="140" x2="530" y2="175" stroke="#888" stroke-width="1.3" marker-end="url(#k8a)"/>
+
+<rect x="40" y="180" width="240" height="120" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.5"/>
+<text x="160" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Worker Node (相当于NodeManager)</text>
+<rect x="55" y="212" width="90" height="34" rx="5" fill="var(--surface)" stroke="var(--success)"/>
+<text x="100" y="227" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">kubelet</text>
+<text x="100" y="240" text-anchor="middle" font-size="7" fill="var(--success)" font-family="-apple-system,sans-serif">管理本机容器</text>
+<rect x="155" y="212" width="105" height="34" rx="5" fill="var(--surface)" stroke="var(--success)"/>
+<text x="207" y="227" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">kube-proxy</text>
+<text x="207" y="240" text-anchor="middle" font-size="7" fill="var(--success)" font-family="-apple-system,sans-serif">网络转发</text>
+<rect x="90" y="255" width="140" height="34" rx="5" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="160" y="275" text-anchor="middle" font-size="9" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Pod(s) 运行中</text>
+
+<rect x="400" y="180" width="240" height="120" rx="8" fill="var(--success-bg)" stroke="var(--success)" stroke-width="1.5"/>
+<text x="520" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">Worker Node (相当于NodeManager)</text>
+<rect x="415" y="212" width="90" height="34" rx="5" fill="var(--surface)" stroke="var(--success)"/>
+<text x="460" y="227" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">kubelet</text>
+<text x="460" y="240" text-anchor="middle" font-size="7" fill="var(--success)" font-family="-apple-system,sans-serif">管理本机容器</text>
+<rect x="515" y="212" width="105" height="34" rx="5" fill="var(--surface)" stroke="var(--success)"/>
+<text x="567" y="227" text-anchor="middle" font-size="8.5" font-weight="700" fill="var(--success)" font-family="-apple-system,sans-serif">kube-proxy</text>
+<text x="567" y="240" text-anchor="middle" font-size="7" fill="var(--success)" font-family="-apple-system,sans-serif">网络转发</text>
+<rect x="450" y="255" width="140" height="34" rx="5" fill="var(--warning-bg)" stroke="var(--warning)"/>
+<text x="520" y="275" text-anchor="middle" font-size="9" font-weight="700" fill="var(--warning)" font-family="-apple-system,sans-serif">Pod(s) 运行中</text>
+</svg>`,
+   table: table(["K8s组件","对应的YARN概念"], [
+     ["Control Plane / API Server","ResourceManager"],
+     ["Scheduler","YARN的Scheduler(Capacity/Fair)"],
+     ["Worker Node + kubelet","NodeManager"],
+     ["Pod","Container(YARN概念)"],
+   ]),
+   tip:"面试如果被问K8s但你更熟YARN，可以直接说：'I'm very comfortable with YARN, and the concepts map closely — API Server/Scheduler is like ResourceManager, kubelet on each Worker Node is like NodeManager, and a Pod is roughly YARN's Container.'"},
+
+  {level:"arch", title:"Pod 是什么？", desc:"A Pod is the smallest deployable unit in K8s — usually wraps ONE container (sometimes a few tightly-coupled ones sharing network/storage).",
+   zh:"中文：Pod是K8s里最小的可部署单元——通常包一个容器(有时候是几个紧密耦合、共享网络和存储的容器)。",
+   speak:"A Pod is the smallest deployable unit in Kubernetes, usually wrapping one container, sometimes a few tightly-coupled containers that share network and storage.",
+   tip:"容易被问到的点：为什么不直接叫Container，要多包一层Pod？——因为K8s要处理「一组容器共享网络/存储」这种场景(比如sidecar模式)，Pod就是这个「组」的抽象。"},
+
+  {level:"ops", title:"Spark on Kubernetes vs Spark on YARN", desc:"Since you're already very comfortable with Spark on YARN, here's the direct comparison for the K8s equivalent.",
+   zh:"中文：既然你对Spark on YARN已经很熟，这里直接列跟K8s版本的对比。",
+   speak:"On Kubernetes, the Spark Driver runs in its own Pod, and each Executor also runs in its own Pod — Kubernetes' scheduler handles resource allocation instead of YARN's ResourceManager.",
+   table: table(["","Spark on YARN","Spark on Kubernetes"], [
+     ["Driver运行位置","AM Container(ApplicationMaster内)","独立的Driver Pod"],
+     ["Executor运行位置","Container(NodeManager分配)","独立的Executor Pod(一个Pod=一个Executor)"],
+     ["资源调度者","YARN ResourceManager","K8s Scheduler"],
+     ["提交命令","spark-submit --master yarn","spark-submit --master k8s://&lt;api-server&gt;"],
+   ]),
+   tip:"核心思路完全一样(Driver规划、Executor执行)，只是「谁来分配机器资源」这一层从YARN换成了K8s——你对Spark内部机制的理解可以100%复用。"},
+
+  {level:"ops", title:"K8s常见故障排查：Pod起不来怎么办", desc:"The K8s equivalent of 'my Spark job won't start' — the same narrowing-down mindset applies.",
+   zh:"中文：这就是K8s版本的「我的Spark任务起不来」——排查思路跟之前YARN那套「逐层缩小范围」完全一致。",
+   speak:"When a Pod won't start, first check its status, then describe it for events, then check the logs — the same layer-by-layer narrowing approach you already use for YARN.",
+   code:`# Step 1: 看Pod整体状态
+kubectl get pods
+
+NAME                  READY   STATUS             RESTARTS   AGE
+spark-driver-abc123    0/1    CrashLoopBackOff   5          3m
+spark-exec-1-def456    0/1    Pending            0          3m
+
+# Step 2: 看具体是什么事件导致的(重点看Events部分)
+kubectl describe pod spark-driver-abc123
+
+Events:
+  Warning  FailedScheduling  ... 0/3 nodes are available: insufficient memory
+
+# Step 3: 看容器日志(如果Pod至少启动过)
+kubectl logs spark-driver-abc123
+
+# Step 4: 如果容器一直重启，看上一次崩溃前的日志
+kubectl logs spark-driver-abc123 --previous`,
+   table: table(["Pod状态","含义","常见原因"], [
+     ["Pending","还没被调度到任何节点","集群资源不足(对应YARN的ACCEPTED)"],
+     ["CrashLoopBackOff","容器反复启动又崩溃","应用本身报错，或者健康检查失败"],
+     ["OOMKilled","容器因为超内存被杀","跟Spark on YARN的Container OOM是同一个概念，只是换了个名字"],
+     ["ImagePullBackOff","镜像拉取失败","镜像地址错误、没权限、registry不可达"],
+   ]),
+   tip:"面试总结句：'The diagnosis flow mirrors YARN — kubectl get pods to see the overall state, kubectl describe for scheduling events, and kubectl logs for the actual error, narrowing down layer by layer just like I would with YARN and Spark UI.'"},
+];
+
+// ============================================================
+document.getElementById('hdfs').innerHTML += `<div class="star-banner" style="background:var(--danger-bg); color:var(--danger); margin-top:24px;">🗄️ HDFS</div>`;
+document.getElementById('hdfs').innerHTML += `<div class="star-banner" style="background:var(--warning-bg); color:var(--warning); margin-top:24px;">🐝 Hive</div>`;
+
+// ============================================================
+// DIAGRAMS FOR CASES TAB (bilingual: Chinese labels + English keyword badges)
+// ============================================================
+
+
+// ============================================================
+// UI MOCKUPS — what YARN RM UI and Spark UI actually look like
+// ============================================================
+
+
+// ============================================================
+// UI MOCKUPS — what YARN RM UI and Spark UI actually look like
+// ============================================================
+
+
+function renderClickHouseTab() {
+  const el = document.getElementById('clickhouse');
+  let html = `<div class="intro-note"><b>Learning path:</b> first understand Kafka from zero, then follow the data into Flink and ClickHouse. The ClickHouse section continues from fundamentals to internal architecture, MergeTree table design, production ingestion, and a complete e-commerce security example.</div>`;
+
+  html += `<div class="level-header"><span class="level-emoji">📨</span><div><div class="level-label">Kafka 0 → 1 — the event transport layer</div><div class="level-desc">Understand why Kafka exists, how records are stored, and how Flink consumes them before writing analytical results to ClickHouse.</div></div></div>`;
+
+  html += renderCard({
+    title:'K1. What problem does Kafka solve?',
+    desc:'Kafka is a distributed event-streaming platform. It sits between systems so producers and consumers do not need to call each other directly. Producers append events to Kafka; consumers read those events independently at their own speed.',
+    zh:'Kafka 是一个分布式事件流平台。它位于上下游系统之间，让生产者与消费者不必直接调用。生产者把事件追加到 Kafka，消费者按照自己的速度独立读取。',
+    html: table(['Without Kafka','With Kafka'],[
+      ['Order service directly calls risk, analytics and notification systems. One slow downstream service can affect the producer.||订单服务直接调用风控、分析和通知系统，下游变慢可能拖累上游','Order service writes one event to Kafka. Flink, monitoring and other consumers read it independently.||订单服务只写一份事件到Kafka，Flink、监控等消费者独立读取'],
+      ['Each new consumer requires another integration.||每增加一个消费者就要新增一套接口','New consumers subscribe to the existing topic without changing the producer.||新消费者订阅已有Topic即可，无需改造生产者'],
+      ['Temporary downstream failure may lose events unless the producer implements retries and storage.||下游临时故障时，上游必须自行处理重试和存储','Kafka retains events, allowing consumers to resume from their last committed offset.||Kafka保留事件，消费者可从已提交Offset继续消费']
+    ]),
+    tip:'A simple sentence: Kafka stores and transports events; Flink calculates them; ClickHouse stores the analytical results for fast queries.',
+    tipZh:'一句话：Kafka负责保存和传输事件，Flink负责计算，ClickHouse负责保存分析结果并提供快速查询。'
+  });
+
+  html += renderCard({
+    title:'K2. Kafka core architecture — Producer, Broker, Topic and Consumer',
+    desc:'A topic is a named event stream. A topic is split into partitions. Brokers store those partitions, and records inside each partition are ordered by offset.',
+    zh:'Topic 是一条有名字的事件流；Topic 被拆成多个 Partition；Broker 保存这些 Partition；同一 Partition 内的消息通过 Offset 保持顺序。',
+    html:`<svg viewBox="0 0 980 500" role="img" aria-label="Kafka core architecture" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs><marker id="kArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="490" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#1f2d3d">Kafka: producers append events, brokers store partitions, consumers read by offset</text>
+      <rect x="35" y="85" width="170" height="95" rx="12" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="120" y="113" text-anchor="middle" font-size="14" font-weight="700">Producer</text>
+      <text x="120" y="136" text-anchor="middle" font-size="11">Order / payment service</text>
+      <text x="120" y="155" text-anchor="middle" font-size="11">send(key, value)</text>
+      <line x1="205" y1="132" x2="282" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kArrow)"/>
+
+      <rect x="290" y="55" width="420" height="270" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="500" y="82" text-anchor="middle" font-size="15" font-weight="700">Kafka Cluster — Topic: security_events</text>
+      <rect x="315" y="105" width="115" height="185" rx="10" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="372" y="129" text-anchor="middle" font-size="12" font-weight="700">Machine 1</text><text x="372" y="143" text-anchor="middle" font-size="9">Kafka Broker 1 process</text>
+      <rect x="330" y="150" width="85" height="48" rx="7" fill="#fff" stroke="#c9a45b"/><text x="372" y="170" text-anchor="middle" font-size="10" font-weight="700">Partition 0</text><text x="372" y="187" text-anchor="middle" font-size="9">offset 0…120</text>
+      <rect x="330" y="215" width="85" height="48" rx="7" fill="#fff" stroke="#c9a45b"/><text x="372" y="235" text-anchor="middle" font-size="10" font-weight="700">P1 replica</text><text x="372" y="252" text-anchor="middle" font-size="9">backup copy</text>
+
+      <rect x="443" y="105" width="115" height="185" rx="10" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="500" y="129" text-anchor="middle" font-size="12" font-weight="700">Machine 2</text><text x="500" y="143" text-anchor="middle" font-size="9">Kafka Broker 2 process</text>
+      <rect x="458" y="150" width="85" height="48" rx="7" fill="#fff" stroke="#9a79b5"/><text x="500" y="170" text-anchor="middle" font-size="10" font-weight="700">Partition 1</text><text x="500" y="187" text-anchor="middle" font-size="9">offset 0…98</text>
+      <rect x="458" y="215" width="85" height="48" rx="7" fill="#fff" stroke="#9a79b5"/><text x="500" y="235" text-anchor="middle" font-size="10" font-weight="700">P2 replica</text><text x="500" y="252" text-anchor="middle" font-size="9">backup copy</text>
+
+      <rect x="571" y="105" width="115" height="185" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="628" y="129" text-anchor="middle" font-size="12" font-weight="700">Machine 3</text><text x="628" y="143" text-anchor="middle" font-size="9">Kafka Broker 3 process</text>
+      <rect x="586" y="150" width="85" height="48" rx="7" fill="#fff" stroke="#56a27c"/><text x="628" y="170" text-anchor="middle" font-size="10" font-weight="700">Partition 2</text><text x="628" y="187" text-anchor="middle" font-size="9">offset 0…110</text>
+      <rect x="586" y="215" width="85" height="48" rx="7" fill="#fff" stroke="#56a27c"/><text x="628" y="235" text-anchor="middle" font-size="10" font-weight="700">P0 replica</text><text x="628" y="252" text-anchor="middle" font-size="9">backup copy</text>
+
+      <line x1="710" y1="132" x2="785" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kArrow)"/>
+      <rect x="795" y="75" width="150" height="115" rx="12" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="870" y="102" text-anchor="middle" font-size="14" font-weight="700">Consumer Group</text>
+      <text x="870" y="125" text-anchor="middle" font-size="11">Flink subtask 1 → P0</text>
+      <text x="870" y="143" text-anchor="middle" font-size="11">Flink subtask 2 → P1</text>
+      <text x="870" y="161" text-anchor="middle" font-size="11">Flink subtask 3 → P2</text>
+
+      <rect x="70" y="370" width="840" height="90" rx="10" fill="#f7f7f5" stroke="#c9c9c5"/>
+      <text x="490" y="395" text-anchor="middle" font-size="12" font-weight="700">Ordering and parallelism rule</text>
+      <text x="490" y="418" text-anchor="middle" font-size="11">Kafka guarantees order only inside one partition. More partitions allow more consumers to process in parallel.</text>
+      <text x="490" y="440" text-anchor="middle" font-size="11">Use a stable key such as seller_id when all events for the same seller must stay in order.</text>
+    </svg>`
+  });
+
+  html += renderCard({
+    title:'K2.5 Physical deployment and scheduling — where each process runs',
+    desc:'Kafka does not dynamically launch a machine for every message. Kafka brokers are long-running processes deployed on fixed machines or Kubernetes pods. Topic partitions are assigned across brokers. Flink is a separate compute cluster: its JobManager schedules Kafka source subtasks onto TaskManagers, and the Kafka consumer group assigns partitions to those subtasks.',
+    zh:'Kafka不会为每条消息临时启动机器。Kafka Broker是长期运行在固定服务器、虚拟机或Kubernetes Pod上的进程；Topic Partition分布在不同Broker上。Flink是独立的计算集群：JobManager把Kafka Source子任务调度到TaskManager，Kafka Consumer Group再把Partition分配给这些子任务。',
+    html:`<svg viewBox="0 0 1080 610" role="img" aria-label="Kafka and Flink physical deployment" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs><marker id="deployArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="540" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#1f2d3d">Physical deployment: Kafka stores data; Flink schedules computation</text>
+
+      <rect x="30" y="60" width="470" height="260" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="265" y="86" text-anchor="middle" font-size="15" font-weight="700">Kafka cluster — long-running storage nodes</text>
+      <rect x="55" y="110" width="125" height="160" rx="10" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="117" y="132" text-anchor="middle" font-size="12" font-weight="700">Machine K1</text><text x="117" y="149" text-anchor="middle" font-size="9">Kafka Broker 1</text>
+      <rect x="70" y="168" width="95" height="38" rx="6" fill="#fff" stroke="#c9a45b"/><text x="117" y="191" text-anchor="middle" font-size="10">P0 leader</text>
+      <rect x="70" y="216" width="95" height="38" rx="6" fill="#fff" stroke="#c9a45b"/><text x="117" y="239" text-anchor="middle" font-size="10">P2 replica</text>
+
+      <rect x="202" y="110" width="125" height="160" rx="10" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="264" y="132" text-anchor="middle" font-size="12" font-weight="700">Machine K2</text><text x="264" y="149" text-anchor="middle" font-size="9">Kafka Broker 2</text>
+      <rect x="217" y="168" width="95" height="38" rx="6" fill="#fff" stroke="#9a79b5"/><text x="264" y="191" text-anchor="middle" font-size="10">P1 leader</text>
+      <rect x="217" y="216" width="95" height="38" rx="6" fill="#fff" stroke="#9a79b5"/><text x="264" y="239" text-anchor="middle" font-size="10">P0 replica</text>
+
+      <rect x="349" y="110" width="125" height="160" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="411" y="132" text-anchor="middle" font-size="12" font-weight="700">Machine K3</text><text x="411" y="149" text-anchor="middle" font-size="9">Kafka Broker 3</text>
+      <rect x="364" y="168" width="95" height="38" rx="6" fill="#fff" stroke="#56a27c"/><text x="411" y="191" text-anchor="middle" font-size="10">P2 leader</text>
+      <rect x="364" y="216" width="95" height="38" rx="6" fill="#fff" stroke="#56a27c"/><text x="411" y="239" text-anchor="middle" font-size="10">P1 replica</text>
+      <text x="265" y="295" text-anchor="middle" font-size="10" fill="#57564f">Kafka controller assigns partition leaders/replicas across brokers</text>
+
+      <rect x="540" y="60" width="510" height="390" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="795" y="86" text-anchor="middle" font-size="15" font-weight="700">Flink cluster — compute processes on separate machines</text>
+      <rect x="690" y="105" width="210" height="70" rx="10" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="795" y="130" text-anchor="middle" font-size="12" font-weight="700">Machine F1: JobManager</text>
+      <text x="795" y="150" text-anchor="middle" font-size="10">builds execution graph and schedules subtasks</text>
+
+      <rect x="575" y="220" width="205" height="155" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="677" y="244" text-anchor="middle" font-size="12" font-weight="700">Machine F2: TaskManager A</text>
+      <rect x="596" y="265" width="163" height="40" rx="6" fill="#fff" stroke="#56a27c"/><text x="677" y="289" text-anchor="middle" font-size="10">Kafka Source subtask 1 → P0</text>
+      <rect x="596" y="316" width="163" height="40" rx="6" fill="#fff" stroke="#56a27c"/><text x="677" y="340" text-anchor="middle" font-size="10">Window / ETL subtask 1</text>
+
+      <rect x="810" y="220" width="205" height="155" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="912" y="244" text-anchor="middle" font-size="12" font-weight="700">Machine F3: TaskManager B</text>
+      <rect x="831" y="265" width="163" height="40" rx="6" fill="#fff" stroke="#56a27c"/><text x="912" y="289" text-anchor="middle" font-size="10">Kafka Source subtask 2 → P1</text>
+      <rect x="831" y="316" width="163" height="40" rx="6" fill="#fff" stroke="#56a27c"/><text x="912" y="340" text-anchor="middle" font-size="10">Window / ETL subtask 2</text>
+
+      <line x1="795" y1="175" x2="677" y2="220" stroke="#2971a8" stroke-width="1.8" marker-end="url(#deployArrow)"/>
+      <line x1="795" y1="175" x2="912" y2="220" stroke="#2971a8" stroke-width="1.8" marker-end="url(#deployArrow)"/>
+      <text x="795" y="205" text-anchor="middle" font-size="10" fill="#2971a8">JobManager scheduling</text>
+
+      <line x1="500" y1="185" x2="575" y2="285" stroke="#69757f" stroke-width="2" marker-end="url(#deployArrow)"/>
+      <line x1="500" y1="210" x2="810" y2="285" stroke="#69757f" stroke-width="2" marker-end="url(#deployArrow)"/>
+      <text x="650" y="405" text-anchor="middle" font-size="10" fill="#57564f">Consumer Group assignment: one partition is consumed by one subtask within the same group</text>
+
+      <rect x="55" y="485" width="970" height="90" rx="10" fill="#f7f7f5" stroke="#c9c9c5"/>
+      <text x="540" y="510" text-anchor="middle" font-size="12" font-weight="700">Who is responsible for what?</text>
+      <text x="540" y="535" text-anchor="middle" font-size="11">Kafka deployment decides where partitions and replicas live. Flink JobManager decides where operators run. Kafka Consumer Group decides which source subtask reads which partition.</text>
+      <text x="540" y="557" text-anchor="middle" font-size="11" fill="#57564f">Kafka machines store data persistently; Flink TaskManagers mainly execute computation and recover state from checkpoints.</text>
+    </svg>`,
+    tip:'Do not mix up Kafka Broker and Flink TaskManager. They are different long-running processes, normally deployed on different machine pools.',
+    tipZh:'不要把Kafka Broker和Flink TaskManager混在一起。它们是不同的长期运行进程，通常部署在不同的机器池。'
+  });
+
+  html += renderCard({
+    title:'K3. Basic Kafka terms',
+    html: table(['Term','Beginner explanation','E-commerce security example'],[
+      ['Producer','Application that sends records to Kafka.||向Kafka发送消息的应用','Order service publishes order_created or refund_requested.||订单服务发送下单或退款事件'],
+      ['Topic','Named stream/category of events.||有名称的事件流或消息类别','security_events, payment_events, seller_updates'],
+      ['Partition','A topic slice used for ordering and parallel processing.||Topic的分片，用于保证局部顺序和并行处理','seller_id hash decides P0, P1 or P2.||按seller_id哈希决定进入哪个Partition'],
+      ['Broker','Kafka server that stores partitions.||保存Partition的Kafka服务器','A three-broker cluster distributes leaders and replicas.||三个Broker分布保存主副本'],
+      ['Record key','Controls partition assignment when present.||通常用于决定消息进入哪个Partition','key=seller_id keeps one seller’s events ordered.||以seller_id为Key保证同一商家事件有序'],
+      ['Offset','Increasing record position inside one partition.||消息在单个Partition中的递增位置','Flink resumes P1 from offset 98 after recovery.||Flink恢复后从P1的offset 98继续'],
+      ['Consumer','Application that reads records.||读取Kafka消息的应用','A Flink source consumes security_events.||Flink Source消费安全事件'],
+      ['Consumer Group','Consumers cooperating so each partition is assigned to only one member in that group.||同组消费者协作，每个Partition在组内只分配给一个成员','Three Flink subtasks consume three partitions in parallel.||三个Flink并行实例分别消费三个Partition'],
+      ['Replication','Extra partition copies for availability.||Partition的额外副本，用于容错','If the leader broker fails, an in-sync replica can become leader.||Leader故障时由同步副本接管'],
+      ['Retention','How long Kafka keeps records, independent of whether they were consumed.||Kafka保留消息的时长，与是否已消费无关','Keep seven days for recovery or replay.||保留7天用于恢复或回放']
+    ])
+  });
+
+  html += renderCard({
+    title:'K4. Partition, ordering and Consumer Group — a concrete example',
+    desc:'Assume the topic has three partitions and the Flink job has three source subtasks. Kafka assigns one partition to each subtask. If Flink parallelism becomes six, only three subtasks can actively consume because the topic still has only three partitions.',
+    zh:'假设Topic有3个Partition，Flink Source并行度也是3，每个Subtask消费一个Partition。如果并行度改为6，但Partition仍只有3个，就只有3个Subtask能实际消费。',
+    html: table(['Input event','Record key','Partition result','Why'],[
+      ['seller_100 creates order A','seller_100','P1','All seller_100 events use the same hash key.||同一商家使用相同Hash Key'],
+      ['seller_200 requests refund','seller_200','P0','Different seller can be processed in parallel.||不同商家可以并行处理'],
+      ['seller_100 updates shipment','seller_100','P1','It follows order A inside P1.||仍进入P1，保持同一商家事件顺序']
+    ]) + `<div class="flow">Topic partitions = 3<br>Flink source parallelism = 3 → all three subtasks are active<br>Flink source parallelism = 6 → only three subtasks receive partitions</div>`,
+    warn:'Kafka does not guarantee global ordering across all partitions. It only guarantees ordering inside each partition.'
+  });
+
+  html += renderCard({
+    title:'K5. Offset, replay and delivery semantics',
+    desc:'Kafka records are not deleted immediately after consumption. A consumer tracks its position using offsets. This enables restart, replay and independent consumers.',
+    html: table(['Scenario','What happens'],[
+      ['Normal processing','Flink reads records and checkpoints its Kafka offsets together with operator state.||Flink消费消息，并把Kafka Offset和算子状态一起Checkpoint'],
+      ['Job failure','Flink restores the latest successful checkpoint and resumes from the corresponding offsets.||任务失败后从最近成功Checkpoint及对应Offset恢复'],
+      ['New risk rule','A separate consumer group or replay topic can reprocess retained historical events.||新规则可通过新Consumer Group或Replay Topic重放历史事件'],
+      ['At-least-once external sink','A retry may write the same result again, so the sink needs a stable event_id or version.||外部Sink重试可能重复写，需要稳定event_id或version']
+    ]),
+    tip:'In Flink, Kafka offsets should normally be managed through checkpoints rather than manually committed after every record.',
+    tipZh:'在Flink中，Kafka Offset通常应跟随Checkpoint统一管理，而不是每处理一条就手动提交。'
+  });
+
+  html += renderCard({
+    title:'K6. Kafka → Flink → ClickHouse: complete responsibility split',
+    desc:'Kafka is not the database used by analysts. It is the durable event log between producers and stream-processing jobs. Flink transforms the stream, while ClickHouse serves analytical queries.',
+    html:`<svg viewBox="0 0 980 370" role="img" aria-label="Kafka Flink ClickHouse pipeline" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs><marker id="kfcArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="490" y="30" text-anchor="middle" font-size="18" font-weight="700">From business event to real-time analytical dashboard</text>
+      <rect x="35" y="85" width="170" height="95" rx="12" fill="#fff" stroke="#b14a3f"/>
+      <text x="120" y="112" text-anchor="middle" font-size="14" font-weight="700">Business Services</text><text x="120" y="136" text-anchor="middle" font-size="11">order / refund / seller</text><text x="120" y="155" text-anchor="middle" font-size="11">produce immutable events</text>
+      <line x1="205" y1="132" x2="270" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kfcArrow)"/>
+      <rect x="275" y="75" width="165" height="115" rx="12" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="357" y="105" text-anchor="middle" font-size="14" font-weight="700">Kafka</text><text x="357" y="130" text-anchor="middle" font-size="11">buffer + retention</text><text x="357" y="149" text-anchor="middle" font-size="11">partitioned ordered log</text><text x="357" y="168" text-anchor="middle" font-size="11">replay by offset</text>
+      <line x1="440" y1="132" x2="505" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kfcArrow)"/>
+      <rect x="510" y="65" width="195" height="135" rx="12" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="607" y="95" text-anchor="middle" font-size="14" font-weight="700">Flink</text><text x="607" y="119" text-anchor="middle" font-size="11">dedup + event time</text><text x="607" y="138" text-anchor="middle" font-size="11">window aggregation</text><text x="607" y="157" text-anchor="middle" font-size="11">risk tags + enrichment</text><text x="607" y="176" text-anchor="middle" font-size="11">checkpoint state + offsets</text>
+      <line x1="705" y1="132" x2="770" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#kfcArrow)"/>
+      <rect x="775" y="75" width="170" height="115" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="860" y="105" text-anchor="middle" font-size="14" font-weight="700">ClickHouse</text><text x="860" y="130" text-anchor="middle" font-size="11">detail + minute metrics</text><text x="860" y="149" text-anchor="middle" font-size="11">fast GROUP BY / drill-down</text><text x="860" y="168" text-anchor="middle" font-size="11">dashboard serving</text>
+      <rect x="90" y="255" width="800" height="70" rx="10" fill="#f7f7f5" stroke="#c9c9c5"/>
+      <text x="490" y="280" text-anchor="middle" font-size="12" font-weight="700">Example: one-minute seller risk metric</text>
+      <text x="490" y="302" text-anchor="middle" font-size="11">Kafka receives raw order events continuously → Flink calculates seller_id × minute → the sink batches many rows → ClickHouse supports dashboards and investigation queries</text>
+    </svg>`,
+    tip:'Kafka should absorb and retain the raw event stream. Do not use ClickHouse as the message queue, and do not use Kafka as the final BI query database.'
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🟢</span><div><div class="level-label">L1 — ClickHouse fundamentals</div><div class="level-desc">What it is, why it exists, how it developed, and which problems it solves.</div></div></div>`;
+
+  html += renderCard({
+    title:'1. What is ClickHouse?',
+    desc:'ClickHouse is a distributed, column-oriented OLAP database designed for high-speed analytical queries over very large datasets. It is mainly used when data is continuously appended and users need fast aggregation, filtering, drill-down and dashboard queries.',
+    zh:'ClickHouse 是一个分布式列式 OLAP 数据库。它擅长持续接收大量数据，并对海量明细做聚合、过滤、下钻和实时大盘查询。',
+    html: table(['Concept','Beginner explanation','Example'],[
+      ['OLAP','Online Analytical Processing: scan many rows and calculate trends, totals, ratios and distributions.||联机分析处理：扫描大量行，计算趋势、总量、比例和分布','Count risky orders by seller, hour and country.||按商家、小时和国家统计风险订单数'],
+      ['Column-oriented','Values from the same column are stored together. A query reads only the required columns.||同一列的数据放在一起，查询只读取需要的列','A risk dashboard reads seller_id, risk_type and event_time without loading a large payload column.||风险大盘无需读取大字段payload'],
+      ['Append-heavy','It performs best when data is inserted in batches and updated less frequently.||适合批量追加写入，不擅长高频逐行修改','Flink writes a batch of risk events every few seconds.||Flink每几秒批量写入风险事件'],
+      ['Near-real-time analytics','Fresh data can usually become queryable within seconds.||新数据通常数秒内可查询','Operations can see abnormal seller activity shortly after it happens.||运营能快速看到商家异常行为']
+    ]),
+    tip:'A simple sentence: Flink is used to calculate streaming data; ClickHouse is used to store the analytical result and let people query it quickly.',
+    tipZh:'一句话理解：Flink负责实时计算，ClickHouse负责保存分析结果并让人快速查询。'
+  });
+
+  html += renderCard({
+    title:'2. Why ClickHouse was created — key milestones',
+    desc:'ClickHouse was created to solve a concrete engineering problem: interactive analytics over extremely large streams of website events. Traditional analytical systems could store the data, but they could not return complex aggregation results quickly enough for an interactive web analytics product.',
+    zh:'ClickHouse 的产生源于一个非常具体的问题：网站每天产生海量点击事件，分析人员需要按时间、来源、地区和页面进行交互式聚合查询，而传统分析系统难以同时满足海量写入和快速查询。',
+    html: table(['Period','Key milestone','Why it mattered'],[
+      ['2009','Yandex began developing a new analytical database for Yandex.Metrica.||Yandex开始为Yandex.Metrica开发新的分析数据库','Metrica had to process massive clickstream data and return multi-dimensional reports interactively.||需要处理海量点击流，并快速返回多维统计报告'],
+      ['2012','The new column-oriented system entered production for large-scale web analytics.||列式分析系统开始用于大规模网站分析','The workload required continuous inserts, strong compression, time-range filtering and fast GROUP BY queries.||业务要求持续写入、高压缩、时间范围过滤和快速聚合'],
+      ['2016','ClickHouse was released as an open-source project.||ClickHouse正式开源','Other companies could adopt the same architecture for logs, product analytics, advertising and security data.||其他公司开始用于日志、产品分析、广告和安全数据'],
+      ['2021','ClickHouse, Inc. was established around the open-source project.||围绕开源项目成立ClickHouse, Inc.','Commercial cloud services and enterprise support accelerated adoption while the core project remained open source.||云服务与企业支持推动普及，核心项目继续开源'],
+      ['Today','ClickHouse is widely used as a real-time analytical serving layer.||ClickHouse广泛用于实时分析服务层','Typical workloads include observability, user behavior, ad analytics, risk monitoring and real-time BI.||典型场景包括可观测性、用户行为、广告分析、风险监控和实时BI']
+    ]),
+    tip:'The original problem shaped the product: ClickHouse is optimized for huge event tables, append-heavy ingestion, time-based filtering and aggregation—not for frequent single-row transactions.',
+    tipZh:'最初的问题决定了它今天的优势：海量事件表、持续追加写入、按时间过滤和聚合分析，而不是高频单行事务。'
+  });
+
+  html += renderCard({
+    title:'3. When ClickHouse is a good fit — and when it is not',
+    html: table(['Good fit','Why'],[
+      ['Real-time dashboards||实时大盘','Fast GROUP BY, filters and time-series aggregation.||快速聚合、过滤和时间序列分析'],
+      ['User or event analytics||用户与事件分析','Large append-only event tables compress well.||海量追加事件压缩效率高'],
+      ['Security and risk monitoring||安全与风险监控','Fast drill-down from a summary metric to detailed events.||可从汇总指标快速下钻到明细事件'],
+      ['Logs and observability||日志与可观测性','High ingestion throughput and fast range queries.||写入吞吐高，时间范围查询快']
+    ]) + table(['Not the first choice','Reason'],[
+      ['High-frequency single-row updates||高频单行更新','ClickHouse stores immutable parts and handles changes asynchronously.||ClickHouse以不可变part为基础，更新通常是异步处理'],
+      ['Strict multi-row transactions||严格多行事务','Its design prioritizes analytical throughput rather than transactional semantics.||设计目标是分析吞吐，而不是复杂事务'],
+      ['Pure RowKey point lookup||纯RowKey点查','HBase is usually more natural for millisecond key-value access.||毫秒级Key-Value点查通常HBase更合适']
+    ])
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🟡</span><div><div class="level-label">L2 — ClickHouse internal architecture</div><div class="level-desc">Understand cluster, shard, replica, table, partition, part, granule, mark and sparse index.</div></div></div>`;
+
+  html += renderCard({
+    title:'4. ClickHouse overall structure',
+    desc:'The upper half shows distributed deployment. The lower half zooms into how one MergeTree table is physically organized on a node.',
+    zh:'上半部分表示分布式部署；下半部分放大一个节点内部 MergeTree 表的物理组织方式。',
+    html:`<svg viewBox="0 0 980 620" role="img" aria-label="ClickHouse internal architecture" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs>
+        <marker id="chArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker>
+      </defs>
+      <text x="490" y="30" text-anchor="middle" font-size="18" font-weight="700" fill="#1f2d3d">ClickHouse: distributed cluster + on-disk MergeTree structure</text>
+      <rect x="350" y="50" width="280" height="54" rx="10" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="490" y="73" text-anchor="middle" font-size="14" font-weight="700" fill="#245d87">Clients / BI / Flink / API</text>
+      <text x="490" y="91" text-anchor="middle" font-size="11" fill="#57564f">SQL query or batched inserts</text>
+      <line x1="490" y1="104" x2="490" y2="132" stroke="#69757f" stroke-width="2" marker-end="url(#chArrow)"/>
+
+      <rect x="55" y="135" width="870" height="190" rx="14" fill="#ffffff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="490" y="159" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2d3d">ClickHouse Cluster</text>
+      <rect x="90" y="175" width="350" height="125" rx="12" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="265" y="198" text-anchor="middle" font-size="14" font-weight="700" fill="#69418a">Shard 1 — one slice of the data</text>
+      <rect x="112" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#9a79b5"/>
+      <rect x="283" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#9a79b5"/>
+      <text x="180" y="239" text-anchor="middle" font-size="12" font-weight="700">Machine C1</text><text x="180" y="254" text-anchor="middle" font-size="9">ClickHouse Replica 1A</text><text x="180" y="270" text-anchor="middle" font-size="10" fill="#57564f">same shard data</text>
+      <text x="350" y="239" text-anchor="middle" font-size="12" font-weight="700">Machine C2</text><text x="350" y="254" text-anchor="middle" font-size="9">ClickHouse Replica 1B</text><text x="350" y="270" text-anchor="middle" font-size="10" fill="#57564f">fault tolerance</text>
+
+      <rect x="540" y="175" width="350" height="125" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="715" y="198" text-anchor="middle" font-size="14" font-weight="700" fill="#17613c">Shard 2 — another slice of the data</text>
+      <rect x="562" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#56a27c"/>
+      <rect x="733" y="215" width="135" height="62" rx="9" fill="#fff" stroke="#56a27c"/>
+      <text x="630" y="239" text-anchor="middle" font-size="12" font-weight="700">Machine C3</text><text x="630" y="254" text-anchor="middle" font-size="9">ClickHouse Replica 2A</text><text x="630" y="270" text-anchor="middle" font-size="10" fill="#57564f">same shard data</text>
+      <text x="800" y="239" text-anchor="middle" font-size="12" font-weight="700">Machine C4</text><text x="800" y="254" text-anchor="middle" font-size="9">ClickHouse Replica 2B</text><text x="800" y="270" text-anchor="middle" font-size="10" fill="#57564f">fault tolerance</text>
+
+      <line x1="490" y1="325" x2="490" y2="350" stroke="#69757f" stroke-width="2" marker-end="url(#chArrow)"/>
+      <text x="505" y="342" font-size="10" fill="#57564f">zoom into one replica</text>
+
+      <rect x="55" y="355" width="870" height="225" rx="14" fill="#fff" stroke="#c9c9c5" stroke-width="1.5"/>
+      <text x="490" y="380" text-anchor="middle" font-size="15" font-weight="700" fill="#1f2d3d">Inside one ClickHouse machine: Database → MergeTree table → Partition → Data Part → Granules</text>
+
+      <rect x="82" y="405" width="120" height="55" rx="9" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="142" y="428" text-anchor="middle" font-size="12" font-weight="700">Database</text><text x="142" y="447" text-anchor="middle" font-size="10">security</text>
+      <line x1="202" y1="432" x2="240" y2="432" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <rect x="245" y="405" width="140" height="55" rx="9" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="315" y="428" text-anchor="middle" font-size="12" font-weight="700">MergeTree Table</text><text x="315" y="447" text-anchor="middle" font-size="10">risk_events</text>
+      <line x1="385" y1="432" x2="423" y2="432" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <rect x="428" y="405" width="120" height="55" rx="9" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="488" y="428" text-anchor="middle" font-size="12" font-weight="700">Partition</text><text x="488" y="447" text-anchor="middle" font-size="10">2026-07</text>
+      <line x1="548" y1="432" x2="586" y2="432" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <rect x="591" y="405" width="125" height="55" rx="9" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="653" y="428" text-anchor="middle" font-size="12" font-weight="700">Data Part</text><text x="653" y="447" text-anchor="middle" font-size="10">immutable batch</text>
+      <line x1="716" y1="432" x2="754" y2="432" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <rect x="759" y="405" width="135" height="55" rx="9" fill="#fbecea" stroke="#b14a3f"/>
+      <text x="826" y="428" text-anchor="middle" font-size="12" font-weight="700">Column Files</text><text x="826" y="447" text-anchor="middle" font-size="10">seller_id.bin ...</text>
+
+      <rect x="245" y="490" width="470" height="62" rx="10" fill="#f7f7f5" stroke="#b9b9b4"/>
+      <text x="480" y="512" text-anchor="middle" font-size="12" font-weight="700">Inside a Data Part</text>
+      <text x="480" y="532" text-anchor="middle" font-size="11" fill="#57564f">sorted rows → granules → marks → sparse primary index</text>
+      <line x1="653" y1="460" x2="653" y2="490" stroke="#69757f" marker-end="url(#chArrow)"/>
+      <path d="M270 562 C390 590,570 590,690 562" fill="none" stroke="#9a6b1e" stroke-width="1.6" marker-end="url(#chArrow)"/>
+      <text x="480" y="575" text-anchor="middle" font-size="10" fill="#8a6d1f">background merge combines small parts into larger sorted parts</text>
+    </svg>`,
+    tip:'Each replica normally runs as a ClickHouse server process on one machine, VM or Kubernetes pod. Shard means horizontal data distribution; replica means another copy of the same shard for availability.',
+    tipZh:'每个Replica通常是运行在一台服务器、虚拟机或Kubernetes Pod上的ClickHouse Server进程。Shard负责水平拆分数据，Replica负责同一Shard的高可用副本。'
+  });
+
+  html += renderCard({
+    title:'4.1 How queries and inserts are routed across ClickHouse machines',
+    desc:'A Distributed table is usually the logical entry point. It routes an insert to a shard and sends a query to all required shards. Each shard stores data in a local MergeTree table. Replicas keep another copy of the same shard and can serve reads or take over after a failure.',
+    zh:'Distributed表通常是逻辑入口。写入时它把数据路由到某个Shard；查询时把SQL发送到需要访问的各个Shard。每个Shard内部由本地MergeTree表保存数据；Replica保存同一Shard的另一份副本，可承担查询或故障切换。',
+    html:`<svg viewBox="0 0 1000 430" role="img" aria-label="ClickHouse request routing across machines" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px;margin-top:8px">
+      <defs><marker id="routeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="500" y="28" text-anchor="middle" font-size="17" font-weight="700">ClickHouse deployment: routing layer + persistent storage machines</text>
+      <rect x="365" y="55" width="270" height="65" rx="10" fill="#e8f2fa" stroke="#2971a8"/>
+      <text x="500" y="80" text-anchor="middle" font-size="13" font-weight="700">Client / Flink Sink / BI</text><text x="500" y="101" text-anchor="middle" font-size="10">INSERT or SELECT</text>
+      <line x1="500" y1="120" x2="500" y2="155" stroke="#69757f" stroke-width="2" marker-end="url(#routeArrow)"/>
+      <rect x="350" y="160" width="300" height="65" rx="10" fill="#fbf0dd" stroke="#9a6b1e"/>
+      <text x="500" y="185" text-anchor="middle" font-size="13" font-weight="700">Distributed Table / Query Coordinator</text><text x="500" y="205" text-anchor="middle" font-size="10">routes by sharding key; fans out SELECT</text>
+
+      <rect x="55" y="270" width="410" height="125" rx="12" fill="#f1e9f7" stroke="#7b4fa0"/>
+      <text x="260" y="294" text-anchor="middle" font-size="13" font-weight="700">Shard 1</text>
+      <rect x="78" y="315" width="165" height="58" rx="8" fill="#fff" stroke="#9a79b5"/><text x="160" y="338" text-anchor="middle" font-size="11" font-weight="700">Machine C1</text><text x="160" y="357" text-anchor="middle" font-size="9">local MergeTree + Replica 1A</text>
+      <rect x="277" y="315" width="165" height="58" rx="8" fill="#fff" stroke="#9a79b5"/><text x="359" y="338" text-anchor="middle" font-size="11" font-weight="700">Machine C2</text><text x="359" y="357" text-anchor="middle" font-size="9">same shard + Replica 1B</text>
+
+      <rect x="535" y="270" width="410" height="125" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/>
+      <text x="740" y="294" text-anchor="middle" font-size="13" font-weight="700">Shard 2</text>
+      <rect x="558" y="315" width="165" height="58" rx="8" fill="#fff" stroke="#56a27c"/><text x="640" y="338" text-anchor="middle" font-size="11" font-weight="700">Machine C3</text><text x="640" y="357" text-anchor="middle" font-size="9">local MergeTree + Replica 2A</text>
+      <rect x="757" y="315" width="165" height="58" rx="8" fill="#fff" stroke="#56a27c"/><text x="839" y="338" text-anchor="middle" font-size="11" font-weight="700">Machine C4</text><text x="839" y="357" text-anchor="middle" font-size="9">same shard + Replica 2B</text>
+
+      <line x1="440" y1="225" x2="260" y2="270" stroke="#7b4fa0" stroke-width="2" marker-end="url(#routeArrow)"/>
+      <line x1="560" y1="225" x2="740" y2="270" stroke="#1e7a4c" stroke-width="2" marker-end="url(#routeArrow)"/>
+    </svg>`,
+    tip:'ClickHouse does not have a Spark-style central scheduler that launches executors for each query. Every ClickHouse server is already running; the coordinator distributes query fragments to the relevant shard machines, which execute them in parallel.',
+    tipZh:'ClickHouse没有Spark那种每个作业临时启动Executor的中央调度方式。各ClickHouse Server长期在线，协调节点把查询片段发送到相关Shard机器并行执行。'
+  });
+
+  html += renderCard({
+    title:'5. Basic internal terms',
+    html: table(['Term','Meaning','Beginner analogy','Closest Spark comparison'],[
+      ['Cluster','A group of ClickHouse servers working together.||一组协同工作的ClickHouse服务器','The whole library system.||整个图书馆系统','A Spark cluster managed by YARN or Kubernetes. ClickHouse servers remain online and also store data.||类似由YARN或Kubernetes管理的Spark集群，但ClickHouse节点长期在线并负责保存数据'],
+      ['Shard','A horizontal slice of data stored on one group of nodes.||一部分水平切分的数据','Different library branches hold different books.||不同分馆保存不同图书','Similar to distributing different data partitions across executors, but a ClickHouse shard is a persistent storage boundary.||类似把不同数据分区分配到Executor，但ClickHouse Shard是长期存在的存储边界'],
+      ['Replica','Another copy of the same shard.||同一个Shard的数据副本','A backup branch with the same books.||保存相同图书的备份分馆','Spark executors do not normally keep permanent replicas. It is closer to replicated storage such as HDFS blocks.||Spark Executor通常没有永久副本，更接近HDFS Block副本机制'],
+      ['Partition','A coarse physical boundary, often month or day.||通常按月或天划分的粗粒度物理边界','A shelf for one month.||一个月份的书架','Closest to a partitioned table directory such as dt=2026-07, not to one temporary Spark task partition.||更接近dt=2026-07这类分区表目录，不等同于临时的Spark Task Partition'],
+      ['Data Part','An immutable, sorted data package created by one insert batch.||一次批量写入形成的不可变、有序数据包','A sealed box of sorted books.||一箱已排序并封装好的书','Similar to one immutable output file created by a Spark write task, but it also contains indexes, marks and column files.||类似Spark写任务产生的一个不可变输出文件，但还包含索引、Mark和列文件'],
+      ['Merge','Background process that combines small parts into larger parts.||后台将小Part合并成更大Part','Combine many small boxes into a larger organized box.||把许多小箱子合成大箱子','Similar in purpose to small-file compaction, but ClickHouse performs it continuously in the background.||作用类似小文件合并，但ClickHouse会在后台持续执行'],
+      ['Granule','The smallest block normally addressed by the sparse index, often around index_granularity rows.||稀疏索引定位的基本数据块','A section inside the box.||箱子中的一个小区域','Roughly comparable to a row group or a scan block, not to a full Spark partition.||大致类似Row Group或扫描块，不是完整的Spark Partition'],
+      ['Mark','A file offset pointing to the start of a granule in column files.||指向列文件中某个Granule起点的偏移','A bookmark.||书签','Similar to file metadata that lets a reader jump directly to a block instead of scanning from the beginning.||类似文件元数据中的定位点，让读取器直接跳到数据块'],
+      ['Sparse index','Stores key values only for marks, not one index entry per row.||只为Mark保存索引值，不是每行一个索引','A table of contents, not an index for every sentence.||目录，而不是每句话都有索引','Closest to Parquet statistics and data skipping, but ClickHouse relies heavily on ORDER BY and marks.||类似Parquet统计信息与Data Skipping，但ClickHouse更依赖ORDER BY和Mark']
+    ])
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🟠</span><div><div class="level-label">L3 — Why ClickHouse is fast</div><div class="level-desc">Column storage, compression, vectorized execution, sorted data and sparse-index skipping.</div></div></div>`;
+
+  html += renderCard({
+    title:'6. Column storage and vectorized execution',
+    desc:'Analytical queries usually need a few columns but many rows. ClickHouse reads those columns in compressed blocks and processes many values per CPU instruction batch.',
+    zh:'分析查询通常只需要少量列，但会扫描很多行。ClickHouse以压缩块读取列数据，并通过向量化方式一次处理一批值。',
+    html:`<svg viewBox="0 0 900 300" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px">
+      <text x="450" y="26" text-anchor="middle" font-size="16" font-weight="700">Query: SUM(risk_score) GROUP BY seller_id</text>
+      <text x="215" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#b14a3f">Row-oriented layout</text>
+      <text x="675" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#1e7a4c">ClickHouse column layout</text>
+      <g font-size="11"><rect x="45" y="75" width="340" height="155" rx="8" fill="#fff" stroke="#c9c9c5"/>
+      <text x="62" y="100">row1: time | seller | type | score | payload</text><text x="62" y="128">row2: time | seller | type | score | payload</text><text x="62" y="156">row3: time | seller | type | score | payload</text><text x="62" y="191" fill="#b14a3f">Must pass through unrelated fields</text><text x="62" y="211" fill="#57564f">Less efficient for wide analytical scans</text></g>
+      <rect x="515" y="75" width="340" height="155" rx="8" fill="#fff" stroke="#c9c9c5"/>
+      <rect x="535" y="95" width="130" height="95" rx="6" fill="#e8f2fa" stroke="#2971a8"/><text x="600" y="116" text-anchor="middle" font-size="11" font-weight="700">seller_id column</text><text x="600" y="141" text-anchor="middle" font-size="10">S1, S1, S2...</text>
+      <rect x="705" y="95" width="130" height="95" rx="6" fill="#e4f5ec" stroke="#1e7a4c"/><text x="770" y="116" text-anchor="middle" font-size="11" font-weight="700">risk_score column</text><text x="770" y="141" text-anchor="middle" font-size="10">80, 70, 20...</text>
+      <text x="685" y="211" text-anchor="middle" font-size="11" fill="#1e7a4c">Read only 2 required columns</text>
+      <path d="M535 255 H835" stroke="#2971a8" stroke-width="6" stroke-linecap="round"/><text x="685" y="279" text-anchor="middle" font-size="11">compressed blocks processed in vectors</text>
+    </svg>`,
+    tip:'Column storage reduces I/O. Vectorized execution reduces CPU overhead. Compression helps both storage and I/O.'
+  });
+
+  html += renderCard({
+    title:'7. Sorted data and sparse-index skipping',
+    desc:'ClickHouse does not normally keep a B-tree entry for every row. Instead, MergeTree data is sorted by ORDER BY, and the sparse primary index stores representative key values for granules.',
+    zh:'ClickHouse通常不会为每一行建立B-Tree索引。MergeTree数据按ORDER BY排序，稀疏主键索引只记录各Granule的代表键值。',
+    html:`<div class="flow">ORDER BY (seller_id, event_date, event_time)<br><br>S001 rows → S002 rows → S003 rows → S004 rows<br>marks:　　　 ▲　　　　 ▲　　　　 ▲　　　　 ▲<br>query seller_id='S003' can skip the S001, S002 and S004 ranges</div>`,
+    tip:'ORDER BY is powerful because it controls three things together: row locality, sparse-index skipping and compression efficiency.'
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🔵</span><div><div class="level-label">L4 — Core MergeTree table design</div><div class="level-desc">PARTITION BY, ORDER BY, PRIMARY KEY, Data Part and background Merge.</div></div></div>`;
+
+  html += renderCard({
+    title:'8. MergeTree: write parts first, merge later',
+    desc:'A batch insert does not modify one large file in place. It creates a new immutable Data Part. Each part is sorted independently by ORDER BY. Background merge tasks later combine compatible small parts.',
+    zh:'一次批量写入不会原地修改一个大文件，而是创建新的不可变Data Part。每个Part内部按ORDER BY独立排序，后台Merge再逐步合并相同分区中的小Part。',
+    html:`<svg viewBox="0 0 900 270" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px">
+      <defs><marker id="mergeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="450" y="26" text-anchor="middle" font-size="16" font-weight="700">MergeTree write and background merge</text>
+      <rect x="35" y="68" width="140" height="62" rx="9" fill="#e8f2fa" stroke="#2971a8"/><text x="105" y="91" text-anchor="middle" font-size="12" font-weight="700">Flink batch A</text><text x="105" y="111" text-anchor="middle" font-size="10">5,000 rows</text>
+      <rect x="35" y="160" width="140" height="62" rx="9" fill="#e8f2fa" stroke="#2971a8"/><text x="105" y="183" text-anchor="middle" font-size="12" font-weight="700">Flink batch B</text><text x="105" y="203" text-anchor="middle" font-size="10">6,000 rows</text>
+      <line x1="175" y1="99" x2="245" y2="99" stroke="#69757f" marker-end="url(#mergeArrow)"/><line x1="175" y1="191" x2="245" y2="191" stroke="#69757f" marker-end="url(#mergeArrow)"/>
+      <rect x="250" y="68" width="145" height="62" rx="9" fill="#fbf0dd" stroke="#9a6b1e"/><text x="322" y="91" text-anchor="middle" font-size="12" font-weight="700">Data Part A</text><text x="322" y="111" text-anchor="middle" font-size="10">sorted, immutable</text>
+      <rect x="250" y="160" width="145" height="62" rx="9" fill="#fbf0dd" stroke="#9a6b1e"/><text x="322" y="183" text-anchor="middle" font-size="12" font-weight="700">Data Part B</text><text x="322" y="203" text-anchor="middle" font-size="10">sorted, immutable</text>
+      <path d="M395 99 C470 99,470 130,535 140" fill="none" stroke="#69757f" marker-end="url(#mergeArrow)"/><path d="M395 191 C470 191,470 160,535 150" fill="none" stroke="#69757f" marker-end="url(#mergeArrow)"/>
+      <rect x="540" y="108" width="150" height="72" rx="10" fill="#f1e9f7" stroke="#7b4fa0"/><text x="615" y="132" text-anchor="middle" font-size="12" font-weight="700">Background Merge</text><text x="615" y="152" text-anchor="middle" font-size="10">read + merge-sort</text><text x="615" y="168" text-anchor="middle" font-size="10">old parts later removed</text>
+      <line x1="690" y1="144" x2="750" y2="144" stroke="#69757f" marker-end="url(#mergeArrow)"/>
+      <rect x="755" y="108" width="120" height="72" rx="10" fill="#e4f5ec" stroke="#1e7a4c"/><text x="815" y="132" text-anchor="middle" font-size="12" font-weight="700">Larger Part</text><text x="815" y="152" text-anchor="middle" font-size="10">11,000 rows</text><text x="815" y="168" text-anchor="middle" font-size="10">still immutable</text>
+    </svg>`,
+    warn:'Too many tiny inserts create too many tiny parts. The server then spends excessive CPU, disk I/O and metadata work on merges.'
+  });
+
+  html += renderCard({
+    title:'9. PARTITION BY, ORDER BY and PRIMARY KEY',
+    desc:'These clauses look similar but solve different problems. For ClickHouse beginners, ORDER BY is the most important one to understand.',
+    html: table(['Clause','What it controls','Typical choice','Common mistake'],[
+      ['PARTITION BY','Coarse physical grouping, lifecycle operations and coarse pruning.||粗粒度物理分组、生命周期管理和分区裁剪','Month or day, depending on volume and retention.||根据数据量和保留周期按月或按天','Partition by seller_id, creating too many partitions.||按seller_id分区，产生海量分区'],
+      ['ORDER BY','Physical row order inside every part, sparse index, locality and compression.||Part内部物理排序、稀疏索引、局部性和压缩','Frequent equality filters first, then common range/time fields.||高频等值过滤字段靠前，再放范围或时间字段','Choose columns only because they are unique.||仅因字段唯一就放入排序键'],
+      ['PRIMARY KEY','Sparse-index expression; defaults to ORDER BY and may be its prefix.||稀疏索引表达式，默认等于ORDER BY，也可为其前缀','Usually omit it initially and use ORDER BY as the primary key.||初学时通常可省略，让其默认等于ORDER BY','Assume it enforces uniqueness.||误以为它保证唯一性']
+    ]),
+    tip:'PARTITION BY helps manage chunks of data. ORDER BY determines how efficiently ClickHouse can find rows inside those chunks.',
+    warn:'ClickHouse PRIMARY KEY normally does not prevent duplicate rows.'
+  });
+
+  html += renderCard({
+    title:'10. Complete table-design example',
+    desc:'Assume the main queries filter by seller and date, then aggregate by risk type or drill down by event time.',
+    code:`CREATE TABLE security.risk_event_local
+(
+    event_date   Date,
+    event_time   DateTime64(3),
+    seller_id    String,
+    order_id     String,
+    risk_type    LowCardinality(String),
+    country_code LowCardinality(String),
+    risk_score   Float32,
+    event_id     String,
+    payload      String
+)
+ENGINE = MergeTree
+PARTITION BY toYYYYMM(event_date)
+ORDER BY (seller_id, event_date, risk_type, event_time)
+TTL event_date + INTERVAL 365 DAY DELETE
+SETTINGS index_granularity = 8192;`,
+    html: table(['Design choice','Reason'],[
+      ['MergeTree','The table is an append-heavy analytical fact table.||这是追加写为主的分析事实表'],
+      ['Monthly partition','Easy monthly lifecycle management without creating excessive partitions.||便于按月管理生命周期，同时避免过多分区'],
+      ['seller_id first','Most investigations start from a seller. Rows for one seller stay close together.||多数调查从商家开始，同一商家数据相邻存储'],
+      ['event_date next','Common date-range filters can skip unrelated ranges inside seller data.||日期范围过滤可以继续跳过无关数据'],
+      ['risk_type before event_time','Supports common grouping/filtering by risk category, then time-range drill-down.||支持按风险类型过滤或聚合，再按时间下钻'],
+      ['LowCardinality(String)','Useful for repeated string categories such as risk type and country.||适合风险类型和国家等重复字符串类别'],
+      ['TTL','Automatically removes data after the retention period.||保留期结束后自动清理数据']
+    ]),
+    tip:'There is no universally correct ORDER BY. Start from the dominant WHERE conditions and query paths, then validate with actual scan ratios.'
+  });
+
+  html += renderCard({
+    title:'11. ReplacingMergeTree — understand eventual replacement',
+    desc:'ReplacingMergeTree is useful when the same business key arrives with multiple versions. During background merges, it keeps one row, usually the highest version.',
+    zh:'同一业务键会到达多个版本时，可以使用ReplacingMergeTree。后台Merge时通常保留version最大的记录。',
+    code:`CREATE TABLE security.seller_risk_profile
+(
+    seller_id   String,
+    risk_level  LowCardinality(String),
+    risk_score  Float32,
+    updated_at  DateTime64(3),
+    version     UInt64
+)
+ENGINE = ReplacingMergeTree(version)
+ORDER BY seller_id;`,
+    html:`<div class="flow">version 1: seller_01, LOW, 20<br>version 2: seller_01, HIGH, 90<br><br>Before merge: both rows may be visible<br>After merge: version 2 is retained</div>`,
+    warn:'ReplacingMergeTree is eventual deduplication, not an immediate unique constraint. Avoid relying on FINAL for every large query; argMax or a latest-state aggregate is often more scalable.'
+  });
+
+  html += `<div class="level-header"><span class="level-emoji">🔴</span><div><div class="level-label">L5 — Flink + ClickHouse production example</div><div class="level-desc">Why Flink computes the stream and ClickHouse becomes the analytical serving layer.</div></div></div>`;
+
+  html += renderCard({
+    title:'12. E-commerce security architecture',
+    desc:'The goal is to identify suspicious seller behavior in real time and support both dashboards and analyst drill-down.',
+    html:`<svg viewBox="0 0 980 430" style="width:100%;height:auto;background:#fbfbfa;border:1px solid var(--border);border-radius:10px">
+      <defs><marker id="pipeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#69757f"/></marker></defs>
+      <text x="490" y="28" text-anchor="middle" font-size="17" font-weight="700">Real-time e-commerce security pipeline</text>
+      <rect x="30" y="78" width="150" height="70" rx="10" fill="#fff" stroke="#b14a3f"/><text x="105" y="101" text-anchor="middle" font-size="12" font-weight="700">Business Events</text><text x="105" y="122" text-anchor="middle" font-size="10">orders / refunds</text><text x="105" y="137" text-anchor="middle" font-size="10">seller / device</text>
+      <line x1="180" y1="113" x2="245" y2="113" stroke="#69757f" stroke-width="2" marker-end="url(#pipeArrow)"/>
+      <rect x="250" y="78" width="125" height="70" rx="10" fill="#fbf0dd" stroke="#9a6b1e"/><text x="312" y="106" text-anchor="middle" font-size="13" font-weight="700">Kafka</text><text x="312" y="127" text-anchor="middle" font-size="10">durable event log</text>
+      <line x1="375" y1="113" x2="440" y2="113" stroke="#69757f" stroke-width="2" marker-end="url(#pipeArrow)"/>
+      <rect x="445" y="58" width="210" height="110" rx="12" fill="#e8f2fa" stroke="#2971a8"/><text x="550" y="84" text-anchor="middle" font-size="14" font-weight="700">Flink</text><text x="550" y="106" text-anchor="middle" font-size="10">deduplication + watermark</text><text x="550" y="123" text-anchor="middle" font-size="10">window aggregation + enrichment</text><text x="550" y="140" text-anchor="middle" font-size="10">risk tags + checkpointed state</text>
+      <line x1="655" y1="113" x2="720" y2="113" stroke="#69757f" stroke-width="2" marker-end="url(#pipeArrow)"/>
+      <rect x="725" y="58" width="220" height="110" rx="12" fill="#e4f5ec" stroke="#1e7a4c"/><text x="835" y="84" text-anchor="middle" font-size="14" font-weight="700">ClickHouse</text><text x="835" y="106" text-anchor="middle" font-size="10">risk_event detail table</text><text x="835" y="123" text-anchor="middle" font-size="10">hourly seller aggregates</text><text x="835" y="140" text-anchor="middle" font-size="10">fast OLAP serving</text>
+
+      <line x1="835" y1="168" x2="835" y2="220" stroke="#69757f" stroke-width="2" marker-end="url(#pipeArrow)"/>
+      <rect x="710" y="225" width="250" height="72" rx="10" fill="#f1e9f7" stroke="#7b4fa0"/><text x="835" y="249" text-anchor="middle" font-size="12" font-weight="700">Dashboard / Analysts / API</text><text x="835" y="270" text-anchor="middle" font-size="10">trend, ranking, drill-down, reports</text>
+
+      <line x1="550" y1="168" x2="550" y2="240" stroke="#69757f" stroke-dasharray="5 4" marker-end="url(#pipeArrow)"/>
+      <rect x="405" y="245" width="290" height="78" rx="10" fill="#fff" stroke="#9a6b1e"/><text x="550" y="269" text-anchor="middle" font-size="12" font-weight="700">Controlled micro-batch sink</text><text x="550" y="289" text-anchor="middle" font-size="10">flush by rows / bytes / time</text><text x="550" y="305" text-anchor="middle" font-size="10">stable event_id for retry handling</text>
+      <line x1="695" y1="284" x2="760" y2="284" stroke="#69757f" marker-end="url(#pipeArrow)"/>
+
+      <rect x="30" y="350" width="915" height="50" rx="9" fill="#f7f7f5" stroke="#c9c9c5"/>
+      <text x="487" y="372" text-anchor="middle" font-size="11" font-weight="700">Responsibility split</text><text x="487" y="390" text-anchor="middle" font-size="10">Kafka transports events → Flink calculates and maintains stream state → ClickHouse stores and serves analytical queries</text>
+    </svg>`
+  });
+
+  html += renderCard({
+    title:'13. Concrete Flink example: hourly seller-risk metrics',
+    desc:'Flink computes event-time windows. ClickHouse stores the final hourly rows so dashboards can query many hours, sellers and risk types efficiently.',
+    code:`-- Simplified Flink SQL result
+SELECT
+    window_start,
+    window_end,
+    seller_id,
+    risk_type,
+    COUNT(*) AS risk_event_count,
+    COUNT(DISTINCT order_id) AS affected_orders,
+    AVG(risk_score) AS avg_risk_score
+FROM TABLE(
+    TUMBLE(
+        TABLE risk_event_stream,
+        DESCRIPTOR(event_time),
+        INTERVAL '1' HOUR
+    )
+)
+GROUP BY window_start, window_end, seller_id, risk_type;`,
+    html: table(['Component','Why it is used'],[
+      ['Kafka','Buffers and replays the source event stream.||缓存并可重放源事件流'],
+      ['Flink','Handles event time, late data, deduplication, joins, state and window calculation.||处理事件时间、迟到、去重、Join、状态和窗口计算'],
+      ['ClickHouse detail table','Supports incident drill-down to individual risk events.||支持下钻到单条风险事件'],
+      ['ClickHouse hourly table','Serves dashboard aggregation with much less scanned data.||以更少扫描量服务大盘聚合查询']
+    ])
+  });
+
+  html += renderCard({
+    title:'14. Why the final result is stored in ClickHouse',
+    html: table(['Requirement','Why ClickHouse fits'],[
+      ['Dashboard queries across time ranges||跨时间范围的大盘查询','Columnar scans and GROUP BY are fast.||列式扫描和GROUP BY速度快'],
+      ['Filter by seller, date and risk type||按商家、日期和风险类型过滤','A matching ORDER BY key allows sparse-index skipping.||匹配的ORDER BY可利用稀疏索引跳读'],
+      ['Drill down from metric to detail||从指标下钻到明细','It can hold both aggregate tables and detailed event tables.||可同时保存聚合表和事件明细表'],
+      ['Many concurrent analyst queries||多人并发分析查询','Parallel execution and pre-aggregation support interactive analysis.||并行执行和预聚合支持交互分析'],
+      ['Continuous Flink output||持续接收Flink结果','Controlled micro-batch ingestion gives good throughput and near-real-time freshness.||可控微批写入兼顾吞吐和实时性']
+    ]) + `<div class="answer-box"><strong>Key explanation</strong>Flink is a stream-processing engine, not an analytical database. It can calculate the latest risk metrics, but it is not designed to retain months of results and serve flexible SQL dashboards. HBase is excellent for looking up one seller profile by RowKey, but it is weak at large GROUP BY and time-range analytical scans. ClickHouse is therefore the serving layer for storing and querying the calculated results.</div>`
+  });
+
+  html += renderCard({
+    title:'15. ClickHouse vs StarRocks vs HBase',
+    desc:'Choose based on access pattern. No system is universally better.',
+    html: table(['System','Core positioning','Strongest capabilities','Main limitations','Typical role in this example'],[
+      ['ClickHouse','Real-time / near-real-time OLAP database.||实时或近实时OLAP数据库','Large scans, aggregation, time-series queries, compression and observability-style workloads.||大扫描、聚合、时间序列、压缩和可观测性场景','Frequent row-level updates and strict transactions are not its strength.||不擅长频繁行更新和严格事务','Risk dashboards, hourly metrics and event drill-down.||风险大盘、小时指标和事件下钻'],
+      ['StarRocks','Real-time analytical data warehouse.||实时分析型数据仓库','Complex joins, BI semantic workloads, primary-key updates and lakehouse-style acceleration.||复杂Join、BI语义查询、主键更新和湖仓加速','Model and operational complexity may be higher for some workloads.||部分场景建模与运维复杂度更高','A good alternative when frequent updates and complex multi-table BI joins are central.||高频更新和复杂多表BI Join较多时可优先考虑'],
+      ['HBase','Distributed wide-column key-value store.||分布式宽列Key-Value存储','High-throughput writes and low-latency RowKey point lookup.||高吞吐写入和低延迟RowKey点查','Weak for ad-hoc SQL, broad scans, GROUP BY and joins.||不擅长即席SQL、大扫描、聚合和Join','Lookup seller blacklist or latest profile by seller_id inside Flink.||Flink中按seller_id点查黑名单或最新画像']
+    ]),
+    tip:'Simple decision: analytical aggregation → ClickHouse; update-heavy complex BI → consider StarRocks; RowKey lookup → HBase.'
+  });
+
+  html += renderCard({
+    title:'16. Production write rules and common failures',
+    html: table(['Problem','Root cause','Fix'],[
+      ['Too many parts','Flink or the application writes tiny batches too frequently.||Flink或应用写入批次太小、过于频繁','Increase batch rows/bytes or flush interval; reduce excessive sink parallelism.||增大行数、字节数或刷新间隔，降低过高并行度'],
+      ['Duplicate rows','Retries occur after an uncertain external commit result.||外部提交结果不确定时发生重试','Use stable event_id, version strategy, dedup query or reconciliation.||使用稳定event_id、版本策略、去重查询或离线校准'],
+      ['Slow queries','ORDER BY does not match dominant filters; too many rows are scanned.||ORDER BY不匹配主要过滤条件，扫描行数过多','Use EXPLAIN indexes=1, inspect read_rows and redesign the sorting key.||用EXPLAIN检查索引和read_rows，重新设计排序键'],
+      ['Merge backlog','Too many small parts, slow disk or excessive ingestion concurrency.||小Part过多、磁盘慢或写入并发过高','Inspect system.parts and system.merges; control batch and concurrency.||检查system.parts和system.merges，控制批次及并发'],
+      ['ReplacingMergeTree still shows duplicates','Background merge has not completed.||后台Merge尚未完成','Use argMax for latest state or design a materialized latest-state table.||用argMax获取最新状态或设计最新状态物化表']
+    ]),
+    tip:'Monitor active parts, merge duration, disk I/O, insert latency, read_rows, memory usage and replication queues.'
+  });
+
+  html += renderCard({
+    title:'17. Interview-ready 60-second answer',
+    html:`<div class="quote-card"><p class="quote-text">“In this security platform, Kafka carries order and seller-risk events, while Flink handles event-time processing, deduplication, enrichment and hourly aggregation. I would write both detailed risk events and hourly seller metrics into ClickHouse using controlled micro-batches. ClickHouse is a good final serving layer because dashboards and analysts need fast time-range filters, GROUP BY queries and drill-down across a very large event table. For the MergeTree design, I would partition by month for lifecycle management and choose an ORDER BY key based on the main filters, for example seller ID, event date, risk type and event time. ORDER BY is especially important because it controls physical sorting, sparse-index skipping and compression. I would avoid row-by-row writes because every insert can create a new data part, and I would use stable event IDs plus reconciliation to handle retries and possible duplicates.”</p></div>`,
+    speak:'In this security platform, Kafka carries order and seller-risk events, while Flink handles event-time processing, deduplication, enrichment and hourly aggregation. I would write both detailed risk events and hourly seller metrics into ClickHouse using controlled micro-batches. ClickHouse is a good final serving layer because dashboards and analysts need fast time-range filters, GROUP BY queries and drill-down across a very large event table. For the MergeTree design, I would partition by month for lifecycle management and choose an ORDER BY key based on the main filters, for example seller ID, event date, risk type and event time. ORDER BY is especially important because it controls physical sorting, sparse-index skipping and compression. I would avoid row-by-row writes because every insert can create a new data part, and I would use stable event IDs plus reconciliation to handle retries and possible duplicates.'
+  });
+
+  el.innerHTML = html;
+}
+
+
+// ============================================================
+// TABS
+// ============================================================
+
+// ============================================================
+// RENDER CALLS
+// ============================================================
+renderByLevel('hdfs', yarnData, yarnLevelMeta);
+renderByLevel('hdfs', hdfsData, hdfsLevelMeta, true);
+renderByLevel('hdfs', hiveDataSimplified, hiveLevelMetaSimplified, true);
+renderByLevel('spark', sparkData, sparkLevelMeta);
+renderByLevel('k8s', k8sData, k8sLevelMeta);
+renderByLevel('linux', linuxData, linuxLevelMeta);
+renderQuickRef();
+renderClickHouseTab();
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+// ============================================================
+// EVENT DELEGATION
+// ============================================================
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action="speak"]');
+  if (btn) toggleSpeak(btn);
+});
+
+// ============================================================
+// TEXT-TO-SPEECH
+// ============================================================
+let voices = [];
+let currentBtn = null;
+const speechSupported = typeof window !== 'undefined' && 'speechSynthesis' in window;
+
+function loadVoices() {
+  if (!speechSupported) return;
+  try {
+    voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+    const select = document.getElementById('voiceSelect');
+    if (!select) return;
+    select.innerHTML = '';
+    if (voices.length === 0) { select.innerHTML = '<option>Default English voice</option>'; return; }
+    voices.forEach((v, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = `${v.name} (${v.lang})`;
+      if (v.name.includes('Google UK English Female')) opt.selected = true;
+      select.appendChild(opt);
+    });
+  } catch (e) { console.warn('Voice loading failed:', e); }
+}
+try { if (speechSupported) { window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); } } catch (e) { console.warn(e); }
+
+const rateSlider = document.getElementById('rateSlider');
+const rateLabel = document.getElementById('rateLabel');
+if (rateSlider) rateSlider.addEventListener('input', () => { rateLabel.textContent = rateSlider.value + 'x'; });
+
+function toggleSpeak(btn) {
+  if (!speechSupported) { alert('Text-to-speech is not supported in this browser.'); return; }
+  try {
+    const text = decodeURIComponent(btn.dataset.text);
+    if (btn.classList.contains('speaking')) { window.speechSynthesis.cancel(); btn.classList.remove('speaking'); currentBtn = null; return; }
+    window.speechSynthesis.cancel();
+    if (currentBtn) currentBtn.classList.remove('speaking');
+    const utter = new SpeechSynthesisUtterance(text);
+    const voiceIdx = document.getElementById('voiceSelect').value;
+    if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
+    utter.lang = 'en-US';
+    utter.rate = parseFloat(rateSlider.value);
+    utter.onstart = () => { btn.classList.add('speaking'); currentBtn = btn; };
+    utter.onend = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    utter.onerror = () => { btn.classList.remove('speaking'); currentBtn = null; };
+    window.speechSynthesis.speak(utter);
+  } catch (e) { console.warn('toggleSpeak failed:', e); }
+}
+const stopAllBtn = document.getElementById('stopAllBtn');
+if (stopAllBtn) stopAllBtn.addEventListener('click', () => {
+  if (speechSupported) window.speechSynthesis.cancel();
+  document.querySelectorAll('.listen-btn.speaking').forEach(b => b.classList.remove('speaking'));
+  currentBtn = null;
+});
+</script>
+</body>
+</html>

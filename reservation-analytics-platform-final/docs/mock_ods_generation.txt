@@ -1,3 +1,0 @@
-ods_reservation_event: 4 rows -> aws/mock_ods/ods_reservation_event/part-00000.parquet
-ods_order: 3 rows -> aws/mock_ods/ods_order/part-00000.parquet
-dim_campaign: 1 rows -> aws/mock_ods/dim_campaign/part-00000.parquet
