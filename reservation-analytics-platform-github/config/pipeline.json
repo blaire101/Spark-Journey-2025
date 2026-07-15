@@ -1,0 +1,18 @@
+{
+  "sql_files": [
+    "sql/shared/10_dwd_reservation.sql",
+    "sql/shared/20_dwd_paid_order.sql",
+    "sql/shared/30_fact_conversion.sql",
+    "sql/dm/35_dm_user_campaign_profile.sql",
+    "sql/ads/40_ads_campaign_conversion.sql",
+    "sql/ads/50_ads_crm_reserved_not_paid.sql"
+  ],
+  "output_tables": [
+    "dwd_reservation",
+    "dwd_paid_order",
+    "fact_reservation_conversion",
+    "dm_user_campaign_profile",
+    "ads_campaign_conversion",
+    "crm_reserved_not_paid"
+  ]
+}

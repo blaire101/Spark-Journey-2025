@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+.DS_Store
+aws_state.json
+output/*
+!output/.gitkeep
+aws/mock_ods/*
+!aws/mock_ods/.gitkeep
