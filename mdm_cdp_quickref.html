@@ -243,6 +243,26 @@
     <div class="tip">💡 This is a strong thing to say in an interview: "SDX's governance goals are exactly what I already built manually in a previous role — I'd expect to pick up the CDP-specific tooling quickly since I already understand the underlying problem it solves."</div>
   </div>
 
+  <div class="card">
+    <div class="q-head">
+      <p class="q-title">CDP vs. CDH — what's the actual difference</p>
+      <button class="listen-btn" data-action="speak" data-text="CDH was Cloudera's original Hadoop distribution, mainly for on-premises deployment, and it reached end of life around 2022. CDP is the successor — it merged CDH and Hortonworks' HDP into one platform, and crucially, it runs consistently across on-premises, hybrid, and public cloud, with a unified governance layer called SDX.">🔊 Listen</button>
+    </div>
+    <p class="q-desc">CDH (Cloudera Distribution for Hadoop) was Cloudera's original, on-premises-only Hadoop distribution — it reached end-of-life around 2022. CDP is the successor: it merged CDH and Hortonworks' HDP into one platform that runs consistently across on-premises, hybrid, and public cloud (AWS/Azure/GCP), with a unified governance layer called SDX.</p>
+    <p class="zh-desc">中文：CDH是Cloudera较旧的、主要只支持本地部署的Hadoop发行版，大约在2022年停止支持。CDP是取代它的新一代产品，把CDH和Hortonworks的HDP合并成一个平台，能在本地/混合云/公有云(AWS/Azure/GCP)之间保持一致运行，并新增了统一治理层SDX。</p>
+    <table class="datatbl">
+      <tr><th>CDH</th><th>CDP</th></tr>
+      <tr><td>On-premises only<br><span class="cell-zh">仅支持本地部署</span></td><td>On-prem + hybrid + public cloud<br><span class="cell-zh">本地+混合云+公有云</span></td></tr>
+      <tr><td>End-of-life ~2022<br><span class="cell-zh">约2022年停止支持</span></td><td>Current active product line<br><span class="cell-zh">目前的主力产品</span></td></tr>
+      <tr><td>No unified governance layer<br><span class="cell-zh">没有统一治理层</span></td><td>Adds SDX for unified security/lineage<br><span class="cell-zh">新增SDX统一治理层</span></td></tr>
+    </table>
+    <div class="warn">⚠️ Confusing detail: even current CDP Private Cloud Base deployments still show "CDH" in internal component version strings — seeing "CDH 7.2.16" doesn't necessarily mean you're on the legacy product.<br><span class="cell-zh">容易搞混的细节：即使是现在的CDP Private Cloud Base，内部组件版本号里仍然会带"CDH"字样——看到"CDH 7.2.16"不代表用的是旧产品。</span></div>
+    <div class="tip">
+      <b>My one-liner for this:</b> "I have hands-on CDH maintenance experience — CDH is essentially the pre-2022 version of CDP."
+      <button class="listen-btn" data-action="speak" data-text="I have hands-on CDH maintenance experience. CDH is essentially the pre-2022 version of CDP." style="margin-left:8px;">🔊 Listen</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
