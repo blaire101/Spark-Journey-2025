@@ -348,7 +348,7 @@ function renderCard(item) {
       <p class="q-title">${item.title}</p>
       ${listenBtn(item.speak)}
     </div>
-    <p class="q-desc">${item.desc}</p>`;
+    <p class="q-desc">${item.speak}</p>`;
   if (item.flow) html += `<div class="flow">${item.flow}</div>`;
   if (item.sample) html += `<span class="step-label">Reference table</span>${item.sample}`;
   if (item.code) html += `<div class="codeblock">${highlightCode(item.code)}</div>`;
@@ -418,11 +418,22 @@ function loadVoices() {
     if (!select) return;
     select.innerHTML = '';
     if (voices.length === 0) { select.innerHTML = '<option>Default English voice</option>'; return; }
+    const preferredVoiceIndex = voices.findIndex(v =>
+      v.name.toLowerCase() === 'google uk english female'
+    );
+    const fallbackVoiceIndex = preferredVoiceIndex >= 0 ? preferredVoiceIndex :
+      voices.findIndex(v =>
+        v.name.toLowerCase().includes('google uk english') &&
+        v.name.toLowerCase().includes('female')
+      );
+    const ukVoiceIndex = fallbackVoiceIndex >= 0 ? fallbackVoiceIndex :
+      voices.findIndex(v => v.lang.toLowerCase().startsWith('en-gb'));
+
     voices.forEach((v, i) => {
       const opt = document.createElement('option');
       opt.value = i;
       opt.textContent = `${v.name} (${v.lang})`;
-      if (v.name.includes('Natural') || v.name.includes('Samantha') || v.name.includes('Google US English')) opt.selected = true;
+      if (i === ukVoiceIndex) opt.selected = true;
       select.appendChild(opt);
     });
   } catch (e) { console.warn('Voice loading failed:', e); }
@@ -443,7 +454,7 @@ function toggleSpeak(btn) {
     const utter = new SpeechSynthesisUtterance(text);
     const voiceIdx = document.getElementById('voiceSelect').value;
     if (voices[voiceIdx]) utter.voice = voices[voiceIdx];
-    utter.lang = 'en-US';
+    utter.lang = 'en-GB';
     utter.rate = parseFloat(rateSlider.value);
     utter.onstart = () => { btn.classList.add('speaking'); currentBtn = btn; };
     utter.onend = () => { btn.classList.remove('speaking'); currentBtn = null; };
