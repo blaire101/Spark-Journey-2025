@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Technical Test Review — Python, SQL, Kubernetes &amp; Coding</title>
+<style>
+  :root{
+    --bg:#f7f8fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --muted:#6b7280;
+    --line:#dbe2ea;
+    --accent:#1976d2;
+    --accent-soft:#eaf3ff;
+    --ok:#137333;
+    --warn:#a15c00;
+    --code:#111827;
+    --code-text:#e5e7eb;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    line-height:1.55;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:24px}
+  h1{font-size:28px;margin:0 0 6px}
+  .subtitle{color:#4b5563;margin-bottom:18px}
+  .toolbar{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 14px;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:12px;
+    box-shadow:0 2px 8px rgba(15,23,42,.04);
+  }
+  .toolbar label{font-size:14px;color:#374151}
+  select,input[type="range"]{vertical-align:middle}
+  select{
+    min-width:300px;padding:7px 10px;border:1px solid #cbd5e1;border-radius:8px;background:white
+  }
+  .stop-btn,.listen-btn{
+    border:1px solid var(--accent);
+    background:white;
+    color:var(--accent);
+    border-radius:999px;
+    padding:7px 14px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .stop-btn:hover,.listen-btn:hover{background:var(--accent-soft)}
+  .listen-btn.speaking{background:var(--accent);color:white}
+  .tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:4px;
+    margin-top:18px;
+    border-bottom:1px solid var(--line);
+    scrollbar-width:thin;
+  }
+  .tab-btn{
+    border:none;background:transparent;padding:12px 16px;cursor:pointer;color:#374151;
+    white-space:nowrap;border-bottom:3px solid transparent;font-size:14px
+  }
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+  .tab-panel{display:none;padding-top:18px}
+  .tab-panel.active{display:block}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  @media(max-width:850px){.grid{grid-template-columns:1fr}.wrap{padding:14px}select{min-width:220px}}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;
+    box-shadow:0 2px 10px rgba(15,23,42,.04)
+  }
+  .card h2,.card h3{margin-top:0}
+  .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .cn{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+  .tag{
+    display:inline-block;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;
+    background:#eef2ff;color:#4338ca;margin-right:6px;margin-bottom:6px
+  }
+  .difficulty.easy{background:#eaf7ee;color:#137333}
+  .difficulty.mid{background:#fff4df;color:#9a5a00}
+  .difficulty.hard{background:#fdecec;color:#b42318}
+  .cheat-table{width:100%;border-collapse:collapse;margin-top:10px}
+  .cheat-table th,.cheat-table td{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}
+  .cheat-table th{background:#f3f6fa}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    background:#eef2f7;padding:1px 5px;border-radius:5px
+  }
+  pre{
+    background:var(--code);color:var(--code-text);padding:14px;border-radius:10px;overflow:auto;
+    font-size:13px;line-height:1.5
+  }
+  .kw{color:#93c5fd}.str{color:#f9a8d4}.fn{color:#facc15}.cm{color:#86efac}
+  .answer{
+    border-left:4px solid var(--accent);background:var(--accent-soft);padding:10px 12px;border-radius:8px;margin:10px 0
+  }
+  .wrong{border-left-color:#dc2626;background:#fff1f2}
+  .steps{margin:8px 0 0;padding-left:20px}
+  .mini{font-size:13px;color:#4b5563}
+  .callout{
+    background:#fffbea;border:1px solid #f4d38a;border-radius:10px;padding:12px
+  }
+  .q{
+    border-top:1px dashed var(--line);padding-top:14px;margin-top:14px
+  }
+  .q:first-child{border-top:none;padding-top:0;margin-top:0}
+
+  .q h3{margin:0}
+  .q .section-head{align-items:flex-start}
+  .q .answer{margin-top:10px}
+  .tab-panel > .card + .card{margin-top:16px}
+  .review-number{font-weight:800;color:var(--accent)}
+
+  .concept-flow,.architecture{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin:14px 0 20px;
+  }
+  .flow-box,.arch-box{
+    background:#f8fbff;
+    border:1px solid #b9d3ee;
+    border-radius:10px;
+    padding:12px 14px;
+    text-align:center;
+    min-width:145px;
+  }
+  .flow-box span{font-size:12px;color:#64748b}
+  .flow-arrow{font-size:22px;color:#1976d2;font-weight:700}
+  .command-table code{white-space:nowrap}
+  .card h3{margin-top:22px}
+  .card h3:first-of-type{margin-top:10px}
+  .tab-panel .card{margin-bottom:16px}
+  @media(max-width:700px){
+    .flow-arrow{transform:rotate(90deg)}
+    .concept-flow,.architecture{flex-direction:column;align-items:stretch}
+    .flow-box,.arch-box{width:100%}
+  }
+
+.zh-note{
+  display:block;
+  margin-top:4px;
+  color:#6b7280;
+  font-size:12.5px;
+  line-height:1.45;
+  font-weight:400;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Technical Test Review — Python, SQL, Kubernetes &amp; Coding</h1>
+<div class="subtitle">A structured handbook based on today’s technical assessment, with foundations, worked examples, numbered questions, difficulty ratings, and English read-aloud.</div>
+<div class="toolbar">
+<label>🔊 Voice:
+      <select id="voiceSelect"></select>
+</label>
+<label>Speed:
+      <input id="rateRange" max="1.3" min="0.6" step="0.01" type="range" value="0.92"/>
+<span id="rateValue">0.92x</span>
+</label>
+<button class="stop-btn" id="stopBtn">■ Stop</button>
+</div>
+<div class="tabs">
+<button class="tab-btn active" data-tab="cheat">📋 Overview</button>
+<button class="tab-btn" data-tab="python">🐍 Python</button>
+<button class="tab-btn" data-tab="sql">🗃️ SQL</button>
+<button class="tab-btn" data-tab="k8s">☸️ Kubernetes</button>
+<button class="tab-btn" data-tab="coding">🧩 Coding</button>
+<button class="tab-btn" data-tab="mock">🎯 Review Cards</button>
+</div>
+<section class="tab-panel active" id="cheat">
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>Today’s Knowledge Map</h2>
+</div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<table class="cheat-table">
+<tr><th>Area</th><th>Key idea</th><th>Typical trap</th></tr>
+<tr><td>Python</td><td>Sort + adjacent comparison, decorators, inheritance, set intersection, itertools.</td><td>Confusing when decorators run; using <code>^</code> instead of <code>&amp;</code>.</td></tr>
+<tr><td>SQL</td><td><code>CASE</code> stops at first match; <code>LEFT JOIN</code> preserves all left rows; <code>GROUP BY</code> with unique ID avoids merging same names.</td><td>Missing <code>ELSE</code> means <code>NULL</code>; using <code>INNER JOIN</code> when unmatched rows must remain.</td></tr>
+<tr><td>Kubernetes</td><td>Understand object scope, probes, NetworkPolicy direction, API groups, resource limits and kubeadm flow.</td><td>Ingress vs IngressController; ingress vs egress; namespaced vs cluster-scoped.</td></tr>
+<tr><td>Coding logic</td><td>Model the domain first, enumerate valid states, then filter.</td><td>Writing loops before defining genotype/phenotype mapping.</td></tr>
+</table>
+</div>
+<div class="grid" style="margin-top:16px">
+<div class="card speakable">
+<div class="section-head">
+<div><h3>Difficulty Map</h3></div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<p><span class="tag difficulty easy">Easy 2–3/10</span> CSV header, average function, <code>kubeadm join</code>, common Kubernetes fields.</p>
+<p><span class="tag difficulty mid">Medium 5–6/10</span> NetworkPolicy, blood genes enumeration, SQL max-order customer, namespaced objects.</p>
+<p><span class="tag difficulty hard">Detail-heavy 6–7/10</span> Kubernetes API groups such as <code>storage.k8s.io</code> vs <code>snapshot.storage.k8s.io</code>.</p>
+</div>
+<div class="card speakable">
+<div class="section-head">
+<div><h3>Best Exam Strategy</h3></div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<ol class="steps">
+<li>Identify whether the question is syntax, concept, or direction of data flow.</li>
+<li>Translate the requirement into a short arrow, for example <code>frontend → backend</code>.</li>
+<li>Eliminate options with wrong object, wrong direction, or invalid syntax.</li>
+<li>Check edge cases: empty list, duplicate names, no matching category, no valid genotype.</li>
+</ol>
+</div>
+</div>
+</section>
+<section class="tab-panel" id="python">
+<div class="card speakable">
+<div class="section-head">
+<div><h2>Python Knowledge Points Covered Today</h2></div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<table class="cheat-table">
+<tr><th>No.</th><th>Topic</th><th>Key idea</th></tr>
+<tr><td>P1</td><td>Sorting</td><td>Minimum difference appears between adjacent values after sorting.</td></tr>
+<tr><td>P2</td><td>Index and position flags</td><td>Use <code>enumerate</code>, modulo, and midpoint comparison.</td></tr>
+<tr><td>P3</td><td>OOP</td><td>Instantiation, inheritance, and public-member naming conventions.</td></tr>
+<tr><td>P4</td><td>Decorators</td><td>The decorator runs at definition time; the wrapper runs on each call.</td></tr>
+<tr><td>P5</td><td>Sets</td><td>Intersection uses <code>&amp;</code> or <code>intersection()</code>.</td></tr>
+<tr><td>P6</td><td>Standard library</td><td><code>itertools.product</code> generates Cartesian products.</td></tr>
+<tr><td>P7</td><td>Edge cases</td><td>Return 0 for an empty average input.</td></tr>
+</table>
+</div>
+<div class="card" style="margin-top:16px">
+<h2>Today’s Python Questions</h2>
+<div class="q speakable"><div class="section-head"><h3>P1. Smallest Positive Interval</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty mid">Difficulty 5/10</span><div class="answer">Sort, then compare adjacent elements.</div><p>Complexity: <code>O(n log n)</code>. Ignore zero when the question asks for a positive interval.</p></div>
+<div class="q speakable"><div class="section-head"><h3>P2. Search Value by Four Zones</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty mid">Difficulty 5/10</span><div class="answer">Return flags for even index, odd index, first half, and second half.</div><p>Use <code>enumerate</code>, <code>index % 2</code>, and <code>index &lt; len(numbers)//2</code>.</p></div>
+<div class="q speakable"><div class="section-head"><h3>P3. Create a Point Instance</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 2/10</span><div class="answer"><code>point = Point(x, y)</code></div></div>
+<div class="q speakable"><div class="section-head"><h3>P4. Public Class Member</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 3/10</span><div class="answer">Do not add a leading underscore.</div><p>This is a Python naming convention rather than strict access control.</p></div>
+<div class="q speakable"><div class="section-head"><h3>P5. Set Intersection</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 3/10</span><div class="answer"><code>set1 &amp; set2</code>, <code>set1.intersection(set2)</code>, or a filtered comprehension.</div><p><code>^</code> means symmetric difference.</p></div>
+<div class="q speakable"><div class="section-head"><h3>P6. Decorator Execution</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty mid">Difficulty 6/10</span><div class="answer"><code>@verbose</code> is a decorator; the returned wrapper runs on every function call.</div><p>The decorator function itself is normally evaluated when the function is defined.</p></div>
+<div class="q speakable"><div class="section-head"><h3>P7. Inheritance</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 2/10</span><div class="answer"><code>class B(A):</code></div></div>
+<div class="q speakable"><div class="section-head"><h3>P8. Cartesian Product Module</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 3/10</span><div class="answer"><code>from itertools import product</code></div></div>
+<div class="q speakable"><div class="section-head"><h3>P9. Average Function</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 2/10</span><div class="answer"><code>return 0 if not table else sum(table) / len(table)</code></div></div>
+</div>
+</section>
+<section class="tab-panel" id="sql">
+<div class="card speakable">
+<div class="section-head">
+<div><h2>SQL Knowledge Points Covered Today</h2></div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<table class="cheat-table">
+<tr><th>No.</th><th>Topic</th><th>Key idea</th></tr>
+<tr><td>S1</td><td>CASE</td><td>Conditions are checked top to bottom; the first match wins.</td></tr>
+<tr><td>S2</td><td>IN</td><td><code>IN</code> can be rewritten with <code>OR</code> conditions.</td></tr>
+<tr><td>S3</td><td>LEFT JOIN</td><td>Keep all rows from the left table, even without a match.</td></tr>
+<tr><td>S4</td><td>Aggregation</td><td>Group by a unique identifier to avoid merging same-name entities.</td></tr>
+<tr><td>S5</td><td>CSV import</td><td>Validate whether the first row is treated as a header.</td></tr>
+<tr><td>S6</td><td>NoSQL to SQL</td><td>Map flexible or nested structures into a rigid relational schema.</td></tr>
+</table>
+</div>
+<div class="card" style="margin-top:16px">
+<h2>Today’s SQL Questions</h2>
+<div class="q speakable"><div class="section-head"><h3>S1. CASE Output</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 3/10</span><div class="answer">Rows with quantity 0 return <code>no stock</code>; otherwise price above 5 returns <code>expensive</code>; unmatched rows return <code>NULL</code>.</div></div>
+<div class="q speakable"><div class="section-head"><h3>S2. Equivalent to IN (2, 3, 6)</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 3/10</span><div class="answer">Select the OR version and the BETWEEN 2 AND 6 with NOT IN (4,5) version.</div></div>
+<div class="q speakable"><div class="section-head"><h3>S3. Customer with Most Orders</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty mid">Difficulty 6/10</span><div class="answer">Count orders per customer, find the maximum count, and return all customers tied at that maximum.</div><p>Include <code>customer_id</code> in the grouping to keep same-name customers separate.</p></div>
+<div class="q speakable"><div class="section-head"><h3>S4. Products and Optional Categories</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty mid">Difficulty 4/10</span><div class="answer">Use <code>product LEFT JOIN product_category</code>.</div><p>Missing categories remain as <code>NULL</code>.</p></div>
+<div class="q speakable"><div class="section-head"><h3>S5. NoSQL Export Challenge</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty mid">Difficulty 5/10</span><div class="answer">Map flexible or nested NoSQL structures into the fixed schema required by SQL databases.</div></div>
+<div class="q speakable"><div class="section-head"><h3>S6. CSV Header Import</h3><button class="listen-btn">▶ Listen</button></div><span class="tag difficulty easy">Difficulty 2/10</span><div class="answer">The importer should have been told that the file contains a header.</div><p>The row <code>address | city</code> was incorrectly inserted as normal data.</p></div>
+</div>
+</section>
+<section class="tab-panel" id="k8s">
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>Kubernetes Foundations</h2>
+<p class="mini">Start here before reviewing today’s questions.</p>
+</div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<h3>1. What Kubernetes Does</h3>
+<p>Kubernetes is a container orchestration platform. It schedules containers onto machines, keeps the required number of replicas running, provides stable networking, supports rolling updates, and integrates storage.<span class="zh-note">Kubernetes 是容器编排平台。它负责把容器安排到不同机器上运行，维持指定副本数，并提供稳定网络、滚动更新和存储集成。</span></p>
+<div class="concept-flow">
+<div class="flow-box"><strong>Deployment</strong><br/><span>Desired application state</span></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><strong>ReplicaSet</strong><br/><span>Maintains replica count</span></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><strong>Pod</strong><br/><span>Runs containers</span></div>
+</div>
+<h3>2. Core Objects</h3>
+<table class="cheat-table">
+<tr><th>Object</th><th>Purpose</th><th>Simple mental model</th></tr>
+<tr><td><code>Pod</code></td><td>Smallest deployable unit. Usually contains one main container.</td><td>A running application instance.</td></tr>
+<tr><td><code>Deployment</code></td><td>Manages stateless Pods, replica count, and rolling updates.</td><td>The application manager.</td></tr>
+<tr><td><code>Service</code></td><td>Provides a stable virtual IP and load balances traffic to matching Pods.<span class="zh-note">提供稳定的虚拟 IP，并把流量负载均衡到匹配的 Pod。</span></td><td>A stable front door for Pods.</td></tr>
+<tr><td><code>Ingress</code></td><td>Defines host-based or path-based HTTP routing to Services.<span class="zh-note">根据域名或路径，把 HTTP 请求转发到不同 Service。</span></td><td>The HTTP routing table.</td></tr>
+<tr><td><code>ConfigMap</code></td><td>Stores non-sensitive configuration.</td><td>External application settings.</td></tr>
+<tr><td><code>Secret</code></td><td>Stores sensitive configuration such as passwords or tokens.</td><td>Protected configuration.</td></tr>
+<tr><td><code>PersistentVolumeClaim</code></td><td>Requests persistent storage for a workload.</td><td>An application storage request.</td></tr>
+<tr><td><code>NetworkPolicy</code></td><td>Controls allowed Pod-to-Pod network traffic.<span class="zh-note">控制哪些 Pod 可以访问哪些 Pod。</span></td><td>A firewall rule for Pods.</td></tr>
+</table>
+<h3>3. Resource Structure</h3>
+<pre>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27</pre>
+<div class="callout">
+<strong>Remember:</strong> <code>apiVersion</code>, <code>kind</code>, and <code>metadata</code> are common resource fields. Fields such as <code>data</code> only exist on selected resource types.
+  </div>
+<h3>4. Namespaced vs Cluster-Scoped</h3>
+<p>A namespaced resource belongs to one namespace. A cluster-scoped resource applies across the entire cluster.<span class="zh-note">Namespaced 资源只属于某个 namespace；cluster-scoped 资源作用于整个集群。</span></p>
+<table class="cheat-table">
+<tr><th>Namespaced examples</th><th>Cluster-scoped examples</th></tr>
+<tr><td>Pod, Deployment, Service, NetworkPolicy, PodDisruptionBudget</td><td>Node, Namespace, PriorityClass, APIService, StorageClass</td></tr>
+</table>
+<h3>5. Probes</h3>
+<table class="cheat-table">
+<tr><th>Probe</th><th>Question it answers</th><th>Effect when it fails</th></tr>
+<tr><td><code>startupProbe</code></td><td>Has the application finished starting?</td><td>Prevents liveness checks from killing a slow-starting application.<span class="zh-note">防止应用启动较慢时被 livenessProbe 误判并重启。</span></td></tr>
+<tr><td><code>readinessProbe</code></td><td>Can the application receive traffic now?</td><td>Removes the Pod from Service endpoints.<span class="zh-note">探测失败时，Pod 会从 Service 的可用端点中移除。</span></td></tr>
+<tr><td><code>livenessProbe</code></td><td>Is the application still alive?</td><td>Restarts the container.<span class="zh-note">探测失败时，Kubernetes 会重启容器。</span></td></tr>
+</table>
+<h3>6. Networking Direction</h3>
+<p>For a flow such as <code>frontend → backend</code>:</p>
+<ul>
+<li>The protected destination is the backend.<span class="zh-note">被保护的目标是 backend。</span></li>
+<li>The traffic direction is ingress because traffic enters the backend.<span class="zh-note">因为流量进入 backend，所以使用 ingress。</span></li>
+<li>The allowed source is the frontend.<span class="zh-note">允许访问 backend 的来源是 frontend。</span></li>
+</ul>
+<pre>spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend</pre>
+<h3>7. Common Commands</h3>
+<table class="cheat-table command-table">
+<tr><th>Command</th><th>Purpose</th></tr>
+<tr><td><code>kubectl get pods</code></td><td>List Pods in the current namespace.</td></tr>
+<tr><td><code>kubectl get pods -A</code></td><td>List Pods in all namespaces.</td></tr>
+<tr><td><code>kubectl get all</code></td><td>List common workload resources.</td></tr>
+<tr><td><code>kubectl describe pod &lt;pod-name&gt;</code></td><td>Show detailed status and recent events.</td></tr>
+<tr><td><code>kubectl logs &lt;pod-name&gt;</code></td><td>Read container logs.</td></tr>
+<tr><td><code>kubectl logs -f &lt;pod-name&gt;</code></td><td>Follow logs continuously.</td></tr>
+<tr><td><code>kubectl exec -it &lt;pod-name&gt; -- sh</code></td><td>Open a shell inside a container.</td></tr>
+<tr><td><code>kubectl apply -f app.yaml</code></td><td>Create or update resources from YAML.</td></tr>
+<tr><td><code>kubectl delete -f app.yaml</code></td><td>Delete resources defined in YAML.</td></tr>
+<tr><td><code>kubectl scale deployment web --replicas=3</code></td><td>Manually change replica count.</td></tr>
+<tr><td><code>kubectl rollout status deployment/web</code></td><td>Check rollout progress.</td></tr>
+<tr><td><code>kubectl rollout undo deployment/web</code></td><td>Roll back the latest Deployment revision.</td></tr>
+<tr><td><code>kubectl api-resources</code></td><td>List resource types available in the cluster.</td></tr>
+<tr><td><code>kubeadm init</code></td><td>Initialize the control plane.</td></tr>
+<tr><td><code>kubeadm join ...</code></td><td>Add a node to the cluster.</td></tr>
+</table>
+</div>
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>Integrated Example: Frontend and Backend Application</h2>
+<p class="mini">This example covers the major ideas tested today.</p>
+</div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<h3>Scenario</h3>
+<p>We run a frontend and backend. The frontend receives external HTTP requests. Only frontend Pods may call backend Pods. The backend must not receive Service traffic until it finishes loading data.<span class="zh-note">这个示例包含 frontend 和 backend。frontend 接收外部 HTTP 请求；只有 frontend Pod 可以访问 backend Pod；backend 完成数据加载前不能接收 Service 流量。</span></p>
+<h3>Architecture</h3>
+<div class="architecture">
+<div class="arch-box">User</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Ingress</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Frontend Service</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Frontend Pods</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Backend Service</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Backend Pods</div>
+</div>
+<h3>Step 1: Backend Deployment with Readiness Probe</h3>
+<pre>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: example/backend:1.0
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5</pre>
+<p>The backend Pods may be running, but the Service will not send them traffic until <code>/ready</code> succeeds.<span class="zh-note">backend Pod 可以已经运行，但只有 /ready 检查成功后，Service 才会把流量转发给它。</span></p>
+<h3>Step 2: Backend Service</h3>
+<pre>apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - port: 80
+      targetPort: 8080</pre>
+<h3>Step 3: Allow Only Frontend to Reach Backend</h3>
+<pre>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-from-frontend-only
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+      ports:
+        - protocol: TCP
+          port: 8080</pre>
+<h3>Step 4: Expose Frontend with Ingress</h3>
+<pre>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  rules:
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80</pre>
+<h3>Step 5: Apply and Verify</h3>
+<pre>kubectl apply -f backend-deployment.yaml
+kubectl apply -f backend-service.yaml
+kubectl apply -f backend-network-policy.yaml
+kubectl apply -f frontend-ingress.yaml
+
+kubectl get pods
+kubectl get services
+kubectl get ingress
+kubectl get networkpolicy
+kubectl describe pod &lt;backend-pod-name&gt;
+kubectl logs &lt;backend-pod-name&gt;</pre>
+<div class="callout">
+<strong>How this example maps to today’s questions:</strong>
+<ul>
+<li><code>Ingress</code> provides host-based routing.</li>
+<li><code>readinessProbe</code> blocks traffic until the backend is ready.</li>
+<li><code>NetworkPolicy</code> protects backend Pods and allows frontend sources.</li>
+<li><code>kubectl apply</code>, <code>get</code>, <code>describe</code>, and <code>logs</code> are common operational commands.</li>
+<li>The manifests use common fields such as <code>apiVersion</code>, <code>kind</code>, and <code>metadata</code>.</li>
+</ul>
+</div>
+</div>
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>Today’s Kubernetes Questions</h2>
+<p class="mini">Numbered summary with answers, reasoning, and difficulty.</p>
+</div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<div class="q">
+<h3>K1. Which object can set maximum memory values in a namespace?</h3>
+<span class="tag difficulty easy">Difficulty 3/10</span>
+<div class="answer"><strong>Answer:</strong> <code>LimitRange</code></div>
+<p><strong>Reasoning:</strong> It defines default, minimum, and maximum CPU or memory values for Pods or containers in one namespace.</p>
+</div>
+<div class="q">
+<h3>K2. Which Kubernetes capabilities are correct?</h3>
+<span class="tag difficulty easy">Difficulty 3/10</span>
+<div class="answer"><strong>Answers:</strong> Service load balancing and storage orchestration.</div>
+<p>Kubernetes supports both stateless and stateful applications.<span class="zh-note">Kubernetes 同时支持无状态应用和有状态应用。</span></p>
+</div>
+<div class="q">
+<h3>K3. Which command adds a node after <code>kubeadm init</code>?</h3>
+<span class="tag difficulty easy">Difficulty 2/10</span>
+<div class="answer"><strong>Answer:</strong> <code>kubeadm join</code></div>
+</div>
+<div class="q">
+<h3>K4. Which probe blocks traffic until data loading completes?</h3>
+<span class="tag difficulty mid">Difficulty 4/10</span>
+<div class="answer"><strong>Answer:</strong> <code>readinessProbe</code></div>
+</div>
+<div class="q">
+<h3>K5. Which field is not common to all Kubernetes objects?</h3>
+<span class="tag difficulty easy">Difficulty 3/10</span>
+<div class="answer"><strong>Answer:</strong> <code>data</code></div>
+</div>
+<div class="q">
+<h3>K6. Which objects are namespaced?</h3>
+<span class="tag difficulty mid">Difficulty 6/10</span>
+<div class="answer"><strong>Answers:</strong> <code>NetworkPolicy</code> and <code>PodDisruptionBudget</code></div>
+</div>
+<div class="q">
+<h3>K7. Which resource is not part of <code>storage.k8s.io</code>?</h3>
+<span class="tag difficulty hard">Difficulty 7/10</span>
+<div class="answer"><strong>Answer:</strong> <code>VolumeSnapshotClass</code></div>
+<p>It belongs to <code>snapshot.storage.k8s.io</code>.</p>
+</div>
+<div class="q">
+<h3>K8. Which resource performs host-based routing?</h3>
+<span class="tag difficulty mid">Difficulty 4/10</span>
+<div class="answer"><strong>Answer:</strong> <code>Ingress</code></div>
+</div>
+<div class="q">
+<h3>K9. What happens with conditional scaling?</h3>
+<span class="tag difficulty mid">Difficulty 5/10</span>
+<pre>kubectl scale --current-replicas=2 --replicas=3 deployment/mysql</pre>
+<div class="answer">The Deployment scales to 3 only if its current replica count is 2.</div>
+</div>
+<div class="q">
+<h3>K10. How do you allow only frontend Pods to access backend Pods?</h3>
+<span class="tag difficulty mid">Difficulty 6/10</span>
+<div class="answer">Select backend Pods with <code>podSelector</code>, then allow <code>ingress.from</code> frontend Pods.</div>
+</div>
+</div>
+</section>
+<section class="tab-panel" id="coding">
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>Coding Knowledge Covered Today</h2>
+<p class="mini">The recurring patterns behind the coding questions.</p>
+</div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<table class="cheat-table">
+<tr><th>Pattern</th><th>When to use it</th><th>Today’s example</th></tr>
+<tr><td>Sort and scan</td><td>When a minimum gap or nearest pair is needed.</td><td>Smallest positive interval.</td></tr>
+<tr><td>Single-pass state flags</td><td>When one traversal can update several Boolean conditions.</td><td>Search a value by index parity and list half.</td></tr>
+<tr><td>State mapping and enumeration</td><td>When the domain has a small, finite set of legal states.</td><td>Blood genotype combinations.</td></tr>
+<tr><td>Explicit edge-case handling</td><td>When the problem defines special outputs for empty or impossible cases.</td><td>Return 0 for empty average input; return <code>[["--", "--"]]</code> when no blood combination is valid.</td></tr>
+</table>
+</div>
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>C1. Smallest Positive Interval</h2>
+<span class="tag difficulty mid">Difficulty 5/10</span>
+</div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<h3>Question</h3>
+<p>Implement <code>find_smallest_interval(numbers)</code>. Return the smallest positive difference between any two values in the list.</p>
+<h3>Example Input</h3>
+<pre>[1, 6, 4, 8, 2]</pre>
+<h3>Example Output</h3>
+<pre>1</pre>
+<h3>Reasoning</h3>
+<p>After sorting, the closest pair must be adjacent. Therefore, sort once and compare neighboring values.</p>
+<h3>Python 3 Solution</h3>
+<pre>from typing import List
+
+def find_smallest_interval(numbers: List[int]) -&gt; int:
+    numbers.sort()
+    best = float("inf")
+
+    for i in range(1, len(numbers)):
+        diff = numbers[i] - numbers[i - 1]
+        if 0 &lt; diff &lt; best:
+            best = diff
+
+    return int(best)</pre>
+<h3>Complexity</h3>
+<p>Time: <code>O(n log n)</code>. The scan itself is <code>O(n)</code>.</p>
+</div>
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>C2. Search a Value in Four Zones</h2>
+<span class="tag difficulty mid">Difficulty 5/10</span>
+</div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<h3>Question</h3>
+<p>Implement <code>search_value(numbers, value)</code>. Return four flags:</p>
+<ol>
+<li>1 if the value appears at an even index.</li>
+<li>1 if the value appears at an odd index.</li>
+<li>1 if the value appears in the first half.</li>
+<li>1 if the value appears in the second half.</li>
+</ol>
+<p>All occurrences must be considered.</p>
+<h3>Example Input</h3>
+<pre>numbers = [5, 8, 3, 8]
+value = 8</pre>
+<h3>Example Output</h3>
+<pre>[0, 1, 1, 1]</pre>
+<h3>Reasoning</h3>
+<p>The value appears at odd indices 1 and 3. Index 1 is in the first half, and index 3 is in the second half.</p>
+<h3>Python 3 Solution</h3>
+<pre>from typing import List
+
+def search_value(numbers: List[int], value: int) -&gt; List[int]:
+    result = [0, 0, 0, 0]
+    half = len(numbers) // 2
+
+    for index, number in enumerate(numbers):
+        if number != value:
+            continue
+
+        if index % 2 == 0:
+            result[0] = 1
+        else:
+            result[1] = 1
+
+        if index &lt; half:
+            result[2] = 1
+        else:
+            result[3] = 1
+
+    return result</pre>
+<h3>Complexity</h3>
+<p>Time: <code>O(n)</code>. Extra space: <code>O(1)</code>.</p>
+</div>
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>C3. Compute Blood Gene Combinations</h2>
+<span class="tag difficulty hard">Difficulty 7/10</span>
+</div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<h3>Question</h3>
+<p>Given the blood types of two parents and one child, return every possible pair of parental genotypes that can produce the child’s phenotype.</p>
+<p>Possible phenotype-to-genotype mappings:</p>
+<pre>A  → AA, AO
+B  → BB, BO
+AB → AB
+O  → OO</pre>
+<p>A child inherits one gene from each parent. Return the parent genotype pairs sorted first by parent 1 genotype and then by parent 2 genotype. If no valid pair exists, return <code>[["--", "--"]]</code>.</p>
+<h3>Example 1 Input</h3>
+<pre>parent1 = "AB"
+parent2 = "A"
+child = "A"</pre>
+<h3>Example 1 Output</h3>
+<pre>[["AB", "AA"], ["AB", "AO"]]</pre>
+<h3>Example 2 Input</h3>
+<pre>parent1 = "O"
+parent2 = "AB"
+child = "O"</pre>
+<h3>Example 2 Output</h3>
+<pre>[["--", "--"]]</pre>
+<h3>Reasoning</h3>
+<ol>
+<li>Convert each parent phenotype into all possible genotypes.</li>
+<li>Enumerate every parent genotype pair.</li>
+<li>Simulate one inherited gene from each parent.</li>
+<li>Convert the child genes back into a phenotype.</li>
+<li>Keep the parent pair if at least one child gene combination matches the required phenotype.</li>
+</ol>
+<h3>Python 3 Solution</h3>
+<pre>from typing import List
+
+def compute_blood_genes(
+    parent1: str,
+    parent2: str,
+    child: str
+) -&gt; List[List[str]]:
+
+    possible = {
+        "A": ["AA", "AO"],
+        "B": ["BB", "BO"],
+        "AB": ["AB"],
+        "O": ["OO"],
+    }
+
+    def phenotype(gene1: str, gene2: str) -&gt; str:
+        genes = {gene1, gene2}
+
+        if genes == {"A", "B"}:
+            return "AB"
+        if "A" in genes:
+            return "A"
+        if "B" in genes:
+            return "B"
+        return "O"
+
+    result = []
+
+    for genes1 in possible[parent1]:
+        for genes2 in possible[parent2]:
+            valid = any(
+                phenotype(gene1, gene2) == child
+                for gene1 in genes1
+                for gene2 in genes2
+            )
+
+            if valid:
+                result.append([genes1, genes2])
+
+    result.sort(key=lambda pair: (pair[0], pair[1]))
+    return result if result else [["--", "--"]]</pre>
+<h3>Complexity</h3>
+<p>The state space is constant and very small, so practical runtime is constant. The important part is correct modeling rather than performance.</p>
+</div>
+</section>
+<section class="tab-panel" id="mock">
+<div class="card speakable">
+<div class="section-head">
+<div><h2>Review Cards</h2></div>
+<button class="listen-btn">▶ Listen</button>
+</div>
+<p>Use these cards for a final five-minute review. Read the prompt first, answer mentally, then reveal the highlighted answer.</p>
+</div>
+<div class="grid" style="margin-top:16px">
+<div class="card speakable">
+<div class="section-head"><div><h3>Python Review</h3></div><button class="listen-btn">▶ Listen</button></div>
+<p><strong>1.</strong> Minimum difference after sorting?</p><div class="answer">Compare adjacent values.</div>
+<p><strong>2.</strong> Set intersection operator?</p><div class="answer"><code>&amp;</code></div>
+<p><strong>3.</strong> Cartesian product module?</p><div class="answer"><code>itertools</code></div>
+</div>
+<div class="card speakable">
+<div class="section-head"><div><h3>SQL Review</h3></div><button class="listen-btn">▶ Listen</button></div>
+<p><strong>1.</strong> Join that preserves all products?</p><div class="answer"><code>LEFT JOIN</code></div>
+<p><strong>2.</strong> No ELSE in CASE?</p><div class="answer">Unmatched rows return <code>NULL</code>.</div>
+<p><strong>3.</strong> Why group by customer ID?</p><div class="answer">To separate customers with identical names.</div>
+</div>
+<div class="card speakable">
+<div class="section-head"><div><h3>Kubernetes Review</h3></div><button class="listen-btn">▶ Listen</button></div>
+<p><strong>1.</strong> Prevent traffic before ready?</p><div class="answer"><code>readinessProbe</code></div>
+<p><strong>2.</strong> Add node after init?</p><div class="answer"><code>kubeadm join</code></div>
+<p><strong>3.</strong> Host-based routing resource?</p><div class="answer"><code>Ingress</code></div>
+<p><strong>4.</strong> Backend protected from all except frontend?</p><div class="answer"><code>podSelector: backend</code> with <code>ingress.from: frontend</code></div>
+</div>
+<div class="card speakable">
+<div class="section-head"><div><h3>Coding Review</h3></div><button class="listen-btn">▶ Listen</button></div>
+<p><strong>1.</strong> Blood type A genotypes?</p><div class="answer"><code>AA</code> and <code>AO</code></div>
+<p><strong>2.</strong> No valid parent combination?</p><div class="answer"><code>[["--", "--"]]</code></div>
+<p><strong>3.</strong> Reusable pattern?</p><div class="answer">Model legal states → enumerate candidates → validate → sort → handle no solution.</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      stopSpeech();
+    });
+  });
+
+  const voiceSelect = document.getElementById('voiceSelect');
+  const rateRange = document.getElementById('rateRange');
+  const rateValue = document.getElementById('rateValue');
+  let voices = [];
+  let activeButton = null;
+
+  function loadVoices(){
+    voices = window.speechSynthesis.getVoices();
+    voiceSelect.innerHTML = '';
+
+    voices.forEach((voice, index) => {
+      const option = document.createElement('option');
+      option.value = index;
+      option.textContent = `${voice.name} (${voice.lang})`;
+      voiceSelect.appendChild(option);
+    });
+
+    let selected = voices.findIndex(v =>
+      v.name === 'Google UK English Female' ||
+      v.name.includes('Google UK English Female')
+    );
+
+    if(selected < 0){
+      selected = voices.findIndex(v =>
+        v.lang === 'en-GB' &&
+        /female|sonia|serena|kate|samantha/i.test(v.name)
+      );
+    }
+
+    if(selected < 0) selected = voices.findIndex(v => v.lang === 'en-GB');
+    if(selected < 0) selected = voices.findIndex(v => v.lang.startsWith('en'));
+    if(selected >= 0) voiceSelect.value = String(selected);
+  }
+
+  loadVoices();
+  if ('onvoiceschanged' in speechSynthesis) {
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  rateRange.value = '0.92';
+  rateValue.textContent = '0.92x';
+
+  rateRange.addEventListener('input', () => {
+    rateValue.textContent = `${Number(rateRange.value).toFixed(2)}x`;
+  });
+
+  function stopSpeech(){
+    window.speechSynthesis.cancel();
+    document.querySelectorAll('.listen-btn').forEach(btn => {
+      btn.classList.remove('speaking');
+      btn.textContent = '▶ Listen';
+    });
+    activeButton = null;
+  }
+
+  document.getElementById('stopBtn').addEventListener('click', stopSpeech);
+
+  function readableText(card){
+    const clone = card.cloneNode(true);
+    clone.querySelectorAll('button, pre, .zh-note').forEach(el => el.remove());
+    return clone.innerText.replace(/\s+/g, ' ').trim();
+  }
+
+  document.addEventListener('click', event => {
+    const btn = event.target.closest('.listen-btn');
+    if(!btn) return;
+
+    if(btn.classList.contains('speaking')){
+      stopSpeech();
+      return;
+    }
+
+    stopSpeech();
+
+    const card = btn.closest('.speakable');
+    const utterance = new SpeechSynthesisUtterance(readableText(card));
+    const selectedVoice = voices[Number(voiceSelect.value)];
+
+    if(selectedVoice) {
+      utterance.voice = selectedVoice;
+      utterance.lang = selectedVoice.lang;
+    } else {
+      utterance.lang = 'en-GB';
+    }
+
+    utterance.rate = Number(rateRange.value);
+    btn.classList.add('speaking');
+    btn.textContent = '■ Stop';
+    activeButton = btn;
+
+    utterance.onend = utterance.onerror = () => {
+      btn.classList.remove('speaking');
+      btn.textContent = '▶ Listen';
+      activeButton = null;
+    };
+
+    window.speechSynthesis.speak(utterance);
+  });
+</script>
+</body>
+</html>
