@@ -1,0 +1,18 @@
+digraph G {
+ graph [rankdir=LR, bgcolor="white", pad=0.25, nodesep=0.45, ranksep=0.75, fontname="Arial", label="LangChain Interview Flow", labelloc=t, fontsize=20];
+ node [shape=box, style="rounded,filled", fontname="Arial", fontsize=12, margin="0.18,0.12", color="#b8c5d8", fillcolor="#f8fbff"];
+ edge [fontname="Arial", fontsize=10, color="#60748f", penwidth=1.5, arrowsize=0.8];
+ q [label="Customer Question", fillcolor="#e8f0fe"];
+ prompt [label="Prompt + Structured Output"];
+ memory [label="Conversation Memory"];
+ rag [label="RAG Retrieval
+Chunks + Embeddings + Vector Store", fillcolor="#e9f7ef"];
+ model [label="gpt-4o-mini", fillcolor="#fff4df"];
+ agent [label="LLM Agent
+Select Tools Dynamically", fillcolor="#fce8e6"];
+ tools [label="Policy Search | Calculator | Status Tool"];
+ eval [label="Evaluation
+Retrieval + Answer + Latency", fillcolor="#f3e8ff"];
+ answer [label="Grounded Structured Answer", fillcolor="#e8f5e9"];
+ q -> prompt; prompt -> memory [label="follow-up context"]; prompt -> rag [label="knowledge question"]; memory -> model; rag -> model; model -> agent [label="when action needed"]; agent -> tools; tools -> agent [label="observation"]; model -> answer; agent -> answer; answer -> eval;
+}

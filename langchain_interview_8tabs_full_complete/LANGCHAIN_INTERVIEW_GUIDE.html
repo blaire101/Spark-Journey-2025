@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>LangChain Interview Guide</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#162033;--muted:#667085;--line:#dbe3ee;--accent:#2563eb;--accent2:#eef5ff;--danger:#d92d20}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+header{background:linear-gradient(135deg,#102a56,#1d4ed8);color:white;padding:34px 22px 26px}
+.wrap{max-width:1180px;margin:auto}
+h1{margin:0 0 8px;font-size:34px}
+.subtitle{opacity:.92;max-width:900px}
+.controls{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px}
+.control-row{max-width:1180px;margin:auto;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+select,input[type=range],button{font:inherit}
+select{padding:7px;border:1px solid var(--line);border-radius:8px;max-width:300px}
+.stop{border:1px solid #1667b1;border-radius:999px;padding:7px 16px;background:#fff;color:#1667b1;cursor:pointer;margin-left:auto}
+.tabs{max-width:1180px;margin:20px auto 0;display:flex;gap:8px;overflow-x:auto;padding:0 16px}
+.tab-btn{border:1px solid var(--line);background:white;border-radius:999px;padding:9px 14px;white-space:nowrap;cursor:pointer}
+.tab-btn.active{background:var(--accent);color:white;border-color:var(--accent)}
+main{max-width:1180px;margin:16px auto 60px;padding:0 16px}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+h2{font-size:27px;margin:22px 0 12px}
+.card,.mini-card,.diagram-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:12px 0;box-shadow:0 4px 15px rgba(16,42,86,.045)}
+.card h3,.mini-card h3{margin:0 0 10px;font-size:18px}
+.speak-row{display:grid;grid-template-columns:minmax(0,1fr) 110px;gap:18px;align-items:start}
+.english{font-size:16px;font-weight:500;min-width:0}
+.chinese{font-size:12.5px;color:var(--muted);margin-top:8px;border-left:3px solid #bfdbfe;padding-left:10px}
+.listen{justify-self:end;align-self:start;width:94px;border:1px solid #1667b1;border-radius:999px;background:#fff;color:#1667b1;padding:6px 10px;cursor:pointer;font-size:13px;white-space:nowrap}
+.listen:hover{background:#eef6ff}
+.listen.speaking{background:#eaf1ff;color:#0b4f91}
+.diagram-wrap{overflow-x:auto;background:white;border-radius:10px;padding:4px}
+.diagram-wrap svg{display:block;width:100%;height:auto;min-width:900px}
+.flow-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.flow-text{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:15px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;margin:12px 0}
+.cheat{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.chip{background:white;border:1px solid var(--line);padding:13px;border-radius:12px}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:25px}
+@media(max-width:760px){h1{font-size:28px}.flow-grid{grid-template-columns:1fr}.speak-row{grid-template-columns:minmax(0,1fr) 96px;gap:10px}.listen{width:90px}.stop{margin-left:0}}
+
+.lesson-block{margin:18px 0 28px;padding-top:2px}
+.lesson-block>h3{font-size:21px;margin:12px 0}
+.toc{columns:2;column-gap:36px;margin:0;padding-left:22px}
+.toc li{break-inside:avoid;margin:6px 0}
+.toc a{color:#174ea6;text-decoration:none}
+.toc a:hover{text-decoration:underline}
+@media(max-width:760px){.toc{columns:1}}
+
+/* Complete Guide tab: full imported preview content */
+.complete-guide-content{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 4px 15px rgba(16,42,86,.045)}
+.complete-guide-content #title-block-header{background:linear-gradient(135deg,#eef4ff,#f8fbff);color:var(--text);padding:20px 22px;border:1px solid #d8e5f7;border-radius:14px;margin-bottom:16px}
+.complete-guide-content #title-block-header .title{font-size:28px;margin:0;color:#173b72}
+.complete-guide-content nav#TOC{background:#f8fbff;border:1px solid #dbe7f5;border-radius:14px;padding:18px 22px;margin:14px 0 24px;max-height:430px;overflow:auto}
+.complete-guide-content nav#TOC>ul{columns:2;column-gap:34px;margin:0;padding-left:22px}
+.complete-guide-content nav#TOC li{break-inside:avoid;margin:4px 0}
+.complete-guide-content nav#TOC a{color:#174ea6;text-decoration:none}
+.complete-guide-content nav#TOC a:hover{text-decoration:underline}
+.complete-guide-content h1{font-size:28px;color:#173b72;margin:30px 0 12px;border-bottom:2px solid #dbe7f5;padding-bottom:7px}
+.complete-guide-content h2{font-size:23px;color:#204b87;margin:26px 0 10px}
+.complete-guide-content h3{font-size:18px;color:#294a72;margin:19px 0 8px}
+.complete-guide-content p{margin:8px 0}
+.complete-guide-content ul,.complete-guide-content ol{padding-left:24px}
+.complete-guide-content li{margin:5px 0}
+.complete-guide-content blockquote{margin:12px 0;padding:12px 15px;border-left:4px solid #93baf0;background:#f6f9fe;border-radius:0 10px 10px 0}
+.complete-guide-content blockquote p{margin:0}
+.complete-guide-content pre{background:#101827;color:#e6edf7;border-radius:12px;padding:15px;overflow:auto;line-height:1.45;font-size:13px}
+.complete-guide-content code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+.complete-guide-content :not(pre)>code{background:#eef3f9;color:#183b66;padding:2px 5px;border-radius:5px;font-size:.92em}
+.complete-guide-content table{width:100%;border-collapse:collapse;margin:14px 0;background:#fff;border:1px solid #dbe3ee}
+.complete-guide-content th,.complete-guide-content td{border:1px solid #dbe3ee;padding:9px 11px;text-align:left;vertical-align:top}
+.complete-guide-content th{background:#eef5ff;color:#173b72}
+.complete-guide-content figure{margin:18px 0;text-align:center}
+.complete-guide-content .complete-flow-image{max-width:100%;height:auto;border:1px solid #dbe3ee;border-radius:12px;background:white;padding:8px}
+.complete-guide-content hr{border:0;border-top:1px solid #dbe3ee;margin:28px 0}
+.complete-guide-content .sourceCode{overflow:auto}
+.complete-guide-content .complete-speak-row{margin:0}
+.complete-guide-content li>.complete-speak-row{align-items:start}
+.complete-guide-content .complete-speak-text{font-weight:400}
+.complete-guide-content .mermaid{white-space:pre-wrap}
+@media(max-width:760px){.complete-guide-content{padding:14px}.complete-guide-content nav#TOC>ul{columns:1}.complete-guide-content h1{font-size:24px}.complete-guide-content h2{font-size:21px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>LangChain, RAG &amp; LLM Agents</h1><div class="subtitle">Interview-first revision guide based on a hands-on customer-support copilot using modern LangChain APIs and gpt-4o-mini.</div></div></header>
+<div class="controls"><div class="control-row"><strong>🔊 Read-aloud Practice</strong><label>Voice <select id="voice"></select></label><label>Speed <input id="rate" max="1.3" min="0.7" step="0.05" type="range" value="0.92"/><span id="rateVal">0.92×</span></label><button class="stop" id="stop">■ Stop</button></div></div>
+<div class="tabs">
+<button class="tab-btn" data-tab="overview">Overview</button><button class="tab-btn" data-tab="architecture">Architecture</button><button class="tab-btn" data-tab="lessons">L1–L6</button><button class="tab-btn" data-tab="concepts">Key Concepts</button><button class="tab-btn" data-tab="talktrack">Interview Talk Track</button><button class="tab-btn" data-tab="qa">Interview Q&amp;A</button><button class="tab-btn" data-tab="memorymap">Fast Memory Map</button>
+<button class="tab-btn" data-tab="complete-guide">Complete Guide</button></div>
+<main>
+<section class="tab-panel active" id="overview"><h2>Overview</h2><article class="card"><h3>What I built</h3><div class="speak-row"><div class="english speakable" data-speak="I built a customer-support copilot with LangChain and gpt-4o-mini. It combines structured output, conversation memory, document-based RAG, evaluation, and agent-driven tool calling.">I built a customer-support copilot with LangChain and gpt-4o-mini. It combines structured output, conversation memory, document-based RAG, evaluation, and agent-driven tool calling.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">我构建了一个客服 Copilot，整合结构化输出、会话记忆、文档 RAG、评估和 Agent 工具调用。</div></article><article class="card"><h3>Why this project matters</h3><div class="speak-row"><div class="english speakable" data-speak="The project demonstrates how an LLM application can move beyond a single model call by connecting prompts, state, enterprise knowledge, tools, and evaluation into one controlled workflow.">The project demonstrates how an LLM application can move beyond a single model call by connecting prompts, state, enterprise knowledge, tools, and evaluation into one controlled workflow.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">该项目展示了如何把 Prompt、状态、企业知识、工具和评估连接成一个可控的 LLM 工作流。</div></article><article class="card"><h3>One-line architecture</h3><div class="speak-row"><div class="english speakable" data-speak="Customer question → prompt and intent processing → memory or RAG retrieval → gpt-4o-mini → structured answer → tool calling when needed → evaluation.">Customer question → prompt and intent processing → memory or RAG retrieval → gpt-4o-mini → structured answer → tool calling when needed → evaluation.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article></section>
+<section class="tab-panel" id="architecture"><h2>Architecture &amp; Flow</h2>
+<div class="diagram-card">
+<div class="diagram-wrap">
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: G Pages: 1 -->
+<svg height="220pt" viewbox="0.00 0.00 1779.00 220.00" width="1779pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="graph0" transform="scale(1 1) rotate(0) translate(18 202)">
+<title>G</title>
+<polygon fill="white" points="-18,18 -18,-202 1761,-202 1761,18 -18,18" stroke="transparent"></polygon>
+<text font-family="Arial" font-size="20.00" text-anchor="middle" x="871.5" y="-164">LangChain Interview Flow</text>
+<!-- q -->
+<g class="node" id="node1">
+<title>q</title>
+<path d="M117,-76C117,-76 12,-76 12,-76 6,-76 0,-70 0,-64 0,-64 0,-52 0,-52 0,-46 6,-40 12,-40 12,-40 117,-40 117,-40 123,-40 129,-46 129,-52 129,-52 129,-64 129,-64 129,-70 123,-76 117,-76" fill="#e8f0fe" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="64.5" y="-54.9">Customer Question</text>
+</g>
+<!-- prompt -->
+<g class="node" id="node2">
+<title>prompt</title>
+<path d="M343,-76C343,-76 196,-76 196,-76 190,-76 184,-70 184,-64 184,-64 184,-52 184,-52 184,-46 190,-40 196,-40 196,-40 343,-40 343,-40 349,-40 355,-46 355,-52 355,-52 355,-64 355,-64 355,-70 349,-76 343,-76" fill="#f8fbff" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="269.5" y="-54.9">Prompt + Structured Output</text>
+</g>
+<!-- q&#45;&gt;prompt -->
+<g class="edge" id="edge1">
+<title>q-&gt;prompt</title>
+<path d="M129.17,-58C143.93,-58 159.92,-58 175.64,-58" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="175.83,-60.8 183.83,-58 175.83,-55.2 175.83,-60.8" stroke="#60748f" stroke-width="1.5"></polygon>
+</g>
+<!-- memory -->
+<g class="node" id="node3">
+<title>memory</title>
+<path d="M669,-112C669,-112 549,-112 549,-112 543,-112 537,-106 537,-100 537,-100 537,-88 537,-88 537,-82 543,-76 549,-76 549,-76 669,-76 669,-76 675,-76 681,-82 681,-88 681,-88 681,-100 681,-100 681,-106 675,-112 669,-112" fill="#f8fbff" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="609" y="-90.9">Conversation Memory</text>
+</g>
+<!-- prompt&#45;&gt;memory -->
+<g class="edge" id="edge2">
+<title>prompt-&gt;memory</title>
+<path d="M355.23,-67.04C408.42,-72.71 476.57,-79.98 528.7,-85.54" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="528.67,-88.35 536.93,-86.42 529.27,-82.79 528.67,-88.35" stroke="#60748f" stroke-width="1.5"></polygon>
+<text font-family="Arial" font-size="10.00" text-anchor="middle" x="425.5" y="-81">follow-up context</text>
+</g>
+<!-- rag -->
+<g class="node" id="node4">
+<title>rag</title>
+<path d="M710,-44C710,-44 508,-44 508,-44 502,-44 496,-38 496,-32 496,-32 496,-12 496,-12 496,-6 502,0 508,0 508,0 710,0 710,0 716,0 722,-6 722,-12 722,-12 722,-32 722,-32 722,-38 716,-44 710,-44" fill="#e9f7ef" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="609" y="-25.4">RAG Retrieval</text>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="609" y="-12.4">Chunks + Embeddings + Vector Store</text>
+</g>
+<!-- prompt&#45;&gt;rag -->
+<g class="edge" id="edge3">
+<title>prompt-&gt;rag</title>
+<path d="M355.23,-48.96C395.3,-44.69 443.86,-39.51 487.67,-34.84" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="488.13,-37.6 495.79,-33.97 487.54,-32.03 488.13,-37.6" stroke="#60748f" stroke-width="1.5"></polygon>
+<text font-family="Arial" font-size="10.00" text-anchor="middle" x="425.5" y="-48">knowledge question</text>
+</g>
+<!-- model -->
+<g class="node" id="node5">
+<title>model</title>
+<path d="M852,-75C852,-75 789,-75 789,-75 783,-75 777,-69 777,-63 777,-63 777,-51 777,-51 777,-45 783,-39 789,-39 789,-39 852,-39 852,-39 858,-39 864,-45 864,-51 864,-51 864,-63 864,-63 864,-69 858,-75 852,-75" fill="#fff4df" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="820.5" y="-53.9">gpt-4o-mini</text>
+</g>
+<!-- memory&#45;&gt;model -->
+<g class="edge" id="edge4">
+<title>memory-&gt;model</title>
+<path d="M681.22,-81.42C710.03,-76.33 742.62,-70.58 768.93,-65.93" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="769.49,-68.68 776.88,-64.53 768.51,-63.16 769.49,-68.68" stroke="#60748f" stroke-width="1.5"></polygon>
+</g>
+<!-- rag&#45;&gt;model -->
+<g class="edge" id="edge5">
+<title>rag-&gt;model</title>
+<path d="M722.11,-40.73C738.37,-43.45 754.4,-46.12 768.61,-48.5" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="768.41,-51.3 776.76,-49.86 769.33,-45.78 768.41,-51.3" stroke="#60748f" stroke-width="1.5"></polygon>
+</g>
+<!-- agent -->
+<g class="node" id="node6">
+<title>agent</title>
+<path d="M1155,-134C1155,-134 1018,-134 1018,-134 1012,-134 1006,-128 1006,-122 1006,-122 1006,-102 1006,-102 1006,-96 1012,-90 1018,-90 1018,-90 1155,-90 1155,-90 1161,-90 1167,-96 1167,-102 1167,-102 1167,-122 1167,-122 1167,-128 1161,-134 1155,-134" fill="#fce8e6" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="1086.5" y="-115.4">LLM Agent</text>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="1086.5" y="-102.4">Select Tools Dynamically</text>
+</g>
+<!-- model&#45;&gt;agent -->
+<g class="edge" id="edge6">
+<title>model-&gt;agent</title>
+<path d="M864.21,-65.9C900.21,-73.4 952.89,-84.37 997.82,-93.73" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="997.42,-96.51 1005.82,-95.4 998.56,-91.03 997.42,-96.51" stroke="#60748f" stroke-width="1.5"></polygon>
+<text font-family="Arial" font-size="10.00" text-anchor="middle" x="935" y="-92">when action needed</text>
+</g>
+<!-- answer -->
+<g class="node" id="node9">
+<title>answer</title>
+<path d="M1467,-74C1467,-74 1310,-74 1310,-74 1304,-74 1298,-68 1298,-62 1298,-62 1298,-50 1298,-50 1298,-44 1304,-38 1310,-38 1310,-38 1467,-38 1467,-38 1473,-38 1479,-44 1479,-50 1479,-50 1479,-62 1479,-62 1479,-68 1473,-74 1467,-74" fill="#e8f5e9" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="1388.5" y="-52.9">Grounded Structured Answer</text>
+</g>
+<!-- model&#45;&gt;answer -->
+<g class="edge" id="edge9">
+<title>model-&gt;answer</title>
+<path d="M864.04,-56.92C953.85,-56.77 1164.79,-56.39 1289.75,-56.17" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="1289.86,-58.97 1297.86,-56.16 1289.85,-53.37 1289.86,-58.97" stroke="#60748f" stroke-width="1.5"></polygon>
+</g>
+<!-- tools -->
+<g class="node" id="node7">
+<title>tools</title>
+<path d="M1493,-154C1493,-154 1284,-154 1284,-154 1278,-154 1272,-148 1272,-142 1272,-142 1272,-130 1272,-130 1272,-124 1278,-118 1284,-118 1284,-118 1493,-118 1493,-118 1499,-118 1505,-124 1505,-130 1505,-130 1505,-142 1505,-142 1505,-148 1499,-154 1493,-154" fill="#f8fbff" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="1388.5" y="-132.9">Policy Search | Calculator | Status Tool</text>
+</g>
+<!-- agent&#45;&gt;tools -->
+<g class="edge" id="edge7">
+<title>agent-&gt;tools</title>
+<path d="M1167.17,-131.08C1176.18,-132.68 1185.26,-134.04 1194,-135 1216.48,-137.46 1240.52,-138.69 1263.74,-139.18" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="1263.86,-141.98 1271.91,-139.32 1263.96,-136.38 1263.86,-141.98" stroke="#60748f" stroke-width="1.5"></polygon>
+</g>
+<!-- agent&#45;&gt;answer -->
+<g class="edge" id="edge10">
+<title>agent-&gt;answer</title>
+<path d="M1167.11,-97.14C1204.86,-90.09 1250.31,-81.61 1290.11,-74.18" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="1290.63,-76.93 1297.99,-72.71 1289.61,-71.43 1290.63,-76.93" stroke="#60748f" stroke-width="1.5"></polygon>
+</g>
+<!-- tools&#45;&gt;agent -->
+<g class="edge" id="edge8">
+<title>tools-&gt;agent</title>
+<path d="M1271.65,-124.28C1262.64,-123.47 1253.67,-122.7 1245,-122 1222.5,-120.18 1198.17,-118.5 1175.52,-117.05" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="1175.42,-114.24 1167.26,-116.53 1175.07,-119.83 1175.42,-114.24" stroke="#60748f" stroke-width="1.5"></polygon>
+<text font-family="Arial" font-size="10.00" text-anchor="middle" x="1219.5" y="-125">observation</text>
+</g>
+<!-- eval -->
+<g class="node" id="node8">
+<title>eval</title>
+<path d="M1731,-78C1731,-78 1572,-78 1572,-78 1566,-78 1560,-72 1560,-66 1560,-66 1560,-46 1560,-46 1560,-40 1566,-34 1572,-34 1572,-34 1731,-34 1731,-34 1737,-34 1743,-40 1743,-46 1743,-46 1743,-66 1743,-66 1743,-72 1737,-78 1731,-78" fill="#f3e8ff" stroke="#b8c5d8"></path>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="1651.5" y="-59.4">Evaluation</text>
+<text font-family="Arial" font-size="12.00" text-anchor="middle" x="1651.5" y="-46.4">Retrieval + Answer + Latency</text>
+</g>
+<!-- answer&#45;&gt;eval -->
+<g class="edge" id="edge11">
+<title>answer-&gt;eval</title>
+<path d="M1479.32,-56C1502.54,-56 1527.66,-56 1551.32,-56" fill="none" stroke="#60748f" stroke-width="1.5"></path>
+<polygon fill="#60748f" points="1551.63,-58.8 1559.63,-56 1551.63,-53.2 1551.63,-58.8" stroke="#60748f" stroke-width="1.5"></polygon>
+</g>
+</g>
+</svg>
+</div>
+</div>
+<div class="flow-grid">
+<article class="mini-card"><h3>1. Prompt and Structured Output</h3><div class="speak-row"><div class="english speakable" data-speak="The request first enters a reusable prompt and a structured output layer so the model receives clear instructions and downstream systems receive validated fields.">The request first enters a reusable prompt and a structured output layer so the model receives clear instructions and downstream systems receive validated fields.</div><button class="listen">🔊 Listen</button></div><div class="chinese">请求先经过 Prompt 和结构化输出层，确保指令清晰并返回可验证字段。</div></article>
+<article class="mini-card"><h3>2. Memory or RAG Retrieval</h3><div class="speak-row"><div class="english speakable" data-speak="Follow-up questions use conversation memory, while knowledge questions use document retrieval with chunks, embeddings, and a vector store.">Follow-up questions use conversation memory, while knowledge questions use document retrieval with chunks, embeddings, and a vector store.</div><button class="listen">🔊 Listen</button></div><div class="chinese">追问使用会话记忆；知识问题通过文档切分、Embedding 和向量检索获得上下文。</div></article>
+<article class="mini-card"><h3>3. Model and Agent Decision</h3><div class="speak-row"><div class="english speakable" data-speak="gpt-4o-mini generates a grounded answer directly when enough context is available, or delegates to an agent when an external action or business tool is required.">gpt-4o-mini generates a grounded answer directly when enough context is available, or delegates to an agent when an external action or business tool is required.</div><button class="listen">🔊 Listen</button></div><div class="chinese">上下文足够时模型直接回答；需要外部动作时由 Agent 选择业务工具。</div></article>
+<article class="mini-card"><h3>4. Evaluation</h3><div class="speak-row"><div class="english speakable" data-speak="The final response is evaluated across retrieval quality, answer quality, groundedness, source attribution, latency, and cost.">The final response is evaluated across retrieval quality, answer quality, groundedness, source attribution, latency, and cost.</div><button class="listen">🔊 Listen</button></div><div class="chinese">最终结果从检索、答案、依据性、来源、延迟和成本等方面评估。</div></article>
+</div>
+<div class="flow-text">Customer Question → Prompt / Structured Output → Memory or RAG → gpt-4o-mini → Agent Tools when needed → Grounded Answer → Evaluation</div>
+</section>
+<section class="tab-panel" id="lessons"><h2>L1–L6 Implementation Summary</h2><article class="card"><h3>L1 — Models, Prompts, and Structured Output</h3><div class="speak-row"><div class="english speakable" data-speak="I initialized gpt-4o-mini, created reusable prompt templates, composed them with LCEL, and used Pydantic schemas to validate model outputs.">I initialized gpt-4o-mini, created reusable prompt templates, composed them with LCEL, and used Pydantic schemas to validate model outputs.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">我初始化模型、构建可复用 Prompt，并使用 Pydantic 验证结构化输出。</div></article><article class="card"><h3>L2 — Conversation Memory</h3><div class="speak-row"><div class="english speakable" data-speak="I added a checkpointer and used a unique thread_id to isolate and restore each conversation. The model itself does not permanently remember the user; the application stores and reloads state.">I added a checkpointer and used a unique thread_id to isolate and restore each conversation. The model itself does not permanently remember the user; the application stores and reloads state.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">通过 checkpointer 和 thread_id 保存会话状态；记忆由应用管理，而不是模型永久保存。</div></article><article class="card"><h3>L3 — Chains with LCEL</h3><div class="speak-row"><div class="english speakable" data-speak="I composed prompts, models, parsers, and Python functions into sequential, parallel, and routed chains. Chains are useful when the execution path should remain explicit and predictable.">I composed prompts, models, parsers, and Python functions into sequential, parallel, and routed chains. Chains are useful when the execution path should remain explicit and predictable.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">我用 LCEL 组合顺序、并行和路由流程；Chain 适合执行路径固定且可预测的场景。</div></article><article class="card"><h3>L4 — Document Q&amp;A and RAG</h3><div class="speak-row"><div class="english speakable" data-speak="I loaded support documents, split them into overlapping chunks, created embeddings, indexed them in a vector store, retrieved the top-k evidence, and passed the context to gpt-4o-mini for a grounded answer.">I loaded support documents, split them into overlapping chunks, created embeddings, indexed them in a vector store, retrieved the top-k evidence, and passed the context to gpt-4o-mini for a grounded answer.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">文档经过切分、向量化和检索后，相关证据被交给模型生成有依据的答案。</div></article><article class="card"><h3>L5 — Evaluation</h3><div class="speak-row"><div class="english speakable" data-speak="I evaluated retrieval quality and answer quality separately so I could identify whether a failure came from search, context quality, or generation.">I evaluated retrieval quality and answer quality separately so I could identify whether a failure came from search, context quality, or generation.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">我分开评估检索和答案质量，以定位问题来自搜索、上下文还是生成。</div></article><article class="card"><h3>L6 — Agents and Tools</h3><div class="speak-row"><div class="english speakable" data-speak="I defined tools with clear names, descriptions, and input schemas, then let the agent dynamically select a policy-search, calculator, or service-status tool.">I defined tools with clear names, descriptions, and input schemas, then let the agent dynamically select a policy-search, calculator, or service-status tool.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">我定义了清晰的工具结构，由 Agent 根据请求动态选择合适的工具。</div></article></section>
+<section class="tab-panel" id="concepts"><h2>Key Concepts</h2><article class="card"><h3>LangChain</h3><div class="speak-row"><div class="english speakable" data-speak="LangChain is an application framework for composing LLMs with prompts, structured output, memory, retrieval systems, tools, and agents.">LangChain is an application framework for composing LLMs with prompts, structured output, memory, retrieval systems, tools, and agents.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>RAG</h3><div class="speak-row"><div class="english speakable" data-speak="Retrieval-Augmented Generation retrieves relevant external knowledge and adds it to the model context before generation.">Retrieval-Augmented Generation retrieves relevant external knowledge and adds it to the model context before generation.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>Embedding</h3><div class="speak-row"><div class="english speakable" data-speak="An embedding is a numeric vector that represents semantic meaning and enables similarity search between a question and document chunks.">An embedding is a numeric vector that represents semantic meaning and enables similarity search between a question and document chunks.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>Vector Store</h3><div class="speak-row"><div class="english speakable" data-speak="A vector store indexes embeddings and returns the most semantically similar chunks for a query.">A vector store indexes embeddings and returns the most semantically similar chunks for a query.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>Chain versus Agent</h3><div class="speak-row"><div class="english speakable" data-speak="A chain follows a predefined workflow, while an agent dynamically chooses tools and actions based on the request and tool observations.">A chain follows a predefined workflow, while an agent dynamically chooses tools and actions based on the request and tool observations.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">Chain 的路径固定；Agent 会根据请求和工具结果动态决策。</div></article><article class="card"><h3>Function Calling versus Tool Execution</h3><div class="speak-row"><div class="english speakable" data-speak="The model proposes a tool name and structured arguments. The application validates and executes the function, then returns the result to the model.">The model proposes a tool name and structured arguments. The application validates and executes the function, then returns the result to the model.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">模型只生成工具名称和参数；真正执行函数的是应用程序。</div></article></section>
+<section class="tab-panel" id="talktrack"><h2>Interview Talk Track</h2><article class="card"><h3>30-second answer</h3><div class="speak-row"><div class="english speakable" data-speak="I built a customer-support copilot using LangChain and gpt-4o-mini. It supports structured ticket classification, thread-level memory, document-based RAG, source-grounded answers, evaluation, and agent-driven tool calling. I separated ingestion, retrieval, generation, and evaluation so each component can be tested and improved independently.">I built a customer-support copilot using LangChain and gpt-4o-mini. It supports structured ticket classification, thread-level memory, document-based RAG, source-grounded answers, evaluation, and agent-driven tool calling. I separated ingestion, retrieval, generation, and evaluation so each component can be tested and improved independently.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">我构建了客服 Copilot，并将数据接入、检索、生成和评估拆分，便于独立测试和优化。</div></article><article class="card"><h3>60-second answer</h3><div class="speak-row"><div class="english speakable" data-speak="I designed the project as an end-to-end LangChain application. First, I used prompt templates and Pydantic structured output to make responses predictable. I added a checkpointer with thread IDs for conversation memory. For knowledge questions, I implemented a two-step RAG pipeline: documents are chunked, embedded, indexed, and retrieved before gpt-4o-mini generates a source-grounded answer. I evaluated retrieval and answer quality separately. Finally, I defined business tools and created an agent that dynamically selects the appropriate tool. The current version is a working prototype; production improvements would include persistent storage, access control, tracing, monitoring, and a larger evaluation dataset.">I designed the project as an end-to-end LangChain application. First, I used prompt templates and Pydantic structured output to make responses predictable. I added a checkpointer with thread IDs for conversation memory. For knowledge questions, I implemented a two-step RAG pipeline: documents are chunked, embedded, indexed, and retrieved before gpt-4o-mini generates a source-grounded answer. I evaluated retrieval and answer quality separately. Finally, I defined business tools and created an agent that dynamically selects the appropriate tool. The current version is a working prototype; production improvements would include persistent storage, access control, tracing, monitoring, and a larger evaluation dataset.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">项目覆盖结构化输出、会话记忆、两阶段 RAG、分层评估和工具调用 Agent；生产化还需持久化、权限和监控。</div></article><article class="card"><h3>Honest positioning</h3><div class="speak-row"><div class="english speakable" data-speak="I have hands-on prototype experience with LangChain, RAG, structured output, conversation memory, evaluation, and LLM agents.">I have hands-on prototype experience with LangChain, RAG, structured output, conversation memory, evaluation, and LLM agents.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>Resume line</h3><div class="speak-row"><div class="english speakable" data-speak="Built a LangChain RAG prototype with document ingestion, embeddings, retrieval, memory, tool calling, and agent routing.">Built a LangChain RAG prototype with document ingestion, embeddings, retrieval, memory, tool calling, and agent routing.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article></section>
+<section class="tab-panel" id="qa"><h2>Common Interview Q&amp;A</h2><article class="card"><h3>Why use LangChain instead of calling the model API directly?</h3><div class="speak-row"><div class="english speakable" data-speak="For a single model call, the native API may be simpler. LangChain becomes valuable when the application connects prompts, parsers, memory, retrieval, tools, agents, and evaluation.">For a single model call, the native API may be simpler. LangChain becomes valuable when the application connects prompts, parsers, memory, retrieval, tools, agents, and evaluation.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">单次调用原生 API 更简单；多组件工作流中 LangChain 更有价值。</div></article><article class="card"><h3>What is the difference between a prompt and a chain?</h3><div class="speak-row"><div class="english speakable" data-speak="A prompt defines instructions and input variables. A chain connects the prompt with a model, parser, retriever, or other processing steps.">A prompt defines instructions and input variables. A chain connects the prompt with a model, parser, retriever, or other processing steps.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>Why use structured output?</h3><div class="speak-row"><div class="english speakable" data-speak="Structured output provides predictable fields, validation, type safety, and easier integration with APIs, databases, and automated workflows.">Structured output provides predictable fields, validation, type safety, and easier integration with APIs, databases, and automated workflows.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>How does memory work?</h3><div class="speak-row"><div class="english speakable" data-speak="The application stores messages or state through a checkpointer and retrieves them using a conversation identifier such as thread_id. It is not permanent memory inside the model.">The application stores messages or state through a checkpointer and retrieves them using a conversation identifier such as thread_id. It is not permanent memory inside the model.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">应用通过 checkpointer 和 thread_id 保存状态，并不是模型内部的永久记忆。</div></article><article class="card"><h3>What problem does RAG solve?</h3><div class="speak-row"><div class="english speakable" data-speak="RAG gives the model access to private or current knowledge and reduces unsupported answers without fine-tuning the base model.">RAG gives the model access to private or current knowledge and reduces unsupported answers without fine-tuning the base model.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>Why split documents into chunks?</h3><div class="speak-row"><div class="english speakable" data-speak="Chunking improves retrieval precision and keeps context within model limits. Very large chunks reduce precision, while very small chunks may lose context.">Chunking improves retrieval precision and keeps context within model limits. Very large chunks reduce precision, while very small chunks may lose context.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>Why use chunk overlap?</h3><div class="speak-row"><div class="english speakable" data-speak="Overlap reduces the chance that important information is split across chunk boundaries, although excessive overlap increases duplication and cost.">Overlap reduces the chance that important information is split across chunk boundaries, although excessive overlap increases duplication and cost.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>How do embeddings work in RAG?</h3><div class="speak-row"><div class="english speakable" data-speak="Document chunks and the user query are converted into vectors. Similar vectors are expected to represent similar semantic meaning, enabling nearest-neighbor retrieval.">Document chunks and the user query are converted into vectors. Similar vectors are expected to represent similar semantic meaning, enabling nearest-neighbor retrieval.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>What is top-k retrieval?</h3><div class="speak-row"><div class="english speakable" data-speak="Top-k retrieval returns the k most similar document chunks. A higher k may improve recall but can also add noise and token cost.">Top-k retrieval returns the k most similar document chunks. A higher k may improve recall but can also add noise and token cost.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>How do you reduce hallucinations?</h3><div class="speak-row"><div class="english speakable" data-speak="I use a grounding prompt, high-quality retrieved context, source references, an explicit insufficient-evidence response, and groundedness evaluation.">I use a grounding prompt, high-quality retrieved context, source references, an explicit insufficient-evidence response, and groundedness evaluation.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>How do you evaluate RAG?</h3><div class="speak-row"><div class="english speakable" data-speak="I evaluate retrieval relevance or recall, answer correctness, groundedness, source attribution, latency, and cost. Retrieval and generation should be tested separately.">I evaluate retrieval relevance or recall, answer correctness, groundedness, source attribution, latency, and cost. Retrieval and generation should be tested separately.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">我分别测试检索和生成，并评估相关性、正确性、依据性、来源、延迟和成本。</div></article><article class="card"><h3>What is the difference between a chain and an agent?</h3><div class="speak-row"><div class="english speakable" data-speak="A chain follows a fixed workflow. An agent uses the model to choose tools and actions dynamically, which adds flexibility but also increases latency, cost, and unpredictability.">A chain follows a fixed workflow. An agent uses the model to choose tools and actions dynamically, which adds flexibility but also increases latency, cost, and unpredictability.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">Agent 更灵活，但也会增加延迟、成本和不确定性。</div></article><article class="card"><h3>What makes a good tool?</h3><div class="speak-row"><div class="english speakable" data-speak="A good tool has one clear responsibility, a descriptive name, a precise docstring, a strict input schema, predictable output, and controlled side effects.">A good tool has one clear responsibility, a descriptive name, a precise docstring, a strict input schema, predictable output, and controlled side effects.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>Does the model execute the tool?</h3><div class="speak-row"><div class="english speakable" data-speak="No. The model proposes the tool call and arguments. The application validates and executes the tool, then sends the result back to the model.">No. The model proposes the tool call and arguments. The application validates and executes the tool, then sends the result back to the model.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>When would you avoid an agent?</h3><div class="speak-row"><div class="english speakable" data-speak="I avoid an agent when the workflow is fixed, compliance requires strict control, latency is critical, or a deterministic chain can solve the problem reliably.">I avoid an agent when the workflow is fixed, compliance requires strict control, latency is critical, or a deterministic chain can solve the problem reliably.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div></article><article class="card"><h3>What would you improve for production?</h3><div class="speak-row"><div class="english speakable" data-speak="I would add persistent memory and vector storage, authentication, document-level authorization, tracing, prompt and model versioning, offline evaluation, monitoring, retries, rate limits, and secret management.">I would add persistent memory and vector storage, authentication, document-level authorization, tracing, prompt and model versioning, offline evaluation, monitoring, retries, rate limits, and secret management.</div><button aria-label="Listen" class="listen">🔊 Listen</button></div><div class="chinese">生产化需要持久化、权限控制、追踪、版本管理、离线评估、监控和密钥管理。</div></article></section>
+<section class="tab-panel" id="memorymap"><h2>Fast Memory Map</h2>
+<div class="cheat">
+<div class="chip"><b>LangChain</b><br/>Application composition</div>
+<div class="chip"><b>Prompt</b><br/>Reusable instructions</div>
+<div class="chip"><b>Structured Output</b><br/>Validated fields</div>
+<div class="chip"><b>Memory</b><br/>Application-managed state</div>
+<div class="chip"><b>LCEL Chain</b><br/>Explicit workflow</div>
+<div class="chip"><b>RAG</b><br/>Retrieve before generate</div>
+<div class="chip"><b>Embedding</b><br/>Semantic vector</div>
+<div class="chip"><b>Vector Store</b><br/>Similarity index</div>
+<div class="chip"><b>Tool</b><br/>Callable capability</div>
+<div class="chip"><b>Agent</b><br/>Dynamic action selection</div>
+<div class="chip"><b>Evaluation</b><br/>Retrieval + answer + operations</div>
+</div>
+<article class="card"><h3>Final interview positioning</h3><div class="speak-row"><div class="english speakable" data-speak="I have hands-on prototype experience with LangChain, RAG, structured output, conversation memory, evaluation, and LLM agents.">I have hands-on prototype experience with LangChain, RAG, structured output, conversation memory, evaluation, and LLM agents.</div><button class="listen">🔊 Listen</button></div></article>
+</section>
+<section class="tab-panel" id="complete-guide"><div class="complete-guide-content"><header id="title-block-header">
+<h1 class="title">LangChain, RAG and LLM Agents — Interview Guide</h1>
+</header><nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#langchain-rag-and-llm-agents-interview-guide" id="toc-langchain-rag-and-llm-agents-interview-guide">LangChain, RAG and
+LLM Agents — Interview Guide</a>
+<ul>
+<li><a href="#what-i-built" id="toc-what-i-built">1. What I Built</a>
+<ul>
+<li><a href="#main-capabilities" id="toc-main-capabilities">Main
+capabilities</a></li>
+<li><a href="#honest-project-scope" id="toc-honest-project-scope">Honest
+project scope</a></li>
+</ul></li>
+<li><a href="#end-to-end-learning-flow" id="toc-end-to-end-learning-flow">2. End-to-End Learning Flow</a></li>
+</ul></li>
+<li><a href="#l1l6-summary" id="toc-l1l6-summary">3. L1–L6 Summary</a>
+<ul>
+<li><a href="#l1-models-prompts-and-structured-output" id="toc-l1-models-prompts-and-structured-output">L1 — Models, Prompts
+and Structured Output</a>
+<ul>
+<li><a href="#what-i-learned" id="toc-what-i-learned">What I
+learned</a></li>
+<li><a href="#core-flow" id="toc-core-flow">Core flow</a></li>
+<li><a href="#example" id="toc-example">Example</a></li>
+<li><a href="#interview-explanation" id="toc-interview-explanation">Interview explanation</a></li>
+</ul></li>
+<li><a href="#l2-conversation-memory" id="toc-l2-conversation-memory">L2
+— Conversation Memory</a>
+<ul>
+<li><a href="#what-i-learned-1" id="toc-what-i-learned-1">What I
+learned</a></li>
+<li><a href="#core-flow-1" id="toc-core-flow-1">Core flow</a></li>
+<li><a href="#example-1" id="toc-example-1">Example</a></li>
+<li><a href="#interview-explanation-1" id="toc-interview-explanation-1">Interview explanation</a></li>
+</ul></li>
+<li><a href="#l3-chains-with-lcel" id="toc-l3-chains-with-lcel">L3 —
+Chains with LCEL</a>
+<ul>
+<li><a href="#what-i-learned-2" id="toc-what-i-learned-2">What I
+learned</a></li>
+<li><a href="#core-flow-2" id="toc-core-flow-2">Core flow</a></li>
+<li><a href="#example-2" id="toc-example-2">Example</a></li>
+<li><a href="#interview-explanation-2" id="toc-interview-explanation-2">Interview explanation</a></li>
+</ul></li>
+<li><a href="#l4-document-qa-and-rag" id="toc-l4-document-qa-and-rag">L4
+— Document Q&amp;A and RAG</a>
+<ul>
+<li><a href="#what-i-learned-3" id="toc-what-i-learned-3">What I
+learned</a></li>
+<li><a href="#rag-flow" id="toc-rag-flow">RAG flow</a></li>
+<li><a href="#example-3" id="toc-example-3">Example</a></li>
+<li><a href="#why-chunk-overlap-matters" id="toc-why-chunk-overlap-matters">Why chunk overlap matters</a></li>
+<li><a href="#interview-explanation-3" id="toc-interview-explanation-3">Interview explanation</a></li>
+</ul></li>
+<li><a href="#l5-evaluation" id="toc-l5-evaluation">L5 — Evaluation</a>
+<ul>
+<li><a href="#what-i-learned-4" id="toc-what-i-learned-4">What I
+learned</a></li>
+<li><a href="#evaluation-flow" id="toc-evaluation-flow">Evaluation
+flow</a></li>
+<li><a href="#important-metrics" id="toc-important-metrics">Important
+metrics</a></li>
+<li><a href="#interview-explanation-4" id="toc-interview-explanation-4">Interview explanation</a></li>
+</ul></li>
+<li><a href="#l6-agents-and-tools" id="toc-l6-agents-and-tools">L6 —
+Agents and Tools</a>
+<ul>
+<li><a href="#what-i-learned-5" id="toc-what-i-learned-5">What I
+learned</a></li>
+<li><a href="#agent-flow" id="toc-agent-flow">Agent flow</a></li>
+<li><a href="#example-4" id="toc-example-4">Example</a></li>
+<li><a href="#chain-versus-agent" id="toc-chain-versus-agent">Chain
+versus Agent</a></li>
+<li><a href="#interview-explanation-5" id="toc-interview-explanation-5">Interview explanation</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#langchain-rag-and-llm-agents-key-definitions" id="toc-langchain-rag-and-llm-agents-key-definitions">4. LangChain, RAG
+and LLM Agents — Key Definitions</a>
+<ul>
+<li><a href="#what-is-langchain" id="toc-what-is-langchain">What is
+LangChain?</a></li>
+<li><a href="#what-is-rag" id="toc-what-is-rag">What is RAG?</a></li>
+<li><a href="#what-is-an-llm-agent" id="toc-what-is-an-llm-agent">What
+is an LLM Agent?</a></li>
+<li><a href="#what-is-an-embedding" id="toc-what-is-an-embedding">What
+is an embedding?</a></li>
+<li><a href="#what-is-a-vector-store" id="toc-what-is-a-vector-store">What is a vector store?</a></li>
+</ul></li>
+<li><a href="#how-to-explain-the-project-in-an-interview" id="toc-how-to-explain-the-project-in-an-interview">5. How to Explain
+the Project in an Interview</a>
+<ul>
+<li><a href="#second-answer" id="toc-second-answer">30-second
+answer</a></li>
+<li><a href="#second-answer-1" id="toc-second-answer-1">60-second
+answer</a></li>
+<li><a href="#resume-bullet" id="toc-resume-bullet">Resume
+bullet</a></li>
+<li><a href="#stronger-two-bullet-version" id="toc-stronger-two-bullet-version">Stronger two-bullet
+version</a></li>
+</ul></li>
+<li><a href="#common-interview-questions-and-answers" id="toc-common-interview-questions-and-answers">6. Common Interview
+Questions and Answers</a>
+<ul>
+<li><a href="#q1.-why-use-langchain-instead-of-calling-the-openai-api-directly" id="toc-q1.-why-use-langchain-instead-of-calling-the-openai-api-directly">Q1.
+Why use LangChain instead of calling the OpenAI API directly?</a></li>
+<li><a href="#q2.-what-is-the-difference-between-a-prompt-and-a-chain" id="toc-q2.-what-is-the-difference-between-a-prompt-and-a-chain">Q2.
+What is the difference between a prompt and a chain?</a></li>
+<li><a href="#q3.-what-is-the-difference-between-a-chain-and-an-agent" id="toc-q3.-what-is-the-difference-between-a-chain-and-an-agent">Q3.
+What is the difference between a chain and an agent?</a></li>
+<li><a href="#q4.-how-does-rag-reduce-hallucination" id="toc-q4.-how-does-rag-reduce-hallucination">Q4. How does RAG reduce
+hallucination?</a></li>
+<li><a href="#q5.-why-split-documents-into-chunks" id="toc-q5.-why-split-documents-into-chunks">Q5. Why split documents
+into chunks?</a></li>
+<li><a href="#q6.-how-did-you-choose-chunk-size-and-overlap" id="toc-q6.-how-did-you-choose-chunk-size-and-overlap">Q6. How did you
+choose chunk size and overlap?</a></li>
+<li><a href="#q7.-what-happens-when-the-retriever-returns-irrelevant-context" id="toc-q7.-what-happens-when-the-retriever-returns-irrelevant-context">Q7.
+What happens when the retriever returns irrelevant context?</a></li>
+<li><a href="#q8.-what-is-top-k-retrieval" id="toc-q8.-what-is-top-k-retrieval">Q8. What is top-k
+retrieval?</a></li>
+<li><a href="#q9.-how-did-you-evaluate-the-rag-system" id="toc-q9.-how-did-you-evaluate-the-rag-system">Q9. How did you
+evaluate the RAG system?</a></li>
+<li><a href="#q10.-what-is-llm-as-a-judge" id="toc-q10.-what-is-llm-as-a-judge">Q10. What is
+LLM-as-a-judge?</a></li>
+<li><a href="#q11.-how-is-memory-implemented" id="toc-q11.-how-is-memory-implemented">Q11. How is memory
+implemented?</a></li>
+<li><a href="#q12.-what-is-structured-output-and-why-is-it-useful" id="toc-q12.-what-is-structured-output-and-why-is-it-useful">Q12. What
+is structured output and why is it useful?</a></li>
+<li><a href="#q13.-what-makes-a-good-tool-definition" id="toc-q13.-what-makes-a-good-tool-definition">Q13. What makes a good
+tool definition?</a></li>
+<li><a href="#q14.-when-should-you-avoid-an-agent" id="toc-q14.-when-should-you-avoid-an-agent">Q14. When should you avoid
+an agent?</a></li>
+<li><a href="#q15.-how-would-you-productionize-this-prototype" id="toc-q15.-how-would-you-productionize-this-prototype">Q15. How would
+you productionize this prototype?</a></li>
+<li><a href="#q16.-how-would-you-secure-enterprise-rag" id="toc-q16.-how-would-you-secure-enterprise-rag">Q16. How would you
+secure enterprise RAG?</a></li>
+<li><a href="#q17.-how-would-you-reduce-cost-and-latency" id="toc-q17.-how-would-you-reduce-cost-and-latency">Q17. How would you
+reduce cost and latency?</a></li>
+<li><a href="#q18.-why-gpt-4o-mini" id="toc-q18.-why-gpt-4o-mini">Q18.
+Why <code>gpt-4o-mini</code>?</a></li>
+<li><a href="#q19.-did-you-use-faiss" id="toc-q19.-did-you-use-faiss">Q19. Did you use FAISS?</a></li>
+<li><a href="#q20.-is-this-production-ready" id="toc-q20.-is-this-production-ready">Q20. Is this
+production-ready?</a></li>
+</ul></li>
+<li><a href="#design-decisions-and-trade-offs" id="toc-design-decisions-and-trade-offs">7. Design Decisions and
+Trade-offs</a></li>
+<li><a href="#production-extension-roadmap" id="toc-production-extension-roadmap">8. Production Extension
+Roadmap</a></li>
+<li><a href="#final-interview-cheat-sheet" id="toc-final-interview-cheat-sheet">9. Final Interview Cheat Sheet</a>
+<ul>
+<li><a href="#best-closing-statement" id="toc-best-closing-statement">Best closing statement</a></li>
+</ul></li>
+</ul>
+</nav><h1 id="langchain-rag-and-llm-agents-interview-guide">LangChain, RAG and
+LLM Agents — Interview Guide</h1><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Positioning: This document summarizes a hands-on learning prototype built with modern LangChain APIs and gpt-4o-mini ."><strong>Positioning:</strong> This document summarizes a hands-on
+learning prototype built with modern LangChain APIs and
+<code>gpt-4o-mini</code>.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+<p><strong>中文：</strong> 本文用于总结一个基于现代 LangChain API 和
+<code>gpt-4o-mini</code> 的可运行学习项目。</p>
+</blockquote><hr/><h2 id="what-i-built">1. What I Built</h2><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I built a customer-support copilot prototype that combines prompt engineering, structured output, conversation memory, LCEL chains, document retrieval, RAG evaluation, and tool-calling agents.">I built a <strong>customer-support copilot prototype</strong> that
+combines prompt engineering, structured output, conversation memory,
+LCEL chains, document retrieval, RAG evaluation, and tool-calling
+agents.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><blockquote>
+<p><strong>中文：</strong> 我构建了一个客服 Copilot
+原型，整合了提示词、结构化输出、对话记忆、LCEL、文档检索、RAG
+评估和工具调用 Agent。</p>
+</blockquote><h3 id="main-capabilities">Main capabilities</h3><ul>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Rewrite and classify customer messages with structured output.">Rewrite and classify customer messages with structured output.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Remember customer context within the same conversation thread.">Remember customer context within the same conversation thread.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Route requests through deterministic LCEL chains.">Route requests through deterministic LCEL chains.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Retrieve relevant support-policy content before answering.">Retrieve relevant support-policy content before answering.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Evaluate retrieval quality and answer quality separately.">Evaluate retrieval quality and answer quality separately.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Let an LLM agent select and call the appropriate tool.">Let an LLM agent select and call the appropriate tool.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ul><h3 id="honest-project-scope">Honest project scope</h3><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="This is a working portfolio prototype , not a production deployment. It demonstrates the end-to-end design and the key engineering concepts required to evolve toward a production AI application.">This is a <strong>working portfolio prototype</strong>, not a
+production deployment. It demonstrates the end-to-end design and the key
+engineering concepts required to evolve toward a production AI
+application.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><blockquote>
+<p><strong>中文：</strong>
+这是可运行的作品集原型，而不是已经投产的系统；它展示了完整设计及生产化所需的核心工程概念。</p>
+</blockquote><hr/><h2 id="end-to-end-learning-flow">2. End-to-End Learning Flow</h2><figure>
+<img alt="LangChain interview flow" class="complete-flow-image" src="interview_flow.png"/>
+<figcaption aria-hidden="true">LangChain interview flow</figcaption>
+</figure><pre class="mermaid"><code>flowchart LR
+    L1[Model + Prompt + Structured Output]
+    L2[Conversation Memory]
+    L3[LCEL Chains + Routing]
+    L4[Document Q&amp;A + RAG]
+    L5[Evaluation]
+    L6[Tools + Agent]
+    Demo[Customer Support Copilot]
+
+    L1 --&gt; L2 --&gt; L3 --&gt; L4 --&gt; L5 --&gt; L6 --&gt; Demo</code></pre><hr/><h1 id="l1l6-summary">3. L1–L6 Summary</h1><h2 id="l1-models-prompts-and-structured-output">L1 — Models, Prompts
+and Structured Output</h2><h3 id="what-i-learned">What I learned</h3><ul>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Created a ChatOpenAI model using gpt-4o-mini .">Created a <code>ChatOpenAI</code> model using
+<code>gpt-4o-mini</code>.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Used ChatPromptTemplate to separate reusable instructions from runtime input.">Used <code>ChatPromptTemplate</code> to separate reusable
+instructions from runtime input.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Built an LCEL pipeline using prompt | model | parser .">Built an LCEL pipeline using
+<code>prompt | model | parser</code>.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Used Pydantic schemas and with_structured_output() to return validated fields instead of free-form text.">Used Pydantic schemas and <code>with_structured_output()</code> to
+return validated fields instead of free-form text.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ul><h3 id="core-flow">Core flow</h3><pre class="text"><code>User Input → Prompt Template → gpt-4o-mini → Output Parser → Typed Result</code></pre><h3 id="example">Example</h3><div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a aria-hidden="true" href="#cb3-1" tabindex="-1"></a><span class="im">from</span> pydantic <span class="im">import</span> BaseModel, Field</span>
+<span id="cb3-2"><a aria-hidden="true" href="#cb3-2" tabindex="-1"></a><span class="im">from</span> langchain_openai <span class="im">import</span> ChatOpenAI</span>
+<span id="cb3-3"><a aria-hidden="true" href="#cb3-3" tabindex="-1"></a></span>
+<span id="cb3-4"><a aria-hidden="true" href="#cb3-4" tabindex="-1"></a><span class="kw">class</span> TicketClassification(BaseModel):</span>
+<span id="cb3-5"><a aria-hidden="true" href="#cb3-5" tabindex="-1"></a>    category: <span class="bu">str</span> <span class="op">=</span> Field(description<span class="op">=</span><span class="st">"Ticket category"</span>)</span>
+<span id="cb3-6"><a aria-hidden="true" href="#cb3-6" tabindex="-1"></a>    priority: <span class="bu">str</span> <span class="op">=</span> Field(description<span class="op">=</span><span class="st">"low, medium, or high"</span>)</span>
+<span id="cb3-7"><a aria-hidden="true" href="#cb3-7" tabindex="-1"></a>    summary: <span class="bu">str</span> <span class="op">=</span> Field(description<span class="op">=</span><span class="st">"Short summary"</span>)</span>
+<span id="cb3-8"><a aria-hidden="true" href="#cb3-8" tabindex="-1"></a></span>
+<span id="cb3-9"><a aria-hidden="true" href="#cb3-9" tabindex="-1"></a>model <span class="op">=</span> ChatOpenAI(model<span class="op">=</span><span class="st">"gpt-4o-mini"</span>, temperature<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-10"><a aria-hidden="true" href="#cb3-10" tabindex="-1"></a>structured_model <span class="op">=</span> model.with_structured_output(TicketClassification)</span>
+<span id="cb3-11"><a aria-hidden="true" href="#cb3-11" tabindex="-1"></a></span>
+<span id="cb3-12"><a aria-hidden="true" href="#cb3-12" tabindex="-1"></a>result <span class="op">=</span> structured_model.invoke(</span>
+<span id="cb3-13"><a aria-hidden="true" href="#cb3-13" tabindex="-1"></a>    <span class="st">"The API has been unavailable for all users for 30 minutes."</span></span>
+<span id="cb3-14"><a aria-hidden="true" href="#cb3-14" tabindex="-1"></a>)</span></code></pre></div><h3 id="interview-explanation">Interview explanation</h3><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I used prompt templates to standardize model instructions and Pydantic structured output to make the LLM response predictable, validated, and easier to integrate with downstream services.">I used prompt templates to standardize model instructions and
+Pydantic structured output to make the LLM response predictable,
+validated, and easier to integrate with downstream services.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><blockquote>
+<p><strong>中文：</strong> 我用 Prompt Template 统一模型指令，并通过
+Pydantic 结构化输出，让结果更稳定、可验证，也更方便下游系统使用。</p>
+</blockquote><hr/><h2 id="l2-conversation-memory">L2 — Conversation Memory</h2><h3 id="what-i-learned-1">What I learned</h3><ul>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Created an agent with a checkpointer.">Created an agent with a checkpointer.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Used thread_id to isolate different conversations.">Used <code>thread_id</code> to isolate different conversations.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Verified that a follow-up question could reuse facts from an earlier message.">Verified that a follow-up question could reuse facts from an earlier
+message.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ul><h3 id="core-flow-1">Core flow</h3><pre class="text"><code>Message 1 → Save under thread_id → Message 2 → Load prior context → Answer</code></pre><h3 id="example-1">Example</h3><div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a aria-hidden="true" href="#cb5-1" tabindex="-1"></a><span class="im">from</span> langchain.agents <span class="im">import</span> create_agent</span>
+<span id="cb5-2"><a aria-hidden="true" href="#cb5-2" tabindex="-1"></a><span class="im">from</span> langchain_openai <span class="im">import</span> ChatOpenAI</span>
+<span id="cb5-3"><a aria-hidden="true" href="#cb5-3" tabindex="-1"></a><span class="im">from</span> langgraph.checkpoint.memory <span class="im">import</span> InMemorySaver</span>
+<span id="cb5-4"><a aria-hidden="true" href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a aria-hidden="true" href="#cb5-5" tabindex="-1"></a>model <span class="op">=</span> ChatOpenAI(model<span class="op">=</span><span class="st">"gpt-4o-mini"</span>, temperature<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb5-6"><a aria-hidden="true" href="#cb5-6" tabindex="-1"></a>memory <span class="op">=</span> InMemorySaver()</span>
+<span id="cb5-7"><a aria-hidden="true" href="#cb5-7" tabindex="-1"></a></span>
+<span id="cb5-8"><a aria-hidden="true" href="#cb5-8" tabindex="-1"></a>agent <span class="op">=</span> create_agent(</span>
+<span id="cb5-9"><a aria-hidden="true" href="#cb5-9" tabindex="-1"></a>    model<span class="op">=</span>model,</span>
+<span id="cb5-10"><a aria-hidden="true" href="#cb5-10" tabindex="-1"></a>    tools<span class="op">=</span>[],</span>
+<span id="cb5-11"><a aria-hidden="true" href="#cb5-11" tabindex="-1"></a>    system_prompt<span class="op">=</span><span class="st">"You are a helpful customer-support assistant."</span>,</span>
+<span id="cb5-12"><a aria-hidden="true" href="#cb5-12" tabindex="-1"></a>    checkpointer<span class="op">=</span>memory,</span>
+<span id="cb5-13"><a aria-hidden="true" href="#cb5-13" tabindex="-1"></a>)</span>
+<span id="cb5-14"><a aria-hidden="true" href="#cb5-14" tabindex="-1"></a></span>
+<span id="cb5-15"><a aria-hidden="true" href="#cb5-15" tabindex="-1"></a>config <span class="op">=</span> {<span class="st">"configurable"</span>: {<span class="st">"thread_id"</span>: <span class="st">"customer-001"</span>}}</span></code></pre></div><h3 id="interview-explanation-1">Interview explanation</h3><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="The model itself does not permanently remember the user. The application stores conversation state through a checkpointer and retrieves it using the same thread ID.">The model itself does not permanently remember the user. The
+application stores conversation state through a checkpointer and
+retrieves it using the same thread ID.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><blockquote>
+<p><strong>中文：</strong> 模型本身不会永久记住用户；应用通过
+checkpointer 保存会话状态，并使用相同的 thread ID 读取历史。</p>
+</blockquote><hr/><h2 id="l3-chains-with-lcel">L3 — Chains with LCEL</h2><h3 id="what-i-learned-2">What I learned</h3><ul>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Used LCEL to compose prompt, model, parser, and Python functions.">Used LCEL to compose prompt, model, parser, and Python
+functions.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Built sequential and parallel processing flows.">Built sequential and parallel processing flows.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Implemented routing based on request type.">Implemented routing based on request type.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Understood that chains are deterministic workflows defined by the developer.">Understood that chains are deterministic workflows defined by the
+developer.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ul><h3 id="core-flow-2">Core flow</h3><pre class="text"><code>Input → Classify Intent → Route → Specialized Chain → Result</code></pre><h3 id="example-2">Example</h3><div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a aria-hidden="true" href="#cb7-1" tabindex="-1"></a><span class="im">from</span> langchain_core.prompts <span class="im">import</span> ChatPromptTemplate</span>
+<span id="cb7-2"><a aria-hidden="true" href="#cb7-2" tabindex="-1"></a><span class="im">from</span> langchain_core.output_parsers <span class="im">import</span> StrOutputParser</span>
+<span id="cb7-3"><a aria-hidden="true" href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a aria-hidden="true" href="#cb7-4" tabindex="-1"></a>prompt <span class="op">=</span> ChatPromptTemplate.from_template(</span>
+<span id="cb7-5"><a aria-hidden="true" href="#cb7-5" tabindex="-1"></a>    <span class="st">"Write a concise support response for this issue:</span><span class="ch">\n</span><span class="sc">{issue}</span><span class="st">"</span></span>
+<span id="cb7-6"><a aria-hidden="true" href="#cb7-6" tabindex="-1"></a>)</span>
+<span id="cb7-7"><a aria-hidden="true" href="#cb7-7" tabindex="-1"></a></span>
+<span id="cb7-8"><a aria-hidden="true" href="#cb7-8" tabindex="-1"></a>chain <span class="op">=</span> prompt <span class="op">|</span> model <span class="op">|</span> StrOutputParser()</span>
+<span id="cb7-9"><a aria-hidden="true" href="#cb7-9" tabindex="-1"></a>answer <span class="op">=</span> chain.invoke({<span class="st">"issue"</span>: <span class="st">"I cannot log in to my account."</span>})</span></code></pre></div><h3 id="interview-explanation-2">Interview explanation</h3><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I used LCEL to create explicit, testable pipelines. A chain follows a predefined path, which makes it suitable when execution order must remain predictable.">I used LCEL to create explicit, testable pipelines. A chain follows a
+predefined path, which makes it suitable when execution order must
+remain predictable.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><blockquote>
+<p><strong>中文：</strong> 我用 LCEL 构建明确且可测试的处理链；Chain
+按预定义路径执行，适合要求流程稳定可控的场景。</p>
+</blockquote><hr/><h2 id="l4-document-qa-and-rag">L4 — Document Q&amp;A and RAG</h2><h3 id="what-i-learned-3">What I learned</h3><ul>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Converted support documents into LangChain Document objects.">Converted support documents into LangChain <code>Document</code>
+objects.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Split long documents into overlapping chunks.">Split long documents into overlapping chunks.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Converted chunks into embeddings.">Converted chunks into embeddings.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Stored embeddings in InMemoryVectorStore .">Stored embeddings in <code>InMemoryVectorStore</code>.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Retrieved top-k semantically relevant chunks.">Retrieved top-k semantically relevant chunks.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Added retrieved context to the prompt before generating an answer.">Added retrieved context to the prompt before generating an
+answer.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Returned source metadata with the answer.">Returned source metadata with the answer.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ul><h3 id="rag-flow">RAG flow</h3><pre class="text"><code>Documents
+→ Chunking
+→ Embeddings
+→ Vector Store
+→ Retriever
+→ Relevant Context
+→ gpt-4o-mini
+→ Grounded Answer + Sources</code></pre><h3 id="example-3">Example</h3><div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a aria-hidden="true" href="#cb9-1" tabindex="-1"></a><span class="im">from</span> langchain_core.vectorstores <span class="im">import</span> InMemoryVectorStore</span>
+<span id="cb9-2"><a aria-hidden="true" href="#cb9-2" tabindex="-1"></a><span class="im">from</span> langchain_openai <span class="im">import</span> OpenAIEmbeddings</span>
+<span id="cb9-3"><a aria-hidden="true" href="#cb9-3" tabindex="-1"></a><span class="im">from</span> langchain_text_splitters <span class="im">import</span> RecursiveCharacterTextSplitter</span>
+<span id="cb9-4"><a aria-hidden="true" href="#cb9-4" tabindex="-1"></a></span>
+<span id="cb9-5"><a aria-hidden="true" href="#cb9-5" tabindex="-1"></a>splitter <span class="op">=</span> RecursiveCharacterTextSplitter(</span>
+<span id="cb9-6"><a aria-hidden="true" href="#cb9-6" tabindex="-1"></a>    chunk_size<span class="op">=</span><span class="dv">300</span>,</span>
+<span id="cb9-7"><a aria-hidden="true" href="#cb9-7" tabindex="-1"></a>    chunk_overlap<span class="op">=</span><span class="dv">50</span>,</span>
+<span id="cb9-8"><a aria-hidden="true" href="#cb9-8" tabindex="-1"></a>)</span>
+<span id="cb9-9"><a aria-hidden="true" href="#cb9-9" tabindex="-1"></a>chunks <span class="op">=</span> splitter.split_documents(documents)</span>
+<span id="cb9-10"><a aria-hidden="true" href="#cb9-10" tabindex="-1"></a></span>
+<span id="cb9-11"><a aria-hidden="true" href="#cb9-11" tabindex="-1"></a>embeddings <span class="op">=</span> OpenAIEmbeddings(model<span class="op">=</span><span class="st">"text-embedding-3-small"</span>)</span>
+<span id="cb9-12"><a aria-hidden="true" href="#cb9-12" tabindex="-1"></a>vector_store <span class="op">=</span> InMemoryVectorStore(embeddings)</span>
+<span id="cb9-13"><a aria-hidden="true" href="#cb9-13" tabindex="-1"></a>vector_store.add_documents(chunks)</span>
+<span id="cb9-14"><a aria-hidden="true" href="#cb9-14" tabindex="-1"></a></span>
+<span id="cb9-15"><a aria-hidden="true" href="#cb9-15" tabindex="-1"></a>retriever <span class="op">=</span> vector_store.as_retriever(search_kwargs<span class="op">=</span>{<span class="st">"k"</span>: <span class="dv">2</span>})</span>
+<span id="cb9-16"><a aria-hidden="true" href="#cb9-16" tabindex="-1"></a>relevant_docs <span class="op">=</span> retriever.invoke(<span class="st">"What is the refund policy?"</span>)</span></code></pre></div><h3 id="why-chunk-overlap-matters">Why chunk overlap matters</h3><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Chunk overlap reduces the chance that important context is split across chunk boundaries, although excessive overlap increases indexing cost and duplicate retrieval.">Chunk overlap reduces the chance that important context is split
+across chunk boundaries, although excessive overlap increases indexing
+cost and duplicate retrieval.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><blockquote>
+<p><strong>中文：</strong> Chunk overlap
+可以降低重要上下文被切断的风险，但过大会增加索引成本和重复检索。</p>
+</blockquote><h3 id="interview-explanation-3">Interview explanation</h3><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I implemented a two-step RAG workflow. The retriever first finds the most relevant document chunks, and the model then generates an answer using only that retrieved context. This reduces unsupported answers and enables source attribution.">I implemented a two-step RAG workflow. The retriever first finds the
+most relevant document chunks, and the model then generates an answer
+using only that retrieved context. This reduces unsupported answers and
+enables source attribution.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><blockquote>
+<p><strong>中文：</strong> 我实现了两阶段
+RAG：先检索相关文档片段，再让模型仅基于这些上下文回答，从而减少无依据回答并支持来源追踪。</p>
+</blockquote><hr/><h2 id="l5-evaluation">L5 — Evaluation</h2><h3 id="what-i-learned-4">What I learned</h3><ul>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Created a small evaluation dataset with questions and expected topics.">Created a small evaluation dataset with questions and expected
+topics.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Evaluated whether the retriever returned the expected evidence.">Evaluated whether the retriever returned the expected evidence.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Evaluated whether the generated answer was correct and grounded.">Evaluated whether the generated answer was correct and
+grounded.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Used structured LLM-as-a-judge output for repeatable scoring.">Used structured LLM-as-a-judge output for repeatable scoring.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ul><h3 id="evaluation-flow">Evaluation flow</h3><pre class="text"><code>Test Question
+→ Retrieve Context
+→ Generate Answer
+→ Retrieval Evaluation
+→ Answer Evaluation
+→ Score and Failure Analysis</code></pre><h3 id="important-metrics">Important metrics</h3><table>
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>What to evaluate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Retrieval</td>
+<td>Recall@k, relevance, correct source returned</td>
+</tr>
+<tr class="even">
+<td>Generation</td>
+<td>Correctness, groundedness, completeness</td>
+</tr>
+<tr class="odd">
+<td>System</td>
+<td>Latency, token usage, cost, failure rate</td>
+</tr>
+</tbody>
+</table><h3 id="interview-explanation-4">Interview explanation</h3><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I separated retrieval evaluation from generation evaluation because a wrong answer may come from poor retrieval or from incorrect reasoning over correct context. The two failure modes require different fixes.">I separated retrieval evaluation from generation evaluation because a
+wrong answer may come from poor retrieval or from incorrect reasoning
+over correct context. The two failure modes require different fixes.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><blockquote>
+<p><strong>中文：</strong>
+我把检索评估和生成评估分开，因为错误可能来自检索不到正确资料，也可能来自模型对正确资料推理错误，两者需要不同优化方式。</p>
+</blockquote><hr/><h2 id="l6-agents-and-tools">L6 — Agents and Tools</h2><h3 id="what-i-learned-5">What I learned</h3><ul>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Defined tools with clear names, descriptions, and typed arguments.">Defined tools with clear names, descriptions, and typed
+arguments.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Created an LLM agent using create_agent() .">Created an LLM agent using <code>create_agent()</code>.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Allowed the model to decide whether and which tool to call.">Allowed the model to decide whether and which tool to call.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Inspected the resulting message history and tool calls.">Inspected the resulting message history and tool calls.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Reused thread-level memory with the agent.">Reused thread-level memory with the agent.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ul><h3 id="agent-flow">Agent flow</h3><pre class="text"><code>User Request
+→ LLM Reasons About Intent
+→ Select Tool
+→ Execute Tool
+→ Observe Tool Result
+→ Generate Final Answer</code></pre><h3 id="example-4">Example</h3><div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a aria-hidden="true" href="#cb12-1" tabindex="-1"></a><span class="im">from</span> langchain.tools <span class="im">import</span> tool</span>
+<span id="cb12-2"><a aria-hidden="true" href="#cb12-2" tabindex="-1"></a><span class="im">from</span> langchain.agents <span class="im">import</span> create_agent</span>
+<span id="cb12-3"><a aria-hidden="true" href="#cb12-3" tabindex="-1"></a></span>
+<span id="cb12-4"><a aria-hidden="true" href="#cb12-4" tabindex="-1"></a><span class="at">@tool</span></span>
+<span id="cb12-5"><a aria-hidden="true" href="#cb12-5" tabindex="-1"></a><span class="kw">def</span> calculate_refund(amount: <span class="bu">float</span>, percentage: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb12-6"><a aria-hidden="true" href="#cb12-6" tabindex="-1"></a>    <span class="co">"""Calculate a refund amount using a percentage."""</span></span>
+<span id="cb12-7"><a aria-hidden="true" href="#cb12-7" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">round</span>(amount <span class="op">*</span> percentage <span class="op">/</span> <span class="dv">100</span>, <span class="dv">2</span>)</span>
+<span id="cb12-8"><a aria-hidden="true" href="#cb12-8" tabindex="-1"></a></span>
+<span id="cb12-9"><a aria-hidden="true" href="#cb12-9" tabindex="-1"></a>agent <span class="op">=</span> create_agent(</span>
+<span id="cb12-10"><a aria-hidden="true" href="#cb12-10" tabindex="-1"></a>    model<span class="op">=</span>model,</span>
+<span id="cb12-11"><a aria-hidden="true" href="#cb12-11" tabindex="-1"></a>    tools<span class="op">=</span>[calculate_refund],</span>
+<span id="cb12-12"><a aria-hidden="true" href="#cb12-12" tabindex="-1"></a>    system_prompt<span class="op">=</span><span class="st">"Use tools when calculation is required."</span>,</span>
+<span id="cb12-13"><a aria-hidden="true" href="#cb12-13" tabindex="-1"></a>)</span></code></pre></div><h3 id="chain-versus-agent">Chain versus Agent</h3><table>
+<thead>
+<tr class="header">
+<th>Chain</th>
+<th>Agent</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Developer defines the execution path</td>
+<td>LLM selects the next action</td>
+</tr>
+<tr class="even">
+<td>Predictable and easier to test</td>
+<td>Flexible but more variable</td>
+</tr>
+<tr class="odd">
+<td>Lower latency and cost</td>
+<td>Often requires multiple model calls</td>
+</tr>
+<tr class="even">
+<td>Best for stable workflows</td>
+<td>Best for dynamic tool selection</td>
+</tr>
+</tbody>
+</table><h3 id="interview-explanation-5">Interview explanation</h3><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I used agents only where dynamic tool selection added value. For predictable retrieval pipelines, I kept an explicit chain because it is easier to test, control, and optimize.">I used agents only where dynamic tool selection added value. For
+predictable retrieval pipelines, I kept an explicit chain because it is
+easier to test, control, and optimize.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><blockquote>
+<p><strong>中文：</strong> 我只在动态工具选择有价值时使用
+Agent；对于固定 RAG 流程，我保留明确的
+Chain，因为它更容易测试、控制和优化。</p>
+</blockquote><hr/><h1 id="langchain-rag-and-llm-agents-key-definitions">4. LangChain, RAG
+and LLM Agents — Key Definitions</h1><h2 id="what-is-langchain">What is LangChain?</h2><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="LangChain is an application framework for composing LLMs with prompts, structured outputs, retrieval systems, tools, memory, and workflow logic.">LangChain is an application framework for composing LLMs with
+prompts, structured outputs, retrieval systems, tools, memory, and
+workflow logic.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><blockquote>
+<p><strong>中文：</strong> LangChain
+是连接模型、提示词、结构化输出、检索、工具、记忆和工作流逻辑的 LLM
+应用框架。</p>
+</blockquote><h2 id="what-is-rag">What is RAG?</h2><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Retrieval-Augmented Generation retrieves relevant information from an external knowledge source and provides it to the LLM before answer generation.">Retrieval-Augmented Generation retrieves relevant information from an
+external knowledge source and provides it to the LLM before answer
+generation.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><blockquote>
+<p><strong>中文：</strong> RAG
+在生成答案前先从外部知识库检索相关资料，并把资料提供给模型。</p>
+</blockquote><h2 id="what-is-an-llm-agent">What is an LLM Agent?</h2><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="An LLM agent uses the model to decide which action or tool should be executed next, based on the current goal and previous observations.">An LLM agent uses the model to decide which action or tool should be
+executed next, based on the current goal and previous observations.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><blockquote>
+<p><strong>中文：</strong> LLM Agent
+根据目标和已有结果，自主决定下一步动作或需要调用的工具。</p>
+</blockquote><h2 id="what-is-an-embedding">What is an embedding?</h2><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="An embedding is a numerical vector that represents semantic meaning, allowing similar text to be found through vector similarity search.">An embedding is a numerical vector that represents semantic meaning,
+allowing similar text to be found through vector similarity search.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><blockquote>
+<p><strong>中文：</strong> Embedding
+是表达语义的数值向量，用于通过向量相似度查找语义接近的文本。</p>
+</blockquote><h2 id="what-is-a-vector-store">What is a vector store?</h2><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="A vector store saves embeddings and supports similarity search over them. In this prototype, I used InMemoryVectorStore ; a production system could use FAISS, Milvus, Pinecone, OpenSearch, or another managed solution.">A vector store saves embeddings and supports similarity search over
+them. In this prototype, I used <code>InMemoryVectorStore</code>; a
+production system could use FAISS, Milvus, Pinecone, OpenSearch, or
+another managed solution.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><blockquote>
+<p><strong>中文：</strong> 向量库保存 embedding
+并提供相似度检索；本原型使用内存向量库，生产环境可替换为
+FAISS、Milvus、Pinecone 或 OpenSearch。</p>
+</blockquote><hr/><h1 id="how-to-explain-the-project-in-an-interview">5. How to Explain
+the Project in an Interview</h1><h2 id="second-answer">30-second answer</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I built a customer-support copilot prototype using LangChain and gpt-4o-mini . It supports prompt templates, structured outputs, conversation memory, LCEL chains, document retrieval, two-step RAG, evaluation, and tool-calling agents. I focused on separating ingestion, retrieval, generation, and evaluation so that each layer could be tested and improved independently.">I built a customer-support copilot prototype using LangChain and
+<code>gpt-4o-mini</code>. It supports prompt templates, structured
+outputs, conversation memory, LCEL chains, document retrieval, two-step
+RAG, evaluation, and tool-calling agents. I focused on separating
+ingestion, retrieval, generation, and evaluation so that each layer
+could be tested and improved independently.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="second-answer-1">60-second answer</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I built an end-to-end LangChain prototype for customer support. First, I used prompt templates and Pydantic structured output to make model responses predictable. I added thread-level memory so follow-up questions could reuse customer context. For document Q&amp;A, I split policy documents into overlapping chunks, generated embeddings, indexed them in an in-memory vector store, and retrieved the top relevant chunks before calling gpt-4o-mini . I then evaluated retrieval and answer quality separately. Finally, I created tools and an agent that could decide whether to retrieve policy information or perform a calculation. The project is a working prototype, and the next production steps would include persistent storage, access control, observability, and a managed vector database.">I built an end-to-end LangChain prototype for customer support.
+First, I used prompt templates and Pydantic structured output to make
+model responses predictable. I added thread-level memory so follow-up
+questions could reuse customer context. For document Q&amp;A, I split
+policy documents into overlapping chunks, generated embeddings, indexed
+them in an in-memory vector store, and retrieved the top relevant chunks
+before calling <code>gpt-4o-mini</code>. I then evaluated retrieval and
+answer quality separately. Finally, I created tools and an agent that
+could decide whether to retrieve policy information or perform a
+calculation. The project is a working prototype, and the next production
+steps would include persistent storage, access control, observability,
+and a managed vector database.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><blockquote>
+<p><strong>中文：</strong> 该项目从结构化输出、记忆、RAG 到 Agent
+工具调用形成完整链路，并明确区分当前原型和未来生产化能力。</p>
+</blockquote><h2 id="resume-bullet">Resume bullet</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Built a LangChain-based customer-support copilot prototype with structured outputs, thread-level memory, LCEL workflows, document RAG, retrieval/answer evaluation, and tool-calling agents using gpt-4o-mini .">Built a LangChain-based customer-support copilot prototype with
+structured outputs, thread-level memory, LCEL workflows, document RAG,
+retrieval/answer evaluation, and tool-calling agents using
+<code>gpt-4o-mini</code>.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="stronger-two-bullet-version">Stronger two-bullet version</h2><ul>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Built a modular LangChain customer-support copilot using gpt-4o-mini , covering prompt templates, Pydantic structured output, conversation memory, LCEL routing, and tool-calling agents.">Built a modular LangChain customer-support copilot using
+<code>gpt-4o-mini</code>, covering prompt templates, Pydantic structured
+output, conversation memory, LCEL routing, and tool-calling agents.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Implemented a two-step RAG pipeline with document chunking, OpenAI embeddings, semantic retrieval, source-grounded generation, and separate retrieval/answer evaluation.">Implemented a two-step RAG pipeline with document chunking, OpenAI
+embeddings, semantic retrieval, source-grounded generation, and separate
+retrieval/answer evaluation.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ul><hr/><h1 id="common-interview-questions-and-answers">6. Common Interview
+Questions and Answers</h1><h2 id="q1.-why-use-langchain-instead-of-calling-the-openai-api-directly">Q1.
+Why use LangChain instead of calling the OpenAI API directly?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Direct API calls are enough for simple prompts. I used LangChain because the application required reusable prompts, structured outputs, retrieval, memory, tools, and composable workflows. LangChain reduced integration boilerplate and provided consistent abstractions for these components.">Direct API calls are enough for simple prompts. I used LangChain
+because the application required reusable prompts, structured outputs,
+retrieval, memory, tools, and composable workflows. LangChain reduced
+integration boilerplate and provided consistent abstractions for these
+components.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q2.-what-is-the-difference-between-a-prompt-and-a-chain">Q2.
+What is the difference between a prompt and a chain?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="A prompt defines the instruction and input format sent to the model. A chain composes multiple processing steps, such as prompt formatting, model invocation, parsing, retrieval, or routing.">A prompt defines the instruction and input format sent to the model.
+A chain composes multiple processing steps, such as prompt formatting,
+model invocation, parsing, retrieval, or routing.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q3.-what-is-the-difference-between-a-chain-and-an-agent">Q3.
+What is the difference between a chain and an agent?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="A chain follows a developer-defined execution path. An agent uses the LLM to choose the next tool or action dynamically. I prefer chains for predictable workflows and agents for requests requiring flexible tool selection.">A chain follows a developer-defined execution path. An agent uses the
+LLM to choose the next tool or action dynamically. I prefer chains for
+predictable workflows and agents for requests requiring flexible tool
+selection.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q4.-how-does-rag-reduce-hallucination">Q4. How does RAG reduce
+hallucination?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="RAG provides relevant external evidence in the model context and instructs the model to answer from that evidence. It does not eliminate hallucination completely, so source attribution and evaluation are still required.">RAG provides relevant external evidence in the model context and
+instructs the model to answer from that evidence. It does not eliminate
+hallucination completely, so source attribution and evaluation are still
+required.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q5.-why-split-documents-into-chunks">Q5. Why split documents
+into chunks?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Entire documents may exceed the context window and contain unrelated information. Chunking creates smaller retrievable units so the system can send only relevant evidence to the model.">Entire documents may exceed the context window and contain unrelated
+information. Chunking creates smaller retrievable units so the system
+can send only relevant evidence to the model.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q6.-how-did-you-choose-chunk-size-and-overlap">Q6. How did you
+choose chunk size and overlap?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I started with a small configurable chunk size and overlap for the prototype, then evaluated whether retrieved chunks contained enough complete context. In production, I would tune these values using retrieval recall, answer quality, document structure, latency, and cost.">I started with a small configurable chunk size and overlap for the
+prototype, then evaluated whether retrieved chunks contained enough
+complete context. In production, I would tune these values using
+retrieval recall, answer quality, document structure, latency, and
+cost.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q7.-what-happens-when-the-retriever-returns-irrelevant-context">Q7.
+What happens when the retriever returns irrelevant context?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="The answer quality usually degrades even if the model is strong. I would inspect retrieval results, improve chunking and metadata, adjust top-k, add query rewriting or reranking, and measure retrieval recall separately.">The answer quality usually degrades even if the model is strong. I
+would inspect retrieval results, improve chunking and metadata, adjust
+top-k, add query rewriting or reranking, and measure retrieval recall
+separately.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q8.-what-is-top-k-retrieval">Q8. What is top-k retrieval?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Top-k is the number of most similar chunks returned by the retriever. A small k may miss evidence, while a large k may add noise, latency, and token cost.">Top-k is the number of most similar chunks returned by the retriever.
+A small k may miss evidence, while a large k may add noise, latency, and
+token cost.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q9.-how-did-you-evaluate-the-rag-system">Q9. How did you
+evaluate the RAG system?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I used a small test dataset and evaluated two stages separately: whether the correct source was retrieved and whether the generated answer was correct and grounded in the retrieved context.">I used a small test dataset and evaluated two stages separately:
+whether the correct source was retrieved and whether the generated
+answer was correct and grounded in the retrieved context.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q10.-what-is-llm-as-a-judge">Q10. What is LLM-as-a-judge?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="It uses another model call to score an output against defined criteria such as correctness or groundedness. It is scalable but not perfectly objective, so I would combine it with deterministic checks and human review for important use cases.">It uses another model call to score an output against defined
+criteria such as correctness or groundedness. It is scalable but not
+perfectly objective, so I would combine it with deterministic checks and
+human review for important use cases.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q11.-how-is-memory-implemented">Q11. How is memory
+implemented?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="The application uses a checkpointer and a thread_id . Messages are stored under a conversation thread and loaded again for follow-up requests. It is application-managed state, not permanent memory inside the model.">The application uses a checkpointer and a <code>thread_id</code>.
+Messages are stored under a conversation thread and loaded again for
+follow-up requests. It is application-managed state, not permanent
+memory inside the model.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q12.-what-is-structured-output-and-why-is-it-useful">Q12. What
+is structured output and why is it useful?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Structured output constrains the response to a defined schema, such as a Pydantic model. It improves validation, testing, API integration, and downstream automation compared with parsing arbitrary text.">Structured output constrains the response to a defined schema, such
+as a Pydantic model. It improves validation, testing, API integration,
+and downstream automation compared with parsing arbitrary text.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q13.-what-makes-a-good-tool-definition">Q13. What makes a good
+tool definition?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="A tool needs a clear name, precise description, typed arguments, predictable output, input validation, and controlled side effects. The description is important because the model uses it when deciding whether to call the tool.">A tool needs a clear name, precise description, typed arguments,
+predictable output, input validation, and controlled side effects. The
+description is important because the model uses it when deciding whether
+to call the tool.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q14.-when-should-you-avoid-an-agent">Q14. When should you avoid
+an agent?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I would avoid an agent when the workflow is fixed, latency-sensitive, inexpensive to express as a chain, or requires strict deterministic control. Agents add model calls, cost, latency, and debugging complexity.">I would avoid an agent when the workflow is fixed, latency-sensitive,
+inexpensive to express as a chain, or requires strict deterministic
+control. Agents add model calls, cost, latency, and debugging
+complexity.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q15.-how-would-you-productionize-this-prototype">Q15. How would
+you productionize this prototype?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I would add persistent vector storage, document versioning, metadata filtering, authentication and document-level authorization, prompt/version management, tracing, token and latency monitoring, offline evaluation, CI/CD, caching, rate limiting, and fallback handling.">I would add persistent vector storage, document versioning, metadata
+filtering, authentication and document-level authorization,
+prompt/version management, tracing, token and latency monitoring,
+offline evaluation, CI/CD, caching, rate limiting, and fallback
+handling.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q16.-how-would-you-secure-enterprise-rag">Q16. How would you
+secure enterprise RAG?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I would enforce access control before retrieval, filter documents by user permissions, encrypt data in transit and at rest, redact sensitive data, log retrieval and generation events, and prevent unauthorized content from entering the model context.">I would enforce access control before retrieval, filter documents by
+user permissions, encrypt data in transit and at rest, redact sensitive
+data, log retrieval and generation events, and prevent unauthorized
+content from entering the model context.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q17.-how-would-you-reduce-cost-and-latency">Q17. How would you
+reduce cost and latency?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="I would cache embeddings and repeated answers, use smaller models where sufficient, limit top-k and context size, batch indexing operations, avoid unnecessary agent loops, and monitor token usage per workflow.">I would cache embeddings and repeated answers, use smaller models
+where sufficient, limit top-k and context size, batch indexing
+operations, avoid unnecessary agent loops, and monitor token usage per
+workflow.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q18.-why-gpt-4o-mini">Q18. Why <code>gpt-4o-mini</code>?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="It is suitable for a learning prototype because it offers good quality with relatively low latency and cost. Model choice should still be validated against task accuracy, context requirements, latency, and budget.">It is suitable for a learning prototype because it offers good
+quality with relatively low latency and cost. Model choice should still
+be validated against task accuracy, context requirements, latency, and
+budget.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q19.-did-you-use-faiss">Q19. Did you use FAISS?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="In the L1–L6 notebook prototype, I used InMemoryVectorStore . I understand FAISS as a local vector-similarity library and can replace the in-memory store with FAISS when local persistence or larger-scale retrieval is required.">In the L1–L6 notebook prototype, I used
+<code>InMemoryVectorStore</code>. I understand FAISS as a local
+vector-similarity library and can replace the in-memory store with FAISS
+when local persistence or larger-scale retrieval is required.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><h2 id="q20.-is-this-production-ready">Q20. Is this
+production-ready?</h2><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="No. It is a working portfolio prototype designed to demonstrate the complete architecture and core implementation. Production readiness would require security, persistent infrastructure, observability, evaluation gates, scalability testing, and operational controls.">No. It is a working portfolio prototype designed to demonstrate the
+complete architecture and core implementation. Production readiness
+would require security, persistent infrastructure, observability,
+evaluation gates, scalability testing, and operational controls.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><hr/><h1 id="design-decisions-and-trade-offs">7. Design Decisions and
+Trade-offs</h1><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Decision</th>
+<th>Why</th>
+<th>Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>gpt-4o-mini</code></td>
+<td>Low-cost, fast prototype model</td>
+<td>Must validate quality for production tasks</td>
+</tr>
+<tr class="even">
+<td>LCEL chains</td>
+<td>Explicit and testable workflows</td>
+<td>Less flexible than agents</td>
+</tr>
+<tr class="odd">
+<td><code>InMemoryVectorStore</code></td>
+<td>Minimal setup for learning</td>
+<td>No durable persistence</td>
+</tr>
+<tr class="even">
+<td>Two-step RAG</td>
+<td>Predictable retrieval then generation</td>
+<td>Less dynamic than agentic RAG</td>
+</tr>
+<tr class="odd">
+<td>Pydantic output</td>
+<td>Validation and stable integration</td>
+<td>Schema may require retries on failures</td>
+</tr>
+<tr class="even">
+<td>In-memory checkpointer</td>
+<td>Easy conversation-memory demo</td>
+<td>State disappears when process stops</td>
+</tr>
+<tr class="odd">
+<td>Small evaluation set</td>
+<td>Fast feedback</td>
+<td>Not statistically representative</td>
+</tr>
+</tbody>
+</table><hr/><h1 id="production-extension-roadmap">8. Production Extension
+Roadmap</h1><pre class="text"><code>Current Prototype
+→ Persistent Vector Database
+→ Metadata and Permission Filtering
+→ Reranking and Query Rewriting
+→ FastAPI Service
+→ Observability and Evaluation Dashboard
+→ CI/CD and Automated Quality Gates
+→ Human Review for Low-Confidence Answers</code></pre><p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Potential future learning:">Potential future learning:</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p><ol type="1">
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Functions, Tools and Agents with LangChain — stronger extraction, routing, and tool-use patterns."><strong>Functions, Tools and Agents with LangChain</strong> —
+stronger extraction, routing, and tool-use patterns.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="Building Agentic RAG with LlamaIndex — router query engines and multi-document agentic retrieval."><strong>Building Agentic RAG with LlamaIndex</strong> — router query
+engines and multi-document agentic retrieval.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+<li><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="LangGraph basics — explicit state, branching, retries, persistence, and human approval."><strong>LangGraph basics</strong> — explicit state, branching,
+retries, persistence, and human approval.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></li>
+</ol><hr/><h1 id="final-interview-cheat-sheet">9. Final Interview Cheat Sheet</h1><pre class="text"><code>LangChain = application framework
+RAG = retrieve evidence before generation
+Embedding = semantic vector representation
+Vector store = similarity search over embeddings
+Retriever = returns relevant document chunks
+Chain = predefined workflow
+Agent = model selects actions/tools dynamically
+Memory = application-managed conversation state
+Structured output = schema-validated response
+Evaluation = measure retrieval and generation separately</code></pre><h3 id="best-closing-statement">Best closing statement</h3><blockquote>
+<p><div class="speak-row complete-speak-row"><div class="english speakable complete-speak-text" data-speak="My core strength is data engineering, so I approached the LLM application as a data and workflow system rather than only a chatbot. I separated document ingestion, semantic indexing, retrieval, generation, evaluation, and tool orchestration so each component could be tested, monitored, and replaced independently.">My core strength is data engineering, so I approached the LLM
+application as a data and workflow system rather than only a chatbot. I
+separated document ingestion, semantic indexing, retrieval, generation,
+evaluation, and tool orchestration so each component could be tested,
+monitored, and replaced independently.</div><button aria-label="Listen" class="listen" type="button">🔊 Listen</button></div></p>
+</blockquote><blockquote>
+<p><strong>中文：</strong> 我的核心优势是数据工程，因此我把 LLM
+应用当成数据与工作流系统，而不仅是聊天机器人；我将摄取、索引、检索、生成、评估和工具编排分层设计，使每一层都可以独立测试、监控和替换。</p>
+</blockquote> READ_ALOUD_RIGHT_ALIGNED_V2 </div></section></main>
+<footer>Open in Chrome for the most reliable speech synthesis.</footer>
+<script>
+const synth=window.speechSynthesis;
+const voiceSel=document.getElementById('voice');
+const rate=document.getElementById('rate');
+const rateVal=document.getElementById('rateVal');
+let activeBtn=null;
+function loadVoices(){
+  const voices=synth.getVoices(); voiceSel.innerHTML='';
+  const preferred=voices.filter(v=>/^en(-|_)/i.test(v.lang));
+  (preferred.length?preferred:voices).forEach(v=>{const o=document.createElement('option');o.value=v.name;o.textContent=`${v.name} (${v.lang})`;voiceSel.appendChild(o);});
+  const preferredNames=[/Google UK English Female/i,/Samantha/i,/Daniel/i,/British/i,/UK/i];
+  for(const re of preferredNames){const idx=[...voiceSel.options].findIndex(o=>re.test(o.text));if(idx>=0){voiceSel.selectedIndex=idx;break;}}
+}
+loadVoices(); if(speechSynthesis.onvoiceschanged!==undefined)speechSynthesis.onvoiceschanged=loadVoices;
+rate.oninput=()=>rateVal.textContent=Number(rate.value).toFixed(2)+'×';
+function stopSpeech(){synth.cancel();if(activeBtn){activeBtn.classList.remove('speaking');activeBtn.textContent='🔊 Listen';activeBtn=null;}}
+document.getElementById('stop').onclick=stopSpeech;
+document.querySelectorAll('.listen').forEach(btn=>btn.addEventListener('click',()=>{
+  if(activeBtn===btn){stopSpeech();return;}
+  stopSpeech();
+  const row=btn.closest('.speak-row'); const text=row.querySelector('.speakable').dataset.speak;
+  const u=new SpeechSynthesisUtterance(text); const v=synth.getVoices().find(x=>x.name===voiceSel.value);
+  if(v)u.voice=v; u.rate=parseFloat(rate.value); u.lang=v?.lang||'en-US';
+  activeBtn=btn; btn.classList.add('speaking'); btn.textContent='■ Stop';
+  u.onend=u.onerror=()=>stopSpeech(); synth.speak(u);
+}));
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active'); document.getElementById(btn.dataset.tab).classList.add('active'); stopSpeech();
+}));
+document.querySelector('.tab-btn').classList.add('active');
+</script>
+</body></html>
