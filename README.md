@@ -3,11 +3,6 @@
 > Open the HTML guides directly in your browser.  
 > Audio and interactive functions work best in Chrome.
 
-## 🤖 AI, LLM & LangChain
-
-- [AI Agent Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/README-ai-agent.html)
-- [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/langchain-course-outline.html)
-
 ## ⚡ Spark, Flink & Big Data
 
 - [Spark Interview Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/spark_prep.html)
@@ -17,7 +12,6 @@
 ## 🏗️ Data Warehouse & Data Governance
 
 - [Data Warehouse STAR Projects](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw_projects_star.html)
-- [MDM & CDP Quick Reference](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/mdm_cdp_quickref.html)
 
 ## ☁️ AWS, Azure & Microsoft Fabric
 
@@ -27,8 +21,14 @@
 
 ## 💼 Interview Preparation
 
-- [STMicroelectronics Data Engineer Interview Prep](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/stm_as_data_engineer_interview_prep_anonymized_fixed.html)
-- [Goldman Sachs LeetCode Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/gs_leetcode_prep.html)
+- [Data Engineer Interview Prep](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/stm_as_data_engineer_interview_prep_anonymized_fixed.html)
+- [LeetCode Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/gs_leetcode_prep.html)
+
+## 🤖 AI, LLM & LangChain
+
+- [AI Agent Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/README-ai-agent.html)
+- [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/langchain-course-outline.html)
+
 
 <details>
 <summary>💬 Spark basic questions</summary>
