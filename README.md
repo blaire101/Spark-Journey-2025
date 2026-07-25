@@ -1,4 +1,55 @@
 
+# 🚀 Interactive Study & Interview Guides
+
+> Open the HTML guides directly in your browser.  
+> Audio and interactive functions work best in Chrome.
+
+## 🤖 AI, LLM & LangChain
+
+- [AI Agent Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/README-ai-agent.html)
+- [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/langchain-course-outline.html)
+
+## ⚡ Spark, Flink & Big Data
+
+- [Spark Interview Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/spark_prep.html)
+- [Flink SQL Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw-flink-sql.html)
+- [Big Data SRE Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/big-data-sre.html)
+
+## ☁️ AWS, Azure & Microsoft Fabric
+
+- [AWS Data Engineer Associate Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws-dea-c01-study-guide.html)
+- [AWS vs Azure Data Engineering Comparison](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_data_engineering_comparison_azure_learning_qa.html)
+- [Azure Fabric Real Console Case](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_fabric_real_console_case_tabbed.html)
+
+## 🏗️ Data Warehouse & Data Governance
+
+- [Data Warehouse STAR Projects](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw_projects_star.html)
+- [MDM & CDP Quick Reference](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/mdm_cdp_quickref.html)
+
+## 💼 Interview Preparation
+
+- [STMicroelectronics Data Engineer Interview Prep](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/stm_as_data_engineer_interview_prep_anonymized_fixed.html)
+- [Goldman Sachs LeetCode Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/gs_leetcode_prep.html)
+
+---
+
+# 🚀 Interactive HTML Guides
+
+| Category | Guide |
+|---|---|
+| AI Agents | [AI Agent Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/README-ai-agent.html) |
+| LangChain | [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/langchain-course-outline.html) |
+| Spark | [Spark Interview Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/spark_prep.html) |
+| Flink | [Flink SQL Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw-flink-sql.html) |
+| Big Data SRE | [Big Data SRE Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/big-data-sre.html) |
+| AWS | [AWS Data Engineer Associate](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws-dea-c01-study-guide.html) |
+| AWS vs Azure | [Data Engineering Comparison](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_data_engineering_comparison_azure_learning_qa.html) |
+| Microsoft Fabric | [Azure Fabric Real Console Case](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_fabric_real_console_case_tabbed.html) |
+| Data Warehouse | [Data Warehouse STAR Projects](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw_projects_star.html) |
+| Data Governance | [MDM & CDP Quick Reference](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/mdm_cdp_quickref.html) |
+| STM Interview | [Data Engineer Interview Prep](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/stm_as_data_engineer_interview_prep_anonymized_fixed.html) |
+| Coding Interview | [Goldman Sachs LeetCode Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/gs_leetcode_prep.html) |
+
 <details>
 <summary>💬 Spark basic questions</summary>
 
