@@ -1,94 +1,34 @@
-<h1>🚀 Interactive Study &amp; Interview Guides</h1>
+# 🚀 Interactive Study & Interview Guides
 
-<blockquote>
-  Open the HTML guides directly in your browser.<br>
-  Audio and interactive functions work best in Chrome.
-</blockquote>
+> Open the HTML guides directly in your browser.  
+> Audio and interactive functions work best in Chrome.
 
-<h2>🤖 AI, LLM &amp; LangChain</h2>
+## 🤖 AI, LLM & LangChain
 
-<ul>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/README-ai-agent.html" target="_blank" rel="noopener noreferrer">
-      AI Agent Study Guide
-    </a>
-  </li>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/langchain-course-outline.html" target="_blank" rel="noopener noreferrer">
-      LangChain Course Outline
-    </a>
-  </li>
-</ul>
+- [AI Agent Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/README-ai-agent.html)
+- [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/langchain-course-outline.html)
 
-<h2>⚡ Spark, Flink &amp; Big Data</h2>
+## ⚡ Spark, Flink & Big Data
 
-<ul>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/spark_prep.html" target="_blank" rel="noopener noreferrer">
-      Spark Interview Preparation
-    </a>
-  </li>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw-flink-sql.html" target="_blank" rel="noopener noreferrer">
-      Flink SQL Study Guide
-    </a>
-  </li>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/big-data-sre.html" target="_blank" rel="noopener noreferrer">
-      Big Data SRE Guide
-    </a>
-  </li>
-</ul>
+- [Spark Interview Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/spark_prep.html)
+- [Flink SQL Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw-flink-sql.html)
+- [Big Data SRE Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/big-data-sre.html)
 
-<h2>☁️ AWS, Azure &amp; Microsoft Fabric</h2>
+## ☁️ AWS, Azure & Microsoft Fabric
 
-<ul>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws-dea-c01-study-guide.html" target="_blank" rel="noopener noreferrer">
-      AWS Data Engineer Associate Study Guide
-    </a>
-  </li>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_data_engineering_comparison_azure_learning_qa.html" target="_blank" rel="noopener noreferrer">
-      AWS vs Azure Data Engineering Comparison
-    </a>
-  </li>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_fabric_real_console_case_tabbed.html" target="_blank" rel="noopener noreferrer">
-      Azure Fabric Real Console Case
-    </a>
-  </li>
-</ul>
+- [AWS Data Engineer Associate Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws-dea-c01-study-guide.html)
+- [AWS vs Azure Data Engineering Comparison](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_data_engineering_comparison_azure_learning_qa.html)
+- [Azure Fabric Real Console Case](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_fabric_real_console_case_tabbed.html)
 
-<h2>🏗️ Data Warehouse &amp; Data Governance</h2>
+## 🏗️ Data Warehouse & Data Governance
 
-<ul>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw_projects_star.html" target="_blank" rel="noopener noreferrer">
-      Data Warehouse STAR Projects
-    </a>
-  </li>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/mdm_cdp_quickref.html" target="_blank" rel="noopener noreferrer">
-      MDM &amp; CDP Quick Reference
-    </a>
-  </li>
-</ul>
+- [Data Warehouse STAR Projects](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw_projects_star.html)
+- [MDM & CDP Quick Reference](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/mdm_cdp_quickref.html)
 
-<h2>💼 Interview Preparation</h2>
+## 💼 Interview Preparation
 
-<ul>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/stm_as_data_engineer_interview_prep_anonymized_fixed.html" target="_blank" rel="noopener noreferrer">
-      STMicroelectronics Data Engineer Interview Prep
-    </a>
-  </li>
-  <li>
-    <a href="https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/gs_leetcode_prep.html" target="_blank" rel="noopener noreferrer">
-      Goldman Sachs LeetCode Preparation
-    </a>
-  </li>
-</ul>
+- [STMicroelectronics Data Engineer Interview Prep](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/stm_as_data_engineer_interview_prep_anonymized_fixed.html)
+- [Goldman Sachs LeetCode Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/gs_leetcode_prep.html)
 
 <details>
 <summary>💬 Spark basic questions</summary>
