@@ -14,16 +14,16 @@
 - [Flink SQL Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw-flink-sql.html)
 - [Big Data SRE Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/big-data-sre.html)
 
+## 🏗️ Data Warehouse & Data Governance
+
+- [Data Warehouse STAR Projects](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw_projects_star.html)
+- [MDM & CDP Quick Reference](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/mdm_cdp_quickref.html)
+
 ## ☁️ AWS, Azure & Microsoft Fabric
 
 - [AWS Data Engineer Associate Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws-dea-c01-study-guide.html)
 - [AWS vs Azure Data Engineering Comparison](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_data_engineering_comparison_azure_learning_qa.html)
 - [Azure Fabric Real Console Case](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_fabric_real_console_case_tabbed.html)
-
-## 🏗️ Data Warehouse & Data Governance
-
-- [Data Warehouse STAR Projects](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw_projects_star.html)
-- [MDM & CDP Quick Reference](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/mdm_cdp_quickref.html)
 
 ## 💼 Interview Preparation
 
