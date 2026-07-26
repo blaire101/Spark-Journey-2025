@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crédit Agricole CIB — Senior Data Engineer Interview Guide</title>
+<style>
+:root {
+  --bg:#f5f7fb; --card:#ffffff; --text:#172033; --muted:#667085;
+  --primary:#0f766e; --primary2:#115e59; --border:#d9e2ec;
+  --code:#111827; --accent:#e6fffb; --warn:#fff7ed; --danger:#fef2f2;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;line-height:1.65}
+header{background:linear-gradient(135deg,#0f766e,#134e4a);color:white;padding:42px 24px}
+header .wrap{max-width:1180px;margin:auto}
+header h1{margin:0 0 8px;font-size:34px}
+header p{margin:0;opacity:.9}
+.controls{position:sticky;top:0;z-index:10;background:white;border-bottom:1px solid var(--border);padding:10px 20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.controls label{font-size:13px;color:var(--muted)}
+.controls select,.controls input{padding:7px;border:1px solid var(--border);border-radius:8px}
+.controls button{border:0;border-radius:9px;padding:8px 13px;cursor:pointer}
+.stop{background:#991b1b;color:white}
+.layout{max-width:1180px;margin:24px auto;display:grid;grid-template-columns:260px 1fr;gap:24px;padding:0 18px}
+nav{position:sticky;top:75px;align-self:start;background:white;border:1px solid var(--border);border-radius:14px;padding:16px;max-height:82vh;overflow:auto}
+nav a{display:block;color:#334155;text-decoration:none;padding:6px 8px;border-radius:7px;font-size:14px}
+nav a:hover{background:#ecfdf5;color:var(--primary2)}
+main{min-width:0}
+section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;margin-bottom:20px;box-shadow:0 3px 12px rgba(15,23,42,.04)}
+h2{margin-top:0;color:#0f172a;border-bottom:2px solid #d1fae5;padding-bottom:8px}
+h3{margin-top:26px;color:#134e4a}
+h4{color:#334155}
+strong{color:#0f5132}
+.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#d1fae5;color:#065f46;font-size:12px;font-weight:700;margin-right:5px}
+.note{background:var(--accent);border-left:4px solid var(--primary);padding:13px 15px;border-radius:8px;margin:14px 0}
+.warn{background:var(--warn);border-left-color:#ea580c}
+pre{background:var(--code);color:#f8fafc;padding:16px;border-radius:12px;overflow:auto;font-size:13px}
+code{font-family:"SFMono-Regular",Consolas,monospace}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+th,td{border:1px solid var(--border);padding:10px;vertical-align:top;text-align:left}
+th{background:#ecfdf5;color:#134e4a}
+ul,ol{padding-left:22px}
+details{border:1px solid var(--border);border-radius:10px;margin:10px 0;background:#fff}
+summary{cursor:pointer;font-weight:700;padding:12px 14px;color:#134e4a}
+details>div{padding:0 16px 14px}
+.listen{border:1px solid #99f6e4;background:#f0fdfa;color:#115e59;border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer;margin-left:8px}
+.listen.speaking{background:#115e59;color:white}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{border:1px solid var(--border);border-radius:12px;padding:16px;background:#fff}
+.priority{font-weight:700}
+.high{color:#b91c1c}.medium{color:#b45309}.good{color:#047857}
+footer{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}nav{position:relative;top:auto;max-height:none}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>Crédit Agricole CIB — Senior Data Engineer</h1>
+<p>Technology Map, Interview Topics, Troubleshooting Scenarios, and Preparation Guide</p>
+</div></header>
+
+<div class="controls">
+<label>Voice
+<select id="voiceSelect"></select>
+</label>
+<label>Speed
+<input id="rate" type="range" min="0.7" max="1.3" step="0.1" value="0.9">
+<span id="rateValue">0.9×</span>
+</label>
+<button class="stop" onclick="stopSpeech()">Stop</button>
+</div>
+
+<div class="layout">
+<nav>
+<strong>Contents</strong>
+<a href="#positioning">1. Role Positioning</a>
+<a href="#map">2. Technology Map</a>
+<a href="#python">3. Python</a>
+<a href="#sql">4. SQL Server</a>
+<a href="#spark">5. Spark / PySpark</a>
+<a href="#lakehouse">6. Lakehouse / Iceberg</a>
+<a href="#k8s">7. Kubernetes</a>
+<a href="#docker">8. Docker</a>
+<a href="#airflow">9. Airflow</a>
+<a href="#cicd">10. CI/CD</a>
+<a href="#modeling">11. Data Modeling</a>
+<a href="#nosql">12. NoSQL</a>
+<a href="#governance">13. Governance</a>
+<a href="#support">14. L3 Support</a>
+<a href="#architecture">15. Architecture</a>
+<a href="#behavioral">16. Behavioral</a>
+<a href="#priority">17. Preparation Priority</a>
+<a href="#fit">18. Candidate Fit</a>
+<a href="#intro">19. Interview Introduction</a>
+</nav>
+
+<main>
+<section id="positioning">
+<h2>1. Role Positioning <button class="listen" data-speak="This role is a Senior Data Engineer position focused on on-premise lakehouse architecture, Kubernetes platform engineering, and production support.">Listen</button></h2>
+<div class="note"><strong>Senior Data Engineer + On-Premise Lakehouse + Kubernetes Platform Engineering + Production Support</strong></div>
+<p>This is not only an ETL development role. The engineer is expected to build pipelines, operate them on Kubernetes, optimize Spark and SQL Server, establish CI/CD, enforce governance, and provide L3 support.</p>
+<pre><code>Python / PySpark
++ SQL Server
++ Apache Spark
++ Apache Iceberg
++ Kubernetes
++ Docker
++ Airflow
++ CI/CD
++ NoSQL
++ Data Governance
++ Production Troubleshooting</code></pre>
+</section>
+
+<section id="map">
+<h2>2. Technology Map</h2>
+<table>
+<tr><th>Priority</th><th>Technology</th><th>Role</th><th>Expected Depth</th></tr>
+<tr><td class="high">Critical</td><td><strong>Python</strong></td><td>Production ETL, automation, testing</td><td>Advanced</td></tr>
+<tr><td class="high">Critical</td><td><strong>SQL Server</strong></td><td>Complex SQL, indexing, tuning</td><td>Expert</td></tr>
+<tr><td class="high">Critical</td><td><strong>Spark / PySpark</strong></td><td>Distributed processing</td><td>Advanced</td></tr>
+<tr><td class="high">Critical</td><td><strong>Kubernetes</strong></td><td>Deploy and operate pipelines</td><td>Advanced</td></tr>
+<tr><td class="high">Critical</td><td><strong>Iceberg</strong></td><td>Lakehouse table management</td><td>Advanced</td></tr>
+<tr><td class="medium">High</td><td><strong>Docker</strong></td><td>Runtime packaging</td><td>Intermediate–Advanced</td></tr>
+<tr><td class="medium">High</td><td><strong>Airflow</strong></td><td>Scheduling and monitoring</td><td>Intermediate–Advanced</td></tr>
+<tr><td class="medium">High</td><td><strong>CI/CD</strong></td><td>Automated delivery</td><td>Intermediate–Advanced</td></tr>
+</table>
+</section>
+
+<section id="python">
+<h2>3. Python <button class="listen" data-speak="Python is used to build production-grade data pipelines, validation logic, automation, retries, logging, and tests.">Listen</button></h2>
+<div class="grid">
+<div class="card"><h3>What to Know</h3><ul><li>Project structure</li><li>Generators and memory efficiency</li><li>Logging and exception handling</li><li>Configuration and secrets</li><li>Unit and integration tests</li><li>Idempotency and retries</li></ul></div>
+<div class="card"><h3>Likely Questions</h3><ul><li>How do you structure a production ETL project?</li><li>How do you avoid duplicate data after retry?</li><li>How do you process files larger than memory?</li><li>How do you test partial failures?</li></ul></div>
+</div>
+<details><summary>Strong Answer Framework</summary><div>
+<p>Separate ingestion, validation, transformation, and output. Use configuration, structured logging, tests, business-key deduplication, checkpoints, and safe retry logic.</p>
+</div></details>
+</section>
+
+<section id="sql">
+<h2>4. SQL Server <button class="listen" data-speak="SQL Server is one of the most important requirements. Prepare indexing, execution plans, statistics, partitioning, blocking, deadlocks, and query optimization.">Listen</button></h2>
+<p><span class="badge">Clustered Index</span><span class="badge">Execution Plan</span><span class="badge">Statistics</span><span class="badge">SARGability</span><span class="badge">Deadlocks</span></p>
+<details open><summary>Likely Interview Questions</summary><div>
+<ol>
+<li>Why can a query remain slow even when an index exists?</li>
+<li>How do you choose column order in a composite index?</li>
+<li>How do you investigate a slow query?</li>
+<li>What is parameter sniffing?</li>
+<li>How do you resolve blocking and deadlocks?</li>
+</ol>
+</div></details>
+<pre><code>Confirm the slow query
+→ Review the actual execution plan
+→ Check scans, seeks, joins, spills, and estimates
+→ Review indexes and statistics
+→ Check blocking and resource pressure
+→ Rewrite and validate improvements</code></pre>
+</section>
+
+<section id="spark">
+<h2>5. Apache Spark / PySpark <button class="listen" data-speak="Spark interview topics usually include shuffle, data skew, join strategies, partitioning, Adaptive Query Execution, executor memory, and small-file optimization.">Listen</button></h2>
+<p><span class="badge">Shuffle</span><span class="badge">Skew</span><span class="badge">Broadcast Join</span><span class="badge">AQE</span><span class="badge">OOM</span></p>
+<div class="grid">
+<div class="card"><h3>Core Concepts</h3><ul><li>Driver and executor</li><li>Job, stage, and task</li><li>Narrow and wide transformations</li><li>Repartition vs. coalesce</li><li>Cache and persist</li><li>Spark UI</li></ul></div>
+<div class="card"><h3>Likely Questions</h3><ul><li>What causes shuffle?</li><li>How do you fix skew?</li><li>When do you broadcast?</li><li>How do you diagnose OOM?</li><li>Why do small files hurt performance?</li></ul></div>
+</div>
+<pre><code>Inspect data distribution and physical plan
+→ Reduce unnecessary shuffles
+→ Fix skew
+→ Select the correct join strategy
+→ Tune partitions
+→ Control memory
+→ Compact output files</code></pre>
+</section>
+
+<section id="lakehouse">
+<h2>6. Lakehouse and Apache Iceberg <button class="listen" data-speak="A lakehouse combines scalable data lake storage with warehouse-style transactions, metadata, governance, and SQL analytics.">Listen</button></h2>
+<div class="note">
+<strong>Parquet</strong> is a file format. <strong>Iceberg</strong> is a table format. <strong>S3, HDFS, or object storage</strong> is the storage layer.
+</div>
+<pre><code>Data Lake
++ Open Table Format
++ Metadata
++ ACID Transactions
++ Governance
++ SQL Analytics
+= Lakehouse</code></pre>
+<details open><summary>Iceberg Topics</summary><div>
+<ul><li>Snapshots and time travel</li><li>Schema evolution</li><li>Partition evolution</li><li>Hidden partitioning</li><li>MERGE, UPDATE, DELETE</li><li>Manifest files</li><li>Snapshot expiration</li><li>File compaction</li></ul>
+</div></details>
+</section>
+
+<section id="k8s">
+<h2>7. Kubernetes <button class="listen" data-speak="Kubernetes is likely the largest gap and one of the most important interview areas. Focus on Jobs, CronJobs, resources, probes, configuration, RBAC, and troubleshooting.">Listen</button></h2>
+<table>
+<tr><th>Object</th><th>Purpose</th></tr>
+<tr><td><strong>Pod</strong></td><td>Smallest deployable unit</td></tr>
+<tr><td><strong>Deployment</strong></td><td>Long-running service</td></tr>
+<tr><td><strong>Job</strong></td><td>Task that runs to completion</td></tr>
+<tr><td><strong>CronJob</strong></td><td>Scheduled Job</td></tr>
+<tr><td><strong>ConfigMap / Secret</strong></td><td>Runtime configuration</td></tr>
+<tr><td><strong>PVC</strong></td><td>Persistent storage request</td></tr>
+<tr><td><strong>ServiceAccount / RBAC</strong></td><td>Workload identity and authorization</td></tr>
+</table>
+<details open><summary>Likely Questions</summary><div>
+<ul>
+<li>Why run a pipeline as a Job instead of a Deployment?</li>
+<li>Readiness probe vs. liveness probe?</li>
+<li>What happens after memory limit is exceeded?</li>
+<li>Why is a pod stuck in Pending?</li>
+<li>How do you investigate CrashLoopBackOff?</li>
+<li>How do requests and limits affect scheduling?</li>
+</ul>
+</div></details>
+<pre><code># Check status
+kubectl get pods -n &lt;namespace&gt;
+
+# Inspect details and events
+kubectl describe pod &lt;pod-name&gt; -n &lt;namespace&gt;
+
+# Read logs
+kubectl logs &lt;pod-name&gt; -n &lt;namespace&gt;
+
+# Read logs from the previous crashed container
+kubectl logs &lt;pod-name&gt; -n &lt;namespace&gt; --previous
+
+# Check recent events
+kubectl get events -n &lt;namespace&gt; --sort-by=.metadata.creationTimestamp</code></pre>
+</section>
+
+<section id="docker">
+<h2>8. Docker</h2>
+<p><span class="badge">Dockerfile</span><span class="badge">Image</span><span class="badge">Container</span><span class="badge">ENTRYPOINT</span><span class="badge">CMD</span></p>
+<ul>
+<li>Use small and trusted base images</li>
+<li>Run as a non-root user</li>
+<li>Use multi-stage builds where useful</li>
+<li>Keep secrets outside the image</li>
+<li>Use immutable image tags for releases</li>
+</ul>
+<details><summary>Likely Questions</summary><div>
+<ul><li>Image vs. container?</li><li>CMD vs. ENTRYPOINT?</li><li>How do you reduce image size?</li><li>How do you debug a running container?</li></ul>
+</div></details>
+</section>
+
+<section id="airflow">
+<h2>9. Apache Airflow</h2>
+<p><span class="badge">DAG</span><span class="badge">Retry</span><span class="badge">Backfill</span><span class="badge">Catchup</span><span class="badge">XCom</span></p>
+<ul>
+<li>Design idempotent DAGs</li>
+<li>Use retries with safe output semantics</li>
+<li>Avoid passing large data through XCom</li>
+<li>Understand catchup, backfill, concurrency, and Sensors</li>
+</ul>
+</section>
+
+<section id="cicd">
+<h2>10. CI/CD and DevOps</h2>
+<pre><code>Commit
+→ Pull Request
+→ Lint and Unit Tests
+→ Build Docker Image
+→ Security Scan
+→ Push to Registry
+→ Deploy to Kubernetes
+→ Smoke Test
+→ Monitor
+→ Roll Back if Needed</code></pre>
+<p>Prepare Git, automated testing, Helm, Infrastructure as Code, secrets management, artifact promotion, and rollback strategies.</p>
+</section>
+
+<section id="modeling">
+<h2>11. Data Modeling</h2>
+<div class="grid">
+<div class="card"><h3>Relational</h3><ul><li>Normalization</li><li>Star schema</li><li>Facts and dimensions</li><li>SCD Type 1 and Type 2</li><li>Grain and surrogate keys</li></ul></div>
+<div class="card"><h3>NoSQL</h3><ul><li>Access-pattern-driven design</li><li>Partition keys</li><li>Hotspot avoidance</li><li>Denormalization</li><li>Consistency trade-offs</li></ul></div>
+</div>
+</section>
+
+<section id="nosql">
+<h2>12. NoSQL</h2>
+<div class="note"><strong>HBase</strong> is a valid NoSQL example because it is a distributed wide-column database.</div>
+<p>Prepare row-key design, hotspot avoidance, partitioning, replication, consistency, and why joins are avoided in NoSQL systems.</p>
+</section>
+
+<section id="governance">
+<h2>13. Security and Data Governance</h2>
+<ul>
+<li><strong>RBAC</strong> and least privilege</li>
+<li>Encryption at rest and in transit</li>
+<li>Masking, tokenization, and PII classification</li>
+<li>Audit logs and access review</li>
+<li>Data lineage and metadata ownership</li>
+<li>Retention and compliance controls</li>
+</ul>
+</section>
+
+<section id="support">
+<h2>14. Production Support and L3 Troubleshooting</h2>
+<pre><code>Detect
+→ Assess business impact
+→ Stabilize service
+→ Collect evidence
+→ Identify root cause
+→ Apply corrective fix
+→ Reprocess safely
+→ Validate data
+→ Document RCA
+→ Add prevention controls</code></pre>
+<p>Prepare one strong incident story covering Spark OOM, slow SQL, failed Kubernetes workload, duplicate data, or late-arriving data.</p>
+</section>
+
+<section id="architecture">
+<h2>15. Architecture Questions</h2>
+<pre><code>Source Systems
+→ Airflow
+→ Kubernetes Jobs
+→ Python / PySpark
+→ Raw Storage
+→ Iceberg Curated Tables
+→ Consumption Tables
+→ SQL Server / Trino / BI</code></pre>
+<div class="note warn">
+Be ready to explain partitioning, schema evolution, retries, deduplication, security, snapshot maintenance, data quality, recovery, and rollback.
+</div>
+</section>
+
+<section id="behavioral">
+<h2>16. Behavioral and Senior-Level Questions</h2>
+<ul>
+<li>Describe a complex project delivered independently.</li>
+<li>Explain how you mentor junior engineers.</li>
+<li>Describe a serious production incident you owned.</li>
+<li>Explain how you balance technical quality with delivery deadlines.</li>
+<li>Describe collaboration with analysts, data scientists, and compliance teams.</li>
+</ul>
+</section>
+
+<section id="priority">
+<h2>17. Recommended Preparation Priority</h2>
+<ol>
+<li><strong>Kubernetes troubleshooting</strong></li>
+<li><strong>SQL Server performance tuning</strong></li>
+<li><strong>Spark optimization</strong></li>
+<li><strong>Iceberg and lakehouse architecture</strong></li>
+<li><strong>Python production pipeline design</strong></li>
+<li>Airflow and CI/CD</li>
+<li>Data governance and L3 support</li>
+</ol>
+</section>
+
+<section id="fit">
+<h2>18. Candidate Fit Assessment</h2>
+<div class="grid">
+<div class="card"><h3 class="good">Strong Match</h3><ul><li>9+ years data engineering</li><li>SQL, Spark, Hive, and warehouse design</li><li>Iceberg experience</li><li>Financial, AML, and governance background</li><li>Spark troubleshooting</li><li>HBase / NoSQL</li></ul></div>
+<div class="card"><h3 class="high">Areas to Strengthen</h3><ul><li>Kubernetes depth</li><li>SQL Server-specific tuning</li><li>Airflow examples</li><li>Full CI/CD implementation</li><li>Terraform or equivalent IaC</li><li>On-premise operations</li></ul></div>
+</div>
+<div class="note"><strong>Estimated match: 70%–75%.</strong> The main gap is Kubernetes depth, not core data engineering capability.</div>
+</section>
+
+<section id="intro">
+<h2>19. Concise Interview Introduction <button class="listen" data-speak="I have over nine years of data engineering experience, with a strong background in SQL, Python, Spark, Hive, data warehousing, and data governance. I have built and optimized large-scale data pipelines in financial and internet business environments, including payment, reconciliation, AML, and analytical data platforms.">Listen</button></h2>
+<p>I have over nine years of data engineering experience, with a strong background in <strong>SQL, Python, Spark, Hive, data warehousing, and data governance</strong>. I have built and optimized large-scale data pipelines in financial and internet business environments, including payment, reconciliation, AML, and analytical data platforms. I also have hands-on experience with Iceberg, HBase, AWS data services, Docker, and Kubernetes fundamentals. My strongest areas are data modeling, pipeline development, Spark performance tuning, production troubleshooting, and governance.</p>
+</section>
+</main>
+</div>
+
+<footer>Senior Data Engineer Interview Preparation Guide</footer>
+<script>
+const synth = window.speechSynthesis;
+const voiceSelect = document.getElementById('voiceSelect');
+const rate = document.getElementById('rate');
+const rateValue = document.getElementById('rateValue');
+let activeButton = null;
+
+function loadVoices() {
+  const voices = synth.getVoices();
+  voiceSelect.innerHTML = '';
+  voices.forEach((v,i)=>{
+    const o=document.createElement('option');
+    o.value=i; o.textContent=`${v.name} (${v.lang})`;
+    voiceSelect.appendChild(o);
+  });
+  let preferred = voices.findIndex(v => /Google UK English Female/i.test(v.name));
+  if (preferred < 0) preferred = voices.findIndex(v => /en-GB/i.test(v.lang) && /female/i.test(v.name));
+  if (preferred < 0) preferred = voices.findIndex(v => /en-GB/i.test(v.lang));
+  if (preferred >= 0) voiceSelect.value = preferred;
+}
+loadVoices();
+if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+
+rate.addEventListener('input',()=>rateValue.textContent=rate.value+'×');
+
+function stopSpeech(){
+  synth.cancel();
+  if(activeButton){activeButton.classList.remove('speaking');activeButton=null;}
+}
+document.querySelectorAll('.listen').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    if(btn.classList.contains('speaking')){stopSpeech();return;}
+    stopSpeech();
+    const utter=new SpeechSynthesisUtterance(btn.dataset.speak);
+    const voices=synth.getVoices();
+    const idx=parseInt(voiceSelect.value,10);
+    if(voices[idx]) utter.voice=voices[idx];
+    utter.rate=parseFloat(rate.value);
+    utter.onend=()=>{btn.classList.remove('speaking');activeButton=null;};
+    utter.onerror=()=>{btn.classList.remove('speaking');activeButton=null;};
+    activeButton=btn; btn.classList.add('speaking'); synth.speak(utter);
+  });
+});
+</script>
+</body>
+</html>

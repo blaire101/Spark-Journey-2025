@@ -62,6 +62,28 @@
   .listen-btn { flex-shrink:0; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:5px 10px; border-radius:999px; border:1px solid var(--accent); background:var(--accent-bg); color:var(--accent); cursor:pointer; }
   .listen-btn.speaking { background:var(--accent); color:white; }
   .listen-btn svg { width:12px; height:12px; }
+
+
+  /* Data Warehouse Fundamentals */
+  .dw-intro { background:linear-gradient(135deg,var(--accent-bg),#F6FAFD); border:1px solid #CFE3F3; border-radius:var(--radius); padding:14px 16px; margin-bottom:14px; }
+  .dw-intro h2 { font-size:17px; margin:0 0 5px; color:var(--accent); }
+  .dw-intro p { margin:0; font-size:13px; color:var(--text-secondary); }
+  .dw-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .dw-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px 18px; margin-bottom:12px; }
+  .dw-card.full { grid-column:1/-1; }
+  .dw-card h3 { font-size:14px; margin:0; }
+  .dw-card p { font-size:13px; color:var(--text-secondary); margin:6px 0 8px; }
+  .dw-cn { color:var(--text-muted) !important; font-size:12px !important; }
+  .dw-key { font-weight:700; color:#173F5F; }
+  .dw-code { white-space:pre-wrap; overflow:auto; background:#111827; color:#E5E7EB; border-radius:8px; padding:11px 14px; font-family:"SF Mono",Menlo,monospace; font-size:11.5px; line-height:1.55; }
+  .dw-qa { border-left:3px solid var(--accent); padding-left:12px; margin:8px 0; }
+  .schema-visual { display:grid; grid-template-columns:1fr auto 1fr; gap:12px; align-items:center; margin:10px 0; }
+  .schema-box { border:1px solid var(--border); border-radius:9px; padding:12px; background:#fff; text-align:center; font-size:12px; }
+  .schema-box.fact { background:var(--warning-bg); color:var(--warning); border-color:#E8D1A8; font-weight:700; }
+  .schema-box.dim { background:var(--accent-bg); color:var(--accent); border-color:#CFE3F3; }
+  .schema-arrow { color:var(--text-muted); font-weight:700; }
+  @media(max-width:720px){ .dw-grid{grid-template-columns:1fr}.schema-visual{grid-template-columns:1fr}.schema-arrow{transform:rotate(90deg)} }
+
 </style>
 </head>
 <body>
@@ -79,13 +101,15 @@
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="amazon">📦 Amazon Collection</button>
+    <button class="tab-btn active" data-tab="dwfund">🏛️ DW Fundamentals</button>
+    <button class="tab-btn" data-tab="amazon">📦 Amazon Collection</button>
     <button class="tab-btn" data-tab="gov">🛡️ Data Governance</button>
     <button class="tab-btn" data-tab="reserve">🎯 Reservation Mart</button>
     <button class="tab-btn" data-tab="toc">🌍 ToC Remittance</button>
   </div>
 
-  <div id="amazon" class="tab-panel active"></div>
+  <div id="dwfund" class="tab-panel active"></div>
+  <div id="amazon" class="tab-panel"></div>
   <div id="gov" class="tab-panel"></div>
   <div id="reserve" class="tab-panel"></div>
   <div id="toc" class="tab-panel"></div>
@@ -303,6 +327,184 @@ const projects = {
 
 };
 
+
+// ============================================================
+// DATA WAREHOUSE FUNDAMENTALS
+// ============================================================
+function dwCard(title, speakText, body, full=false) {
+  return `<div class="dw-card${full ? ' full' : ''}">
+    <div class="q-head">
+      <h3>${title}</h3>
+      ${listenBtn(speakText)}
+    </div>
+    ${body}
+  </div>`;
+}
+
+function renderDwFundamentals() {
+  const el = document.getElementById('dwfund');
+  let html = `<div class="dw-intro">
+    <h2>Data Warehouse Fundamentals</h2>
+    <p><span class="dw-key">OLTP vs OLAP</span>, <span class="dw-key">Normalization</span>, <span class="dw-key">Fact & Dimension</span>, <span class="dw-key">Star Schema</span>, <span class="dw-key">Snowflake Schema</span>, <span class="dw-key">Grain</span>, <span class="dw-key">SCD</span>, and common interview questions.</p>
+  </div><div class="dw-grid">`;
+
+  html += dwCard(
+    '1. OLTP vs OLAP',
+    'OLTP systems support frequent transactional operations, while OLAP systems support large-scale analytical queries across historical data.',
+    `<p><span class="dw-key">OLTP</span> is optimized for frequent inserts, updates, and point lookups. <span class="dw-key">OLAP</span> is optimized for scans, aggregations, trends, and multi-dimensional analysis.</p>
+     <p class="dw-cn">中文：OLTP 处理日常交易；OLAP 处理历史数据分析。</p>
+     ${table(['Dimension','OLTP','OLAP'],[
+       ['Purpose','Run business transactions','Analyze business performance'],
+       ['Workload','Many short reads and writes','Large scans and aggregations'],
+       ['Data','Current operational data','Historical integrated data'],
+       ['Model','Usually normalized','Usually dimensional'],
+       ['Example','Order placement, payment','Revenue trend, customer analysis']
+     ])}`
+  );
+
+  html += dwCard(
+    '2. Normalization',
+    'Normalization organizes relational data into separate tables to reduce redundancy and update anomalies.',
+    `<p><span class="dw-key">Normalization</span> separates repeated attributes into related tables. It improves consistency in transactional systems but can create more joins for analytics.</p>
+     <p class="dw-cn">中文：规范化通过拆表减少冗余，适合 OLTP；分析场景通常会适当反规范化。</p>
+     ${table(['Normal Form','Main Rule','Simple Meaning'],[
+       ['1NF','Atomic column values','One cell contains one value'],
+       ['2NF','No partial dependency','Non-key columns depend on the whole composite key'],
+       ['3NF','No transitive dependency','Non-key columns depend only on the key'],
+       ['Denormalization','Intentionally combine data','Reduce joins and improve analytical query speed']
+     ])}`
+  );
+
+  html += dwCard(
+    '3. Fact Tables and Dimension Tables',
+    'A fact table stores measurable business events at a defined grain, while dimension tables store descriptive attributes used to filter and group those facts.',
+    `<p><span class="dw-key">Fact Table</span> = measurable event. <span class="dw-key">Dimension Table</span> = descriptive business context.</p>
+     <p class="dw-cn">中文：事实表保存业务事件和指标；维度表保存用户、产品、地区、时间等描述属性。</p>
+     ${table(['Table Type','Contains','Examples'],[
+       ['Fact','Foreign keys, measures, event timestamps','order_amount, quantity, transaction_count'],
+       ['Dimension','Attributes and hierarchies','customer_name, product_category, country'],
+       ['Factless Fact','Event or relationship without numeric measure','student_attendance, promotion_eligibility']
+     ])}`
+  );
+
+  html += dwCard(
+    '4. Grain — the Most Important Design Decision',
+    'Grain defines exactly what one row in a fact table represents. It must be declared before selecting facts and dimensions.',
+    `<p>The <span class="dw-key">grain</span> is the precise meaning of one row.</p>
+     <div class="dw-code">Examples:
+Order fact       → one row per order line
+Payment fact     → one row per payment transaction
+Daily snapshot   → one row per account per day
+Reservation mart → one row per user × campaign × product × site</div>
+     <p class="dw-cn">中文：建模时先定义粒度，再选择指标和维度，否则容易出现重复计算。</p>`
+  );
+
+  html += dwCard(
+    '5. Star Schema',
+    'A Star Schema has one central fact table connected directly to denormalized dimension tables.',
+    `<div class="schema-visual">
+       <div><div class="schema-box dim">Customer Dimension</div><div class="schema-box dim">Product Dimension</div></div>
+       <div class="schema-arrow">→</div>
+       <div class="schema-box fact">Sales Fact<br>customer_key<br>product_key<br>date_key<br>amount</div>
+     </div>
+     <p><span class="dw-key">Advantages:</span> simple joins, easy for BI users, fast analytical queries, intuitive business model.</p>
+     <p class="dw-cn">中文：星型模型是一张中心事实表直接连接多个反规范化维度表。</p>`
+  );
+
+  html += dwCard(
+    '6. Snowflake Schema',
+    'A Snowflake Schema normalizes dimension tables into multiple related sub-dimensions.',
+    `<div class="dw-code">Sales Fact
+  → Product Dimension
+      → Product Category
+          → Department
+  → Geography Dimension
+      → Country
+          → Region</div>
+     <p><span class="dw-key">Advantages:</span> less dimension redundancy and stronger hierarchy consistency. <span class="dw-key">Trade-off:</span> more joins and greater query complexity.</p>
+     <p class="dw-cn">中文：雪花模型会继续拆分维度表，冗余更少，但查询更复杂。</p>`
+  );
+
+  html += dwCard(
+    '7. Star Schema vs Snowflake Schema',
+    'Star Schema favors simplicity and query performance, while Snowflake Schema favors normalization and reduced dimension redundancy.',
+    `${table(['Aspect','Star Schema','Snowflake Schema'],[
+      ['Dimension design','Denormalized','Normalized'],
+      ['Number of joins','Fewer','More'],
+      ['Query simplicity','High','Lower'],
+      ['Storage redundancy','Higher','Lower'],
+      ['BI usability','Very easy','More technical'],
+      ['Typical choice','Most analytics and marts','Complex reusable hierarchies']
+    ])}
+    <div class="tip">💡 Interview answer: I usually prefer a <b>Star Schema</b> for BI and analytical marts because it is easier to understand and query. I use Snowflake-style normalization selectively when dimensions contain large reusable hierarchies.</div>`,
+    true
+  );
+
+  html += dwCard(
+    '8. Types of Fact Tables',
+    'The three common fact table types are transaction facts, periodic snapshots, and accumulating snapshots.',
+    `${table(['Fact Type','Grain','Example'],[
+      ['Transaction Fact','One row per event','One row per payment or order line'],
+      ['Periodic Snapshot','One row per entity per period','Daily account balance'],
+      ['Accumulating Snapshot','One row per process lifecycle','Order from creation to delivery'],
+      ['Factless Fact','One row per event or relationship','Attendance or eligibility']
+    ])}`
+  );
+
+  html += dwCard(
+    '9. Slowly Changing Dimensions',
+    'Slowly Changing Dimensions define how historical changes to dimension attributes are stored.',
+    `${table(['Type','Behavior','Example'],[
+      ['SCD Type 0','Never change','Original signup source'],
+      ['SCD Type 1','Overwrite old value','Correct spelling error'],
+      ['SCD Type 2','Create a new version row','Preserve customer address history'],
+      ['SCD Type 3','Store limited previous value','Current and previous department']
+    ])}
+    <div class="dw-code">SCD Type 2 common columns:
+surrogate_key
+business_key
+effective_start_date
+effective_end_date
+is_current</div>
+    <p class="dw-cn">中文：Type 1 覆盖旧值；Type 2 新增版本并保留完整历史。</p>`
+  );
+
+  html += dwCard(
+    '10. Surrogate Key vs Business Key',
+    'A business key comes from the source system, while a surrogate key is generated inside the warehouse to uniquely identify a dimension version.',
+    `${table(['Key','Meaning','Example'],[
+      ['Business Key','Natural source identifier','customer_id = C1001'],
+      ['Surrogate Key','Warehouse-generated identifier','customer_sk = 98231'],
+      ['Why surrogate keys?','Support SCD Type 2 and isolate source-system changes','Same customer can have multiple historical versions']
+    ])}`
+  );
+
+  html += dwCard(
+    '11. Conformed Dimensions and Degenerate Dimensions',
+    'A conformed dimension is consistently shared across multiple fact tables. A degenerate dimension is a business identifier stored directly in the fact table without a separate dimension table.',
+    `<p><span class="dw-key">Conformed Dimension:</span> the same Customer or Date dimension is reused by Sales Fact and Payment Fact.</p>
+     <p><span class="dw-key">Degenerate Dimension:</span> order_number is stored directly in the Order Fact because it has no useful descriptive attributes.</p>
+     <p class="dw-cn">中文：一致性维度可跨主题复用；退化维度通常是直接放在事实表里的业务编号。</p>`
+  );
+
+  html += dwCard(
+    '12. Common Data Warehouse Interview Q&A',
+    'These are common interview questions about dimensional modeling, grain, facts, dimensions, and schema design.',
+    `<div class="dw-qa"><b>Q: What is the first step when designing a fact table?</b><br>Define the business process and declare the grain.</div>
+     <div class="dw-qa"><b>Q: What is the difference between a fact and a dimension?</b><br>A fact records a measurable event; a dimension provides descriptive context.</div>
+     <div class="dw-qa"><b>Q: Why is grain important?</b><br>It determines row uniqueness, valid measures, joins, and prevents double counting.</div>
+     <div class="dw-qa"><b>Q: Why is a Star Schema common in OLAP?</b><br>It requires fewer joins and is easier for analysts and BI tools to understand.</div>
+     <div class="dw-qa"><b>Q: When would you use SCD Type 2?</b><br>When historical attribute changes must be preserved for point-in-time reporting.</div>
+     <div class="dw-qa"><b>Q: Can a fact table contain no numeric measure?</b><br>Yes. A factless fact table records an event or relationship.</div>
+     <div class="dw-qa"><b>Q: What is a conformed dimension?</b><br>A dimension with consistent meaning and values across multiple data marts.</div>
+     <div class="dw-qa"><b>Q: Normalization or denormalization for a warehouse?</b><br>Core operational systems often use normalization; analytical marts usually use dimensional and partially denormalized models.</div>`,
+    true
+  );
+
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
 // ============================================================
 // RENDERING
 // ============================================================
@@ -349,6 +551,7 @@ renderProject('amazon', projects.amazon);
 renderProject('gov', projects.gov);
 renderProject('reserve', projects.reserve);
 renderProject('toc', projects.toc);
+renderDwFundamentals();
 
 // ============================================================
 // TABS
