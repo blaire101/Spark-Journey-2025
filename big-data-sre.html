@@ -709,6 +709,173 @@ html {
   color:#B3B3AE;
   font-size:10.8px;
 }
+
+/* --- Level 8 command reference --- */
+#k8s .command-table {
+  width:100%;
+  border-collapse:collapse;
+  margin:12px 0 16px;
+  table-layout:fixed;
+}
+#k8s .command-table th,
+#k8s .command-table td {
+  border:1px solid #D8D8D3;
+  padding:10px 11px;
+  vertical-align:top;
+  text-align:left;
+}
+#k8s .command-table th {
+  background:var(--accent-bg);
+  color:var(--accent);
+  font-weight:800;
+}
+#k8s .command-table th:nth-child(1){width:19%}
+#k8s .command-table th:nth-child(2){width:43%}
+#k8s .command-table th:nth-child(3){width:38%}
+#k8s .command-table code {
+  font-family:"SF Mono",Menlo,Consolas,monospace;
+  font-size:11.5px;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+#k8s .command-group-title {
+  margin-top:18px;
+  font-size:15px;
+  font-weight:800;
+}
+
+/* --- Compact collapsible command groups --- */
+#k8s details.compact-command-details {
+  margin:10px 0 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#FBFBFA;
+  overflow:hidden;
+}
+#k8s details.compact-command-details summary {
+  cursor:pointer;
+  padding:10px 13px;
+  font-size:13px;
+  font-weight:800;
+  color:var(--accent);
+  background:var(--accent-bg);
+  list-style:none;
+}
+#k8s details.compact-command-details summary::-webkit-details-marker { display:none; }
+#k8s details.compact-command-details summary::before {
+  content:"▶";
+  display:inline-block;
+  margin-right:8px;
+  transition:transform .15s ease;
+}
+#k8s details.compact-command-details[open] summary::before {
+  transform:rotate(90deg);
+}
+#k8s details.compact-command-details .code-wrap {
+  margin:0;
+  border:none;
+  border-radius:0;
+}
+#k8s .troubleshoot-step {
+  margin:12px 0;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#FBFBFA;
+}
+#k8s .troubleshoot-step-title {
+  font-weight:800;
+  margin-bottom:4px;
+}
+#k8s .troubleshoot-step-desc {
+  margin-bottom:9px;
+}
+#k8s .troubleshoot-step .code-wrap {
+  margin:0;
+}
+
+/* --- Compact, readable interview Q&A cards --- */
+#k8s .qa-card-list {
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+  margin-top:14px;
+}
+#k8s .qa-card {
+  border:1px solid #D9D9D4;
+  border-radius:12px;
+  background:#FFFFFF;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+  overflow:hidden;
+}
+#k8s .qa-card-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 12px;
+  background:var(--accent-bg);
+  border-bottom:1px solid #D9D9D4;
+}
+#k8s .qa-category {
+  display:inline-flex;
+  align-items:center;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.02em;
+  color:var(--accent);
+  background:#FFFFFF;
+  border:1px solid #C9DDF0;
+}
+#k8s .qa-card-body {
+  padding:11px 12px 12px;
+}
+#k8s .qa-question {
+  font-size:13px;
+  line-height:1.45;
+  font-weight:800;
+  color:var(--text-primary);
+  margin-bottom:8px;
+}
+#k8s .qa-answer-title,
+#k8s .qa-explanation-title {
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:#6E6D67;
+  margin-bottom:3px;
+}
+#k8s .qa-answer-text {
+  font-size:12px;
+  line-height:1.5;
+  color:var(--text-primary);
+  margin-bottom:8px;
+}
+#k8s .qa-explanation {
+  padding-top:7px;
+  border-top:1px dashed #D9D9D4;
+  font-size:11px;
+  line-height:1.45;
+  color:#6F6E68;
+}
+#k8s .qa-card .listen-btn {
+  flex:0 0 auto;
+  margin:0;
+  padding:5px 8px;
+  font-size:10px;
+}
+#k8s .qa-answer-text strong,
+#k8s .qa-question strong,
+#k8s .qa-explanation strong {
+  font-weight:800;
+  color:#111;
+}
+@media (max-width:900px){
+  #k8s .qa-card-list{grid-template-columns:1fr;}
+}
 </style>
 <body>
 <div class="app">
@@ -724,7 +891,7 @@ html {
 </div>
 <div class="tabs">
 <button class="tab-btn active" data-tab="hdfs">🧶🗄️🐝 YARN &amp; HDFS &amp; Hive</button><button class="tab-btn" data-tab="spark">⚡ Spark Memory</button><button class="tab-btn" data-tab="clickhouse">📨 MQ &amp; ClickHouse</button><button class="tab-btn" data-tab="k8s">🐳☸️ Docker &amp; Kubernetes</button><button class="tab-btn" data-tab="linux">🐧 Linux</button><button class="tab-btn" data-tab="ref">📋 Quick Reference</button><button class="tab-btn" data-tab="test-review">📝 Test Review</button></div>
-<div class="tab-panel active" id="hdfs"></div><div class="tab-panel" id="spark"></div><div class="tab-panel" id="clickhouse"></div><div class="tab-panel" id="k8s"><nav aria-label="Docker and Kubernetes table of contents" class="dk-toc"><div class="dk-toc-title">Table of Contents</div><div class="dk-toc-grid"><a class="dk-toc-link" href="#dk-level-1">Level 1 — Docker and Kubernetes Overview</a><a class="dk-toc-link" href="#dk-level-2">Level 2 — Docker Image vs Container</a><a class="dk-toc-link" href="#dk-level-3">Level 3 — Basic Docker Commands</a><a class="dk-toc-link" href="#dk-level-4">Level 4 — Kubernetes Foundations</a><a class="dk-toc-link" href="#dk-level-5">Level 5 — Pod, Deployment and Service</a><a class="dk-toc-link" href="#dk-level-6">Level 6 — Secret and Persistent Storage</a><a class="dk-toc-link" href="#dk-level-7">Level 7 — Deploy One MySQL Example</a><a class="dk-toc-link" href="#dk-level-8">Level 8 — Execute and Verify</a><a class="dk-toc-link" href="#dk-level-9">Level 9 — Troubleshooting Flow</a><a class="dk-toc-link" href="#dk-level-10">Level 10 — Common Interview Q&amp;A</a></div></nav>
+<div class="tab-panel active" id="hdfs"></div><div class="tab-panel" id="spark"></div><div class="tab-panel" id="clickhouse"></div><div class="tab-panel" id="k8s"><nav aria-label="Docker and Kubernetes table of contents" class="dk-toc"><div class="dk-toc-title">Table of Contents</div><div class="dk-toc-grid"><a class="dk-toc-link" href="#dk-level-1">Level 1 — Docker and Kubernetes Overview</a><a class="dk-toc-link" href="#dk-level-2">Level 2 — Docker Image vs Container</a><a class="dk-toc-link" href="#dk-level-3">Level 3 — Basic Docker Commands</a><a class="dk-toc-link" href="#dk-level-4">Level 4 — Kubernetes Foundations</a><a class="dk-toc-link" href="#dk-level-5">Level 5 — Pod, Deployment and Service</a><a class="dk-toc-link" href="#dk-level-6">Level 6 — Secret and Persistent Storage</a><a class="dk-toc-link" href="#dk-level-7">Level 7 — Deploy One MySQL Example</a><a class="dk-toc-link" href="#dk-level-8">Level 8 — K8S Basic Commands + Execute and Verify</a><a class="dk-toc-link" href="#dk-level-9">Level 9 — Troubleshooting Flow</a><a class="dk-toc-link" href="#dk-level-10">Level 10 — Common Interview Q&amp;A</a></div></nav>
 <div class="compact-interview-diagram">
 <svg aria-label="Simple MySQL Kubernetes architecture" role="img" viewbox="0 0 820 300">
 <defs>
@@ -1285,12 +1452,55 @@ spec:
 </code></pre></div></details><details class="code-details frontend-backend-yaml"><summary>Apply and Verify Commands</summary><div class="code-wrap"><div class="code-label">Shell</div><pre><code>kubectl apply -f frontend-backend.yaml
 kubectl get pods,svc,networkpolicy
 kubectl describe pod &lt;backend-pod&gt;
-kubectl get endpoints backend</code></pre></div></details></div></section><section class="level-section" id="dk-level-8"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 8 — Execute and Verify</h2><div class="level-subtitle-unified">Use a small command set for daily operations.</div></div></div><div class="level-body-unified"><div class="memory-item"><div class="memory-text"><div class="memory-en">Apply the YAML file.</div><div class="memory-zh">应用 YAML 文件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Apply the YAML file.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Check whether the Pod is running.</div><div class="memory-zh">检查 Pod 是否正常运行。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Check whether the Pod is running.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Describe the Pod to inspect events and configuration.</div><div class="memory-zh">使用 describe 查看事件和配置。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Describe the Pod to inspect events and configuration.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Read logs when MySQL fails to start.</div><div class="memory-zh">MySQL 启动失败时查看日志。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Read logs when MySQL fails to start.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Connect through the Service name mysql.</div><div class="memory-zh">通过 Service 名称 mysql 连接。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Connect through the Service name mysql.">🔊 Listen</button></div><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Apply the YAML, then verify that the <strong>Deployment</strong>, <strong>Pod</strong>, <strong>Service</strong> and <strong>PVC</strong> were created successfully.</div><div class="knowledge-zh">应用 YAML，然后检查 Deployment、Pod、Service 和 PVC 是否成功创建。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Apply the YAML, then verify that the Deployment, Pod, Service and PVC were created successfully.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Use kubectl describe to inspect <strong>Pod</strong> events and configuration, kubectl logs to investigate startup errors, and the <strong>Service</strong> name mysql to test connectivity.</div><div class="knowledge-zh">使用 kubectl describe 查看 Pod 事件和配置，使用 kubectl logs 排查启动错误，并通过 Service 名称 mysql 测试连接。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Use kubectl describe to inspect Pod events and configuration, kubectl logs to investigate startup errors, and the Service name mysql to test connectivity.">🔊 Listen</button></li></ul><div class="code-wrap level-code"><div class="code-label">Shell</div><pre><code class="language-shell"><span class="tok-cmd">kubectl</span> apply <span class="tok-flag">-f</span> mysql.yaml
+kubectl get endpoints backend</code></pre></div></details></div></section><section class="level-section" id="dk-level-8"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 8 — K8S Basic Commands + Execute and Verify</h2><div class="level-subtitle-unified">Use a small command set for daily operations.</div></div></div><div class="level-body-unified"><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Use <strong>kubectl</strong> to manage workloads and inspect cluster resources, while <strong>kubeadm</strong> is mainly used to initialize and join Kubernetes nodes.</div><div class="knowledge-zh">kubectl 用于管理工作负载和检查集群资源；kubeadm 主要用于初始化集群和加入节点。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Use kubectl to manage workloads and inspect cluster resources, while kubeadm is mainly used to initialize and join Kubernetes nodes.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">For troubleshooting, start with resource status, then inspect events, logs, Service endpoints, readiness probes, and Ingress routing.</div><div class="knowledge-zh">排障时先查看资源状态，再检查事件、日志、Service endpoints、readiness probe 和 Ingress 路由。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="For troubleshooting, start with resource status, then inspect events, logs, Service endpoints, readiness probes, and Ingress routing.">🔊 Listen</button></li></ul><details class="compact-command-details" open=""><summary>Daily kubectl Commands</summary><div class="code-wrap"><div class="code-label">Shell</div><pre><code># Check nodes and Pods
+kubectl get nodes
+kubectl get pods -o wide
 
-<span class="tok-cmd">kubectl</span> get deployment,pod,service,pvc
-<span class="tok-cmd">kubectl</span> describe pod <span class="tok-str">&lt;mysql-pod&gt;</span>
-<span class="tok-cmd">kubectl</span> logs <span class="tok-str">&lt;mysql-pod&gt;</span>
-<span class="tok-cmd">kubectl</span> run mysql-client <span class="tok-flag">--rm</span> -it   <span class="tok-flag">--image</span>=mysql:8.4   -- mysql <span class="tok-flag">-h</span> mysql -uroot <span class="tok-flag">-p</span></code></pre></div></div></section><section class="level-section" id="dk-level-9"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 9 — Troubleshooting Flow</h2><div class="level-subtitle-unified">Answer operational questions in a clear sequence.</div></div></div><div class="level-body-unified"><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Start with kubectl get pods to check status, then use kubectl describe pod to inspect recent events.</div><div class="knowledge-zh">先使用 kubectl get pods 查看状态，再使用 kubectl describe pod 检查最近事件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Start with kubectl get pods to check status, then use kubectl describe pod to inspect recent events.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Use kubectl logs to inspect application errors, verify the <strong>Secret</strong>, <strong>PVC</strong> and <strong>Service</strong> selector, and finally test connectivity from another <strong>Pod</strong>.</div><div class="knowledge-zh">使用 kubectl logs 查看应用错误，检查 Secret、PVC 和 Service selector，最后从另一个 Pod 测试连接。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Use kubectl logs to inspect application errors, verify the Secret, PVC and Service selector, and finally test connectivity from another Pod.">🔊 Listen</button></li></ul><div class="memory-item"><div class="memory-text"><div class="memory-en">First, run kubectl get pods and check the Pod status.</div><div class="memory-zh">第一步查看 Pod 状态。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="First, run kubectl get pods and check the Pod status.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Second, run kubectl describe pod and inspect recent events.</div><div class="memory-zh">第二步查看 Pod 事件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Second, run kubectl describe pod and inspect recent events.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Third, run kubectl logs and inspect the application error.</div><div class="memory-zh">第三步查看应用日志。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Third, run kubectl logs and inspect the application error.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Fourth, verify the Secret, PVC and Service selector.</div><div class="memory-zh">第四步检查 Secret、PVC 和 Service selector。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Fourth, verify the Secret, PVC and Service selector.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Finally, test connectivity from another Pod.</div><div class="memory-zh">最后从另一个 Pod 测试连接。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Finally, test connectivity from another Pod.">🔊 Listen</button></div></div></section><section class="level-section" id="dk-level-10"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 10 — Common Interview Q&amp;A</h2><div class="level-subtitle-unified">Fast review before the interview.</div></div></div><div class="level-body-unified"><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the difference between an image and a container?</div><div class="qa-answer"><strong>Answer:</strong> An image is a read-only template. A container is a running instance of that image.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between an image and a container? Answer: An image is a read-only template. A container is a running instance of that image.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the difference between a Pod and a container?</div><div class="qa-answer"><strong>Answer:</strong> A container runs the process. A Pod is the Kubernetes unit that wraps one or more containers and provides shared networking and storage.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between a Pod and a container? Answer: A container runs the process. A Pod is the Kubernetes unit that wraps one or more containers and provides shared networking and storage.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why do we need a Deployment?</div><div class="qa-answer"><strong>Answer:</strong> A Deployment maintains the desired Pod count, replaces failed Pods and supports rolling updates.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Deployment? Answer: A Deployment maintains the desired Pod count, replaces failed Pods and supports rolling updates.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why do we need a Service?</div><div class="qa-answer"><strong>Answer:</strong> Pod IP addresses may change. A Service provides a stable DNS name and virtual IP.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Service? Answer: Pod IP addresses may change. A Service provides a stable DNS name and virtual IP.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why does MySQL need a PVC?</div><div class="qa-answer"><strong>Answer:</strong> The PVC keeps database files after the Pod is replaced or restarted.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why does MySQL need a PVC? Answer: The PVC keeps database files after the Pod is replaced or restarted.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What happens if the MySQL Pod crashes?</div><div class="qa-answer"><strong>Answer:</strong> The Deployment creates a replacement Pod, and the PVC allows the new Pod to reuse the database files.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What happens if the MySQL Pod crashes? Answer: The Deployment creates a replacement Pod, and the PVC allows the new Pod to reuse the database files.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Can we safely scale this MySQL Deployment to three replicas?</div><div class="qa-answer"><strong>Answer:</strong> Not by default. Multiple MySQL replicas require a proper replication or clustering design.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Can we safely scale this MySQL Deployment to three replicas? Answer: Not by default. Multiple MySQL replicas require a proper replication or clustering design.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the first command you use when a Pod is failing?</div><div class="qa-answer"><strong>Answer:</strong> Start with kubectl get pods, then use kubectl describe pod and kubectl logs.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the first command you use when a Pod is failing? Answer: Start with kubectl get pods, then use kubectl describe pod and kubectl logs.">🔊 Listen</button></div><table class="qa-table"><thead><tr><th>Category</th><th>Question</th><th>Answer</th><th>Explanation</th></tr></thead><tbody><tr><td><strong>Architecture</strong></td><td>What is the difference between the Control Plane and a Worker Node?<button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between the Control Plane and a Worker Node?">🔊 Listen</button></td><td>The Control Plane makes cluster-wide decisions. Worker Nodes run Pods and containers.<button class="listen-btn level-listen" data-action="speak" data-text="The Control Plane makes cluster-wide decisions. Worker Nodes run Pods and containers.">🔊 Listen</button></td><td>The Control Plane decides; Worker Nodes execute.</td></tr><tr><td><strong>YARN Mapping</strong></td><td>How does Kubernetes map to YARN?<button class="listen-btn level-listen" data-action="speak" data-text="How does Kubernetes map to YARN?">🔊 Listen</button></td><td>The API Server and Scheduler are similar to the ResourceManager, kubelet is similar to the NodeManager, and a Pod is roughly comparable to a YARN Container.<button class="listen-btn level-listen" data-action="speak" data-text="The API Server and Scheduler are similar to the ResourceManager, kubelet is similar to the NodeManager, and a Pod is roughly comparable to a YARN Container.">🔊 Listen</button></td><td>Use this bridge when you are more familiar with YARN.</td></tr><tr><td><strong>Workload</strong></td><td>What is the difference between a Pod and a Container?<button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between a Pod and a Container?">🔊 Listen</button></td><td>A container runs the application process. A Pod is the Kubernetes unit that wraps and manages one or more containers.<button class="listen-btn level-listen" data-action="speak" data-text="A container runs the application process. A Pod is the Kubernetes unit that wraps and manages one or more containers.">🔊 Listen</button></td><td>Most Pods contain one main container, but sidecars are also possible.</td></tr><tr><td><strong>Workload</strong></td><td>What does a Deployment do?<button class="listen-btn level-listen" data-action="speak" data-text="What does a Deployment do?">🔊 Listen</button></td><td>A Deployment manages the desired number of Pods, replaces failed Pods, and supports rolling updates and rollback.<button class="listen-btn level-listen" data-action="speak" data-text="A Deployment manages the desired number of Pods, replaces failed Pods, and supports rolling updates and rollback.">🔊 Listen</button></td><td>It is mainly used for stateless workloads.</td></tr><tr><td><strong>Networking</strong></td><td>Why do we need a Service if Pods already have IP addresses?<button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Service if Pods already have IP addresses?">🔊 Listen</button></td><td>Pod IP addresses can change when Pods are recreated. A Service provides a stable DNS name and virtual IP.<button class="listen-btn level-listen" data-action="speak" data-text="Pod IP addresses can change when Pods are recreated. A Service provides a stable DNS name and virtual IP.">🔊 Listen</button></td><td>Service selectors connect the stable endpoint to matching Pods.</td></tr><tr><td><strong>Networking</strong></td><td>What does NetworkPolicy control?<button class="listen-btn level-listen" data-action="speak" data-text="What does NetworkPolicy control?">🔊 Listen</button></td><td>It controls which Pods or namespaces are allowed to send traffic to selected Pods.<button class="listen-btn level-listen" data-action="speak" data-text="It controls which Pods or namespaces are allowed to send traffic to selected Pods.">🔊 Listen</button></td><td>It is similar to a firewall policy between Pods.</td></tr><tr><td><strong>Health Checks</strong></td><td>What is the difference between readiness and liveness probes?<button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between readiness and liveness probes?">🔊 Listen</button></td><td>Readiness controls whether a Pod receives traffic. Liveness decides whether the container should be restarted.<button class="listen-btn level-listen" data-action="speak" data-text="Readiness controls whether a Pod receives traffic. Liveness decides whether the container should be restarted.">🔊 Listen</button></td><td>A Pod can be alive but not ready.</td></tr><tr><td><strong>Storage</strong></td><td>Why does MySQL need a PVC?<button class="listen-btn level-listen" data-action="speak" data-text="Why does MySQL need a PVC?">🔊 Listen</button></td><td>The PVC stores database files outside the temporary Pod, so data survives Pod restart or replacement.<button class="listen-btn level-listen" data-action="speak" data-text="The PVC stores database files outside the temporary Pod, so data survives Pod restart or replacement.">🔊 Listen</button></td><td>The Pod can be recreated while the persistent data remains.</td></tr><tr><td><strong>Troubleshooting</strong></td><td>How would you troubleshoot a Pod that is not receiving traffic?<button class="listen-btn level-listen" data-action="speak" data-text="How would you troubleshoot a Pod that is not receiving traffic?">🔊 Listen</button></td><td>Check Pod status, readiness probe results, Service selectors, endpoints, NetworkPolicy, and application logs.<button class="listen-btn level-listen" data-action="speak" data-text="Check Pod status, readiness probe results, Service selectors, endpoints, NetworkPolicy, and application logs.">🔊 Listen</button></td><td>Follow the path from Pod health to Service routing and network rules.</td></tr></tbody></table></div></section></div><div class="tab-panel" id="linux"></div><div class="tab-panel" id="ref"></div><div class="tab-panel imported-review" id="test-review">
+# Check Deployments and Services
+kubectl get deployments
+kubectl get services
+
+# Apply YAML
+kubectl apply -f app.yaml</code></pre></div></details><details class="compact-command-details"><summary>Troubleshooting Commands</summary><div class="code-wrap"><div class="code-label">Shell</div><pre><code># Inspect Pod details and recent events
+kubectl describe pod &lt;pod-name&gt;
+
+# Read application logs
+kubectl logs &lt;pod-name&gt;
+
+# Enter a running container
+kubectl exec -it &lt;pod-name&gt; -- /bin/sh
+
+# Watch Pod status changes
+kubectl get pods -w</code></pre></div></details><details class="compact-command-details"><summary>Readiness, Service and Ingress</summary><div class="code-wrap"><div class="code-label">Shell</div><pre><code># Check readiness probe results
+kubectl describe pod &lt;pod-name&gt;
+
+# Check which Pod IPs receive Service traffic
+kubectl get endpoints &lt;service-name&gt;
+
+# Inspect Ingress routing
+kubectl get ingress
+kubectl describe ingress &lt;ingress-name&gt;</code></pre></div></details><details class="compact-command-details"><summary>Deployment Rollout</summary><div class="code-wrap"><div class="code-label">Shell</div><pre><code># Check rollout status
+kubectl rollout status deployment/&lt;deployment-name&gt;
+
+# Restart a Deployment
+kubectl rollout restart deployment/&lt;deployment-name&gt;
+
+# Roll back to the previous version
+kubectl rollout undo deployment/&lt;deployment-name&gt;</code></pre></div></details><details class="compact-command-details"><summary>kubeadm Essentials</summary><div class="code-wrap"><div class="code-label">Shell</div><pre><code># Initialize the first Control Plane node
+sudo kubeadm init
+
+# Generate the Worker Node join command
+kubeadm token create --print-join-command
+
+# Run the generated kubeadm join command on each Worker Node
+sudo kubeadm join &lt;api-server&gt;:6443 --token &lt;token&gt; --discovery-token-ca-cert-hash sha256:&lt;hash&gt;</code></pre></div></details></div></section><section class="level-section" id="dk-level-9"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 9 — Troubleshooting Flow</h2><div class="level-subtitle-unified">Answer operational questions in a clear sequence.</div></div></div><div class="level-body-unified"><div class="troubleshoot-step"><div class="troubleshoot-step-title">Step 1 — Check Pod Status</div><div class="troubleshoot-step-desc"><div class="knowledge-en">Start by checking whether the Pod is Running, Pending, CrashLoopBackOff, ImagePullBackOff or another state.</div><div class="knowledge-zh">先确认 Pod 当前处于 Running、Pending、CrashLoopBackOff、ImagePullBackOff 或其他状态。</div></div><div class="code-wrap"><div class="code-label">Shell</div><pre><code>kubectl get pods -o wide</code></pre></div></div><div class="troubleshoot-step"><div class="troubleshoot-step-title">Step 2 — Inspect Events</div><div class="troubleshoot-step-desc"><div class="knowledge-en">Use Pod events to identify scheduling, image, volume, probe or permission problems.</div><div class="knowledge-zh">通过 Pod 事件定位调度、镜像、存储、健康检查或权限问题。</div></div><div class="code-wrap"><div class="code-label">Shell</div><pre><code>kubectl describe pod &lt;pod-name&gt;</code></pre></div></div><div class="troubleshoot-step"><div class="troubleshoot-step-title">Step 3 — Read Application Logs</div><div class="troubleshoot-step-desc"><div class="knowledge-en">Check the current container logs, or use --previous when the container has already restarted.</div><div class="knowledge-zh">查看当前容器日志；如果容器已经重启，则使用 --previous 查看上一次日志。</div></div><div class="code-wrap"><div class="code-label">Shell</div><pre><code>kubectl logs &lt;pod-name&gt;
+kubectl logs &lt;pod-name&gt; --previous</code></pre></div></div><div class="troubleshoot-step"><div class="troubleshoot-step-title">Step 4 — Check Readiness and Service Endpoints</div><div class="troubleshoot-step-desc"><div class="knowledge-en">A running Pod may still be unready. Confirm readiness results and whether the Service has endpoint IP addresses.</div><div class="knowledge-zh">Pod 即使处于 Running，也可能尚未 Ready；需要检查 readiness 结果以及 Service 是否有 endpoint IP。</div></div><div class="code-wrap"><div class="code-label">Shell</div><pre><code>kubectl describe pod &lt;pod-name&gt;
+kubectl get endpoints &lt;service-name&gt;</code></pre></div></div><div class="troubleshoot-step"><div class="troubleshoot-step-title">Step 5 — Verify Service and Ingress Routing</div><div class="troubleshoot-step-desc"><div class="knowledge-en">Check that the Service selector matches Pod labels, then inspect Ingress rules and backend Services.</div><div class="knowledge-zh">检查 Service selector 是否匹配 Pod label，然后查看 Ingress 路由和后端 Service。</div></div><div class="code-wrap"><div class="code-label">Shell</div><pre><code>kubectl describe service &lt;service-name&gt;
+kubectl describe ingress &lt;ingress-name&gt;</code></pre></div></div><div class="troubleshoot-step"><div class="troubleshoot-step-title">Step 6 — Test from Inside the Cluster</div><div class="troubleshoot-step-desc"><div class="knowledge-en">Enter a Pod and test DNS, ports or HTTP connectivity from inside the cluster.</div><div class="knowledge-zh">进入 Pod，从集群内部测试 DNS、端口或 HTTP 连通性。</div></div><div class="code-wrap"><div class="code-label">Shell</div><pre><code>kubectl exec -it &lt;pod-name&gt; -- /bin/sh
+
+# Example checks inside the container
+nslookup &lt;service-name&gt;
+curl http://&lt;service-name&gt;:&lt;port&gt;</code></pre></div></div></div></section><section class="level-section" id="dk-level-10"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 10 — Common Interview Q&amp;A</h2><div class="level-subtitle-unified">Fast review before the interview.</div></div></div><div class="level-body-unified"><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the difference between an image and a container?</div><div class="qa-answer"><strong>Answer:</strong> An image is a read-only template. A container is a running instance of that image.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between an image and a container? Answer: An image is a read-only template. A container is a running instance of that image.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the difference between a Pod and a container?</div><div class="qa-answer"><strong>Answer:</strong> A container runs the process. A Pod is the Kubernetes unit that wraps one or more containers and provides shared networking and storage.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between a Pod and a container? Answer: A container runs the process. A Pod is the Kubernetes unit that wraps one or more containers and provides shared networking and storage.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why do we need a Deployment?</div><div class="qa-answer"><strong>Answer:</strong> A Deployment maintains the desired Pod count, replaces failed Pods and supports rolling updates.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Deployment? Answer: A Deployment maintains the desired Pod count, replaces failed Pods and supports rolling updates.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why do we need a Service?</div><div class="qa-answer"><strong>Answer:</strong> Pod IP addresses may change. A Service provides a stable DNS name and virtual IP.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Service? Answer: Pod IP addresses may change. A Service provides a stable DNS name and virtual IP.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why does MySQL need a PVC?</div><div class="qa-answer"><strong>Answer:</strong> The PVC keeps database files after the Pod is replaced or restarted.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why does MySQL need a PVC? Answer: The PVC keeps database files after the Pod is replaced or restarted.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What happens if the MySQL Pod crashes?</div><div class="qa-answer"><strong>Answer:</strong> The Deployment creates a replacement Pod, and the PVC allows the new Pod to reuse the database files.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What happens if the MySQL Pod crashes? Answer: The Deployment creates a replacement Pod, and the PVC allows the new Pod to reuse the database files.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Can we safely scale this MySQL Deployment to three replicas?</div><div class="qa-answer"><strong>Answer:</strong> Not by default. Multiple MySQL replicas require a proper replication or clustering design.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Can we safely scale this MySQL Deployment to three replicas? Answer: Not by default. Multiple MySQL replicas require a proper replication or clustering design.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the first command you use when a Pod is failing?</div><div class="qa-answer"><strong>Answer:</strong> Start with kubectl get pods, then use kubectl describe pod and kubectl logs.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the first command you use when a Pod is failing? Answer: Start with kubectl get pods, then use kubectl describe pod and kubectl logs.">🔊 Listen</button></div><div class="qa-card-list"><div class="qa-card"><div class="qa-card-header"><span class="qa-category">Architecture</span><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between the Control Plane and a Worker Node? The Control Plane makes cluster-wide decisions. Worker Nodes run Pods and containers.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">What is the difference between the <strong>Control Plane</strong> and a <strong>Worker Node</strong>?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text">The <strong>Control Plane</strong> makes cluster-wide decisions. <strong>Worker Nodes</strong> run Pods and containers.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation">The <strong>Control Plane</strong> decides; <strong>Worker Nodes</strong> execute.</div></div></div><div class="qa-card"><div class="qa-card-header"><span class="qa-category">YARN Mapping</span><button class="listen-btn level-listen" data-action="speak" data-text="How does Kubernetes map to YARN? The API Server and Scheduler are similar to the ResourceManager, kubelet is similar to the NodeManager, and a Pod is roughly comparable to a YARN Container.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">How does <strong>Kubernetes</strong> map to YARN?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text">The <strong>API Server</strong> and <strong>Scheduler</strong> are similar to the <strong>ResourceManager</strong>, kubelet is similar to the <strong>NodeManager</strong>, and a <strong>Pod</strong> is roughly comparable to a <strong>YARN <strong>Container</strong></strong>.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation">Use this bridge when you are more familiar with YARN.</div></div></div><div class="qa-card"><div class="qa-card-header"><span class="qa-category">Workload</span><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between a Pod and a Container? A container runs the application process. A Pod is the Kubernetes unit that wraps and manages one or more containers.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">What is the difference between a <strong>Pod</strong> and a <strong>Container</strong>?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text">A container runs the application process. A <strong>Pod</strong> is the <strong>Kubernetes</strong> unit that wraps and manages one or more containers.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation">Most Pods contain one main container, but <strong>sidecars</strong> are also possible.</div></div></div><div class="qa-card"><div class="qa-card-header"><span class="qa-category">Workload</span><button class="listen-btn level-listen" data-action="speak" data-text="What does a Deployment do? A Deployment manages the desired number of Pods, replaces failed Pods, and supports rolling updates and rollback.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">What does a <strong>Deployment</strong> do?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text">A <strong>Deployment</strong> manages the desired number of Pods, replaces failed Pods, and supports <strong>rolling updates</strong> and <strong>rollback</strong>.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation">It is mainly used for stateless workloads.</div></div></div><div class="qa-card"><div class="qa-card-header"><span class="qa-category">Networking</span><button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Service if Pods already have IP addresses? Pod IP addresses can change when Pods are recreated. A Service provides a stable DNS name and virtual IP.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">Why do we need a <strong>Service</strong> if Pods already have IP addresses?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text"><strong>Pod</strong> IP addresses can change when Pods are recreated. A <strong>Service</strong> provides a stable <strong>DNS</strong> name and <strong>virtual IP</strong>.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation"><strong>Service</strong> selectors connect the stable endpoint to matching Pods.</div></div></div><div class="qa-card"><div class="qa-card-header"><span class="qa-category">Networking</span><button class="listen-btn level-listen" data-action="speak" data-text="What does NetworkPolicy control? It controls which Pods or namespaces are allowed to send traffic to selected Pods.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">What does <strong>NetworkPolicy</strong> control?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text">It controls which Pods or namespaces are allowed to send traffic to selected Pods.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation">It is similar to a firewall policy between Pods.</div></div></div><div class="qa-card"><div class="qa-card-header"><span class="qa-category">Health Checks</span><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between readiness and liveness probes? Readiness controls whether a Pod receives traffic. Liveness decides whether the container should be restarted.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">What is the difference between <strong>readiness</strong> and <strong>liveness</strong> probes?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text">Readiness controls whether a <strong>Pod</strong> receives traffic. Liveness decides whether the container should be restarted.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation">A <strong>Pod</strong> can be alive but not ready.</div></div></div><div class="qa-card"><div class="qa-card-header"><span class="qa-category">Storage</span><button class="listen-btn level-listen" data-action="speak" data-text="Why does MySQL need a PVC? The PVC stores database files outside the temporary Pod, so data survives Pod restart or replacement.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">Why does <strong>MySQL</strong> need a <strong>PVC</strong>?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text">The <strong>PVC</strong> stores database files outside the temporary <strong>Pod</strong>, so data survives <strong>Pod</strong> restart or replacement.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation">The <strong>Pod</strong> can be recreated while the persistent data remains.</div></div></div><div class="qa-card"><div class="qa-card-header"><span class="qa-category">Troubleshooting</span><button class="listen-btn level-listen" data-action="speak" data-text="How would you troubleshoot a Pod that is not receiving traffic? Check Pod status, readiness probe results, Service selectors, endpoints, NetworkPolicy, and application logs.">🔊 Listen</button></div><div class="qa-card-body"><div class="qa-question">How would you troubleshoot a <strong>Pod</strong> that is not receiving traffic?</div><div class="qa-answer-title">Answer</div><div class="qa-answer-text">Check <strong>Pod</strong> status, <strong>readiness</strong> probe results, <strong>Service</strong> selectors, <strong>endpoints</strong>, <strong>NetworkPolicy</strong>, and application logs.</div><div class="qa-explanation-title">Explanation</div><div class="qa-explanation">Follow the path from <strong>Pod</strong> health to <strong>Service</strong> routing and network rules.</div></div></div></div></div></section></div><div class="tab-panel" id="linux"></div><div class="tab-panel" id="ref"></div><div class="tab-panel imported-review" id="test-review">
 <div class="imported-hero card">
 <div class="q-head">
 <div>
