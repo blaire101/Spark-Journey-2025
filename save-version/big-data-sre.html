@@ -161,560 +161,12 @@
     .imported-review .concept-flow, .imported-review .architecture { flex-direction:column; align-items:stretch; }
     .imported-review .flow-box, .imported-review .arch-box { width:100%; }
   }
-
-  /* --- Combined Docker & Kubernetes architecture --- */
-  .k8s-architecture-wrap {
-    background:linear-gradient(180deg,#F8FBFF 0%,#FFFFFF 100%);
-    border:1px solid #B9D3EE;
-    border-radius:12px;
-    padding:14px;
-    margin:12px 0 18px;
-    overflow-x:auto;
-  }
-  .k8s-architecture-svg { width:100%; min-width:820px; height:auto; display:block; }
-  .k8s-legend { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0 0; }
-  .k8s-legend span { border:1px solid var(--border); border-radius:999px; padding:3px 9px; font-size:11px; background:#fff; }
-  .command-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-  .command-grid .card { margin-bottom:0; }
-  @media(max-width:760px) {
-    .command-grid { grid-template-columns:1fr; }
-  }
-
-  /* --- Docker & Kubernetes leveled learning layout --- */
-  .dk-level { margin:26px 0 12px; }
-  .dk-level-head {
-    display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
-    padding:12px 14px; border:1px solid var(--border-strong); border-radius:10px;
-    background:linear-gradient(90deg,var(--accent-bg),#fff);
-  }
-  .dk-level-title { font-size:16px; font-weight:800; margin:0; }
-  .dk-level-sub { font-size:12px; color:var(--text-secondary); margin-top:3px; }
-  .speak-row { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
-  .speak-row > div:first-child { flex:1; min-width:0; }
-  .listen-btn.right { margin-left:auto; align-self:flex-start; }
-  .codeblock.hl, .imported-review pre.hl {
-    background:#17212B; color:#E7EEF5; border:1px solid #2B3B4A;
-  }
-  .tok-key { color:#7FDBFF; font-weight:700; }
-  .tok-val { color:#A8E6A3; }
-  .tok-num { color:#FFD580; }
-  .tok-cmt { color:#8FA1B3; font-style:italic; }
-  .tok-cmd { color:#F5B7F5; font-weight:700; }
-  .tok-flag { color:#FFD580; }
-  .tok-str { color:#A8E6A3; }
-  .dk-mini-diagram {
-    margin:10px 0 16px; padding:12px; border:1px solid #B9D3EE;
-    background:#F8FBFF; border-radius:10px; overflow:auto;
-  }
-  .dk-mini-diagram svg { min-width:760px; width:100%; height:auto; display:block; }
-
-  /* --- Interview fast-track Docker & Kubernetes layout --- */
-  .fast-level { margin:24px 0 14px; }
-  .fast-level-head {
-    display:flex; justify-content:space-between; align-items:flex-start; gap:14px;
-    padding:12px 14px; border:1px solid var(--border-strong); border-radius:10px;
-    background:linear-gradient(90deg,var(--accent-bg),#fff);
-  }
-  .fast-level-title { margin:0; font-size:16px; font-weight:800; }
-  .fast-level-sub { margin-top:3px; font-size:12px; color:var(--text-secondary); }
-  .learn-line {
-    display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-    padding:10px 0; border-bottom:1px dashed var(--border);
-  }
-  .learn-line:last-child { border-bottom:none; }
-  .learn-copy { flex:1; min-width:0; }
-  .learn-en { font-size:13.5px; line-height:1.65; }
-  .learn-zh { color:var(--text-muted); font-size:11.5px; margin-top:3px; line-height:1.5; }
-  .learn-list { margin:0; padding:0; list-style:none; }
-  .compact-diagram { margin:10px 0 16px; padding:10px; border:1px solid #B9D3EE; background:#F8FBFF; border-radius:10px; overflow:auto; }
-  .compact-diagram svg { width:100%; min-width:680px; height:auto; display:block; }
-  .qa-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-  .qa-card { border:1px solid var(--border); border-radius:9px; padding:12px; background:#fff; }
-  .qa-card h3 { margin:0 0 6px; font-size:13.5px; }
-  .qa-card p { margin:0; font-size:12.5px; line-height:1.6; }
-  .listen-btn.right { margin-left:auto; flex-shrink:0; }
-  .codeblock.hl, pre.hl {
-    background:#17212B; color:#E7EEF5; border:1px solid #2B3B4A;
-  }
-  .tok-key { color:#7FDBFF; font-weight:700; }
-  .tok-val { color:#A8E6A3; }
-  .tok-num { color:#FFD580; }
-  .tok-cmd { color:#F5B7F5; font-weight:700; }
-  .tok-flag { color:#FFD580; }
-  .tok-str { color:#A8E6A3; }
-  @media(max-width:760px){ .qa-grid{grid-template-columns:1fr;} }
-
-  /* --- Proper highlighted code blocks --- */
-  .code-wrap {
-    position:relative;
-    margin:10px 0 16px;
-    border-radius:10px;
-    overflow:hidden;
-    border:1px solid #2B3B4A;
-    background:#17212B;
-  }
-  .code-label {
-    padding:7px 12px;
-    background:#22303D;
-    color:#B9C7D5;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.04em;
-    text-transform:uppercase;
-    border-bottom:1px solid #2B3B4A;
-  }
-  .code-wrap pre {
-    margin:0;
-    padding:14px 16px;
-    background:#17212B;
-    color:#E7EEF5;
-    overflow-x:auto;
-    white-space:pre;
-    line-height:1.6;
-    font-family:"SF Mono",Menlo,Consolas,monospace;
-    font-size:11.8px;
-  }
-  .code-wrap code {
-    background:transparent !important;
-    color:inherit;
-    padding:0 !important;
-    border-radius:0;
-    font-family:inherit;
-    font-size:inherit;
-  }
-  .tok-key { color:#7FDBFF; font-weight:700; }
-  .tok-val { color:#A8E6A3; }
-  .tok-num { color:#FFD580; }
-  .tok-cmd { color:#F5B7F5; font-weight:700; }
-  .tok-flag { color:#FFD580; }
-  .tok-str { color:#A8E6A3; }
-  .tok-comment { color:#8FA1B3; font-style:italic; }
-
-/* --- Fully unified Level 1–10 learning layout --- */
-.level-section { margin:24px 0; }
-.level-header-unified {
-  display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
-  padding:13px 15px; border:1px solid var(--border-strong); border-radius:10px;
-  background:linear-gradient(90deg,var(--accent-bg),#fff);
-}
-.level-heading-wrap { flex:1; min-width:0; }
-.level-title-unified { margin:0; font-size:16px; font-weight:800; }
-.level-subtitle-unified { margin-top:3px; font-size:12px; color:var(--text-secondary); }
-.level-body-unified {
-  margin-top:10px; background:var(--surface); border:1px solid var(--border);
-  border-radius:10px; padding:4px 14px;
-}
-.memory-item {
-  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-  padding:11px 0; border-bottom:1px dashed var(--border);
-}
-.memory-item:last-child { border-bottom:none; }
-.memory-text { flex:1; min-width:0; }
-.memory-en { font-size:13.5px; line-height:1.62; color:var(--text-primary); }
-.memory-zh { font-size:11.5px; line-height:1.5; color:var(--text-muted); margin-top:3px; }
-.memory-key { font-weight:800; color:var(--accent); }
-.level-code { margin:12px 0; }
-.qa-answer {
-  margin-top:5px; padding:7px 9px; border-left:3px solid var(--accent);
-  background:var(--accent-bg); border-radius:6px; font-size:12.5px;
-}
-.compact-interview-diagram {
-  margin:8px 0 18px; padding:10px; border:1px solid #B9D3EE;
-  background:#F8FBFF; border-radius:10px; overflow:auto;
-}
-.compact-interview-diagram svg { width:100%; min-width:650px; height:auto; display:block; }
-.listen-btn.level-listen { margin-left:auto; flex-shrink:0; }
-
-/* --- Refined unified learning format --- */
-.level-title-unified { color:var(--text-primary); }
-.level-title-unified .title-zh { display:none; }
-
-.knowledge-list {
-  margin:0;
-  padding:0;
-  list-style:none;
-}
-.knowledge-item {
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  padding:10px 0;
-  border-bottom:1px dashed var(--border);
-}
-.knowledge-item:last-child { border-bottom:none; }
-.knowledge-main { flex:1; min-width:0; }
-.knowledge-en { font-size:13.5px; line-height:1.65; }
-.knowledge-zh { font-size:11.5px; color:var(--text-muted); margin-top:3px; line-height:1.5; }
-
-.core-object-table {
-  width:100%;
-  border-collapse:collapse;
-  margin:12px 0;
-  table-layout:fixed;
-}
-.core-object-table th,
-.core-object-table td {
-  border:1px solid var(--border-strong);
-  padding:10px 12px;
-  vertical-align:top;
-}
-.core-object-table th {
-  background:var(--accent-bg);
-  color:var(--accent);
-  text-align:left;
-  font-size:12.5px;
-}
-.core-object-table td {
-  background:#fff;
-  font-size:12.5px;
-  line-height:1.55;
-}
-.core-object-table .cell-wrap {
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:8px;
-}
-.core-object-table .cell-text { flex:1; min-width:0; }
-.core-object-table .cell-zh {
-  display:block;
-  font-size:11px;
-  color:var(--text-muted);
-  margin-top:3px;
-}
-.core-object-table .listen-btn {
-  padding:4px 8px;
-  font-size:10.5px;
-  white-space:nowrap;
-}
-
-.level-diagram {
-  margin:10px 0 14px;
-  padding:10px;
-  border:1px solid #B9D3EE;
-  background:#F8FBFF;
-  border-radius:10px;
-  overflow:auto;
-}
-.level-diagram svg {
-  width:100%;
-  min-width:620px;
-  height:auto;
-  display:block;
-}
-
-/* --- Docker & Kubernetes TOC --- */
-.dk-toc {
-  margin:0 0 18px;
-  padding:14px 16px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-}
-.dk-toc-title {
-  font-size:14px;
-  font-weight:800;
-  margin-bottom:9px;
-}
-.dk-toc-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-  gap:8px;
-}
-.dk-toc-link {
-  display:block;
-  padding:8px 10px;
-  border:1px solid var(--border-strong);
-  border-radius:8px;
-  background:#FBFBFA;
-  color:var(--text-primary);
-  text-decoration:none;
-  font-size:12px;
-  font-weight:650;
-  line-height:1.4;
-}
-.dk-toc-link:hover {
-  border-color:var(--accent);
-  color:var(--accent);
-  background:var(--accent-bg);
-}
-.level-section {
-  scroll-margin-top:18px;
-}
-html {
-  scroll-behavior:smooth;
-}
-
-/* --- English-first learning emphasis --- */
-#k8s .knowledge-zh,
-#k8s .cell-zh,
-#k8s .zh-note {
-  color:#B3B3AE !important;
-  font-size:10.8px !important;
-  font-weight:400 !important;
-}
-#k8s .knowledge-en strong,
-#k8s .cell-text strong,
-#k8s .qa-answer strong {
-  color:var(--text-primary);
-  font-weight:800;
-}
-#k8s .yarn-architecture-diagram {
-  margin:12px 0 16px;
-  padding:12px;
-  border:1px solid #B9D3EE;
-  background:#F8FBFF;
-  border-radius:10px;
-  overflow-x:auto;
-}
-#k8s .yarn-architecture-diagram svg {
-  width:100%;
-  min-width:760px;
-  height:auto;
-  display:block;
-}
-
-/* --- Expanded Worker Node tree example --- */
-#k8s .worker-tree {
-  margin:12px 0 16px;
-  padding:14px 16px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#FBFBFA;
-  font-family:"SF Mono",Menlo,Consolas,monospace;
-  font-size:12px;
-  line-height:1.7;
-  overflow-x:auto;
-  white-space:pre;
-}
-#k8s .worker-tree .tree-title {
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  font-weight:800;
-  font-size:13px;
-  margin-bottom:8px;
-}
-
-/* --- Collapsible worker node example --- */
-#k8s .worker-tree-details {
-  margin:12px 0 16px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#FBFBFA;
-  overflow:hidden;
-}
-#k8s .worker-tree-details summary {
-  cursor:pointer;
-  padding:11px 14px;
-  font-size:13px;
-  font-weight:800;
-  color:var(--accent);
-  background:var(--accent-bg);
-  list-style:none;
-}
-#k8s .worker-tree-details summary::-webkit-details-marker { display:none; }
-#k8s .worker-tree-details summary::before {
-  content:"▶";
-  display:inline-block;
-  margin-right:8px;
-  transition:transform .15s ease;
-}
-#k8s .worker-tree-details[open] summary::before {
-  transform:rotate(90deg);
-}
-#k8s .worker-tree-details .worker-tree {
-  margin:0;
-  border:none;
-  border-radius:0;
-  background:#FBFBFA;
-}
-#k8s .cluster-object-diagram {
-  margin:12px 0 16px;
-  padding:12px;
-  border:1px solid #B9D3EE;
-  background:#F8FBFF;
-  border-radius:10px;
-  overflow-x:auto;
-}
-#k8s .cluster-object-diagram svg {
-  width:100%;
-  min-width:760px;
-  height:auto;
-  display:block;
-}
-
-/* --- Collapsible code sections and Q&A table --- */
-#k8s details.code-details {
-  margin:12px 0 16px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
-  background:#FBFBFA;
-}
-#k8s details.code-details summary {
-  cursor:pointer;
-  padding:11px 14px;
-  font-weight:800;
-  color:var(--accent);
-  background:var(--accent-bg);
-  list-style:none;
-}
-#k8s details.code-details summary::-webkit-details-marker { display:none; }
-#k8s details.code-details summary::before {
-  content:"▶";
-  display:inline-block;
-  margin-right:8px;
-  transition:transform .15s ease;
-}
-#k8s details.code-details[open] summary::before { transform:rotate(90deg); }
-#k8s details.code-details .code-wrap { margin:0; border-radius:0; border:none; }
-
-#k8s .qa-table {
-  width:100%;
-  border-collapse:collapse;
-  margin-top:12px;
-  table-layout:fixed;
-}
-#k8s .qa-table th,
-#k8s .qa-table td {
-  border:1px solid #D8D8D3;
-  padding:10px 11px;
-  vertical-align:top;
-  text-align:left;
-}
-#k8s .qa-table th {
-  background:var(--accent-bg);
-  color:var(--accent);
-  font-weight:800;
-}
-#k8s .qa-table th:nth-child(1){width:13%}
-#k8s .qa-table th:nth-child(2){width:25%}
-#k8s .qa-table th:nth-child(3){width:32%}
-#k8s .qa-table th:nth-child(4){width:30%}
-#k8s .qa-table .zh-note {
-  margin-top:5px;
-  color:#B3B3AE;
-  font-size:10.8px;
-}
-#k8s .qa-table .listen-btn {
-  margin-top:7px;
-}
-
-/* --- Pod explainer trees --- */
-#k8s .pod-explainer-grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin:14px 0 18px;
-}
-#k8s .pod-tree-card {
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#FBFBFA;
-  overflow:hidden;
-}
-#k8s .pod-tree-card .card-title {
-  padding:10px 12px;
-  font-weight:800;
-  color:var(--accent);
-  background:var(--accent-bg);
-}
-#k8s .pod-tree-card pre {
-  margin:0;
-  padding:14px 16px;
-  overflow-x:auto;
-  white-space:pre;
-  font-family:"SF Mono",Menlo,Consolas,monospace;
-  font-size:12px;
-  line-height:1.7;
-  color:var(--text-primary);
-}
-#k8s .pod-tree-card .tree-note {
-  padding:0 16px 14px;
-  color:#B3B3AE;
-  font-size:10.8px;
-}
-@media (max-width:820px){
-  #k8s .pod-explainer-grid{grid-template-columns:1fr;}
-}
-
-/* --- Collapsible Pod explainers --- */
-#k8s .pod-details {
-  margin:12px 0 14px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#FBFBFA;
-  overflow:hidden;
-}
-#k8s .pod-details summary {
-  cursor:pointer;
-  padding:11px 14px;
-  font-size:13px;
-  font-weight:800;
-  color:var(--accent);
-  background:var(--accent-bg);
-  list-style:none;
-}
-#k8s .pod-details summary::-webkit-details-marker { display:none; }
-#k8s .pod-details summary::before {
-  content:"▶";
-  display:inline-block;
-  margin-right:8px;
-  transition:transform .15s ease;
-}
-#k8s .pod-details[open] summary::before {
-  transform:rotate(90deg);
-}
-#k8s .pod-details-body {
-  padding:12px 14px 14px;
-}
-#k8s .pod-diagram {
-  margin:0 0 14px;
-  padding:10px;
-  border:1px solid #B9D3EE;
-  background:#F8FBFF;
-  border-radius:10px;
-  overflow-x:auto;
-}
-#k8s .pod-diagram svg {
-  width:100%;
-  min-width:640px;
-  height:auto;
-  display:block;
-}
-#k8s .pod-tree-card {
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#FBFBFA;
-  overflow:hidden;
-}
-#k8s .pod-tree-card .card-title {
-  padding:10px 12px;
-  font-weight:800;
-  color:var(--accent);
-  background:var(--accent-bg);
-}
-#k8s .pod-tree-card pre {
-  margin:0;
-  padding:14px 16px;
-  overflow-x:auto;
-  white-space:pre;
-  font-family:"SF Mono",Menlo,Consolas,monospace;
-  font-size:12px;
-  line-height:1.7;
-  color:var(--text-primary);
-}
-#k8s .pod-tree-card .tree-note {
-  padding:0 16px 14px;
-  color:#B3B3AE;
-  font-size:10.8px;
-}
 </style>
 <body>
 <div class="app">
 <header>
 <h1>Big Data Platform Ops — Interview Prep</h1>
-<p>HDFS · YARN · Spark memory internals · Kafka &amp; ClickHouse · Docker &amp; Kubernetes · Linux · Technical test review — from fundamentals to diagnosis, with diagrams</p>
+<p>HDFS · YARN · Spark memory internals · Kafka &amp; ClickHouse · Docker &amp; K8S · Linux · Technical test review — from fundamentals to diagnosis, with diagrams</p>
 </header>
 <div class="voice-bar">
 <label>🔊 Voice: <select id="voiceSelect"></select></label>
@@ -723,518 +175,145 @@ html {
 <button class="listen-btn" id="stopAllBtn" style="margin-left:auto">⏹ Stop</button>
 </div>
 <div class="tabs">
-<button class="tab-btn active" data-tab="hdfs">🧶🗄️🐝 YARN &amp; HDFS &amp; Hive</button><button class="tab-btn" data-tab="spark">⚡ Spark Memory</button><button class="tab-btn" data-tab="clickhouse">📨 MQ &amp; ClickHouse</button><button class="tab-btn" data-tab="k8s">🐳☸️ Docker &amp; Kubernetes</button><button class="tab-btn" data-tab="linux">🐧 Linux</button><button class="tab-btn" data-tab="ref">📋 Quick Reference</button><button class="tab-btn" data-tab="test-review">📝 Test Review</button></div>
-<div class="tab-panel active" id="hdfs"></div><div class="tab-panel" id="spark"></div><div class="tab-panel" id="clickhouse"></div><div class="tab-panel" id="k8s"><nav aria-label="Docker and Kubernetes table of contents" class="dk-toc"><div class="dk-toc-title">Table of Contents</div><div class="dk-toc-grid"><a class="dk-toc-link" href="#dk-level-1">Level 1 — Docker and Kubernetes Overview</a><a class="dk-toc-link" href="#dk-level-2">Level 2 — Docker Image vs Container</a><a class="dk-toc-link" href="#dk-level-3">Level 3 — Basic Docker Commands</a><a class="dk-toc-link" href="#dk-level-4">Level 4 — Kubernetes Foundations</a><a class="dk-toc-link" href="#dk-level-5">Level 5 — Pod, Deployment and Service</a><a class="dk-toc-link" href="#dk-level-6">Level 6 — Secret and Persistent Storage</a><a class="dk-toc-link" href="#dk-level-7">Level 7 — Deploy One MySQL Example</a><a class="dk-toc-link" href="#dk-level-8">Level 8 — Execute and Verify</a><a class="dk-toc-link" href="#dk-level-9">Level 9 — Troubleshooting Flow</a><a class="dk-toc-link" href="#dk-level-10">Level 10 — Common Interview Q&amp;A</a></div></nav>
-<div class="compact-interview-diagram">
-<svg aria-label="Simple MySQL Kubernetes architecture" role="img" viewbox="0 0 820 300">
-<defs>
-<marker id="uarr" markerheight="9" markerwidth="9" orient="auto" refx="8" refy="4.5">
-<path d="M0,0 L9,4.5 L0,9 Z" fill="#2971A8"></path>
-</marker>
-<style>
-      .b{fill:#fff;stroke:#2971A8;stroke-width:2;rx:10}
-      .g{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:2;rx:10}
-      .p{fill:#F4ECFA;stroke:#7B4FA0;stroke-width:2;rx:10}
-      .t{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-      .s{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-      .a{stroke:#2971A8;stroke-width:2.2;fill:none;marker-end:url(#uarr)}
-      .d{stroke:#7B4FA0;stroke-width:1.8;stroke-dasharray:6 5;fill:none;marker-end:url(#uarr)}
-    </style>
-</defs>
-<text class="t" text-anchor="middle" x="410" y="25">MySQL on Kubernetes: the five objects to remember</text>
-<rect class="b" height="64" width="145" x="30" y="85"></rect>
-<text class="t" text-anchor="middle" x="102" y="111">Deployment</text>
-<text class="s" text-anchor="middle" x="102" y="132">Keeps 1 Pod running</text>
-<rect class="g" height="94" width="155" x="230" y="70"></rect>
-<text class="t" text-anchor="middle" x="307" y="100">Pod</text>
-<text class="s" text-anchor="middle" x="307" y="122">MySQL container</text>
-<text class="s" text-anchor="middle" x="307" y="143">Port 3306</text>
-<rect class="b" height="64" width="145" x="445" y="85"></rect>
-<text class="t" text-anchor="middle" x="517" y="111">Service</text>
-<text class="s" text-anchor="middle" x="517" y="132">Stable mysql:3306</text>
-<rect class="p" height="58" width="150" x="200" y="215"></rect>
-<text class="t" text-anchor="middle" x="275" y="239">Secret</text>
-<text class="s" text-anchor="middle" x="275" y="259">Root password</text>
-<rect class="p" height="58" width="150" x="420" y="215"></rect>
-<text class="t" text-anchor="middle" x="495" y="239">PVC</text>
-<text class="s" text-anchor="middle" x="495" y="259">Database files</text>
-<path class="a" d="M175 117 H230"></path>
-<path class="a" d="M385 117 H445"></path>
-<path class="d" d="M275 215 C275 188 292 180 300 164"></path>
-<path class="d" d="M495 215 C495 185 360 185 340 164"></path>
-</svg>
-</div>
-<section class="level-section" id="dk-level-1"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 1 — Docker and Kubernetes Overview</h2><div class="level-subtitle-unified">Understand what each tool is responsible for.</div></div></div><div class="level-body-unified">
-<div class="level-diagram docker-level1-diagram">
-<svg aria-label="Docker application packaging and runtime flow" role="img" viewbox="0 0 900 360">
-<defs>
-<marker id="dockerL1Arrow" markerheight="9" markerwidth="9" orient="auto" refx="8" refy="4.5">
-<path d="M0,0 L9,4.5 L0,9 Z" fill="#2971A8"></path>
-</marker>
-<style>
-      .box{fill:#fff;stroke:#2971A8;stroke-width:2;rx:11}
-      .soft{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:2;rx:11}
-      .purple{fill:#F4ECFA;stroke:#7B4FA0;stroke-width:2;rx:11}
-      .amber{fill:#FFF7E8;stroke:#9A6B1E;stroke-width:2;rx:11}
-      .host{fill:#F8FBFF;stroke:#7BA8CC;stroke-width:2;rx:14}
-      .title{font:700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-      .label{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-      .small{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-      .arrow{stroke:#2971A8;stroke-width:2.2;fill:none;marker-end:url(#dockerL1Arrow)}
-    </style>
-</defs>
-<text class="title" text-anchor="middle" x="450" y="26">How Docker Packages and Runs an Application</text>
-<rect class="amber" height="78" width="155" x="30" y="70"></rect>
-<text class="label" text-anchor="middle" x="107" y="98">Application Code</text>
-<text class="small" text-anchor="middle" x="107" y="122">Python / Java / SQL app</text>
-<rect class="amber" height="78" width="170" x="220" y="70"></rect>
-<text class="label" text-anchor="middle" x="305" y="98">Dependencies</text>
-<text class="small" text-anchor="middle" x="305" y="122">Libraries + runtime</text>
-<rect class="box" height="78" width="150" x="425" y="70"></rect>
-<text class="label" text-anchor="middle" x="500" y="98">Dockerfile</text>
-<text class="small" text-anchor="middle" x="500" y="122">Build instructions</text>
-<rect class="purple" height="78" width="150" x="610" y="70"></rect>
-<text class="label" text-anchor="middle" x="685" y="98">Docker Image</text>
-<text class="small" text-anchor="middle" x="685" y="122">Read-only template</text>
-<path class="arrow" d="M185 109 H220"></path>
-<path class="arrow" d="M390 109 H425"></path>
-<path class="arrow" d="M575 109 H610"></path>
-<rect class="host" height="135" width="760" x="70" y="195"></rect>
-<text class="label" x="95" y="220">Server / Host Machine</text>
-<text class="small" x="95" y="242">Docker Engine creates isolated containers from the same image.</text>
-<rect class="soft" height="52" width="170" x="150" y="260"></rect>
-<text class="label" text-anchor="middle" x="235" y="282">Container 1</text>
-<text class="small" text-anchor="middle" x="235" y="301">Running application</text>
-<rect class="soft" height="52" width="170" x="365" y="260"></rect>
-<text class="label" text-anchor="middle" x="450" y="282">Container 2</text>
-<text class="small" text-anchor="middle" x="450" y="301">Running application</text>
-<rect class="soft" height="52" width="170" x="580" y="260"></rect>
-<text class="label" text-anchor="middle" x="665" y="282">Container 3</text>
-<text class="small" text-anchor="middle" x="665" y="301">Running application</text>
-<path class="arrow" d="M685 148 V185 C685 205 235 205 235 260"></path>
-<path class="arrow" d="M685 148 V205 C685 225 450 225 450 260"></path>
-<path class="arrow" d="M685 148 V240 C685 250 665 250 665 260"></path>
-</svg>
-</div><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en"><strong>Docker</strong> packages an application and its dependencies, while <strong>Kubernetes</strong> runs and manages the resulting containers across machines.</div><div class="knowledge-zh">Docker 负责打包应用及依赖；Kubernetes 负责在多台机器上运行和管理生成的容器。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Docker packages an application and its dependencies, while Kubernetes runs and manages the resulting containers across machines.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Containerization gives consistent environments, eliminates the 'works on my machine' problem, speeds up deployment, and improves resource isolation for <strong>Spark</strong> and <strong>Flink</strong> jobs on shared infrastructure.</div><div class="knowledge-zh">容器化提供一致环境，减少“本地能跑、上线失败”的问题，加快部署，并改善共享基础设施上 Spark/Flink 作业的资源隔离。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Containerization gives consistent environments, eliminates the 'works on my machine' problem, speeds up deployment, and improves resource isolation for Spark and Flink jobs on shared infrastructure.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The same image can run in development, testing and production, making deployment, scaling and rollback more predictable.</div><div class="knowledge-zh">同一个镜像可以运行在开发、测试和生产环境，使部署、扩缩容和回滚更加可控。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The same image can run in development, testing and production, making deployment, scaling and rollback more predictable.">🔊 Listen</button></li></ul>
-</div></section><section class="level-section" id="dk-level-2"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 2 — Docker Image vs Container</h2><div class="level-subtitle-unified">Memorize the difference one sentence at a time.</div></div></div><div class="level-body-unified"><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">An image is a read-only, layered template, similar to a class.</div><div class="knowledge-zh">Image 是只读的分层模板，可以类比为 class。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="An image is a read-only, layered template, similar to a class.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">A container is a running instance of an image, similar to an object, and many containers can be created from the same image.</div><div class="knowledge-zh">Container 是 image 的运行实例，可以类比为 object；同一个 image 可以启动多个 container。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="A container is a running instance of an image, similar to an object, and many containers can be created from the same image.">🔊 Listen</button></li></ul></div></section><section class="level-section" id="dk-level-3"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 3 — Basic Docker Commands</h2><div class="level-subtitle-unified">Build, run, inspect and enter a container.</div></div></div><div class="level-body-unified"><div class="memory-item"><div class="memory-text"><div class="memory-en">Build an image from a Dockerfile.</div><div class="memory-zh">从 Dockerfile 构建镜像。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Build an image from a Dockerfile.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Run one MySQL container locally.</div><div class="memory-zh">在本地运行一个 MySQL 容器。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Run one MySQL container locally.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Inspect logs when the container does not start correctly.</div><div class="memory-zh">容器启动异常时查看日志。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Inspect logs when the container does not start correctly.">🔊 Listen</button></div><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Use docker pull to download an image and docker run to create and start a container from it.</div><div class="knowledge-zh">使用 docker pull 下载镜像，并使用 docker run 从镜像创建和启动容器。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Use docker pull to download an image and docker run to create and start a container from it.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Use docker ps to inspect running containers, docker logs to read logs, and docker exec to enter a running container.</div><div class="knowledge-zh">使用 docker ps 查看运行中的容器，使用 docker logs 查看日志，并使用 docker exec 进入容器。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Use docker ps to inspect running containers, docker logs to read logs, and docker exec to enter a running container.">🔊 Listen</button></li></ul><div class="code-wrap level-code"><div class="code-label">Shell</div><pre><code class="language-shell"><span class="tok-cmd">docker</span> pull mysql:8.4
 
-<span class="tok-cmd">docker</span> run <span class="tok-flag">--name</span> mysql-local   <span class="tok-flag">-e</span> MYSQL_ROOT_PASSWORD=demo123   <span class="tok-flag">-p</span> 3306:3306   <span class="tok-flag">-d</span> mysql:8.4
 
-<span class="tok-cmd">docker</span> ps
-<span class="tok-cmd">docker</span> logs mysql-local
-<span class="tok-cmd">docker</span> exec -it mysql-local mysql -uroot <span class="tok-flag">-p</span></code></pre></div></div></section><section class="level-section" id="dk-level-4"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 4 — Kubernetes Foundations</h2><div class="level-subtitle-unified">Start here before reviewing today’s questions.</div></div></div><div class="level-body-unified">
-<div class="level-diagram">
-<svg aria-label="Kubernetes foundation flow" role="img" viewbox="0 0 780 280">
-<defs>
-<marker id="lvl4arr" markerheight="9" markerwidth="9" orient="auto" refx="8" refy="4.5">
-<path d="M0,0 L9,4.5 L0,9 Z" fill="#2971A8"></path>
-</marker>
-<style>
-      .b{fill:#fff;stroke:#2971A8;stroke-width:2;rx:10}
-      .g{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:2;rx:10}
-      .p{fill:#F4ECFA;stroke:#7B4FA0;stroke-width:2;rx:10}
-      .t{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-      .s{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-      .a{stroke:#2971A8;stroke-width:2.1;fill:none;marker-end:url(#lvl4arr)}
-      .d{stroke:#7B4FA0;stroke-width:1.7;stroke-dasharray:6 5;fill:none;marker-end:url(#lvl4arr)}
-    </style>
-</defs>
-<text class="t" text-anchor="middle" x="390" y="24">Deployment → Pod → Service</text>
-<rect class="b" height="70" width="165" x="40" y="80"></rect>
-<text class="t" text-anchor="middle" x="122" y="108">Deployment</text>
-<text class="s" text-anchor="middle" x="122" y="130">Manages desired state</text>
-<rect class="g" height="100" width="170" x="305" y="65"></rect>
-<text class="t" text-anchor="middle" x="390" y="96">Pod</text>
-<text class="s" text-anchor="middle" x="390" y="118">Runs the container</text>
-<text class="s" text-anchor="middle" x="390" y="140">Replaceable instance</text>
-<rect class="b" height="70" width="165" x="575" y="80"></rect>
-<text class="t" text-anchor="middle" x="657" y="108">Service</text>
-<text class="s" text-anchor="middle" x="657" y="130">Stable network endpoint</text>
-<rect class="p" height="52" width="145" x="210" y="210"></rect>
-<text class="t" text-anchor="middle" x="282" y="241">Secret</text>
-<rect class="p" height="52" width="145" x="425" y="210"></rect>
-<text class="t" text-anchor="middle" x="497" y="241">PVC</text>
-<path class="a" d="M205 115 H305"></path>
-<path class="a" d="M475 115 H575"></path>
-<path class="d" d="M282 210 C282 182 340 182 350 165"></path>
-<path class="d" d="M497 210 C497 182 440 182 430 165"></path>
-</svg>
-</div><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en"><strong>Kubernetes</strong> is a container orchestration platform that schedules Pods onto Worker Nodes.</div><div class="knowledge-zh">Kubernetes 是容器编排平台，负责把 Pod 调度到 Worker Node。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Kubernetes is a container orchestration platform that schedules Pods onto Worker Nodes.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">It keeps the desired number of replicas running, replaces failed Pods automatically, and supports rolling updates and rollback.</div><div class="knowledge-zh">它维持期望的副本数量，自动替换失败 Pod，并支持滚动更新和回滚。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="It keeps the desired number of replicas running, replaces failed Pods automatically, and supports rolling updates and rollback.">🔊 Listen</button></li></ul>
-<h3>Core Objects</h3><table class="core-object-table"><thead><tr><th><div class="cell-wrap"><div class="cell-text">Object</div><button class="listen-btn level-listen" data-action="speak" data-text="Object">🔊 Listen</button></div></th><th><div class="cell-wrap"><div class="cell-text">Purpose</div><button class="listen-btn level-listen" data-action="speak" data-text="Purpose">🔊 Listen</button></div></th><th><div class="cell-wrap"><div class="cell-text">Simple mental model</div><button class="listen-btn level-listen" data-action="speak" data-text="Simple mental model">🔊 Listen</button></div></th></tr></thead><tbody><tr><td><div class="cell-wrap"><div class="cell-text">Pod</div><button class="listen-btn level-listen" data-action="speak" data-text="Pod">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">Smallest deployable unit. Usually contains one main container.<span class="cell-zh">最小可部署单元，通常运行一个主要容器。</span></div><button class="listen-btn level-listen" data-action="speak" data-text="Smallest deployable unit. Usually contains one main container.">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">A running application instance.</div><button class="listen-btn level-listen" data-action="speak" data-text="A running application instance.">🔊 Listen</button></div></td></tr><tr><td><div class="cell-wrap"><div class="cell-text">Deployment</div><button class="listen-btn level-listen" data-action="speak" data-text="Deployment">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">Manages stateless Pods, replica count and rolling updates.<span class="cell-zh">管理无状态 Pod、副本数量和滚动更新。</span></div><button class="listen-btn level-listen" data-action="speak" data-text="Manages stateless Pods, replica count and rolling updates.">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">The application manager.</div><button class="listen-btn level-listen" data-action="speak" data-text="The application manager.">🔊 Listen</button></div></td></tr><tr><td><div class="cell-wrap"><div class="cell-text">Service</div><button class="listen-btn level-listen" data-action="speak" data-text="Service">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">Provides a stable virtual IP and routes traffic to matching Pods.<span class="cell-zh">提供稳定虚拟 IP，并把流量转发到匹配的 Pod。</span></div><button class="listen-btn level-listen" data-action="speak" data-text="Provides a stable virtual IP and routes traffic to matching Pods.">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">A stable front door.</div><button class="listen-btn level-listen" data-action="speak" data-text="A stable front door.">🔊 Listen</button></div></td></tr><tr><td><div class="cell-wrap"><div class="cell-text">Secret</div><button class="listen-btn level-listen" data-action="speak" data-text="Secret">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">Stores sensitive values such as passwords and tokens.<span class="cell-zh">保存密码和令牌等敏感信息。</span></div><button class="listen-btn level-listen" data-action="speak" data-text="Stores sensitive values such as passwords and tokens.">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">Protected configuration.</div><button class="listen-btn level-listen" data-action="speak" data-text="Protected configuration.">🔊 Listen</button></div></td></tr><tr><td><div class="cell-wrap"><div class="cell-text">PersistentVolumeClaim</div><button class="listen-btn level-listen" data-action="speak" data-text="PersistentVolumeClaim">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">Requests persistent storage for a workload.<span class="cell-zh">为工作负载申请持久化存储。</span></div><button class="listen-btn level-listen" data-action="speak" data-text="Requests persistent storage for a workload.">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">A storage request.</div><button class="listen-btn level-listen" data-action="speak" data-text="A storage request.">🔊 Listen</button></div></td></tr></tbody></table><h3>Kubernetes Architecture — Control Plane vs Worker Node</h3><div class="yarn-architecture-diagram">
-<svg aria-label="Kubernetes architecture compared with YARN" role="img" viewbox="0 0 980 430">
-<defs>
-<marker id="yarnArrowVisible" markerheight="9" markerwidth="9" orient="auto" refx="8" refy="4.5">
-<path d="M0,0 L9,4.5 L0,9 Z" fill="#7A7A7A"></path>
-</marker>
-<style>
-      .cp{fill:#EAF3FB;stroke:#2B78B8;stroke-width:2.2;rx:14}
-      .wk{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:2.2;rx:14}
-      .bx{fill:#FFFFFF;stroke:#2B78B8;stroke-width:1.8;rx:10}
-      .gbx{fill:#FFFFFF;stroke:#1E7A4C;stroke-width:1.8;rx:10}
-      .et{fill:#FBEDEA;stroke:#B14A3F;stroke-width:1.8;rx:10}
-      .pod{fill:#FFF5DF;stroke:#B98528;stroke-width:1.8;rx:10}
-      .t{font:700 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-      .s{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-      .zh{font:11px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#B3B3AE}
-      .a{stroke:#7A7A7A;stroke-width:2.1;fill:none;marker-end:url(#yarnArrowVisible)}
-    </style>
-</defs>
-<rect class="cp" height="185" width="470" x="255" y="20"></rect>
-<text class="t" text-anchor="middle" x="490" y="48">Control Plane</text>
-<text class="zh" text-anchor="middle" x="490" y="67">Comparable to YARN ResourceManager</text>
-<rect class="bx" height="62" width="125" x="285" y="85"></rect>
-<text class="t" text-anchor="middle" x="347" y="109">API Server</text>
-<text class="s" text-anchor="middle" x="347" y="130">Cluster entry point</text>
-<rect class="bx" height="62" width="125" x="430" y="85"></rect>
-<text class="t" text-anchor="middle" x="492" y="109">Scheduler</text>
-<text class="s" text-anchor="middle" x="492" y="130">Chooses a node</text>
-<rect class="bx" height="62" width="125" x="575" y="85"></rect>
-<text class="t" text-anchor="middle" x="637" y="106">Controller</text>
-<text class="t" text-anchor="middle" x="637" y="123">Manager</text>
-<text class="s" text-anchor="middle" x="637" y="140">Maintains state</text>
-<rect class="et" height="38" width="250" x="365" y="155"></rect>
-<text class="t" text-anchor="middle" x="490" y="178">etcd — cluster state store</text>
-<rect class="wk" height="140" width="350" x="70" y="260"></rect>
-<text class="t" text-anchor="middle" x="245" y="286">Worker Node 1</text>
-<text class="zh" text-anchor="middle" x="245" y="304">Comparable to YARN NodeManager</text>
-<rect class="gbx" height="48" width="120" x="95" y="320"></rect>
-<text class="t" text-anchor="middle" x="155" y="342">kubelet</text>
-<text class="s" text-anchor="middle" x="155" y="359">Runs Pods</text>
-<rect class="gbx" height="48" width="120" x="235" y="320"></rect>
-<text class="t" text-anchor="middle" x="295" y="342">kube-proxy</text>
-<text class="s" text-anchor="middle" x="295" y="359">Networking</text>
-<rect class="pod" height="42" width="180" x="155" y="375"></rect>
-<text class="t" text-anchor="middle" x="245" y="400">Pod(s) Running</text>
-<rect class="wk" height="140" width="350" x="560" y="260"></rect>
-<text class="t" text-anchor="middle" x="735" y="286">Worker Node 2</text>
-<text class="zh" text-anchor="middle" x="735" y="304">Comparable to YARN NodeManager</text>
-<rect class="gbx" height="48" width="120" x="585" y="320"></rect>
-<text class="t" text-anchor="middle" x="645" y="342">kubelet</text>
-<text class="s" text-anchor="middle" x="645" y="359">Runs Pods</text>
-<rect class="gbx" height="48" width="120" x="725" y="320"></rect>
-<text class="t" text-anchor="middle" x="785" y="342">kube-proxy</text>
-<text class="s" text-anchor="middle" x="785" y="359">Networking</text>
-<rect class="pod" height="42" width="180" x="645" y="375"></rect>
-<text class="t" text-anchor="middle" x="735" y="400">Pod(s) Running</text>
-<path class="a" d="M390 205 C350 225 300 235 245 260"></path>
-<path class="a" d="M590 205 C630 225 680 235 735 260"></path>
-</svg>
-</div><div class="cluster-object-diagram">
-<svg aria-label="Deployment and Service relationship to Pods on worker nodes" role="img" viewbox="0 0 980 390">
-<defs>
-<marker id="dsArrow" markerheight="9" markerwidth="9" orient="auto" refx="8" refy="4.5">
-<path d="M0,0 L9,4.5 L0,9 Z" fill="#2971A8"></path>
-</marker>
-<style>
-      .cluster{fill:#F8FBFF;stroke:#7BA8CC;stroke-width:2;rx:14}
-      .obj{fill:#FFFFFF;stroke:#2971A8;stroke-width:2;rx:10}
-      .worker{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:2;rx:12}
-      .pod{fill:#FFF5DF;stroke:#B98528;stroke-width:1.8;rx:9}
-      .svc{fill:#F4ECFA;stroke:#7B4FA0;stroke-width:2;rx:10}
-      .t{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-      .s{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-      .a{stroke:#2971A8;stroke-width:2.1;fill:none;marker-end:url(#dsArrow)}
-      .d{stroke:#7B4FA0;stroke-width:1.8;stroke-dasharray:6 5;fill:none;marker-end:url(#dsArrow)}
-    </style>
-</defs>
-<rect class="cluster" height="345" width="930" x="25" y="20"></rect>
-<text class="t" x="50" y="48">Kubernetes Cluster</text>
-<rect class="obj" height="72" width="190" x="70" y="80"></rect>
-<text class="t" text-anchor="middle" x="165" y="108">Deployment</text>
-<text class="s" text-anchor="middle" x="165" y="130">Desired state in the API</text>
-<rect class="svc" height="72" width="190" x="320" y="80"></rect>
-<text class="t" text-anchor="middle" x="415" y="108">Service</text>
-<text class="s" text-anchor="middle" x="415" y="130">Stable virtual endpoint</text>
-<rect class="worker" height="110" width="160" x="570" y="70"></rect>
-<text class="t" text-anchor="middle" x="650" y="98">Worker Node 1</text>
-<rect class="pod" height="42" width="100" x="600" y="120"></rect>
-<text class="t" text-anchor="middle" x="650" y="146">Pod A</text>
-<rect class="worker" height="110" width="160" x="770" y="70"></rect>
-<text class="t" text-anchor="middle" x="850" y="98">Worker Node 2</text>
-<rect class="pod" height="42" width="100" x="800" y="120"></rect>
-<text class="t" text-anchor="middle" x="850" y="146">Pod B</text>
-<path class="a" d="M260 116 C360 190 530 210 650 162"></path>
-<path class="a" d="M260 116 C390 230 700 230 850 162"></path>
-<path class="d" d="M510 116 C600 116 610 130 600 140"></path>
-<path class="d" d="M510 116 C680 116 760 130 800 140"></path>
-<rect class="obj" height="78" width="750" x="115" y="245"></rect>
-<text class="t" text-anchor="middle" x="490" y="273">Key idea</text>
-<text class="s" text-anchor="middle" x="490" y="296">Deployment and Service are cluster objects. Pods run on Worker Nodes.</text>
-</svg>
-</div><details class="worker-tree-details"><summary>Example: What Can Run on One Worker Node?</summary><div class="worker-tree">Worker Node 1
-├── System Components
-│   ├── kubelet
-│   ├── kube-proxy
-│   └── Container Runtime
-│
-├── Pod A — Database
-│   └── MySQL Container
-│
-├── Pod B — API Service
-│   ├── Python API Container
-│   └── Log Sidecar Container
-│
-├── Pod C — Data Processing
-│   └── Spark Executor Container
-│
-├── Pod D — Monitoring
-│   ├── Metrics Exporter Container
-│   └── Log Collector Container
-│
-└── Shared Node Resources
-    ├── CPU
-    ├── Memory
-    ├── Local Disk
-    └── Network</div></details>
-<div class="knowledge-list"><div class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The <strong>Control Plane</strong> makes cluster-wide decisions, while Worker Nodes actually run containers. This maps closely to the <strong>YARN</strong> <strong>ResourceManager</strong> and <strong>NodeManager</strong> model.</div><div class="knowledge-zh">Control Plane 负责集群级决策，Worker Node 负责真正运行容器；这与 YARN 的 ResourceManager / NodeManager 模型很接近。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Control Plane makes cluster-wide decisions, while Worker Nodes actually run containers. This maps closely to the YARN ResourceManager and NodeManager model.">🔊 Listen</button></div></div>
-<h3>Kubernetes to YARN Mapping</h3><table class="core-object-table"><thead><tr><th><div class="cell-wrap"><div class="cell-text">Kubernetes Component</div><button class="listen-btn level-listen" data-action="speak" data-text="Kubernetes Component">🔊 Listen</button></div></th><th><div class="cell-wrap"><div class="cell-text">Closest YARN Concept</div><button class="listen-btn level-listen" data-action="speak" data-text="Closest YARN Concept">🔊 Listen</button></div></th></tr></thead><tbody><tr><td><div class="cell-wrap"><div class="cell-text">Control Plane / API Server</div><button class="listen-btn level-listen" data-action="speak" data-text="Control Plane / API Server">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">ResourceManager</div><button class="listen-btn level-listen" data-action="speak" data-text="ResourceManager">🔊 Listen</button></div></td></tr><tr><td><div class="cell-wrap"><div class="cell-text">Scheduler</div><button class="listen-btn level-listen" data-action="speak" data-text="Scheduler">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">YARN Scheduler, such as Capacity Scheduler or Fair Scheduler</div><button class="listen-btn level-listen" data-action="speak" data-text="YARN Scheduler, such as Capacity Scheduler or Fair Scheduler">🔊 Listen</button></div></td></tr><tr><td><div class="cell-wrap"><div class="cell-text">Worker Node and kubelet</div><button class="listen-btn level-listen" data-action="speak" data-text="Worker Node and kubelet">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">NodeManager</div><button class="listen-btn level-listen" data-action="speak" data-text="NodeManager">🔊 Listen</button></div></td></tr><tr><td><div class="cell-wrap"><div class="cell-text">Pod</div><button class="listen-btn level-listen" data-action="speak" data-text="Pod">🔊 Listen</button></div></td><td><div class="cell-wrap"><div class="cell-text">Roughly similar to a YARN Container</div><button class="listen-btn level-listen" data-action="speak" data-text="Roughly similar to a YARN Container">🔊 Listen</button></div></td></tr></tbody></table><div class="answer-box"><strong>Interview bridge from YARN:</strong> I'm very comfortable with YARN, and the concepts map closely. The API Server and Scheduler are similar to the ResourceManager, kubelet on each Worker Node is similar to the NodeManager, and a Pod is roughly comparable to a YARN Container.<button class="listen-btn level-listen" data-action="speak" data-text="I'm very comfortable with YARN, and the concepts map closely. The API Server and Scheduler are similar to the ResourceManager, kubelet on each Worker Node is similar to the NodeManager, and a Pod is roughly comparable to a YARN Container.">🔊 Listen</button></div></div></section><section class="level-section" id="dk-level-5"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 5 — Pod, Deployment and Service</h2><div class="level-subtitle-unified">Learn the three objects that appear in almost every interview.</div></div></div><div class="level-body-unified"><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">A <strong>Pod</strong> is the smallest deployable unit in <strong>Kubernetes</strong> and usually contains one main container.</div><div class="knowledge-zh">Pod 是 Kubernetes 中最小的可部署单元，通常包含一个主要容器。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="A Pod is the smallest deployable unit in Kubernetes and usually contains one main container.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">A <strong>Deployment</strong> manages Pods and replica count, replaces failed Pods, and supports rolling updates.</div><div class="knowledge-zh">Deployment 管理 Pod 和副本数量，替换失败 Pod，并支持滚动更新。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="A Deployment manages Pods and replica count, replaces failed Pods, and supports rolling updates.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">A <strong>Service</strong> provides a stable virtual IP and DNS name, then routes traffic to Pods selected by labels.</div><div class="knowledge-zh">Service 提供稳定的虚拟 IP 和 DNS 名称，并根据标签把流量转发到匹配的 Pod。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="A Service provides a stable virtual IP and DNS name, then routes traffic to Pods selected by labels.">🔊 Listen</button></li></ul><details class="pod-details">
-<summary>What a Pod Contains</summary>
-<div class="pod-details-body">
-<div class="pod-diagram">
-<svg aria-label="What a Pod contains" role="img" viewbox="0 0 860 360">
-<defs>
-<style>
-            .pod{fill:#FFF5DF;stroke:#B98528;stroke-width:2.2;rx:14}
-            .box{fill:#FFFFFF;stroke:#2971A8;stroke-width:1.8;rx:10}
-            .vol{fill:#F4ECFA;stroke:#7B4FA0;stroke-width:1.8;rx:10}
-            .cfg{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:1.8;rx:10}
-            .t{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-            .s{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-            .zh{font:11px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#B3B3AE}
-          </style>
-</defs>
-<rect class="pod" height="305" width="800" x="30" y="25"></rect>
-<text class="t" text-anchor="middle" x="430" y="50">Pod</text>
-<text class="zh" text-anchor="middle" x="430" y="68">Shared runtime boundary managed by Kubernetes</text>
-<rect class="box" height="80" width="180" x="80" y="95"></rect>
-<text class="t" text-anchor="middle" x="170" y="124">Main Container</text>
-<text class="s" text-anchor="middle" x="170" y="146">Runs the application</text>
-<rect class="box" height="80" width="160" x="290" y="95"></rect>
-<text class="t" text-anchor="middle" x="370" y="124">Sidecar Container</text>
-<text class="s" text-anchor="middle" x="370" y="146">Optional helper</text>
-<rect class="cfg" height="80" width="150" x="480" y="95"></rect>
-<text class="t" text-anchor="middle" x="555" y="122">Shared Network</text>
-<text class="s" text-anchor="middle" x="555" y="144">Pod IP + localhost</text>
-<rect class="vol" height="80" width="120" x="660" y="95"></rect>
-<text class="t" text-anchor="middle" x="720" y="124">Volume</text>
-<text class="s" text-anchor="middle" x="720" y="146">Shared storage</text>
-<rect class="cfg" height="72" width="160" x="80" y="215"></rect>
-<text class="t" text-anchor="middle" x="160" y="242">Environment</text>
-<text class="s" text-anchor="middle" x="160" y="263">Variables</text>
-<rect class="cfg" height="72" width="170" x="270" y="215"></rect>
-<text class="t" text-anchor="middle" x="355" y="242">ConfigMap / Secret</text>
-<text class="s" text-anchor="middle" x="355" y="263">Configuration refs</text>
-<rect class="box" height="72" width="150" x="470" y="215"></rect>
-<text class="t" text-anchor="middle" x="545" y="242">CPU / Memory</text>
-<text class="s" text-anchor="middle" x="545" y="263">Requests / limits</text>
-<rect class="box" height="72" width="130" x="650" y="215"></rect>
-<text class="t" text-anchor="middle" x="715" y="242">Probes</text>
-<text class="s" text-anchor="middle" x="715" y="263">Readiness / liveness</text>
-</svg>
+
+
+
+
+<button class="tab-btn active" data-tab="hdfs">🧶🗄️🐝 YARN &amp; HDFS &amp; Hive</button><button class="tab-btn" data-tab="spark">⚡ Spark Memory</button><button class="tab-btn" data-tab="clickhouse">📨 MQ &amp; ClickHouse</button><button class="tab-btn" data-tab="k8s">🐳 Docker &amp; K8S</button><button class="tab-btn" data-tab="k8s-review">☸️ K8S</button><button class="tab-btn" data-tab="linux">🐧 Linux</button><button class="tab-btn" data-tab="ref">📋 Quick Reference</button><button class="tab-btn" data-tab="test-review">📝 Test Review</button></div>
+
+
+
+
+
+
+<div class="tab-panel active" id="hdfs"></div><div class="tab-panel" id="spark"></div><div class="tab-panel" id="clickhouse"></div><div class="tab-panel" id="k8s"></div><div class="tab-panel imported-review" id="k8s-review">
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>Kubernetes Foundations</h2>
+<p class="mini">Start here before reviewing today’s questions.</p>
 </div>
-<div class="pod-tree-card">
-<div class="card-title">What a Pod Contains</div>
-<pre>Pod
-├── One or more Containers
-├── Shared IP address
-├── Shared network namespace
-├── Volumes
-├── Environment variables
-├── ConfigMap / Secret references
-├── CPU and memory settings
-└── Health checks</pre>
-<div class="tree-note">A Pod defines the shared runtime environment for its containers.</div>
+<button class="listen-btn" data-action="speak" data-text="Kubernetes%20Foundations%20Start%20here%20before%20reviewing%20today%E2%80%99s%20questions.%201.%20What%20Kubernetes%20Does%20Kubernetes%20is%20a%20container%20orchestration%20platform.%20It%20schedules%20containers%20onto%20machines%2C%20keeps%20the%20required%20number%20of%20replicas%20running%2C%20provides%20stable%20networking%2C%20supports%20rolling%20updates%2C%20and%20integrates%20storage.%20Deployment%20Desired%20application%20state%20%E2%86%92%20ReplicaSet%20Maintains%20replica%20count%20%E2%86%92%20Pod%20Runs%20containers%202.%20Core%20Objects%20Object%20Purpose%20Simple%20mental%20model%20Pod%20Smallest%20deployable%20unit.%20Usually%20contains%20one%20main%20container.%20A%20running%20application%20instance.%20Deployment%20Manages%20stateless%20Pods%2C%20replica%20count%2C%20and%20rolling%20updates.%20The%20application%20manager.%20Service%20Provides%20a%20stable%20virtual%20IP%20and%20load%20balances%20traffic%20to%20matching%20Pods.%20A%20stable%20front%20door%20for%20Pods.%20Ingress%20Defines%20host-based%20or%20path-based%20HTTP%20routing%20to%20Services.%20The%20HTTP%20routing%20table.%20ConfigMap%20Stores%20non-sensitive%20configuration.%20External%20application%20settings.%20Secret%20Stores%20sensitive%20configuration%20such%20as%20passwords%20or%20tokens.%20Protected%20configuration.%20PersistentVolumeClaim%20Requests%20persistent%20storage%20for%20a%20workload.%20An%20application%20storage%20request.%20NetworkPolicy%20Controls%20allowed%20Pod-to-Pod%20network%20traffic.%20A%20firewall%20rule%20for%20Pods.%203.%20Resource%20Structure%20Remember%3A%20apiVersion%20%2C%20kind%20%2C%20and%20metadata%20are%20common%20resource%20fields.%20Fields%20such%20as%20data%20only%20exist%20on%20selected%20resource%20types.%204.%20Namespaced%20vs%20Cluster-Scoped%20A%20namespaced%20resource%20belongs%20to%20one%20namespace.%20A%20cluster-scoped%20resource%20applies%20across%20the%20entire%20cluster.%20Namespaced%20examples%20Cluster-scoped%20examples%20Pod%2C%20Deployment%2C%20Service%2C%20NetworkPolicy%2C%20PodDisruptionBudget%20Node%2C%20Namespace%2C%20PriorityClass%2C%20APIService%2C%20StorageClass%205.%20Probes%20Probe%20Question%20it%20answers%20Effect%20when%20it%20fails%20startupProbe%20Has%20the%20application%20finished%20starting%3F%20Prevents%20liveness%20checks%20from%20killing%20a%20slow-starting%20application.%20readinessProbe%20Can%20the%20application%20receive%20traffic%20now%3F%20Removes%20the%20Pod%20from%20Service%20endpoints.%20livenessProbe%20Is%20the%20application%20still%20alive%3F%20Restarts%20the%20container.%206.%20Networking%20Direction%20For%20a%20flow%20such%20as%20frontend%20%E2%86%92%20backend%20%3A%20The%20protected%20destination%20is%20the%20backend.%20The%20traffic%20direction%20is%20ingress%20because%20traffic%20enters%20the%20backend.%20The%20allowed%20source%20is%20the%20frontend.%207.%20Common%20Commands%20Command%20Purpose%20kubectl%20get%20pods%20List%20Pods%20in%20the%20current%20namespace.%20kubectl%20get%20pods%20-A%20List%20Pods%20in%20all%20namespaces.%20kubectl%20get%20all%20List%20common%20workload%20resources.%20kubectl%20describe%20pod%20%3Cpod-name%3E%20Show%20detailed%20status%20and%20recent%20events.%20kubectl%20logs%20%3Cpod-name%3E%20Read%20container%20logs.%20kubectl%20logs%20-f%20%3Cpod-name%3E%20Follow%20logs%20continuously.%20kubectl%20exec%20-it%20%3Cpod-name%3E%20--%20sh%20Open%20a%20shell%20inside%20a%20container.%20kubectl%20apply%20-f%20app.yaml%20Create%20or%20update%20resources%20from%20YAML.%20kubectl%20delete%20-f%20app.yaml%20Delete%20resources%20defined%20in%20YAML.%20kubectl%20scale%20deployment%20web%20--replicas%3D3%20Manually%20change%20replica%20count.%20kubectl%20rollout%20status%20deployment/web%20Check%20rollout%20progress.%20kubectl%20rollout%20undo%20deployment/web%20Roll%20back%20the%20latest%20Deployment%20revision.%20kubectl%20api-resources%20List%20resource%20types%20available%20in%20the%20cluster.%20kubeadm%20init%20Initialize%20the%20control%20plane.%20kubeadm%20join%20...%20Add%20a%20node%20to%20the%20cluster.">🔊 Listen</button>
 </div>
+<h3>1. What Kubernetes Does</h3>
+<p>Kubernetes is a container orchestration platform. It schedules containers onto machines, keeps the required number of replicas running, provides stable networking, supports rolling updates, and integrates storage.<span class="zh-note">Kubernetes 是容器编排平台。它负责把容器安排到不同机器上运行，维持指定副本数，并提供稳定网络、滚动更新和存储集成。</span></p>
+<div class="concept-flow">
+<div class="flow-box"><strong>Deployment</strong><br/><span>Desired application state</span></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><strong>ReplicaSet</strong><br/><span>Maintains replica count</span></div>
+<div class="flow-arrow">→</div>
+<div class="flow-box"><strong>Pod</strong><br/><span>Runs containers</span></div>
 </div>
-</details><details class="pod-details">
-<summary>MySQL Pod Example</summary>
-<div class="pod-details-body">
-<div class="pod-diagram">
-<svg aria-label="MySQL Pod example" role="img" viewbox="0 0 860 330">
-<defs>
-<style>
-            .pod{fill:#FFF5DF;stroke:#B98528;stroke-width:2.2;rx:14}
-            .box{fill:#FFFFFF;stroke:#2971A8;stroke-width:1.8;rx:10}
-            .vol{fill:#F4ECFA;stroke:#7B4FA0;stroke-width:1.8;rx:10}
-            .cfg{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:1.8;rx:10}
-            .t{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-            .s{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-            .zh{font:11px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#B3B3AE}
-          </style>
-</defs>
-<rect class="pod" height="275" width="780" x="40" y="25"></rect>
-<text class="t" text-anchor="middle" x="430" y="50">MySQL Pod</text>
-<text class="zh" text-anchor="middle" x="430" y="68">The Pod references external Kubernetes objects and mounts storage</text>
-<rect class="box" height="82" width="190" x="95" y="95"></rect>
-<text class="t" text-anchor="middle" x="190" y="125">MySQL Container</text>
-<text class="s" text-anchor="middle" x="190" y="147">mysql:8.4</text>
-<rect class="cfg" height="82" width="180" x="335" y="95"></rect>
-<text class="t" text-anchor="middle" x="425" y="122">Secret reference</text>
-<text class="s" text-anchor="middle" x="425" y="144">Root password</text>
-<rect class="vol" height="82" width="190" x="565" y="95"></rect>
-<text class="t" text-anchor="middle" x="660" y="122">PVC-backed Volume</text>
-<text class="s" text-anchor="middle" x="660" y="144">Mounted at /var/lib/mysql</text>
-<rect class="box" height="60" width="190" x="175" y="215"></rect>
-<text class="t" text-anchor="middle" x="270" y="241">CPU / Memory</text>
-<text class="s" text-anchor="middle" x="270" y="260">Resource settings</text>
-<rect class="box" height="60" width="210" x="475" y="215"></rect>
-<text class="t" text-anchor="middle" x="580" y="241">Readiness / Liveness</text>
-<text class="s" text-anchor="middle" x="580" y="260">Health probes</text>
-</svg>
+<h3>2. Core Objects</h3>
+<table class="cheat-table">
+<tr><th>Object</th><th>Purpose</th><th>Simple mental model</th></tr>
+<tr><td><code>Pod</code></td><td>Smallest deployable unit. Usually contains one main container.</td><td>A running application instance.</td></tr>
+<tr><td><code>Deployment</code></td><td>Manages stateless Pods, replica count, and rolling updates.</td><td>The application manager.</td></tr>
+<tr><td><code>Service</code></td><td>Provides a stable virtual IP and load balances traffic to matching Pods.<span class="zh-note">提供稳定的虚拟 IP，并把流量负载均衡到匹配的 Pod。</span></td><td>A stable front door for Pods.</td></tr>
+<tr><td><code>Ingress</code></td><td>Defines host-based or path-based HTTP routing to Services.<span class="zh-note">根据域名或路径，把 HTTP 请求转发到不同 Service。</span></td><td>The HTTP routing table.</td></tr>
+<tr><td><code>ConfigMap</code></td><td>Stores non-sensitive configuration.</td><td>External application settings.</td></tr>
+<tr><td><code>Secret</code></td><td>Stores sensitive configuration such as passwords or tokens.</td><td>Protected configuration.</td></tr>
+<tr><td><code>PersistentVolumeClaim</code></td><td>Requests persistent storage for a workload.</td><td>An application storage request.</td></tr>
+<tr><td><code>NetworkPolicy</code></td><td>Controls allowed Pod-to-Pod network traffic.<span class="zh-note">控制哪些 Pod 可以访问哪些 Pod。</span></td><td>A firewall rule for Pods.</td></tr>
+</table>
+<h3>3. Resource Structure</h3>
+<pre>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27</pre>
+<div class="callout">
+<strong>Remember:</strong> <code>apiVersion</code>, <code>kind</code>, and <code>metadata</code> are common resource fields. Fields such as <code>data</code> only exist on selected resource types.
+  </div>
+<h3>4. Namespaced vs Cluster-Scoped</h3>
+<p>A namespaced resource belongs to one namespace. A cluster-scoped resource applies across the entire cluster.<span class="zh-note">Namespaced 资源只属于某个 namespace；cluster-scoped 资源作用于整个集群。</span></p>
+<table class="cheat-table">
+<tr><th>Namespaced examples</th><th>Cluster-scoped examples</th></tr>
+<tr><td>Pod, Deployment, Service, NetworkPolicy, PodDisruptionBudget</td><td>Node, Namespace, PriorityClass, APIService, StorageClass</td></tr>
+</table>
+<h3>5. Probes</h3>
+<table class="cheat-table">
+<tr><th>Probe</th><th>Question it answers</th><th>Effect when it fails</th></tr>
+<tr><td><code>startupProbe</code></td><td>Has the application finished starting?</td><td>Prevents liveness checks from killing a slow-starting application.<span class="zh-note">防止应用启动较慢时被 livenessProbe 误判并重启。</span></td></tr>
+<tr><td><code>readinessProbe</code></td><td>Can the application receive traffic now?</td><td>Removes the Pod from Service endpoints.<span class="zh-note">探测失败时，Pod 会从 Service 的可用端点中移除。</span></td></tr>
+<tr><td><code>livenessProbe</code></td><td>Is the application still alive?</td><td>Restarts the container.<span class="zh-note">探测失败时，Kubernetes 会重启容器。</span></td></tr>
+</table>
+<h3>6. Networking Direction</h3>
+<p>For a flow such as <code>frontend → backend</code>:</p>
+<ul>
+<li>The protected destination is the backend.<span class="zh-note">被保护的目标是 backend。</span></li>
+<li>The traffic direction is ingress because traffic enters the backend.<span class="zh-note">因为流量进入 backend，所以使用 ingress。</span></li>
+<li>The allowed source is the frontend.<span class="zh-note">允许访问 backend 的来源是 frontend。</span></li>
+</ul>
+<pre>spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend</pre>
+<h3>7. Common Commands</h3>
+<table class="cheat-table command-table">
+<tr><th>Command</th><th>Purpose</th></tr>
+<tr><td><code>kubectl get pods</code></td><td>List Pods in the current namespace.</td></tr>
+<tr><td><code>kubectl get pods -A</code></td><td>List Pods in all namespaces.</td></tr>
+<tr><td><code>kubectl get all</code></td><td>List common workload resources.</td></tr>
+<tr><td><code>kubectl describe pod &lt;pod-name&gt;</code></td><td>Show detailed status and recent events.</td></tr>
+<tr><td><code>kubectl logs &lt;pod-name&gt;</code></td><td>Read container logs.</td></tr>
+<tr><td><code>kubectl logs -f &lt;pod-name&gt;</code></td><td>Follow logs continuously.</td></tr>
+<tr><td><code>kubectl exec -it &lt;pod-name&gt; -- sh</code></td><td>Open a shell inside a container.</td></tr>
+<tr><td><code>kubectl apply -f app.yaml</code></td><td>Create or update resources from YAML.</td></tr>
+<tr><td><code>kubectl delete -f app.yaml</code></td><td>Delete resources defined in YAML.</td></tr>
+<tr><td><code>kubectl scale deployment web --replicas=3</code></td><td>Manually change replica count.</td></tr>
+<tr><td><code>kubectl rollout status deployment/web</code></td><td>Check rollout progress.</td></tr>
+<tr><td><code>kubectl rollout undo deployment/web</code></td><td>Roll back the latest Deployment revision.</td></tr>
+<tr><td><code>kubectl api-resources</code></td><td>List resource types available in the cluster.</td></tr>
+<tr><td><code>kubeadm init</code></td><td>Initialize the control plane.</td></tr>
+<tr><td><code>kubeadm join ...</code></td><td>Add a node to the cluster.</td></tr>
+</table>
 </div>
-<div class="pod-tree-card">
-<div class="card-title">MySQL Pod Example</div>
-<pre>MySQL Pod
-├── MySQL Container
-├── Secret reference
-│   └── Root password
-├── PVC-backed Volume
-│   └── Mounted at /var/lib/mysql
-├── CPU / Memory settings
-└── Readiness / Liveness probes</pre>
-<div class="tree-note">The Pod references the Secret and PVC; they are separate Kubernetes objects.</div>
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>Integrated Example: Frontend and Backend Application</h2>
+<p class="mini">This example covers the major ideas tested today.</p>
 </div>
+<button class="listen-btn" data-action="speak" data-text="Integrated%20Example%3A%20Frontend%20and%20Backend%20Application%20This%20example%20covers%20the%20major%20ideas%20tested%20today.%20Scenario%20We%20run%20a%20frontend%20and%20backend.%20The%20frontend%20receives%20external%20HTTP%20requests.%20Only%20frontend%20Pods%20may%20call%20backend%20Pods.%20The%20backend%20must%20not%20receive%20Service%20traffic%20until%20it%20finishes%20loading%20data.%20Architecture%20User%20%E2%86%92%20Ingress%20%E2%86%92%20Frontend%20Service%20%E2%86%92%20Frontend%20Pods%20%E2%86%92%20Backend%20Service%20%E2%86%92%20Backend%20Pods%20Step%201%3A%20Backend%20Deployment%20with%20Readiness%20Probe%20The%20backend%20Pods%20may%20be%20running%2C%20but%20the%20Service%20will%20not%20send%20them%20traffic%20until%20/ready%20succeeds.%20Step%202%3A%20Backend%20Service%20Step%203%3A%20Allow%20Only%20Frontend%20to%20Reach%20Backend%20Step%204%3A%20Expose%20Frontend%20with%20Ingress%20Step%205%3A%20Apply%20and%20Verify%20How%20this%20example%20maps%20to%20today%E2%80%99s%20questions%3A%20Ingress%20provides%20host-based%20routing.%20readinessProbe%20blocks%20traffic%20until%20the%20backend%20is%20ready.%20NetworkPolicy%20protects%20backend%20Pods%20and%20allows%20frontend%20sources.%20kubectl%20apply%20%2C%20get%20%2C%20describe%20%2C%20and%20logs%20are%20common%20operational%20commands.%20The%20manifests%20use%20common%20fields%20such%20as%20apiVersion%20%2C%20kind%20%2C%20and%20metadata%20.">🔊 Listen</button>
 </div>
-</details></div></section><section class="level-section" id="dk-level-6"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 6 — Secret and Persistent Storage</h2><div class="level-subtitle-unified">Understand why databases need configuration and durable storage.</div></div></div><div class="level-body-unified">
-<div class="level-diagram">
-<svg aria-label="PVC relationship" role="img" viewbox="0 0 760 220">
-<defs>
-<marker id="pvcarr" markerheight="9" markerwidth="9" orient="auto" refx="8" refy="4.5">
-<path d="M0,0 L9,4.5 L0,9 Z" fill="#2971A8"></path>
-</marker>
-<style>
-      .b{fill:#fff;stroke:#2971A8;stroke-width:2;rx:10}
-      .p{fill:#F4ECFA;stroke:#7B4FA0;stroke-width:2;rx:10}
-      .g{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:2;rx:10}
-      .t{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-      .s{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-      .a{stroke:#2971A8;stroke-width:2.2;fill:none;marker-end:url(#pvcarr)}
-    </style>
-</defs>
-<text class="t" text-anchor="middle" x="380" y="24">Pod → PVC → PV → Physical Storage</text>
-<rect class="b" height="72" width="150" x="25" y="75"></rect>
-<text class="t" text-anchor="middle" x="100" y="102">Pod</text>
-<text class="s" text-anchor="middle" x="100" y="125">Mounts /var/lib/mysql</text>
-<rect class="p" height="72" width="150" x="220" y="75"></rect>
-<text class="t" text-anchor="middle" x="295" y="102">PVC</text>
-<text class="s" text-anchor="middle" x="295" y="125">Storage request</text>
-<rect class="p" height="72" width="150" x="415" y="75"></rect>
-<text class="t" text-anchor="middle" x="490" y="102">PV</text>
-<text class="s" text-anchor="middle" x="490" y="125">Allocated volume</text>
-<rect class="g" height="72" width="125" x="610" y="75"></rect>
-<text class="t" text-anchor="middle" x="672" y="102">Disk</text>
-<text class="s" text-anchor="middle" x="672" y="125">Actual storage</text>
-<path class="a" d="M175 111 H220"></path>
-<path class="a" d="M370 111 H415"></path>
-<path class="a" d="M565 111 H610"></path>
-</svg>
-</div><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">A <strong>Secret</strong> stores sensitive values such as passwords and tokens.</div><div class="knowledge-zh">Secret 保存密码和令牌等敏感信息。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="A Secret stores sensitive values such as passwords and tokens.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">A <strong>PersistentVolumeClaim</strong>, or <strong>PVC</strong>, requests persistent storage and is mounted by a <strong>Pod</strong> as a directory such as /var/lib/mysql.</div><div class="knowledge-zh">PersistentVolumeClaim，简称 PVC，用来申请持久化存储，并由 Pod 挂载成目录，例如 /var/lib/mysql。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="A PersistentVolumeClaim, or PVC, requests persistent storage and is mounted by a Pod as a directory such as /var/lib/mysql.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The <strong>PVC</strong> is usually bound to a <strong>PersistentVolume</strong> backed by local, cloud or network storage, so <strong>MySQL</strong> data survives <strong>Pod</strong> restart or replacement.</div><div class="knowledge-zh">PVC 通常绑定到由本地、云或网络存储支持的 PV，因此 MySQL 数据可以在 Pod 重启或替换后继续保留。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The PVC is usually bound to a PersistentVolume backed by local, cloud or network storage, so MySQL data survives Pod restart or replacement.">🔊 Listen</button></li></ul>
-</div></section><section class="level-section" id="dk-level-7"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 7 — Deploy One MySQL Example</h2><div class="level-subtitle-unified">Connect Deployment, Pod, Service, Secret and PVC in one simple example.</div></div></div><div class="level-body-unified"><div class="memory-item"><div class="memory-text"><div class="memory-en">The Deployment keeps one MySQL Pod running.</div><div class="memory-zh">Deployment 保持一个 MySQL Pod 运行。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Deployment keeps one MySQL Pod running.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">The Pod runs the mysql:8.4 container image.</div><div class="memory-zh">Pod 运行 mysql:8.4 容器镜像。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Pod runs the mysql:8.4 container image.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">The Service exposes MySQL through a stable name: mysql.</div><div class="memory-zh">Service 通过稳定名称 mysql 提供访问。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Service exposes MySQL through a stable name: mysql.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">The Secret provides the root password.</div><div class="memory-zh">Secret 提供 root 密码。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Secret provides the root password.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">The PVC stores the database files.</div><div class="memory-zh">PVC 保存数据库文件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The PVC stores the database files.">🔊 Listen</button></div><h3>Frontend and Backend Example</h3><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The <strong>Deployment</strong> keeps one <strong>MySQL Pod</strong> running, and the Pod uses the <strong>mysql:8.4 image</strong>.</div><div class="knowledge-zh">Deployment 保持一个 MySQL Pod 运行，Pod 使用 mysql:8.4 镜像。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Deployment keeps one MySQL Pod running, and the Pod uses the mysql:8.4 image .">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The <strong>Service</strong> exposes MySQL through the stable DNS name <strong>mysql</strong> on port <strong>3306</strong>.</div><div class="knowledge-zh">Service 通过稳定 DNS 名称 mysql 和 3306 端口提供 MySQL 访问。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Service exposes MySQL through the stable DNS name mysql on port 3306 .">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The <strong>Secret</strong> provides the root password, while the <strong>PVC</strong> stores the database files outside the temporary Pod.</div><div class="knowledge-zh">Secret 提供 root 密码，PVC 在临时 Pod 外部保存数据库文件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Secret provides the root password, while the PVC stores the database files outside the temporary Pod.">🔊 Listen</button></li></ul><details class="code-details" open="False"><summary>MySQL Deployment YAML</summary><div class="code-wrap level-code"><div class="code-label">YAML</div><pre><code class="language-yaml"><span class="tok-key">apiVersion</span>: v1
-<span class="tok-key">kind</span>: Secret
-<span class="tok-key">metadata</span>:
-  <span class="tok-key">name</span>: mysql-secret
-<span class="tok-key">type</span>: Opaque
-<span class="tok-key">stringData</span>:
-  <span class="tok-key">MYSQL_ROOT_PASSWORD</span>: demo123
----
-<span class="tok-key">apiVersion</span>: v1
-<span class="tok-key">kind</span>: PersistentVolumeClaim
-<span class="tok-key">metadata</span>:
-  <span class="tok-key">name</span>: mysql-pvc
-<span class="tok-key">spec</span>:
-  <span class="tok-key">accessModes</span>:
-    - ReadWriteOnce
-  <span class="tok-key">resources</span>:
-    <span class="tok-key">requests</span>:
-      <span class="tok-key">storage</span>: <span class="tok-num">1Gi</span>
----
-<span class="tok-key">apiVersion</span>: apps/v1
-<span class="tok-key">kind</span>: Deployment
-<span class="tok-key">metadata</span>:
-  <span class="tok-key">name</span>: mysql
-<span class="tok-key">spec</span>:
-  <span class="tok-key">replicas</span>: <span class="tok-num">1</span>
-<span class="tok-key">selector</span>:
-    <span class="tok-key">matchLabels</span>:
-      <span class="tok-key">app</span>: mysql
-  <span class="tok-key">template</span>:
-    <span class="tok-key">metadata</span>:
-      <span class="tok-key">labels</span>:
-        <span class="tok-key">app</span>: mysql
-    <span class="tok-key">spec</span>:
-      <span class="tok-key">containers</span>:
-        - name: mysql
-          <span class="tok-key">image</span>: mysql:8.4
-          <span class="tok-key">ports</span>:
-            - containerPort: <span class="tok-num">3306</span>
-<span class="tok-key">envFrom</span>:
-            - secretRef:
-                <span class="tok-key">name</span>: mysql-secret
-          <span class="tok-key">volumeMounts</span>:
-            - name: mysql-data
-              <span class="tok-key">mountPath</span>: /var/lib/mysql
-      <span class="tok-key">volumes</span>:
-        - name: mysql-data
-          <span class="tok-key">persistentVolumeClaim</span>:
-            <span class="tok-key">claimName</span>: mysql-pvc
----
-<span class="tok-key">apiVersion</span>: v1
-<span class="tok-key">kind</span>: Service
-<span class="tok-key">metadata</span>:
-  <span class="tok-key">name</span>: mysql
-<span class="tok-key">spec</span>:
-  <span class="tok-key">selector</span>:
-    <span class="tok-key">app</span>: mysql
-  <span class="tok-key">ports</span>:
-    - port: <span class="tok-num">3306</span>
-<span class="tok-key">targetPort</span>: <span class="tok-num">3306</span></code></pre></div></details>
-<div class="level-diagram">
-<svg aria-label="Frontend and backend Kubernetes architecture" role="img" viewbox="0 0 940 320">
-<defs>
-<marker id="fbArrow" markerheight="9" markerwidth="9" orient="auto" refx="8" refy="4.5">
-<path d="M0,0 L9,4.5 L0,9 Z" fill="#2971A8"></path>
-</marker>
-<style>
-      .b{fill:#fff;stroke:#2971A8;stroke-width:2;rx:10}
-      .g{fill:#EAF7EF;stroke:#1E7A4C;stroke-width:2;rx:10}
-      .p{fill:#F4ECFA;stroke:#7B4FA0;stroke-width:2;rx:10}
-      .t{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#1A1A18}
-      .s{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;fill:#57564F}
-      .a{stroke:#2971A8;stroke-width:2.2;fill:none;marker-end:url(#fbArrow)}
-      .d{stroke:#7B4FA0;stroke-width:1.8;stroke-dasharray:6 5;fill:none;marker-end:url(#fbArrow)}
-    </style>
-</defs>
-<text class="t" text-anchor="middle" x="470" y="25">User → Ingress → Frontend Service → Frontend Pods → Backend Service → Backend Pods</text>
-<rect class="b" height="60" width="110" x="20" y="95"></rect>
-<text class="t" text-anchor="middle" x="75" y="130">User</text>
-<rect class="b" height="60" width="120" x="155" y="95"></rect>
-<text class="t" text-anchor="middle" x="215" y="130">Ingress</text>
-<rect class="b" height="80" width="150" x="300" y="85"></rect>
-<text class="t" text-anchor="middle" x="375" y="114">Frontend Service</text>
-<text class="s" text-anchor="middle" x="375" y="138">Stable endpoint</text>
-<rect class="g" height="100" width="150" x="485" y="75"></rect>
-<text class="t" text-anchor="middle" x="560" y="106">Frontend Pods</text>
-<text class="s" text-anchor="middle" x="560" y="130">Receive requests</text>
-<text class="s" text-anchor="middle" x="560" y="151">Call backend</text>
-<rect class="b" height="80" width="135" x="670" y="85"></rect>
-<text class="t" text-anchor="middle" x="737" y="114">Backend Service</text>
-<text class="s" text-anchor="middle" x="737" y="138">Stable endpoint</text>
-<rect class="g" height="100" width="90" x="830" y="75"></rect>
-<text class="t" text-anchor="middle" x="875" y="106">Backend</text>
-<text class="s" text-anchor="middle" x="875" y="130">Pods</text>
-<text class="s" text-anchor="middle" x="875" y="151">/ready</text>
-<rect class="p" height="58" width="130" x="675" y="225"></rect>
-<text class="t" text-anchor="middle" x="740" y="248">NetworkPolicy</text>
-<text class="s" text-anchor="middle" x="740" y="269">Frontend only</text>
-<path class="a" d="M130 125 H155"></path>
-<path class="a" d="M275 125 H300"></path>
-<path class="a" d="M450 125 H485"></path>
-<path class="a" d="M635 125 H670"></path>
-<path class="a" d="M805 125 H830"></path>
-<path class="d" d="M740 225 V165"></path>
-</svg>
-</div><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The <strong>Deployment</strong> keeps one <strong>MySQL</strong> <strong>Pod</strong> running, and the <strong>Pod</strong> runs the mysql:8.4 image.</div><div class="knowledge-zh">Deployment 保持一个 MySQL Pod 运行，Pod 使用 mysql:8.4 镜像。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Deployment keeps one MySQL Pod running, and the Pod runs the mysql:8.4 image.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The <strong>Service</strong> exposes <strong>MySQL</strong> through the stable name mysql on port 3306.</div><div class="knowledge-zh">Service 通过稳定名称 mysql 和 3306 端口提供 MySQL 访问。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Service exposes MySQL through the stable name mysql on port 3306.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The <strong>Secret</strong> provides the root password, while the <strong>PVC</strong> stores the database files.</div><div class="knowledge-zh">Secret 提供 root 密码，PVC 保存数据库文件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The Secret provides the root password, while the PVC stores the database files.">🔊 Listen</button></li></ul>
-<ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en"><strong>Ingress</strong> routes external HTTP traffic to the frontend <strong>Service</strong>.</div><div class="knowledge-zh">Ingress 把外部 HTTP 流量路由到 frontend Service。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Ingress routes external HTTP traffic to the frontend Service.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">The frontend <strong>Service</strong> sends traffic to ready frontend Pods.</div><div class="knowledge-zh">frontend Service 把流量发送给已经就绪的 frontend Pod。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="The frontend Service sends traffic to ready frontend Pods.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">A <strong>NetworkPolicy</strong> allows only frontend Pods to call backend Pods.</div><div class="knowledge-zh">NetworkPolicy 只允许 frontend Pod 访问 backend Pod。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="A NetworkPolicy allows only frontend Pods to call backend Pods.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">A <strong>readiness probe</strong> keeps backend Pods out of <strong>Service</strong> endpoints until data loading finishes.</div><div class="knowledge-zh">readiness probe 会在数据加载完成前阻止 backend Pod 接收 Service 流量。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="A readiness probe keeps backend Pods out of Service endpoints until data loading finishes.">🔊 Listen</button></li></ul><details class="code-details frontend-backend-yaml"><summary>Frontend / Backend YAML Example</summary><div class="code-wrap"><div class="code-label">YAML</div><pre><code>apiVersion: apps/v1
+<h3>Scenario</h3>
+<p>We run a frontend and backend. The frontend receives external HTTP requests. Only frontend Pods may call backend Pods. The backend must not receive Service traffic until it finishes loading data.<span class="zh-note">这个示例包含 frontend 和 backend。frontend 接收外部 HTTP 请求；只有 frontend Pod 可以访问 backend Pod；backend 完成数据加载前不能接收 Service 流量。</span></p>
+<h3>Architecture</h3>
+<div class="architecture">
+<div class="arch-box">User</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Ingress</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Frontend Service</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Frontend Pods</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Backend Service</div>
+<div class="flow-arrow">→</div>
+<div class="arch-box">Backend Pods</div>
+</div>
+<h3>Step 1: Backend Deployment with Readiness Probe</h3>
+<pre>apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
@@ -1251,14 +330,17 @@ spec:
       containers:
         - name: backend
           image: example/backend:1.0
+          ports:
+            - containerPort: 8080
           readinessProbe:
             httpGet:
               path: /ready
               port: 8080
             initialDelaySeconds: 5
-            periodSeconds: 5
----
-apiVersion: v1
+            periodSeconds: 5</pre>
+<p>The backend Pods may be running, but the Service will not send them traffic until <code>/ready</code> succeeds.<span class="zh-note">backend Pod 可以已经运行，但只有 /ready 检查成功后，Service 才会把流量转发给它。</span></p>
+<h3>Step 2: Backend Service</h3>
+<pre>apiVersion: v1
 kind: Service
 metadata:
   name: backend
@@ -1266,31 +348,131 @@ spec:
   selector:
     app: backend
   ports:
-    - port: 8080
-      targetPort: 8080
----
-apiVersion: networking.k8s.io/v1
+    - port: 80
+      targetPort: 8080</pre>
+<h3>Step 3: Allow Only Frontend to Reach Backend</h3>
+<pre>apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-frontend-to-backend
+  name: backend-from-frontend-only
 spec:
   podSelector:
     matchLabels:
       app: backend
+  policyTypes:
+    - Ingress
   ingress:
     - from:
         - podSelector:
             matchLabels:
               app: frontend
-</code></pre></div></details><details class="code-details frontend-backend-yaml"><summary>Apply and Verify Commands</summary><div class="code-wrap"><div class="code-label">Shell</div><pre><code>kubectl apply -f frontend-backend.yaml
-kubectl get pods,svc,networkpolicy
-kubectl describe pod &lt;backend-pod&gt;
-kubectl get endpoints backend</code></pre></div></details></div></section><section class="level-section" id="dk-level-8"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 8 — Execute and Verify</h2><div class="level-subtitle-unified">Use a small command set for daily operations.</div></div></div><div class="level-body-unified"><div class="memory-item"><div class="memory-text"><div class="memory-en">Apply the YAML file.</div><div class="memory-zh">应用 YAML 文件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Apply the YAML file.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Check whether the Pod is running.</div><div class="memory-zh">检查 Pod 是否正常运行。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Check whether the Pod is running.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Describe the Pod to inspect events and configuration.</div><div class="memory-zh">使用 describe 查看事件和配置。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Describe the Pod to inspect events and configuration.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Read logs when MySQL fails to start.</div><div class="memory-zh">MySQL 启动失败时查看日志。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Read logs when MySQL fails to start.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Connect through the Service name mysql.</div><div class="memory-zh">通过 Service 名称 mysql 连接。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Connect through the Service name mysql.">🔊 Listen</button></div><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Apply the YAML, then verify that the <strong>Deployment</strong>, <strong>Pod</strong>, <strong>Service</strong> and <strong>PVC</strong> were created successfully.</div><div class="knowledge-zh">应用 YAML，然后检查 Deployment、Pod、Service 和 PVC 是否成功创建。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Apply the YAML, then verify that the Deployment, Pod, Service and PVC were created successfully.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Use kubectl describe to inspect <strong>Pod</strong> events and configuration, kubectl logs to investigate startup errors, and the <strong>Service</strong> name mysql to test connectivity.</div><div class="knowledge-zh">使用 kubectl describe 查看 Pod 事件和配置，使用 kubectl logs 排查启动错误，并通过 Service 名称 mysql 测试连接。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Use kubectl describe to inspect Pod events and configuration, kubectl logs to investigate startup errors, and the Service name mysql to test connectivity.">🔊 Listen</button></li></ul><div class="code-wrap level-code"><div class="code-label">Shell</div><pre><code class="language-shell"><span class="tok-cmd">kubectl</span> apply <span class="tok-flag">-f</span> mysql.yaml
+      ports:
+        - protocol: TCP
+          port: 8080</pre>
+<h3>Step 4: Expose Frontend with Ingress</h3>
+<pre>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  rules:
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80</pre>
+<h3>Step 5: Apply and Verify</h3>
+<pre>kubectl apply -f backend-deployment.yaml
+kubectl apply -f backend-service.yaml
+kubectl apply -f backend-network-policy.yaml
+kubectl apply -f frontend-ingress.yaml
 
-<span class="tok-cmd">kubectl</span> get deployment,pod,service,pvc
-<span class="tok-cmd">kubectl</span> describe pod <span class="tok-str">&lt;mysql-pod&gt;</span>
-<span class="tok-cmd">kubectl</span> logs <span class="tok-str">&lt;mysql-pod&gt;</span>
-<span class="tok-cmd">kubectl</span> run mysql-client <span class="tok-flag">--rm</span> -it   <span class="tok-flag">--image</span>=mysql:8.4   -- mysql <span class="tok-flag">-h</span> mysql -uroot <span class="tok-flag">-p</span></code></pre></div></div></section><section class="level-section" id="dk-level-9"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 9 — Troubleshooting Flow</h2><div class="level-subtitle-unified">Answer operational questions in a clear sequence.</div></div></div><div class="level-body-unified"><ul class="knowledge-list"><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Start with kubectl get pods to check status, then use kubectl describe pod to inspect recent events.</div><div class="knowledge-zh">先使用 kubectl get pods 查看状态，再使用 kubectl describe pod 检查最近事件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Start with kubectl get pods to check status, then use kubectl describe pod to inspect recent events.">🔊 Listen</button></li><li class="knowledge-item"><div class="knowledge-main"><div class="knowledge-en">Use kubectl logs to inspect application errors, verify the <strong>Secret</strong>, <strong>PVC</strong> and <strong>Service</strong> selector, and finally test connectivity from another <strong>Pod</strong>.</div><div class="knowledge-zh">使用 kubectl logs 查看应用错误，检查 Secret、PVC 和 Service selector，最后从另一个 Pod 测试连接。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Use kubectl logs to inspect application errors, verify the Secret, PVC and Service selector, and finally test connectivity from another Pod.">🔊 Listen</button></li></ul><div class="memory-item"><div class="memory-text"><div class="memory-en">First, run kubectl get pods and check the Pod status.</div><div class="memory-zh">第一步查看 Pod 状态。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="First, run kubectl get pods and check the Pod status.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Second, run kubectl describe pod and inspect recent events.</div><div class="memory-zh">第二步查看 Pod 事件。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Second, run kubectl describe pod and inspect recent events.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Third, run kubectl logs and inspect the application error.</div><div class="memory-zh">第三步查看应用日志。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Third, run kubectl logs and inspect the application error.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Fourth, verify the Secret, PVC and Service selector.</div><div class="memory-zh">第四步检查 Secret、PVC 和 Service selector。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Fourth, verify the Secret, PVC and Service selector.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Finally, test connectivity from another Pod.</div><div class="memory-zh">最后从另一个 Pod 测试连接。</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Finally, test connectivity from another Pod.">🔊 Listen</button></div></div></section><section class="level-section" id="dk-level-10"><div class="level-header-unified"><div class="level-heading-wrap"><h2 class="level-title-unified">Level 10 — Common Interview Q&amp;A</h2><div class="level-subtitle-unified">Fast review before the interview.</div></div></div><div class="level-body-unified"><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the difference between an image and a container?</div><div class="qa-answer"><strong>Answer:</strong> An image is a read-only template. A container is a running instance of that image.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between an image and a container? Answer: An image is a read-only template. A container is a running instance of that image.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the difference between a Pod and a container?</div><div class="qa-answer"><strong>Answer:</strong> A container runs the process. A Pod is the Kubernetes unit that wraps one or more containers and provides shared networking and storage.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between a Pod and a container? Answer: A container runs the process. A Pod is the Kubernetes unit that wraps one or more containers and provides shared networking and storage.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why do we need a Deployment?</div><div class="qa-answer"><strong>Answer:</strong> A Deployment maintains the desired Pod count, replaces failed Pods and supports rolling updates.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Deployment? Answer: A Deployment maintains the desired Pod count, replaces failed Pods and supports rolling updates.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why do we need a Service?</div><div class="qa-answer"><strong>Answer:</strong> Pod IP addresses may change. A Service provides a stable DNS name and virtual IP.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Service? Answer: Pod IP addresses may change. A Service provides a stable DNS name and virtual IP.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Why does MySQL need a PVC?</div><div class="qa-answer"><strong>Answer:</strong> The PVC keeps database files after the Pod is replaced or restarted.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Why does MySQL need a PVC? Answer: The PVC keeps database files after the Pod is replaced or restarted.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What happens if the MySQL Pod crashes?</div><div class="qa-answer"><strong>Answer:</strong> The Deployment creates a replacement Pod, and the PVC allows the new Pod to reuse the database files.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What happens if the MySQL Pod crashes? Answer: The Deployment creates a replacement Pod, and the PVC allows the new Pod to reuse the database files.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">Can we safely scale this MySQL Deployment to three replicas?</div><div class="qa-answer"><strong>Answer:</strong> Not by default. Multiple MySQL replicas require a proper replication or clustering design.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="Can we safely scale this MySQL Deployment to three replicas? Answer: Not by default. Multiple MySQL replicas require a proper replication or clustering design.">🔊 Listen</button></div><div class="memory-item"><div class="memory-text"><div class="memory-en">What is the first command you use when a Pod is failing?</div><div class="qa-answer"><strong>Answer:</strong> Start with kubectl get pods, then use kubectl describe pod and kubectl logs.</div></div><button class="listen-btn level-listen" data-action="speak" data-text="What is the first command you use when a Pod is failing? Answer: Start with kubectl get pods, then use kubectl describe pod and kubectl logs.">🔊 Listen</button></div><table class="qa-table"><thead><tr><th>Category</th><th>Question</th><th>Answer</th><th>Explanation</th></tr></thead><tbody><tr><td><strong>Architecture</strong></td><td>What is the difference between the Control Plane and a Worker Node?<button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between the Control Plane and a Worker Node?">🔊 Listen</button></td><td>The Control Plane makes cluster-wide decisions. Worker Nodes run Pods and containers.<button class="listen-btn level-listen" data-action="speak" data-text="The Control Plane makes cluster-wide decisions. Worker Nodes run Pods and containers.">🔊 Listen</button></td><td>The Control Plane decides; Worker Nodes execute.</td></tr><tr><td><strong>YARN Mapping</strong></td><td>How does Kubernetes map to YARN?<button class="listen-btn level-listen" data-action="speak" data-text="How does Kubernetes map to YARN?">🔊 Listen</button></td><td>The API Server and Scheduler are similar to the ResourceManager, kubelet is similar to the NodeManager, and a Pod is roughly comparable to a YARN Container.<button class="listen-btn level-listen" data-action="speak" data-text="The API Server and Scheduler are similar to the ResourceManager, kubelet is similar to the NodeManager, and a Pod is roughly comparable to a YARN Container.">🔊 Listen</button></td><td>Use this bridge when you are more familiar with YARN.</td></tr><tr><td><strong>Workload</strong></td><td>What is the difference between a Pod and a Container?<button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between a Pod and a Container?">🔊 Listen</button></td><td>A container runs the application process. A Pod is the Kubernetes unit that wraps and manages one or more containers.<button class="listen-btn level-listen" data-action="speak" data-text="A container runs the application process. A Pod is the Kubernetes unit that wraps and manages one or more containers.">🔊 Listen</button></td><td>Most Pods contain one main container, but sidecars are also possible.</td></tr><tr><td><strong>Workload</strong></td><td>What does a Deployment do?<button class="listen-btn level-listen" data-action="speak" data-text="What does a Deployment do?">🔊 Listen</button></td><td>A Deployment manages the desired number of Pods, replaces failed Pods, and supports rolling updates and rollback.<button class="listen-btn level-listen" data-action="speak" data-text="A Deployment manages the desired number of Pods, replaces failed Pods, and supports rolling updates and rollback.">🔊 Listen</button></td><td>It is mainly used for stateless workloads.</td></tr><tr><td><strong>Networking</strong></td><td>Why do we need a Service if Pods already have IP addresses?<button class="listen-btn level-listen" data-action="speak" data-text="Why do we need a Service if Pods already have IP addresses?">🔊 Listen</button></td><td>Pod IP addresses can change when Pods are recreated. A Service provides a stable DNS name and virtual IP.<button class="listen-btn level-listen" data-action="speak" data-text="Pod IP addresses can change when Pods are recreated. A Service provides a stable DNS name and virtual IP.">🔊 Listen</button></td><td>Service selectors connect the stable endpoint to matching Pods.</td></tr><tr><td><strong>Networking</strong></td><td>What does NetworkPolicy control?<button class="listen-btn level-listen" data-action="speak" data-text="What does NetworkPolicy control?">🔊 Listen</button></td><td>It controls which Pods or namespaces are allowed to send traffic to selected Pods.<button class="listen-btn level-listen" data-action="speak" data-text="It controls which Pods or namespaces are allowed to send traffic to selected Pods.">🔊 Listen</button></td><td>It is similar to a firewall policy between Pods.</td></tr><tr><td><strong>Health Checks</strong></td><td>What is the difference between readiness and liveness probes?<button class="listen-btn level-listen" data-action="speak" data-text="What is the difference between readiness and liveness probes?">🔊 Listen</button></td><td>Readiness controls whether a Pod receives traffic. Liveness decides whether the container should be restarted.<button class="listen-btn level-listen" data-action="speak" data-text="Readiness controls whether a Pod receives traffic. Liveness decides whether the container should be restarted.">🔊 Listen</button></td><td>A Pod can be alive but not ready.</td></tr><tr><td><strong>Storage</strong></td><td>Why does MySQL need a PVC?<button class="listen-btn level-listen" data-action="speak" data-text="Why does MySQL need a PVC?">🔊 Listen</button></td><td>The PVC stores database files outside the temporary Pod, so data survives Pod restart or replacement.<button class="listen-btn level-listen" data-action="speak" data-text="The PVC stores database files outside the temporary Pod, so data survives Pod restart or replacement.">🔊 Listen</button></td><td>The Pod can be recreated while the persistent data remains.</td></tr><tr><td><strong>Troubleshooting</strong></td><td>How would you troubleshoot a Pod that is not receiving traffic?<button class="listen-btn level-listen" data-action="speak" data-text="How would you troubleshoot a Pod that is not receiving traffic?">🔊 Listen</button></td><td>Check Pod status, readiness probe results, Service selectors, endpoints, NetworkPolicy, and application logs.<button class="listen-btn level-listen" data-action="speak" data-text="Check Pod status, readiness probe results, Service selectors, endpoints, NetworkPolicy, and application logs.">🔊 Listen</button></td><td>Follow the path from Pod health to Service routing and network rules.</td></tr></tbody></table></div></section></div><div class="tab-panel" id="linux"></div><div class="tab-panel" id="ref"></div><div class="tab-panel imported-review" id="test-review">
+kubectl get pods
+kubectl get services
+kubectl get ingress
+kubectl get networkpolicy
+kubectl describe pod &lt;backend-pod-name&gt;
+kubectl logs &lt;backend-pod-name&gt;</pre>
+<div class="callout">
+<strong>How this example maps to today’s questions:</strong>
+<ul>
+<li><code>Ingress</code> provides host-based routing.</li>
+<li><code>readinessProbe</code> blocks traffic until the backend is ready.</li>
+<li><code>NetworkPolicy</code> protects backend Pods and allows frontend sources.</li>
+<li><code>kubectl apply</code>, <code>get</code>, <code>describe</code>, and <code>logs</code> are common operational commands.</li>
+<li>The manifests use common fields such as <code>apiVersion</code>, <code>kind</code>, and <code>metadata</code>.</li>
+</ul>
+</div>
+</div>
+<div class="card speakable">
+<div class="section-head">
+<div>
+<h2>Today’s Kubernetes Questions</h2>
+<p class="mini">Numbered summary with answers, reasoning, and difficulty.</p>
+</div>
+<button class="listen-btn" data-action="speak" data-text="Today%E2%80%99s%20Kubernetes%20Questions%20Numbered%20summary%20with%20answers%2C%20reasoning%2C%20and%20difficulty.%20K1.%20Which%20object%20can%20set%20maximum%20memory%20values%20in%20a%20namespace%3F%20Difficulty%203/10%20Answer%3A%20LimitRange%20Reasoning%3A%20It%20defines%20default%2C%20minimum%2C%20and%20maximum%20CPU%20or%20memory%20values%20for%20Pods%20or%20containers%20in%20one%20namespace.%20K2.%20Which%20Kubernetes%20capabilities%20are%20correct%3F%20Difficulty%203/10%20Answers%3A%20Service%20load%20balancing%20and%20storage%20orchestration.%20Kubernetes%20supports%20both%20stateless%20and%20stateful%20applications.%20K3.%20Which%20command%20adds%20a%20node%20after%20kubeadm%20init%20%3F%20Difficulty%202/10%20Answer%3A%20kubeadm%20join%20K4.%20Which%20probe%20blocks%20traffic%20until%20data%20loading%20completes%3F%20Difficulty%204/10%20Answer%3A%20readinessProbe%20K5.%20Which%20field%20is%20not%20common%20to%20all%20Kubernetes%20objects%3F%20Difficulty%203/10%20Answer%3A%20data%20K6.%20Which%20objects%20are%20namespaced%3F%20Difficulty%206/10%20Answers%3A%20NetworkPolicy%20and%20PodDisruptionBudget%20K7.%20Which%20resource%20is%20not%20part%20of%20storage.k8s.io%20%3F%20Difficulty%207/10%20Answer%3A%20VolumeSnapshotClass%20It%20belongs%20to%20snapshot.storage.k8s.io%20.%20K8.%20Which%20resource%20performs%20host-based%20routing%3F%20Difficulty%204/10%20Answer%3A%20Ingress%20K9.%20What%20happens%20with%20conditional%20scaling%3F%20Difficulty%205/10%20The%20Deployment%20scales%20to%203%20only%20if%20its%20current%20replica%20count%20is%202.%20K10.%20How%20do%20you%20allow%20only%20frontend%20Pods%20to%20access%20backend%20Pods%3F%20Difficulty%206/10%20Select%20backend%20Pods%20with%20podSelector%20%2C%20then%20allow%20ingress.from%20frontend%20Pods.">🔊 Listen</button>
+</div>
+<div class="q">
+<h3>K1. Which object can set maximum memory values in a namespace?</h3>
+<span class="tag difficulty easy">Difficulty 3/10</span>
+<div class="answer"><strong>Answer:</strong> <code>LimitRange</code></div>
+<p><strong>Reasoning:</strong> It defines default, minimum, and maximum CPU or memory values for Pods or containers in one namespace.</p>
+</div>
+<div class="q">
+<h3>K2. Which Kubernetes capabilities are correct?</h3>
+<span class="tag difficulty easy">Difficulty 3/10</span>
+<div class="answer"><strong>Answers:</strong> Service load balancing and storage orchestration.</div>
+<p>Kubernetes supports both stateless and stateful applications.<span class="zh-note">Kubernetes 同时支持无状态应用和有状态应用。</span></p>
+</div>
+<div class="q">
+<h3>K3. Which command adds a node after <code>kubeadm init</code>?</h3>
+<span class="tag difficulty easy">Difficulty 2/10</span>
+<div class="answer"><strong>Answer:</strong> <code>kubeadm join</code></div>
+</div>
+<div class="q">
+<h3>K4. Which probe blocks traffic until data loading completes?</h3>
+<span class="tag difficulty mid">Difficulty 4/10</span>
+<div class="answer"><strong>Answer:</strong> <code>readinessProbe</code></div>
+</div>
+<div class="q">
+<h3>K5. Which field is not common to all Kubernetes objects?</h3>
+<span class="tag difficulty easy">Difficulty 3/10</span>
+<div class="answer"><strong>Answer:</strong> <code>data</code></div>
+</div>
+<div class="q">
+<h3>K6. Which objects are namespaced?</h3>
+<span class="tag difficulty mid">Difficulty 6/10</span>
+<div class="answer"><strong>Answers:</strong> <code>NetworkPolicy</code> and <code>PodDisruptionBudget</code></div>
+</div>
+<div class="q">
+<h3>K7. Which resource is not part of <code>storage.k8s.io</code>?</h3>
+<span class="tag difficulty hard">Difficulty 7/10</span>
+<div class="answer"><strong>Answer:</strong> <code>VolumeSnapshotClass</code></div>
+<p>It belongs to <code>snapshot.storage.k8s.io</code>.</p>
+</div>
+<div class="q">
+<h3>K8. Which resource performs host-based routing?</h3>
+<span class="tag difficulty mid">Difficulty 4/10</span>
+<div class="answer"><strong>Answer:</strong> <code>Ingress</code></div>
+</div>
+<div class="q">
+<h3>K9. What happens with conditional scaling?</h3>
+<span class="tag difficulty mid">Difficulty 5/10</span>
+<pre>kubectl scale --current-replicas=2 --replicas=3 deployment/mysql</pre>
+<div class="answer">The Deployment scales to 3 only if its current replica count is 2.</div>
+</div>
+<div class="q">
+<h3>K10. How do you allow only frontend Pods to access backend Pods?</h3>
+<span class="tag difficulty mid">Difficulty 6/10</span>
+<div class="answer">Select backend Pods with <code>podSelector</code>, then allow <code>ingress.from</code> frontend Pods.</div>
+</div>
+</div>
+</div><div class="tab-panel" id="linux"></div><div class="tab-panel" id="ref"></div><div class="tab-panel imported-review" id="test-review">
 <div class="imported-hero card">
 <div class="q-head">
 <div>
@@ -2515,7 +1697,7 @@ const k8sLevelMeta = {
 
 
 const k8sData = [
-  {level:"basics", title:"Docker Image vs Container", desc:"An image is a read-only, layered template (like a class). A container is a running instance of that image (like an object) — you can run many containers from the same image.",
+  {level:"basics", title:"Docker Image vs Container — 一个是模板，一个是运行实例", desc:"An image is a read-only, layered template (like a class). A container is a running instance of that image (like an object) — you can run many containers from the same image.",
    zh:"中文：Image(镜像)是只读的、分层的模板(类似「类」)；Container(容器)是这个镜像的一个运行实例(类似「对象」)——同一个镜像可以同时跑出很多个容器。",
    speak:"An image is a read-only layered template, like a class. A container is a running instance of that image, like an object — you can run many containers from the same image.",
    code:`# 常用命令
@@ -2525,7 +1707,7 @@ docker ps                          # 查看正在运行的容器
 docker logs <container_id>         # 查看容器日志`,
    tip:"面试一句话：'An image is the blueprint, a container is a running instance of that blueprint — analogous to a class and an object in OOP.'"},
 
-  {level:"basics", title:"Why Big Data Platforms Use Containers", desc:"Containerization gives consistent environments (no more 'works on my machine'), faster deployment, and resource isolation — increasingly common for running Spark/Flink jobs on shared infrastructure.",
+  {level:"basics", title:"为什么大数据平台要容器化？", desc:"Containerization gives consistent environments (no more 'works on my machine'), faster deployment, and resource isolation — increasingly common for running Spark/Flink jobs on shared infrastructure.",
    zh:"中文：容器化能保证环境一致性(不再有「我本地能跑」的问题)、部署更快、资源隔离更好——现在越来越多大数据平台用容器跑Spark/Flink任务，而不是传统的YARN。",
    speak:"Containerization gives consistent environments, faster deployment, and resource isolation — increasingly common for running Spark and Flink jobs on shared infrastructure.",
    tip:"这跟你已经很熟的YARN不是对立关系，而是「平行」关系——YARN和Kubernetes都是资源调度器，只是YARN是大数据生态原生的，K8s是云原生生态的，现在有的公司甚至把两者结合(Spark on K8s)。"},
@@ -3219,8 +2401,7 @@ renderByLevel('hdfs', yarnData, yarnLevelMeta);
 renderByLevel('hdfs', hdfsData, hdfsLevelMeta, true);
 renderByLevel('hdfs', hiveDataSimplified, hiveLevelMetaSimplified, true);
 renderByLevel('spark', sparkData, sparkLevelMeta);
-
-
+renderByLevel('k8s', k8sData, k8sLevelMeta);
 renderByLevel('linux', linuxData, linuxLevelMeta);
 renderQuickRef();
 renderClickHouseTab();
