@@ -5,7 +5,7 @@
 
 ## ⚡ Spark, Flink & Big Data
 
-- [Spark Interview Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/spark_prep_with_flink_sql_tabs.html.html)
+- [Spark Interview Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/spark_prep_with_flink_sql_tabs.html)
 - [Flink SQL Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/dw-flink-sql.html)
 - [Big Data SRE Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/big-data-sre.html)
 
