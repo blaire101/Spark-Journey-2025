@@ -74,6 +74,10 @@
   .dw-card h3 { font-size:14px; margin:0; }
   .dw-card p { font-size:13px; color:var(--text-secondary); margin:6px 0 8px; }
   .dw-cn { color:var(--text-muted) !important; font-size:12px !important; }
+  .case-section-title { font-size:16px; font-weight:700; color:var(--purple); margin:22px 0 10px; }
+  .case-intro { background:var(--accent-bg); border:1px solid #cfe3f3; border-radius:var(--radius); padding:12px 14px; margin-bottom:14px; font-size:13px; color:var(--text-secondary); }
+  .domain-code { font-family:"SF Mono",Menlo,monospace; font-weight:700; color:var(--accent); }
+
   .dw-key { font-weight:700; color:#173F5F; }
   .dw-code { white-space:pre-wrap; overflow:auto; background:#111827; color:#E5E7EB; border-radius:8px; padding:11px 14px; font-family:"SF Mono",Menlo,monospace; font-size:11.5px; line-height:1.55; }
   .dw-qa { border-left:3px solid var(--accent); padding-left:12px; margin:8px 0; }
@@ -174,6 +178,55 @@ const projects = {
 
   amazon: {
     header: `<b>Amazon Standard Collection</b> — cross-border e-commerce fund collection using a Virtual Account (VA) model`,
+    introHtml: `
+      <div class="case-section-title">1. Development Process</div>
+      <div class="case-intro"><b>Standard warehouse development flow:</b> define the business goal first, preserve source truth in ODS, build reusable facts and dimensions, aggregate by subject, and finally serve applications.</div>
+      ${flowDiagram([
+        "Define business goals & requirements",
+        "Load raw data → ODS",
+        "Transform into fact / dimension → DIL / DIM",
+        "Aggregate by subject themes → DWS",
+        "Serve reporting & BI → ADS"
+      ])}
+
+      <div class="case-section-title">2. Enterprise Data Domains</div>
+      <div class="card">
+        <div class="q-head">
+          <p class="q-title">Subject-oriented domain classification</p>
+          ${listenBtn("The enterprise warehouse is organized into ten primary data domains: Customer, Product, Transaction, Event, Agreement, Finance, Capital, Asset, Relationship, and Address.")}
+        </div>
+        ${table(["No.","Topic","Code","Description"], [
+          ["1","Customer","<span class='domain-code'>USR</span>","Covers individuals, merchants, and users, including profile, credit, education, and occupation information.<br><span class='dw-cn'>涵盖个人、商家和用户信息，包括画像、征信、学历和职业等。</span>"],
+          ["2","Product","<span class='domain-code'>PRD</span>","Covers products and services such as credit card repayment and red packets.<br><span class='dw-cn'>涵盖信用卡还款、红包等产品和服务。</span>"],
+          ["3","Transaction","<span class='domain-code'>TRD</span>","Covers the full order lifecycle from creation to payment, success, cancellation, and closure.<br><span class='dw-cn'>涵盖订单从创建、付款到成功、取消和关闭的完整生命周期。</span>"],
+          ["4","Event","<span class='domain-code'>EVT</span>","Covers risk events, campaigns, clickstream logs, and other operational events.<br><span class='dw-cn'>涵盖风险事件、运营活动、点击日志等事件数据。</span>"],
+          ["5","Agreement","<span class='domain-code'>AGT</span>","Covers contracts, agreements, and related terms.<br><span class='dw-cn'>涵盖合同、协议及相关条款。</span>"],
+          ["6","Finance","<span class='domain-code'>FIN</span>","Covers finance-related analysis, such as reserve balances and available advance amounts.<br><span class='dw-cn'>涵盖备付金余额、可垫资金额等财务分析。</span>"],
+          ["7","Capital","<span class='domain-code'>CAP</span>","Covers balances, payments, transfers, purchases, and fund-flow analysis.<br><span class='dw-cn'>涵盖账户余额、支付、转账、购买金额及资金流水分析。</span>"],
+          ["8","Asset","<span class='domain-code'>AST</span>","Covers fixed, long-term, and virtual assets such as houses and vehicles.<br><span class='dw-cn'>涵盖房产、车辆等固定资产、长期投资和虚拟资产。</span>"],
+          ["9","Relationship","<span class='domain-code'>REL</span>","Covers fund networks, social relationships, and relationship graph analysis.<br><span class='dw-cn'>涵盖资金网络、社交关系和关系图谱分析。</span>"],
+          ["10","Address","<span class='domain-code'>ADR</span>","Covers customer addresses, locations, latitude, and longitude.<br><span class='dw-cn'>涵盖客户地址、地理位置及经纬度信息。</span>"]
+        ])}
+      </div>
+
+      <div class="card">
+        <div class="q-head">
+          <p class="q-title">Q: How do you classify a DWS table when it combines user, order, and product data?</p>
+          ${listenBtn("I classify the table by its main business subject, not by every source domain used in the join. I first check the table grain, then the core metrics, the main business question, and the team that owns the metric definition. Cross-domain joins are allowed, but the table should still have one clear primary domain.")}
+        </div>
+        <p class="q-desc"><b>A:</b> I classify the table by its <b>main business subject</b>, not by every source domain used in the join.</p>
+        ${table(["Decision step","How to determine the primary domain"], [
+          ["1. Check the grain","One row per user → <b>User</b>; one row per order → <b>Transaction / Order</b>; one row per product → <b>Product</b>."],
+          ["2. Check core metrics","Identify what the table primarily measures."],
+          ["3. Check the business question","Determine the main analytical question answered by the table."],
+          ["4. Check ownership","Confirm which business process or team owns the metric definition."],
+          ["5. Allow cross-domain joins","Joined sources may come from several domains, but the output should still have one clear primary domain."]
+        ])}
+        <div class="tip"><b>Example:</b> Grain = <b>user_id + date</b>; metrics = user GMV, purchase frequency, active status; purpose = analyse user behaviour → <b>Primary domain: User</b>, even when order and product data are joined.</div>
+      </div>
+
+      <div class="case-section-title">3. Business Case 2 — Cross-border E-commerce Collection</div>
+    `,
     cards: [
       {letter:"S", title:"Situation", desc:"Chinese and Hong Kong cross-border sellers operate multiple Amazon stores across different countries. They cannot easily open overseas bank accounts, so they struggle to receive funds, withdraw money, and pay suppliers."},
       {letter:"T", title:"Task", desc:"Design a data warehouse solution that supports a Virtual Account architecture — giving each merchant a consolidated view while still tracking funds down to the individual store and currency level for compliance."},
@@ -275,8 +328,40 @@ const projects = {
 
   reserve: {
     header: `<b>Reservation Attribution Data Mart</b> — built from scratch at Xiaomi to track pre-launch product reservations`,
+    introHtml: `
+      <div class="case-section-title">Business Case 1 — Reservation DM Table Design</div>
+      <div class="case-intro"><b>Interview summary:</b> “I designed a full-snapshot reservation attribution mart from scratch, at <b>User × Campaign × Product × Site</b> grain, to track pre-launch conversion and power CRM remarketing.”</div>
+
+      <div class="card">
+        <div class="q-head">
+          <p class="q-title">E-commerce Data Domain Map</p>
+          ${listenBtn("The e-commerce warehouse uses Traffic, Trade, Operation, User, Product, Device, Page, Configuration, and Common domains. Each domain has a clear business loop and ownership boundary.")}
+        </div>
+        ${table(["Code","Data Domain","Type","Description","Core Loop"], [
+          ["<span class='domain-code'>TRF</span>","Traffic","Behavioral Fact Domain","Access, exposure, clicks, and other user behavior trails.<br><span class='dw-cn'>访问、曝光、点击等用户行为轨迹。</span>","Exposure → Click → Visit"],
+          ["<span class='domain-code'>TRD</span>","Trade / Order","Transaction Fact Domain","Order placement, payment, cancellation, refund, and other transaction behaviors.<br><span class='dw-cn'>下单、支付、取消、退款等交易行为。</span>","Order → Payment → Repurchase"],
+          ["<span class='domain-code'>OPS</span>","Operation","Operational Fact Domain","Push notifications, EDM, campaigns, marketing outreach and conversion.<br><span class='dw-cn'>Push、EDM、活动、营销触达与转化。</span>","Outreach → Conversion → Review"],
+          ["<span class='domain-code'>USR</span>","User","Entity Domain","Registration, login, user status, attributes, and tags.<br><span class='dw-cn'>注册、登录、用户状态、属性与标签。</span>","Active → Lifecycle → Tagging"],
+          ["<span class='domain-code'>PRD</span>","Product","Entity Domain","SKU, SPU, category system, and other product information.<br><span class='dw-cn'>SKU、SPU、类目体系等商品信息。</span>","Category → SKU → Structure"],
+          ["<span class='domain-code'>DVC</span>","Device","Entity Domain","Device entities, system environment, and device attributes.<br><span class='dw-cn'>设备实体、系统环境、设备属性。</span>","Device → Usage → Change"],
+          ["<span class='domain-code'>PGE</span>","Page","Entity Domain","Pages, URLs, content carriers, and business semantics.<br><span class='dw-cn'>页面、URL 内容载体及业务语义。</span>","Page → Behavior"],
+          ["<span class='domain-code'>CFG</span>","Configuration","Control / Configuration Domain","Site configuration, effective rules, and other control data.<br><span class='dw-cn'>站点配置、生效规则等控制类数据。</span>","Config → Effective → Governance"],
+          ["<span class='domain-code'>COM</span>","Common","Public Domain","Public information that cannot be classified, such as country-code tables.<br><span class='dw-cn'>无法归类的公共信息，例如国家码表。</span>","General → Reuse"]
+        ])}
+      </div>
+
+      <div class="case-section-title">User Funnel — Tell the Story in Order</div>
+      ${flowDiagram([
+        "Exposure / Campaign Outreach",
+        "Product Reservation",
+        "Product Launch",
+        "Order Matching",
+        "Purchase Conversion",
+        "CRM Remarketing for Unconverted Users"
+      ])}
+    `,
     cards: [
-      {letter:"S", title:"Situation", desc:"Users could reserve a product before its official launch, but there was no way to track whether they actually purchased it afterwards, or to specifically target users who reserved but never converted."},
+      {letter:"S", title:"Step 1 — Business Problem", desc:"Users reserve a product before launch. We had no way to track whether they purchased afterwards, or target unconverted users."},
       {letter:"T", title:"Task", desc:"Design a full-snapshot reservation attribution data mart from scratch, at the grain of User by Campaign by Product by Site, to track pre-launch conversion and power CRM remarketing."},
       {letter:"A", title:"Action — design decisions", desc:"I made five key design choices to shape this table from the ground up.",
         table: table(["Decision","What I chose","Why"], [
@@ -284,23 +369,27 @@ const projects = {
           ["Grain","User x Campaign x Product x Site","Most granular level needed for analysis"],
           ["Fact","reserve_flag = 1","User reserved the product"],
           ["Dimensions","Campaign, Product, Site, UTM/channel","Needed for multi-dimensional analysis"],
-          ["Table type","Full snapshot","Need daily state of all reservations"],
+          ["Table type","Full snapshot (df)","Need daily state of all reservations"],
         ]),
       },
-      {letter:"A", title:"Action — the technical challenge", desc:"There was no direct foreign key between the reservation table and the order table. I solved this using Spark non-equi time-window joins, matching each reservation to orders placed within the campaign's launch window."},
-      {letter:"A", title:"Action — downstream value", desc:"I pre-computed a tag_reserved_not_paid field directly in the data mart, so it feeds straight into CRM campaigns with no extra join required. Analysts run a simple COUNT DISTINCT on user ID for conversion metrics."},
-      {letter:"R", title:"Result", desc:"Data latency dropped from T-plus-1-day to T-plus-1-hour, enabling same-day campaign post-analysis instead of waiting until the next day. The unconverted-user targeting contributed to a 0.2 percentage point improvement in conversion."},
+      {letter:"A", title:"Action — the technical challenge", desc:"No direct foreign key existed between the reservation and order tables. I used Spark non-equi time-window joins, matching each reservation to orders placed within the campaign launch window."},
+      {letter:"A", title:"Action — downstream value", desc:"I pre-computed tag_reserved_not_paid directly in the data mart, so it feeds straight into CRM with no extra join. Analysts use COUNT DISTINCT mid for conversion metrics."},
+      {letter:"R", title:"Result", desc:"Data latency improved from T-plus-1-day to T-plus-1-hour, enabling same-day campaign analysis. Direct targeting of users with tag_reserved_not_paid contributed to a plus 0.2 percentage-point conversion improvement."},
     ],
     schemas: [
       {name: "Reservation Attribution Table", desc: "Grain: one row per (user, campaign, product, site) combination — full daily snapshot.",
-       table: table(["Field","Description"], [
-         ["fdate","Partition date (full snapshot)"],
-         ["user_id / campaign_id / product_id / site_id","Composite grain key"],
-         ["utm_source / channel","Marketing channel / UTM attribution"],
-         ["reserve_flag","1 if the user reserved the product"],
+       table: table(["Field","Meaning"], [
+         ["fdate","Partition date for the full snapshot"],
+         ["mid","User ID"],
+         ["campaign_id","Campaign"],
+         ["product_id","Reserved product SKU"],
+         ["site","MiWeb / MiWorldwide"],
+         ["reserve_flag","1 = reserved"],
+         ["order_flag","1 = purchased"],
+         ["tag_reserved_not_paid","1 = reserved but not purchased"],
+         ["utm_source / channel","Traffic source"],
          ["reserve_time","Timestamp of reservation"],
-         ["order_id / order_time","Matched order (via non-equi time-window join), if converted"],
-         ["tag_reserved_not_paid","Pre-computed flag: reserved but not yet purchased — feeds CRM directly"],
+         ["order_id / order_time","Matched order through the non-equi time-window join"],
        ])},
     ],
     anchor: "PROBLEM  -> no way to track reservation -> purchase\nGRAIN    -> User x Campaign x Product x Site\nCHALLENGE -> no FK -> non-equi time-window join\nOUTPUT   -> tag_reserved_not_paid -> CRM push\nRESULT   -> T+1 day -> T+1 hour, +0.2pp conversion"
@@ -656,6 +745,7 @@ function renderCard(item) {
 function renderProject(containerId, project) {
   const el = document.getElementById(containerId);
   let html = `<div class="project-header">${project.header}</div>`;
+  if (project.introHtml) html += project.introHtml;
   html += project.cards.map(renderCard).join('');
 
   if (project.schemas) {
