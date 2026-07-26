@@ -499,7 +499,71 @@ document.getElementById('stop').onclick=()=>{ synth.cancel(); reset(); };
       <\/script>
     `;
 
-    source = source.replace("</body>", activateScript + "</body>");
+    source = source.replace("
+<script>
+(function () {
+  function scrollToInternalTarget(targetId) {
+    if (!targetId) return false;
+
+    const target = document.getElementById(targetId);
+    if (!target) return false;
+
+    const stickyOffset = 135;
+    const top = target.getBoundingClientRect().top + window.scrollY - stickyOffset;
+
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: 'smooth'
+    });
+
+    // Keep the visible preview URL stable without triggering raw.githubusercontent navigation.
+    try {
+      const previewUrl = window.location.href.split('#')[0] + '#' + encodeURIComponent(targetId);
+      window.history.replaceState(null, '', previewUrl);
+    } catch (error) {
+      console.warn('Could not update URL hash:', error);
+    }
+
+    return true;
+  }
+
+  // Capture clicks before the browser follows links using htmlpreview's <base> URL.
+  document.addEventListener('click', function (event) {
+    const link = event.target.closest(
+      '.tab-toc-link, .embedded-toc-link, a[href^="#"]'
+    );
+
+    if (!link) return;
+
+    const href = link.getAttribute('href') || '';
+    const dataTarget = link.getAttribute('data-target-id') || '';
+    const targetId = dataTarget || (href.startsWith('#') ? decodeURIComponent(href.slice(1)) : '');
+
+    if (!targetId) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Normal content in the parent document.
+    if (scrollToInternalTarget(targetId)) return;
+
+    // Imported iframe TOCs already post messages to the parent.
+    // Do not allow the browser to follow their raw GitHub base URL.
+  }, true);
+
+  // Support opening the preview with an existing fragment.
+  window.addEventListener('load', function () {
+    const initialId = decodeURIComponent((window.location.hash || '').replace(/^#/, ''));
+    if (!initialId) return;
+
+    setTimeout(function () {
+      scrollToInternalTarget(initialId);
+    }, 250);
+  });
+})();
+</script>
+
+</body>", activateScript + "</body>");
     return source;
   }
 
