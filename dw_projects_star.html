@@ -162,9 +162,31 @@
     background:#fff;
   }
   .metric-type-text{flex:1;min-width:0;font-size:12.8px;color:var(--text-secondary)}
+  .table-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin:8px 0 6px;padding:8px 10px;border-radius:8px;background:#F7F9FB;border:1px solid var(--border)}
+  .table-intro p{margin:0!important;flex:1;color:var(--text-secondary);font-size:12.8px}
+  .qa-listen-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .qa-listen-row .qa-copy{flex:1;min-width:0}
   @media(max-width:720px){
     .dm-design-grid{grid-template-columns:1fr}
   }
+
+
+
+  /* Fast interview storytelling */
+  .quick-story{background:linear-gradient(135deg,#F6FAFD,#FFFFFF);border:1px solid #BFD9EC;border-left:5px solid var(--accent);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px}
+  .quick-story-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:7px}
+  .quick-story h3{font-size:15px;margin:0;color:#173F5F}
+  .quick-story p{font-size:13.5px;color:var(--text-secondary);margin:0;line-height:1.65}
+  .quick-points{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:10px 0 2px}
+  .quick-point{background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 9px;font-size:11.8px;color:var(--text-secondary)}
+  .quick-point b{display:block;color:var(--accent);font-size:11.5px;margin-bottom:3px}
+  details.project-details{margin-top:10px}
+  details.project-details>summary{cursor:pointer;list-style:none;background:#fff;border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:12.5px;font-weight:700;color:var(--text-secondary)}
+  details.project-details>summary::-webkit-details-marker{display:none}
+  details.project-details>summary:before{content:'＋ ';color:var(--accent)}
+  details.project-details[open]>summary:before{content:'－ '}
+  .details-content{margin-top:12px}
+  @media(max-width:800px){.quick-points{grid-template-columns:1fr 1fr}.quick-points .quick-point:last-child{grid-column:1/-1}}
 
 </style>
 </head>
@@ -234,6 +256,25 @@ function enhanceDwFundamentalTables() {
   });
 }
 
+function enhanceKnowledgeTables() {
+  document.querySelectorAll('table.datatbl').forEach(tbl => {
+    if (tbl.closest('.no-cell-listen')) return;
+    tbl.querySelectorAll('th, td').forEach(cell => {
+      if (cell.querySelector('.cell-listen-wrap')) return;
+      const original = cell.innerHTML;
+      const speakText = plainEnglishText(original);
+      if (!speakText) return;
+      cell.innerHTML = `
+        <div class="cell-listen-wrap">
+          <div class="cell-listen-text">${original}</div>
+          <button class="cell-listen-btn" data-action="speak" data-text="${encodeURIComponent(speakText)}" aria-label="Listen to this table cell" title="Listen">
+            ${speakIcon}
+          </button>
+        </div>`;
+    });
+  });
+}
+
 
 function flowDiagram(steps) {
   const boxW = 600, boxH = 46, gap = 34, padTop = 30, padBottom = 20;
@@ -277,7 +318,7 @@ const projects = {
         "Define business goals & requirements",
         "Load raw data → ODS",
         "Transform into fact / dimension → DIL / DIM",
-        "Aggregate by subject themes → DWS",
+        "Aggregate by subject themes → DM",
         "Serve reporting & BI → ADS"
       ])}
 
@@ -288,22 +329,22 @@ const projects = {
           ${listenBtn("The enterprise warehouse is organized into ten primary data domains: Customer, Product, Transaction, Event, Agreement, Finance, Capital, Asset, Relationship, and Address.")}
         </div>
         ${table(["No.","Topic","Code","Description"], [
-          ["1","Customer","<span class='domain-code'>USR</span>","Covers individuals, merchants, and users, including profile, credit, education, and occupation information.<br><span class='dw-cn'>涵盖个人、商家和用户信息，包括画像、征信、学历和职业等。</span>"],
-          ["2","Product","<span class='domain-code'>PRD</span>","Covers products and services such as credit card repayment and red packets.<br><span class='dw-cn'>涵盖信用卡还款、红包等产品和服务。</span>"],
-          ["3","Transaction","<span class='domain-code'>TRD</span>","Covers the full order lifecycle from creation to payment, success, cancellation, and closure.<br><span class='dw-cn'>涵盖订单从创建、付款到成功、取消和关闭的完整生命周期。</span>"],
-          ["4","Event","<span class='domain-code'>EVT</span>","Covers risk events, campaigns, clickstream logs, and other operational events.<br><span class='dw-cn'>涵盖风险事件、运营活动、点击日志等事件数据。</span>"],
-          ["5","Agreement","<span class='domain-code'>AGT</span>","Covers contracts, agreements, and related terms.<br><span class='dw-cn'>涵盖合同、协议及相关条款。</span>"],
-          ["6","Finance","<span class='domain-code'>FIN</span>","Covers finance-related analysis, such as reserve balances and available advance amounts.<br><span class='dw-cn'>涵盖备付金余额、可垫资金额等财务分析。</span>"],
-          ["7","Capital","<span class='domain-code'>CAP</span>","Covers balances, payments, transfers, purchases, and fund-flow analysis.<br><span class='dw-cn'>涵盖账户余额、支付、转账、购买金额及资金流水分析。</span>"],
-          ["8","Asset","<span class='domain-code'>AST</span>","Covers fixed, long-term, and virtual assets such as houses and vehicles.<br><span class='dw-cn'>涵盖房产、车辆等固定资产、长期投资和虚拟资产。</span>"],
-          ["9","Relationship","<span class='domain-code'>REL</span>","Covers fund networks, social relationships, and relationship graph analysis.<br><span class='dw-cn'>涵盖资金网络、社交关系和关系图谱分析。</span>"],
-          ["10","Address","<span class='domain-code'>ADR</span>","Covers customer addresses, locations, latitude, and longitude.<br><span class='dw-cn'>涵盖客户地址、地理位置及经纬度信息。</span>"]
+          ["1","Customer","<span class='domain-code'>USR</span>","Covers individuals, merchants, and users, including profile, credit, education, and occupation information.<br>"],
+          ["2","Product","<span class='domain-code'>PRD</span>","Covers products and services such as credit card repayment and red packets.<br>"],
+          ["3","Transaction","<span class='domain-code'>TRD</span>","Covers the full order lifecycle from creation to payment, success, cancellation, and closure.<br>"],
+          ["4","Event","<span class='domain-code'>EVT</span>","Covers risk events, campaigns, clickstream logs, and other operational events.<br>"],
+          ["5","Agreement","<span class='domain-code'>AGT</span>","Covers contracts, agreements, and related terms.<br>"],
+          ["6","Finance","<span class='domain-code'>FIN</span>","Covers finance-related analysis, such as reserve balances and available advance amounts.<br>"],
+          ["7","Capital","<span class='domain-code'>CAP</span>","Covers balances, payments, transfers, purchases, and fund-flow analysis.<br>"],
+          ["8","Asset","<span class='domain-code'>AST</span>","Covers fixed, long-term, and virtual assets such as houses and vehicles.<br>"],
+          ["9","Relationship","<span class='domain-code'>REL</span>","Covers fund networks, social relationships, and relationship graph analysis.<br>"],
+          ["10","Address","<span class='domain-code'>ADR</span>","Covers customer addresses, locations, latitude, and longitude.<br>"]
         ])}
       </div>
 
       <div class="card">
         <div class="q-head">
-          <p class="q-title">Q: How do you classify a DWS table when it combines user, order, and product data?</p>
+          <p class="q-title">Q: How do you classify a DM table when it combines user, order, and product data?</p>
           ${listenBtn("I classify the table by its main business subject, not by every source domain used in the join. I first check the table grain, then the core metrics, the main business question, and the team that owns the metric definition. Cross-domain joins are allowed, but the table should still have one clear primary domain.")}
         </div>
         <p class="q-desc"><b>A:</b> I classify the table by its <b>main business subject</b>, not by every source domain used in the join.</p>
@@ -430,15 +471,15 @@ const projects = {
           ${listenBtn("The e-commerce warehouse uses Traffic, Trade, Operation, User, Product, Device, Page, Configuration, and Common domains. Each domain has a clear business loop and ownership boundary.")}
         </div>
         ${table(["Code","Data Domain","Type","Description","Core Loop"], [
-          ["<span class='domain-code'>TRF</span>","Traffic","Behavioral Fact Domain","Access, exposure, clicks, and other user behavior trails.<br><span class='dw-cn'>访问、曝光、点击等用户行为轨迹。</span>","Exposure → Click → Visit"],
-          ["<span class='domain-code'>TRD</span>","Trade / Order","Transaction Fact Domain","Order placement, payment, cancellation, refund, and other transaction behaviors.<br><span class='dw-cn'>下单、支付、取消、退款等交易行为。</span>","Order → Payment → Repurchase"],
-          ["<span class='domain-code'>OPS</span>","Operation","Operational Fact Domain","Push notifications, EDM, campaigns, marketing outreach and conversion.<br><span class='dw-cn'>Push、EDM、活动、营销触达与转化。</span>","Outreach → Conversion → Review"],
-          ["<span class='domain-code'>USR</span>","User","Entity Domain","Registration, login, user status, attributes, and tags.<br><span class='dw-cn'>注册、登录、用户状态、属性与标签。</span>","Active → Lifecycle → Tagging"],
-          ["<span class='domain-code'>PRD</span>","Product","Entity Domain","SKU, SPU, category system, and other product information.<br><span class='dw-cn'>SKU、SPU、类目体系等商品信息。</span>","Category → SKU → Structure"],
-          ["<span class='domain-code'>DVC</span>","Device","Entity Domain","Device entities, system environment, and device attributes.<br><span class='dw-cn'>设备实体、系统环境、设备属性。</span>","Device → Usage → Change"],
-          ["<span class='domain-code'>PGE</span>","Page","Entity Domain","Pages, URLs, content carriers, and business semantics.<br><span class='dw-cn'>页面、URL 内容载体及业务语义。</span>","Page → Behavior"],
-          ["<span class='domain-code'>CFG</span>","Configuration","Control / Configuration Domain","Site configuration, effective rules, and other control data.<br><span class='dw-cn'>站点配置、生效规则等控制类数据。</span>","Config → Effective → Governance"],
-          ["<span class='domain-code'>COM</span>","Common","Public Domain","Public information that cannot be classified, such as country-code tables.<br><span class='dw-cn'>无法归类的公共信息，例如国家码表。</span>","General → Reuse"]
+          ["<span class='domain-code'>TRF</span>","Traffic","Behavioral Fact Domain","Access, exposure, clicks, and other user behavior trails.<br>","Exposure → Click → Visit"],
+          ["<span class='domain-code'>TRD</span>","Trade / Order","Transaction Fact Domain","Order placement, payment, cancellation, refund, and other transaction behaviors.<br>","Order → Payment → Repurchase"],
+          ["<span class='domain-code'>OPS</span>","Operation","Operational Fact Domain","Push notifications, EDM, campaigns, marketing outreach and conversion.<br>","Outreach → Conversion → Review"],
+          ["<span class='domain-code'>USR</span>","User","Entity Domain","Registration, login, user status, attributes, and tags.<br>","Active → Lifecycle → Tagging"],
+          ["<span class='domain-code'>PRD</span>","Product","Entity Domain","SKU, SPU, category system, and other product information.<br>","Category → SKU → Structure"],
+          ["<span class='domain-code'>DVC</span>","Device","Entity Domain","Device entities, system environment, and device attributes.<br>","Device → Usage → Change"],
+          ["<span class='domain-code'>PGE</span>","Page","Entity Domain","Pages, URLs, content carriers, and business semantics.<br>","Page → Behavior"],
+          ["<span class='domain-code'>CFG</span>","Configuration","Control / Configuration Domain","Site configuration, effective rules, and other control data.<br>","Config → Effective → Governance"],
+          ["<span class='domain-code'>COM</span>","Common","Public Domain","Public information that cannot be classified, such as country-code tables.<br>","General → Reuse"]
         ])}
       </div>
 
@@ -563,12 +604,13 @@ DWD  → cleaned and deduplicated detail, usually at the same business-event gra
 DM   → reusable subject model built from DWD facts and dimensions
 ADS  → report- or application-specific output</div>
 
+     <div class="table-intro"><p>The main difference is whether development starts from a single report or from a reusable business process.</p>${listenBtn('The main difference is whether development starts from a single report or from a reusable business process.')}</div>
      ${table(
        ['Topic','Report-driven','Business-process-driven'],
        [
-         ['Starting point','One report or dashboard','A stable business process'],
-         ['Core model','Dedicated output tables','Reusable DWD and DM models'],
-         ['Result','Duplicated logic and inconsistent metrics','Shared grain, dimensions, and metric definitions']
+         ['Starting point','One report','A stable business process'],
+         ['Core model','Dedicated output table','Reusable DWD and DM models'],
+         ['Result','Duplicated logic','Shared grain and metrics']
        ]
      )}
 
@@ -614,7 +656,7 @@ ADS  → report- or application-specific output</div>
            ${listenBtn('Time series metrics are rolling or cumulative values, such as thirty day transaction count, thirty day transaction amount, and lifetime settlement amount.')}
          </div>
 
-         <p class="dw-cn">中文：DM 基于清洗后的 DWD 明细，围绕稳定业务过程定义粒度、主键、数据域和可复用指标。</p>
+         
        </div>
 
        <div class="dw-qa">
@@ -644,13 +686,12 @@ ADS  → report- or application-specific output</div>
     '1. OLTP vs OLAP',
     'OLTP systems support frequent transactional operations, while OLAP systems support large-scale analytical queries across historical data.',
     `<p><span class="dw-key">OLTP</span> is optimized for frequent inserts, updates, and point lookups. <span class="dw-key">OLAP</span> is optimized for scans, aggregations, trends, and multi-dimensional analysis.</p>
-     <p class="dw-cn">中文：OLTP 处理日常交易；OLAP 处理历史数据分析。</p>
-     ${table(['Dimension','OLTP','OLAP'],[
-       ['Purpose','Run business transactions','Analyze business performance'],
-       ['Workload','Many short reads and writes','Large scans and aggregations'],
-       ['Data','Current operational data','Historical integrated data'],
-       ['Model','Usually normalized','Usually dimensional'],
-       ['Example','Order placement, payment','Revenue trend, customer analysis']
+     
+     <div class="table-intro"><p>OLTP is optimized for operational transactions, while OLAP is optimized for historical analysis and aggregation.</p>${listenBtn('OLTP is optimized for operational transactions, while OLAP is optimized for historical analysis and aggregation.')}</div>
+     ${table(['Aspect','OLTP','OLAP'],[
+       ['Purpose','Run daily transactions','Analyze business performance'],
+       ['Workload','Short reads and writes','Large scans and aggregations'],
+       ['Model','Usually normalized','Usually dimensional']
      ])}`
   );
 
@@ -658,12 +699,13 @@ ADS  → report- or application-specific output</div>
     '2. Normalization',
     'Normalization organizes relational data into separate tables to reduce redundancy and update anomalies.',
     `<p><span class="dw-key">Normalization</span> separates repeated attributes into related tables. It improves consistency in transactional systems but can create more joins for analytics.</p>
-     <p class="dw-cn">中文：规范化通过拆表减少冗余，适合 OLTP；分析场景通常会适当反规范化。</p>
-     ${table(['Normal Form','Main Rule','Simple Meaning'],[
-       ['1NF','Atomic column values','One cell contains one value'],
-       ['2NF','No partial dependency','Non-key columns depend on the whole composite key'],
-       ['3NF','No transitive dependency','Non-key columns depend only on the key'],
-       ['Denormalization','Intentionally combine data','Reduce joins and improve analytical query speed']
+     
+     <div class="table-intro"><p>The key idea is to reduce redundancy in OLTP, while analytical models may denormalize selectively to reduce joins.</p>${listenBtn('The key idea is to reduce redundancy in OLTP, while analytical models may denormalize selectively to reduce joins.')}</div>
+     ${table(['Form','Core Rule','Meaning'],[
+       ['1NF','Atomic values','One cell contains one value'],
+       ['2NF','No partial dependency','Depend on the full composite key'],
+       ['3NF','No transitive dependency','Depend only on the key'],
+       ['Denormalization','Combine related data','Reduce analytical joins']
      ])}`
   );
 
@@ -671,11 +713,12 @@ ADS  → report- or application-specific output</div>
     '3. Fact Tables and Dimension Tables',
     'A fact table stores measurable business events at a defined grain, while dimension tables store descriptive attributes used to filter and group those facts.',
     `<p><span class="dw-key">Fact Table</span> = measurable event. <span class="dw-key">Dimension Table</span> = descriptive business context.</p>
-     <p class="dw-cn">中文：事实表保存业务事件和指标；维度表保存用户、产品、地区、时间等描述属性。</p>
-     ${table(['Table Type','Contains','Examples'],[
-       ['Fact','Foreign keys, measures, event timestamps','order_amount, quantity, transaction_count'],
-       ['Dimension','Attributes and hierarchies','customer_name, product_category, country'],
-       ['Factless Fact','Event or relationship without numeric measure','student_attendance, promotion_eligibility']
+     
+     <div class="table-intro"><p>Fact tables record business events at a declared grain, while dimension tables provide descriptive context for analysis.</p>${listenBtn('Fact tables record business events at a declared grain, while dimension tables provide descriptive context for analysis.')}</div>
+     ${table(['Table Type','Main Content','Example'],[
+       ['Fact','Keys, measures, event time','order_amount, quantity'],
+       ['Dimension','Descriptive attributes','customer, product, country'],
+       ['Factless Fact','Event or relationship only','attendance, eligibility']
      ])}`
   );
 
@@ -688,7 +731,7 @@ Order fact       → one row per order line
 Payment fact     → one row per payment transaction
 Daily snapshot   → one row per account per day
 Reservation mart → one row per user × campaign × product × site</div>
-     <p class="dw-cn">中文：建模时先定义粒度，再选择指标和维度，否则容易出现重复计算。</p>`
+     `
   );
 
   html += dwCard(
@@ -700,7 +743,7 @@ Reservation mart → one row per user × campaign × product × site</div>
        <div class="schema-box fact">Sales Fact<br>customer_key<br>product_key<br>date_key<br>amount</div>
      </div>
      <p><span class="dw-key">Advantages:</span> simple joins, easy for BI users, fast analytical queries, intuitive business model.</p>
-     <p class="dw-cn">中文：星型模型是一张中心事实表直接连接多个反规范化维度表。</p>`
+     `
   );
 
   html += dwCard(
@@ -714,61 +757,61 @@ Reservation mart → one row per user × campaign × product × site</div>
       → Country
           → Region</div>
      <p><span class="dw-key">Advantages:</span> less dimension redundancy and stronger hierarchy consistency. <span class="dw-key">Trade-off:</span> more joins and greater query complexity.</p>
-     <p class="dw-cn">中文：雪花模型会继续拆分维度表，冗余更少，但查询更复杂。</p>`
+     `
   );
 
   html += dwCard(
     '7. Star Schema vs Snowflake Schema',
     'Star Schema favors simplicity and query performance, while Snowflake Schema favors normalization and reduced dimension redundancy.',
-    `${table(['Aspect','Star Schema','Snowflake Schema'],[
-      ['Dimension design','Denormalized','Normalized'],
-      ['Number of joins','Fewer','More'],
-      ['Query simplicity','High','Lower'],
-      ['Storage redundancy','Higher','Lower'],
-      ['BI usability','Very easy','More technical'],
-      ['Typical choice','Most analytics and marts','Complex reusable hierarchies']
-    ])}
-    <div class="tip">💡 Interview answer: I usually prefer a <b>Star Schema</b> for BI and analytical marts because it is easier to understand and query. I use Snowflake-style normalization selectively when dimensions contain large reusable hierarchies.</div>`,
+    `<div class="table-intro"><p>Star Schema is usually preferred for BI simplicity, while Snowflake Schema is useful when dimension hierarchies need stronger normalization.</p>${listenBtn('Star Schema is usually preferred for BI simplicity, while Snowflake Schema is useful when dimension hierarchies need stronger normalization.')}</div>
+     ${table(['Aspect','Star Schema','Snowflake Schema'],[
+       ['Dimension design','Denormalized','Normalized'],
+       ['Joins','Fewer','More'],
+       ['Best fit','BI and analytical marts','Complex reusable hierarchies']
+     ])}
+     <div class="tip">💡 Interview answer: I usually prefer a <b>Star Schema</b> for BI and analytical marts because it is easier to understand and query. I use Snowflake-style normalization selectively when dimensions contain large reusable hierarchies.</div>`,
     true
   );
 
   html += dwCard(
     '8. Types of Fact Tables',
-    'The three common fact table types are transaction facts, periodic snapshots, and accumulating snapshots.',
-    `${table(['Fact Type','Grain','Example'],[
-      ['Transaction Fact','One row per event','One row per payment or order line'],
-      ['Periodic Snapshot','One row per entity per period','Daily account balance'],
-      ['Accumulating Snapshot','One row per process lifecycle','Order from creation to delivery'],
-      ['Factless Fact','One row per event or relationship','Attendance or eligibility']
-    ])}`
+    'The common fact table types are transaction facts, periodic snapshots, accumulating snapshots, and factless facts.',
+    `<div class="table-intro"><p>Choose the fact table type according to whether you need event detail, periodic state, or lifecycle progress.</p>${listenBtn('Choose the fact table type according to whether you need event detail, periodic state, or lifecycle progress.')}</div>
+     ${table(['Fact Type','Grain','Example'],[
+       ['Transaction Fact','One row per event','Payment or order line'],
+       ['Periodic Snapshot','One row per entity per period','Daily account balance'],
+       ['Accumulating Snapshot','One row per process lifecycle','Order lifecycle'],
+       ['Factless Fact','One row per event or relationship','Attendance or eligibility']
+     ])}`
   );
 
   html += dwCard(
     '9. Slowly Changing Dimensions',
     'Slowly Changing Dimensions define how historical changes to dimension attributes are stored.',
-    `${table(['Type','Behavior','Example'],[
-      ['SCD Type 0','Never change','Original signup source'],
-      ['SCD Type 1','Overwrite old value','Correct spelling error'],
-      ['SCD Type 2','Create a new version row','Preserve customer address history'],
-      ['SCD Type 3','Store limited previous value','Current and previous department']
-    ])}
-    <div class="dw-code">SCD Type 2 common columns:
+    `<div class="table-intro"><p>SCD Type 1 overwrites old values, while SCD Type 2 creates new rows to preserve full history.</p>${listenBtn('SCD Type 1 overwrites old values, while SCD Type 2 creates new rows to preserve full history.')}</div>
+     ${table(['Type','Behavior','Typical Use'],[
+       ['SCD Type 1','Overwrite old value','Correct an attribute'],
+       ['SCD Type 2','Create a new version row','Preserve full history'],
+       ['SCD Type 3','Keep limited previous value','Track one prior state']
+     ])}
+     <div class="dw-code">SCD Type 2 common columns:
 surrogate_key
 business_key
 effective_start_date
 effective_end_date
 is_current</div>
-    <p class="dw-cn">中文：Type 1 覆盖旧值；Type 2 新增版本并保留完整历史。</p>`
+     `
   );
 
   html += dwCard(
     '10. Surrogate Key vs Business Key',
     'A business key comes from the source system, while a surrogate key is generated inside the warehouse to uniquely identify a dimension version.',
-    `${table(['Key','Meaning','Example'],[
-      ['Business Key','Natural source identifier','customer_id = C1001'],
-      ['Surrogate Key','Warehouse-generated identifier','customer_sk = 98231'],
-      ['Why surrogate keys?','Support SCD Type 2 and isolate source-system changes','Same customer can have multiple historical versions']
-    ])}`
+    `<div class="table-intro"><p>A business key identifies the entity in the source, while a surrogate key identifies a specific warehouse version.</p>${listenBtn('A business key identifies the entity in the source, while a surrogate key identifies a specific warehouse version.')}</div>
+     ${table(['Key','Meaning','Example'],[
+       ['Business Key','Source-system identifier','customer_id = C1001'],
+       ['Surrogate Key','Warehouse-generated identifier','customer_sk = 98231'],
+       ['Main Value','Supports SCD Type 2 versions','One customer, multiple history rows']
+     ])}`
   );
 
   html += dwCard(
@@ -776,20 +819,20 @@ is_current</div>
     'A conformed dimension is consistently shared across multiple fact tables. A degenerate dimension is a business identifier stored directly in the fact table without a separate dimension table.',
     `<p><span class="dw-key">Conformed Dimension:</span> the same Customer or Date dimension is reused by Sales Fact and Payment Fact.</p>
      <p><span class="dw-key">Degenerate Dimension:</span> order_number is stored directly in the Order Fact because it has no useful descriptive attributes.</p>
-     <p class="dw-cn">中文：一致性维度可跨主题复用；退化维度通常是直接放在事实表里的业务编号。</p>`
+     `
   );
 
   html += dwCard(
     '12. Common Data Warehouse Interview Q&A',
     'These are common interview questions about dimensional modeling, grain, facts, dimensions, and schema design.',
-    `<div class="dw-qa"><b>Q: What is the first step when designing a fact table?</b><br>Define the business process and declare the grain.</div>
-     <div class="dw-qa"><b>Q: What is the difference between a fact and a dimension?</b><br>A fact records a measurable event; a dimension provides descriptive context.</div>
-     <div class="dw-qa"><b>Q: Why is grain important?</b><br>It determines row uniqueness, valid measures, joins, and prevents double counting.</div>
-     <div class="dw-qa"><b>Q: Why is a Star Schema common in OLAP?</b><br>It requires fewer joins and is easier for analysts and BI tools to understand.</div>
-     <div class="dw-qa"><b>Q: When would you use SCD Type 2?</b><br>When historical attribute changes must be preserved for point-in-time reporting.</div>
-     <div class="dw-qa"><b>Q: Can a fact table contain no numeric measure?</b><br>Yes. A factless fact table records an event or relationship.</div>
-     <div class="dw-qa"><b>Q: What is a conformed dimension?</b><br>A dimension with consistent meaning and values across multiple data marts.</div>
-     <div class="dw-qa"><b>Q: Normalization or denormalization for a warehouse?</b><br>Core operational systems often use normalization; analytical marts usually use dimensional and partially denormalized models.</div>`,
+    `<div class="dw-qa"><div class="qa-listen-row"><div class="qa-copy"><b>Q: What is the first step when designing a fact table?</b><br>Define the business process and declare the grain.</div>${listenBtn('What is the first step when designing a fact table? Define the business process and declare the grain.')}</div></div>
+     <div class="dw-qa"><div class="qa-listen-row"><div class="qa-copy"><b>Q: What is the difference between a fact and a dimension?</b><br>A fact records a measurable event; a dimension provides descriptive context.</div>${listenBtn('What is the difference between a fact and a dimension? A fact records a measurable event; a dimension provides descriptive context.')}</div></div>
+     <div class="dw-qa"><div class="qa-listen-row"><div class="qa-copy"><b>Q: Why is grain important?</b><br>It determines row uniqueness, valid measures, joins, and prevents double counting.</div>${listenBtn('Why is grain important? It determines row uniqueness, valid measures, joins, and prevents double counting.')}</div></div>
+     <div class="dw-qa"><div class="qa-listen-row"><div class="qa-copy"><b>Q: Why is a Star Schema common in OLAP?</b><br>It requires fewer joins and is easier for analysts and BI tools to understand.</div>${listenBtn('Why is a Star Schema common in OLAP? It requires fewer joins and is easier for analysts and BI tools to understand.')}</div></div>
+     <div class="dw-qa"><div class="qa-listen-row"><div class="qa-copy"><b>Q: When would you use SCD Type 2?</b><br>When historical attribute changes must be preserved for point-in-time reporting.</div>${listenBtn('When would you use SCD Type 2? When historical attribute changes must be preserved for point in time reporting.')}</div></div>
+     <div class="dw-qa"><div class="qa-listen-row"><div class="qa-copy"><b>Q: Can a fact table contain no numeric measure?</b><br>Yes. A factless fact table records an event or relationship.</div>${listenBtn('Can a fact table contain no numeric measure? Yes. A factless fact table records an event or relationship.')}</div></div>
+     <div class="dw-qa"><div class="qa-listen-row"><div class="qa-copy"><b>Q: What is a conformed dimension?</b><br>A dimension with consistent meaning and values across multiple data marts.</div>${listenBtn('What is a conformed dimension? A dimension with consistent meaning and values across multiple data marts.')}</div></div>
+     <div class="dw-qa"><div class="qa-listen-row"><div class="qa-copy"><b>Q: Normalization or denormalization for a warehouse?</b><br>Operational systems usually use normalization; analytical marts usually use dimensional and partially denormalized models.</div>${listenBtn('Normalization or denormalization for a warehouse? Operational systems usually use normalization, while analytical marts usually use dimensional and partially denormalized models.')}</div></div>`,
     true
   );
 
@@ -910,7 +953,19 @@ function renderDwDgTab() {
       ${item.steps ? item.steps.map(s => `<div class="q-head" style="margin-top:8px; margin-bottom:0;"><p class="a-text" style="margin:0;"><span class="star-label">${s.label}:</span> ${s.text}</p>${listenBtn(s.text)}</div>`).join('') : ''}
     </div>`;
   }).join('');
-  el.innerHTML = intro + dwDgHourglassDiagram() + cards;
+  const quickAnswer = 'I built a layered data warehouse from source ingestion through ODS, DWD, reusable DM models, and ADS outputs. The DM layer formed the narrow waist, allowing Merchant, Store, and Order models to serve many reports. I also strengthened governance across standards, data quality, security, and cost, and improved the daily SLA from ninety-five percent to above ninety-nine percent through dependency cleanup, trigger-based scheduling, and better alerting.';
+  const quick = `<div class="quick-story">
+    <div class="quick-story-head"><h3>60-second Interview Answer</h3>${listenBtn(quickAnswer)}</div>
+    <p>${quickAnswer}</p>
+    <div class="quick-points">
+      <div class="quick-point"><b>Architecture</b>ODS → DWD → DM → ADS</div>
+      <div class="quick-point"><b>Core model</b>Reusable Merchant, Store, and Order DM</div>
+      <div class="quick-point"><b>Governance</b>Standards, DQC, Security, Cost</div>
+      <div class="quick-point"><b>Operations</b>DAG dependencies and trigger scheduling</div>
+      <div class="quick-point"><b>Result</b>SLA improved from 95% to 99%+</div>
+    </div>
+  </div>`;
+  el.innerHTML = intro + quick + dwDgHourglassDiagram() + `<details class="project-details"><summary>Open detailed architecture and governance talking points</summary><div class="details-content">${cards}</div></details>`;
 }
 
 // ============================================================
@@ -932,28 +987,88 @@ function renderCard(item) {
   return html;
 }
 
+const quickStories = {
+  amazon: {
+    answer: "I designed a cross-border collection data model for merchants that could not open overseas bank accounts. I used a three-level virtual-account structure: one real pooled account, one merchant virtual account, and sub-accounts by store and currency. I then modeled the full process from merchant onboarding and KYC to Amazon settlement and withdrawal, and built reusable Merchant, Store, and Order DM tables. The result was transaction-level traceability while funds remained safely pooled for regulatory compliance.",
+    points: [
+      ["Problem","Merchants could not open overseas accounts"],
+      ["Model","Pool account → Merchant VA → Store/Currency Sub-VA"],
+      ["Process","KYC → Store binding → Settlement → Withdrawal"],
+      ["Data","Merchant, Store, and Order DM tables"],
+      ["Result","Traceable, pooled, and compliant"]
+    ]
+  },
+  gov: {
+    answer: "I improved data governance by expanding a DQC-only score into a four-dimensional data-asset framework. The score covered standards, data quality, security, and cost, with daily Spark SQL jobs using Hive metadata, lineage, security scans, and stale-table checks. I also introduced whitelist governance for approved exceptions. This raised the average score across more than six hundred tables from seventy-six to eighty-six.",
+    points: [
+      ["Problem","Governance measured only DQC"],
+      ["Framework","Standards, DQC, Security, Cost"],
+      ["Automation","Daily Spark SQL and metadata scans"],
+      ["Control","Owners, alerts, and approved whitelist"],
+      ["Result","Asset score improved from 76 to 86"]
+    ]
+  },
+  reserve: {
+    answer: "I built a reservation-attribution DM table from scratch for pre-launch e-commerce campaigns. I declared the grain as user by campaign by product by site, then connected reservation and order data with a non-equi time-window join because there was no direct foreign key. I produced reservation, purchase, and reserved-but-not-paid flags for analysis and CRM targeting. The latency improved from T plus one day to T plus one hour, and targeted remarketing contributed a zero-point-two percentage-point conversion improvement.",
+    points: [
+      ["Problem","Reservation-to-purchase conversion was unknown"],
+      ["Grain","User × Campaign × Product × Site"],
+      ["Challenge","No direct reservation-to-order key"],
+      ["Solution","Time-window join and reusable CRM flags"],
+      ["Result","T+1 hour and +0.2 percentage points"]
+    ]
+  },
+  toc: {
+    answer: "I designed a regulatory data model for cross-border remittance into China, where user orders were recorded individually but fund settlements arrived in batches. I modeled Sending Institution, Order, and User subject areas and built a reconciliation table that matched each settlement batch to valid remittance orders. Encrypted recipient identity fields supported deduplication and residency checks. The solution provided full auditability, reduced AML risk, and supported regulatory reporting across multiple jurisdictions.",
+    points: [
+      ["Problem","Individual orders versus batched settlements"],
+      ["Model","Institution, Order, and User subject areas"],
+      ["Core","Batch-to-order regulatory reconciliation"],
+      ["Control","Encrypted identity, deduplication, residency"],
+      ["Result","Auditability and lower AML risk"]
+    ]
+  }
+};
+
+function quickStoryHtml(key) {
+  const story = quickStories[key];
+  if (!story) return '';
+  return `<div class="quick-story">
+    <div class="quick-story-head"><h3>60-second Interview Answer</h3>${listenBtn(story.answer)}</div>
+    <p>${story.answer}</p>
+    <div class="quick-points">${story.points.map(p=>`<div class="quick-point"><b>${p[0]}</b>${p[1]}</div>`).join('')}</div>
+  </div>`;
+}
+
 function renderProject(containerId, project) {
   const el = document.getElementById(containerId);
-  let html = `<div class="project-header">${project.header}</div>`;
-  if (project.introHtml) html += project.introHtml;
-  html += project.cards.map(renderCard).join('');
+  let detailed = '';
+  if (project.introHtml) detailed += project.introHtml;
+  detailed += project.cards.map(renderCard).join('');
 
   if (project.schemas) {
-    html += `<div class="star-banner" style="background:var(--surface); border:1px solid var(--border-strong); color:var(--text-secondary);">📐 Table Structure Reference</div>`;
+    detailed += `<div class="star-banner" style="background:var(--surface); border:1px solid var(--border-strong); color:var(--text-secondary);">📐 Table Structure Reference</div>`;
     project.schemas.forEach(schema => {
-      html += `<div class="card">
-        <p class="q-title" style="margin-bottom:8px;">${schema.name}</p>
+      const skipCellListen = /Subject Table|Data Asset Score Table/i.test(schema.name);
+      detailed += `<div class="card${skipCellListen ? ' no-cell-listen' : ''}">
+        <div class="q-head"><p class="q-title" style="margin-bottom:8px;">${schema.name}</p>${listenBtn((schema.name + '. ' + (schema.desc || '')).trim())}</div>
         ${schema.desc ? `<p class="q-desc" style="margin-bottom:8px;">${schema.desc}</p>` : ''}
         ${schema.table}
       </div>`;
     });
   }
 
-  html += `<div class="star-banner" style="background:var(--surface); border:1px solid var(--border-strong); color:var(--text-secondary);">🧠 Memory Anchor
+  detailed += `<div class="star-banner" style="background:var(--surface); border:1px solid var(--border-strong); color:var(--text-secondary);">🧠 Memory Anchor
     ${listenBtn(project.anchor.replace(/\n/g, '. ').replace(/->/g, 'leads to'))}
   </div>`;
-  html += `<div class="anchor">${project.anchor}</div>`;
-  el.innerHTML = html;
+  detailed += `<div class="anchor">${project.anchor}</div>`;
+
+  el.innerHTML = `<div class="project-header">${project.header}</div>
+    ${quickStoryHtml(containerId)}
+    <details class="project-details">
+      <summary>Open detailed STAR story, tables, and field references</summary>
+      <div class="details-content">${detailed}</div>
+    </details>`;
 }
 
 renderProject('amazon', projects.amazon);
@@ -962,6 +1077,7 @@ renderProject('reserve', projects.reserve);
 renderProject('toc', projects.toc);
 renderDwFundamentals();
 renderDwDgTab();
+enhanceKnowledgeTables();
 
 // ============================================================
 // TABS
