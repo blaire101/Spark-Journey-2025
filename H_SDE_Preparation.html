@@ -6731,6 +6731,79 @@ button.v59-audio > .v59-speaker-glyph{
     font-size:11px!important;
   }
 }
+</style><style id="v85-map-presentation-style">
+/* V85 — Tab1 ETL Map presentation, default collapsed */
+#part1-star #v85-map-presentation{
+  margin:14px 0 2px;
+  border:1px solid #d9e5ed;
+  border-radius:14px;
+  background:#fff;
+  overflow:hidden;
+  box-shadow:0 3px 12px rgba(29,73,105,.05);
+}
+#part1-star #v85-map-presentation > summary{
+  list-style:none;
+  cursor:pointer;
+}
+#part1-star #v85-map-presentation > summary::-webkit-details-marker{display:none}
+#part1-star .v85-pres-summary{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) 28px;
+  gap:10px;
+  align-items:center;
+  padding:12px 14px;
+  background:linear-gradient(90deg,#eef6fb 0%,#f9fcfe 100%);
+}
+#part1-star .v85-pres-icon{
+  width:34px;height:34px;display:grid;place-items:center;
+  border-radius:10px;background:#dfeef7;font-size:17px;
+}
+#part1-star .v85-pres-summary-copy b{
+  display:block;color:#173f5e;font-size:14px;line-height:1.25;
+}
+#part1-star .v85-pres-summary-copy small{
+  display:block;margin-top:2px;color:#70818c;font-size:10.5px;
+}
+#part1-star .v85-pres-chevron{
+  display:grid;place-items:center;color:#5c8096;font-size:21px;font-weight:900;
+  transition:transform .18s ease;
+}
+#part1-star #v85-map-presentation[open] .v85-pres-chevron{transform:rotate(90deg)}
+#part1-star .v85-pres-body{padding:12px 14px 14px;background:#fff}
+#part1-star .v85-pres-lead{
+  margin-bottom:8px;padding:8px 10px;border-left:4px solid #6da7c8;
+  border-radius:8px;background:#f4f9fc;color:#476577;font-size:11.5px;font-weight:700;
+}
+#part1-star .v85-pres-row{
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr) 34px;
+  gap:10px;
+  align-items:center;
+  padding:9px 10px;
+  margin-top:7px;
+  border:1px solid #dfe8ee;
+  border-radius:10px;
+  background:#fbfdfe;
+}
+#part1-star .v85-pres-no{
+  width:27px;height:27px;display:grid;place-items:center;
+  border-radius:50%;background:#e8f3fa;color:#176ea3;
+  font-size:9px;font-weight:900;
+}
+#part1-star .v85-pres-text{
+  color:#2f4857;font-size:12.2px;line-height:1.46;
+}
+#part1-star .v85-pres-row > .v85-pres-audio{
+  justify-self:end!important;
+  display:grid!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+#part1-star .v85-pres-memory{
+  margin-top:9px;padding:9px 11px;border-radius:8px;
+  background:#fff8e9;border-left:4px solid #e9b94b;
+  color:#634f23;font-size:11.5px;
+}
 </style></head>
 <body>
 <header>
@@ -6789,7 +6862,20 @@ button.v59-audio > .v59-speaker-glyph{
 </div>
 </div>
 <div class="branch-key"><span class="failed-key">Failed = invalid or lower-priced duplicate</span><span class="review-key">Review = unusual but still valid</span><span class="clean-key">Cleaned = accepted business records</span></div>
-</section></div></details>
+</section>
+<details class="v85-map-presentation" id="v85-map-presentation">
+<summary class="v85-pres-summary">
+<span class="v85-pres-icon">🎤</span>
+<div class="v85-pres-summary-copy"><b>Presentation — 60-second walkthrough</b><small>Use this after showing the ETL map.</small></div>
+<span class="v85-pres-chevron">›</span>
+</summary>
+<div class="v85-pres-body">
+<div class="v85-pres-lead">Start with the three-stage structure, then explain the exception paths and outputs.</div>
+<div class="v85-pres-row"><span class="v85-pres-no">01</span><div class="v85-pres-text">Let me walk through the pipeline from left to right. It has three stages: ingest and prepare, clean and validate, and create outputs.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="Let me walk through the pipeline from left to right. It has three stages: ingest and prepare, clean and validate, and create outputs." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">02</span><div class="v85-pres-text">First, I read the ZIP programmatically, discover the CSV files, preserve the original source files, combine schema differences, filter the required period, and profile the data.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="First, I read the ZIP programmatically, discover the CSV files, preserve the original source files, combine schema differences, filter the required period, and profile the data." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">03</span><div class="v85-pres-text">Second, I validate and standardise the business fields, and invalid records are written to Failed with an explicit reason.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="Second, I validate and standardise the business fields, and invalid records are written to Failed with an explicit reason." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">04</span><div class="v85-pres-text">I then recalculate the remaining lease using the 99-year rule and a configurable as-of date so the result is reproducible.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="I then recalculate the remaining lease using the 99-year rule and a configurable as-of date so the result is reproducible." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">05</span><div class="v85-pres-text">For duplicates, I use the business key, keep the higher resale price, and send the lower-priced duplicate to Failed.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="For duplicates, I use the business key, keep the higher resale price, and send the lower-priced duplicate to Failed." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">06</span><div class="v85-pres-text">For price anomalies, I use IQR on price per square metre within the year, town, and flat-type peer group. These records remain valid in Cleaned and are also copied to Review.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="For price anomalies, I use IQR on price per square metre within the year, town, and flat-type peer group. These records remain valid in Cleaned and are also copied to Review." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">07</span><div class="v85-pres-text">Finally, I create the prescribed resale identifier and its SHA-256 hash, producing Cleaned, Transformed, and Hashed outputs with clear traceability.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="Finally, I create the prescribed resale identifier and its SHA-256 hash, producing Cleaned, Transformed, and Hashed outputs with clear traceability." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div>
+<div class="v85-pres-memory"><b>Line :</b> Ingest &amp; Prepare → Clean &amp; Validate → Create Outputs.</div>
+</div>
+</details>
+</div></details>
 <details class="v82-major-details" id="v82-t1-star"><summary class="v82-major-summary"><span class="v82-major-icon">⭐</span><span class="v82-major-copy"><strong>STAR Story</strong><small>PART 2 OF 3</small></span><span aria-hidden="true" class="v82-major-chevron">›</span><span class="v83-major-badge">02</span></summary><div class="v82-major-body"><section class="star-section" id="p1-s">
 <div class="star-heading s-head"><span class="star-big">S</span><div><h3>Situation — Why was the pipeline needed?</h3><p>Start with the business background, not the code.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="HDB needed a programmatic pipeline to prepare resale flat data from January 2012 to December 2016 for downstream analysis. The source consisted of multiple files with schema differences and required consistent quality controls." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div>
 <div class="star-grid-2">
