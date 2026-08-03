@@ -27,9 +27,9 @@
 
 ## 🤖 AI, LLM & LangChain
 
+- [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/LangChain_LLM_Agent_Demo.html)
 - [AI Agent Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/README-ai-agent.html)
 - [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/langchain-course-outline.html)
-
 
 <details>
 <summary>💬 Spark basic questions</summary>
