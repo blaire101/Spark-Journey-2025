@@ -24,7 +24,6 @@
 
 - [H-DE Interview Prep](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/H_SDE_Preparation.html)
 - [LeetCode Preparation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/gs_leetcode_prep.html)
-- [STM-Data Engineer Interview Prep](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/stm_as_data_engineer_interview_prep_anonymized_fixed.html)
 
 ## 🤖 AI, LLM & LangChain
 
