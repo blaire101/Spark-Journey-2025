@@ -15,6 +15,7 @@
 
 ## ☁️ AWS, Azure & Microsoft Fabric
 
+- [AWS_Reservation_DM_CloudFormation](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/AWS_Reservation_DM_CloudFormation.html)
 - [AWS Data Engineer Associate Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws-dea-c01-study-guide.html)
 - [AWS vs Azure Data Engineering Comparison](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_data_engineering_comparison_azure_learning_qa.html)
 - [Azure Fabric Real Console Case](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/aws_azure_chanel_fabric_real_console_case_tabbed.html)
@@ -27,7 +28,7 @@
 
 ## 🤖 AI, LLM & LangChain
 
-- [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/LangChain_LLM_Agent_Demo.html)
+- [LangChain_LLM_Agent_Demo](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/LangChain_LLM_Agent_Demo.html)
 - [AI Agent Study Guide](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/README-ai-agent.html)
 - [LangChain Course Outline](https://htmlpreview.github.io/?https://github.com/blaire101/Spark-Journey-2025/blob/main/langchain-course-outline.html)
 
