@@ -685,6 +685,205 @@
 @media(max-width:560px){
   .source-head-v8{align-items:flex-start}
 }
+</style><style id="v9-faiss-visual-styles">
+.faiss-visual-v9{
+  margin:10px 0 13px;
+  padding:11px 12px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--card);
+}
+.faiss-head-v9{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:9px;
+}
+.faiss-head-v9 h3{
+  margin:1px 0 0;
+  font-size:13.5px;
+  color:var(--text);
+}
+.faiss-kicker-v9{
+  display:block;
+  color:#6EAED0;
+  font-size:8.3px;
+  letter-spacing:.9px;
+  font-weight:800;
+}
+.faiss-listen-v9{
+  width:auto!important;
+  min-width:74px!important;
+  height:28px!important;
+  padding:0 9px!important;
+  font-size:9.6px!important;
+}
+.faiss-flow-v9{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr);
+  gap:4px;
+  align-items:stretch;
+}
+.faiss-node-v9{
+  min-height:112px;
+  padding:9px 7px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:var(--card2);
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.faiss-icon-v9{font-size:19px;margin-bottom:3px}
+.faiss-node-v9 strong{
+  color:#8FC4DF;
+  font-size:10.8px;
+}
+.faiss-node-v9 span{
+  display:block;
+  margin-top:3px;
+  color:var(--text);
+  font-size:9.5px;
+  line-height:1.35;
+}
+.faiss-node-v9 small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:8.7px;
+  line-height:1.3;
+}
+.faiss-arrow-v9{
+  display:grid;
+  place-items:center;
+  color:#718796;
+  font-size:15px;
+}
+.faiss-definition-v9{
+  margin-top:9px;
+  padding:9px 10px;
+  border-left:3px solid #4B94C4;
+  border-radius:7px;
+  background:#17242E;
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  align-items:flex-start;
+}
+.faiss-definition-copy-v9 b{
+  display:block;
+  color:#9AC9E1;
+  font-size:10px;
+  margin-bottom:2px;
+}
+.faiss-definition-copy-v9 p{
+  margin:0;
+  color:#C2D0D9;
+  font-size:10.3px;
+  line-height:1.47;
+}
+.faiss-memory-v9{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+  margin-top:8px;
+}
+.faiss-memory-v9>div{
+  padding:7px 8px;
+  border:1px solid var(--line);
+  border-radius:7px;
+  background:#151F27;
+}
+.faiss-memory-v9 b{
+  display:block;
+  color:#84BCD9;
+  font-size:9.8px;
+}
+.faiss-memory-v9 span{
+  display:block;
+  margin-top:2px;
+  color:#AEBCC6;
+  font-size:8.9px;
+  line-height:1.35;
+}
+
+/* Light theme */
+.light .faiss-definition-v9{
+  background:#F2F8FB;
+}
+.light .faiss-definition-copy-v9 b{
+  color:#286F9B;
+}
+.light .faiss-definition-copy-v9 p{
+  color:#475467;
+}
+.light .faiss-memory-v9>div{
+  background:#F8FAFC;
+}
+.light .faiss-memory-v9 b{
+  color:#286F9B;
+}
+.light .faiss-memory-v9 span{
+  color:#667085;
+}
+.light .faiss-node-v9 strong{
+  color:#286F9B;
+}
+
+@media(max-width:880px){
+  .faiss-flow-v9{
+    grid-template-columns:1fr;
+  }
+  .faiss-arrow-v9{
+    transform:rotate(90deg);
+    min-height:16px;
+  }
+  .faiss-node-v9{
+    min-height:auto;
+  }
+  .faiss-memory-v9{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:520px){
+  .faiss-memory-v9{
+    grid-template-columns:1fr;
+  }
+}
+</style><style id="v10-faiss-layout-polish">
+/* FAISS visual is now a standalone summary after all concept cards */
+.faiss-visual-v9{
+  margin:16px 0 14px!important;
+  clear:both;
+}
+.faiss-head-v9{
+  margin-bottom:10px!important;
+}
+.faiss-visual-v9::before{
+  content:"";
+  display:block;
+  height:1px;
+  margin:-3px 0 12px;
+  background:linear-gradient(90deg,transparent,var(--line),transparent);
+}
+
+/* Prevent concept cards from stretching because of unrelated content */
+.concept-grid-v5{
+  align-items:stretch;
+}
+.concept-card-v5{
+  min-height:0!important;
+}
+
+/* On wide screens, keep the FAISS summary visually centered and independent */
+@media(min-width:1100px){
+  .faiss-visual-v9{
+    padding:13px 14px 14px!important;
+  }
+}
 </style></head><body><div class="wrap">
 <header><h1>LangChain Final Demo — Customer Support Copilot</h1><p>One compact project covering modules 1–6.</p><div class="toolbar"><label>Voice <select aria-label="English voice" id="voice"><option value="">Loading voices...</option></select></label><span class="voice-status-v6" id="voiceStatusV6">Voice: loading...</span><label>Speed <input id="rate" max="1.3" min=".7" step=".05" type="range" value=".95"/></label><button class="stop" id="stop">Stop</button><button class="theme" id="theme">☀ Light Mode</button></div></header>
 <div class="top-explain-v4">
@@ -880,6 +1079,7 @@ agent = <span class="tok-func">create_agent</span>(
 <div class="speak-row-v8"><span>Vector similarity search.</span><button class="listen tts-btn-v6 inline-listen-v8" data-text="Vector similarity search." title="Listen" type="button">🔊</button></div>
 <div class="speak-row-v8"><p>FAISS stores embedding vectors and quickly finds the vectors most similar to the user's question.</p><button class="listen tts-btn-v6 inline-listen-v8" data-text="FAISS stores embedding vectors and quickly finds the vectors most similar to the user's question." title="Listen" type="button">🔊</button></div>
 </div>
+
 <div class="concept-card-v5">
 <strong>Retriever</strong>
 <div class="speak-row-v8"><span>The search step.</span><button class="listen tts-btn-v6 inline-listen-v8" data-text="The search step." title="Listen" type="button">🔊</button></div>
@@ -926,7 +1126,64 @@ result = agent.<span class="tok-func">invoke</span>(
 )
 
 <span class="tok-builtin">print</span>(follow_up[<span class="tok-string">"messages"</span>][-<span class="tok-number">1</span>].content)</code></pre></div></div></details></div><div class="card"><h3>1–6 Coverage</h3><table><tr><th>Module</th><th>Implementation</th><th>Meaning</th></tr><tr><td>1. Structured Output</td><td>RequestInfo</td><td>Predictable schema</td></tr><tr><td>2. Memory</td><td>MemorySaver + thread_id</td><td>Conversation state</td></tr><tr><td>3. Chains</td><td>prompt | model | parser</td><td>Fixed workflow</td></tr><tr><td>4. RAG</td><td>Embeddings + FAISS</td><td>External knowledge</td></tr><tr><td>5. Evaluation</td><td>Fixed test cases</td><td>Repeatable quality check</td></tr><tr><td>6. Agents &amp; Tools</td><td>policy_search + total_cost</td><td>Dynamic tool selection</td></tr></table></div>
-<section class="source-file-v8">
+<section class="faiss-visual-v9">
+<div class="faiss-head-v9">
+<div>
+<span class="faiss-kicker-v9">MENTAL MODEL</span>
+<h3>From Document to FAISS Search</h3>
+</div>
+<button class="listen tts-btn-v6 faiss-listen-v9" data-text="FAISS is a vector similarity search library. In my RAG demo, I use it to index document embeddings and retrieve the most relevant policy chunks for a user question." title="Listen" type="button">🔊 Listen</button>
+</div>
+<div class="faiss-flow-v9">
+<div class="faiss-node-v9">
+<div class="faiss-icon-v9">📘</div>
+<strong>Document</strong>
+<span>A whole source file</span>
+<small>Think: a book</small>
+</div>
+<div class="faiss-arrow-v9">→</div>
+<div class="faiss-node-v9">
+<div class="faiss-icon-v9">🧩</div>
+<strong>Chunk</strong>
+<span>A small piece of the document</span>
+<small>Think: one paragraph</small>
+</div>
+<div class="faiss-arrow-v9">→</div>
+<div class="faiss-node-v9">
+<div class="faiss-icon-v9">📍</div>
+<strong>Embedding</strong>
+<span>A semantic vector for each chunk</span>
+<small>Think: a meaning coordinate</small>
+</div>
+<div class="faiss-arrow-v9">→</div>
+<div class="faiss-node-v9">
+<div class="faiss-icon-v9">🔎</div>
+<strong>FAISS</strong>
+<span>Searches nearby vectors</span>
+<small>Think: find the closest meanings</small>
+</div>
+<div class="faiss-arrow-v9">→</div>
+<div class="faiss-node-v9">
+<div class="faiss-icon-v9">✅</div>
+<strong>Relevant Chunks</strong>
+<span>The best context for the question</span>
+<small>Sent to the LLM</small>
+</div>
+</div>
+<div class="faiss-definition-v9">
+<div class="faiss-definition-copy-v9">
+<b>Professional explanation</b>
+<p>FAISS is a vector similarity search library. In my RAG demo, I use it to index document embeddings and retrieve the most relevant policy chunks for a user question.</p>
+</div>
+<button class="listen tts-btn-v6 inline-listen-v8" data-text="FAISS is a vector similarity search library. In my RAG demo, I use it to index document embeddings and retrieve the most relevant policy chunks for a user question." title="Listen" type="button">🔊</button>
+</div>
+<div class="faiss-memory-v9">
+<div><b>Document</b><span>A whole source file</span></div>
+<div><b>Chunk</b><span>A small section from the document</span></div>
+<div><b>Embedding</b><span>A semantic coordinate for each chunk</span></div>
+<div><b>FAISS</b><span>Finds the chunks whose coordinates are closest to the question</span></div>
+</div>
+</section><section class="source-file-v8">
 <div class="source-head-v8">
 <div>
 <span class="source-kicker-v8">LOCAL RAG SOURCE</span>
