@@ -981,6 +981,158 @@
   color:#765C1E;
   border-left-color:#D5A24C;
 }
+</style><style id="v14-build-steps">
+.build-answer-v14{
+  display:grid;
+  grid-template-columns:132px minmax(0,1fr) 30px;
+  gap:9px;
+  align-items:center;
+  margin:8px 10px;
+  padding:9px 10px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--card2);
+}
+.build-answer-v14 b{
+  color:#8FC4DF;
+  font-size:10.5px;
+}
+.build-answer-v14 p{
+  margin:0!important;
+  color:var(--text)!important;
+  font-size:10.3px!important;
+  line-height:1.48!important;
+}
+.build-listen-v14{
+  width:27px!important;
+  min-width:27px!important;
+  height:27px!important;
+  padding:0!important;
+  border-radius:50%!important;
+  font-size:10px!important;
+}
+.light .build-answer-v14{
+  background:#F8FAFC;
+}
+.light .build-answer-v14 b{
+  color:#286F9B;
+}
+@media(max-width:760px){
+  .build-answer-v14{
+    grid-template-columns:1fr 30px;
+  }
+  .build-answer-v14 b{
+    grid-column:1 / -1;
+  }
+}
+</style><style id="v15-ordered-build-steps">
+.build-steps-v15{
+  margin:8px 10px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  overflow:hidden;
+  background:var(--card2);
+}
+.build-steps-head-v15{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 10px;
+  border-bottom:1px solid var(--line);
+}
+.build-steps-head-v15 b{
+  color:#8FC4DF;
+  font-size:10.8px;
+}
+.build-all-listen-v15{
+  min-width:58px!important;
+  height:26px!important;
+  padding:0 10px!important;
+  border-radius:14px!important;
+  font-size:9px!important;
+}
+.build-step-list-v15{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  padding:8px;
+}
+.build-step-row-v15{
+  display:grid;
+  grid-template-columns:25px minmax(0,1fr) 26px;
+  gap:7px;
+  align-items:center;
+  min-height:37px;
+  padding:5px 6px;
+  border:1px solid var(--line);
+  border-radius:7px;
+  background:var(--card);
+}
+.build-step-number-v15{
+  width:23px;
+  height:23px;
+  display:grid;
+  place-items:center;
+  border-radius:6px;
+  background:rgba(75,148,196,.14);
+  color:#7EB8D6;
+  font-size:8.5px;
+  font-weight:800;
+}
+.build-step-text-v15{
+  color:var(--text);
+  font-size:9.8px;
+  line-height:1.35;
+  font-weight:650;
+}
+.build-step-listen-v15,
+.build-script-listen-v15{
+  width:25px!important;
+  min-width:25px!important;
+  height:25px!important;
+  padding:0!important;
+  border-radius:50%!important;
+  font-size:9px!important;
+}
+.build-speaking-v15{
+  display:grid;
+  grid-template-columns:96px minmax(0,1fr) 26px;
+  gap:8px;
+  align-items:center;
+  padding:8px 10px;
+  border-top:1px solid var(--line);
+}
+.build-speaking-v15 b{
+  color:#8FC4DF;
+  font-size:10px;
+}
+.build-speaking-v15 p{
+  margin:0!important;
+  color:var(--text)!important;
+  font-size:10px!important;
+  line-height:1.45!important;
+}
+.light .build-steps-v15,
+.light .build-step-row-v15{
+  background:#F8FAFC;
+}
+.light .build-steps-head-v15 b,
+.light .build-speaking-v15 b{
+  color:#286F9B;
+}
+.light .build-step-number-v15{
+  background:#E3F0F7;
+  color:#2D759E;
+}
+@media(max-width:900px){
+  .build-step-list-v15{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .build-step-list-v15{grid-template-columns:1fr}
+  .build-speaking-v15{grid-template-columns:1fr 26px}
+  .build-speaking-v15 b{grid-column:1 / -1}
+}
 </style></head><body><div class="wrap">
 <header><h1>LangChain Final Demo — Customer Support Copilot</h1><p>One compact project covering modules 1–6.</p><div class="toolbar"><label>Voice <select aria-label="English voice" id="voice"><option value="">Loading voices...</option></select></label><span class="voice-status-v6" id="voiceStatusV6">Voice: loading...</span><label>Speed <input id="rate" max="1.3" min=".7" step=".05" type="range" value=".95"/></label><button class="stop" id="stop">Stop</button><button class="theme" id="theme">☀ Light Mode</button></div></header>
 <div class="top-explain-v4">
@@ -1206,9 +1358,9 @@ agent = <span class="tok-func">create_agent</span>(
 </div>
 </div><div class="card"><h3>End-to-End Demo</h3><details class="code-cell-v2"><summary class="code-summary-v2"><span class="code-icon-v2">⌘</span><span class="code-summary-copy-v2"><b>End-to-End Demo</b><small>Notebook cell · click to expand</small></span><span class="code-chevron-v2">›</span></summary><div class="code-body-v2">
 <div class="run-intro-v12">
-<b>Complete end-to-end program</b>
-<p>This final workflow uses the Normalize Chain, RAG, Tools, Agent, and Memory. Structured Output is kept only as a commented learning reference.</p>
-</div>
+<b>Build Steps</b>
+<p>This is the order I used to build the customer-support copilot prototype.</p>
+</div><section class="build-steps-v15"><div class="build-steps-head-v15"><b>How I built it</b><button class="listen tts-btn-v6 build-all-listen-v15" data-text="First, I chose the model. Then, I built the normalize chain. Next, I loaded the documents, split them into chunks, created embeddings, and built the FAISS index. Finally, I defined the tools and created the agent and memory." title="Listen to the complete explanation" type="button">Listen</button></div><div class="build-step-list-v15"><div class="build-step-row-v15"><span class="build-step-number-v15">01</span><span class="build-step-text-v15">Choose the Model</span><button class="listen tts-btn-v6 build-step-listen-v15" data-text="Choose the Model" title="Listen" type="button">🔊</button></div><div class="build-step-row-v15"><span class="build-step-number-v15">02</span><span class="build-step-text-v15">Build the Normalize Chain</span><button class="listen tts-btn-v6 build-step-listen-v15" data-text="Build the Normalize Chain" title="Listen" type="button">🔊</button></div><div class="build-step-row-v15"><span class="build-step-number-v15">03</span><span class="build-step-text-v15">Load Documents</span><button class="listen tts-btn-v6 build-step-listen-v15" data-text="Load Documents" title="Listen" type="button">🔊</button></div><div class="build-step-row-v15"><span class="build-step-number-v15">04</span><span class="build-step-text-v15">Split Documents into Chunks</span><button class="listen tts-btn-v6 build-step-listen-v15" data-text="Split Documents into Chunks" title="Listen" type="button">🔊</button></div><div class="build-step-row-v15"><span class="build-step-number-v15">05</span><span class="build-step-text-v15">Create Embeddings</span><button class="listen tts-btn-v6 build-step-listen-v15" data-text="Create Embeddings" title="Listen" type="button">🔊</button></div><div class="build-step-row-v15"><span class="build-step-number-v15">06</span><span class="build-step-text-v15">Build the FAISS Index</span><button class="listen tts-btn-v6 build-step-listen-v15" data-text="Build the FAISS Index" title="Listen" type="button">🔊</button></div><div class="build-step-row-v15"><span class="build-step-number-v15">07</span><span class="build-step-text-v15">Define Tools</span><button class="listen tts-btn-v6 build-step-listen-v15" data-text="Define Tools" title="Listen" type="button">🔊</button></div><div class="build-step-row-v15"><span class="build-step-number-v15">08</span><span class="build-step-text-v15">Create the Agent and Memory</span><button class="listen tts-btn-v6 build-step-listen-v15" data-text="Create the Agent and Memory" title="Listen" type="button">🔊</button></div></div><div class="build-speaking-v15"><b>What I can say</b><p>First, I chose the model. Then, I built the normalize chain. Next, I loaded the documents, split them into chunks, created embeddings, and built the FAISS index. Finally, I defined the tools and created the agent and memory.</p><button class="listen tts-btn-v6 build-script-listen-v15" data-text="First, I chose the model. Then, I built the normalize chain. Next, I loaded the documents, split them into chunks, created embeddings, and built the FAISS index. Finally, I defined the tools and created the agent and memory." title="Listen" type="button">🔊</button></div></section>
 <div class="structured-note-v13">Structured Output is intentionally commented out in the final workflow. It remains in the code as a learning reference for schema validation and explicit routing.</div><div class="nb-row-v2"><div class="nb-prompt-v2">In [ ]:</div><pre class="code-pre-v2 code-pre-unified-v8 final-program-v12"><code class="python-code-v2">from pathlib import Path
 from typing import Literal
 
@@ -1278,6 +1430,9 @@ Request:
 normalize_chain = (
     normalize_prompt
     | model
+
+    # Convert the model's AIMessage output
+    # into a normal Python string.
     | StrOutputParser()
 )
 
@@ -1357,6 +1512,10 @@ return monthly_price * months
 # 6. Memory + Agent
 # ============================================================
 
+# MemorySaver stores the conversation state in process memory.
+# It is suitable for a small demo or local development.
+# In production, use a database-backed checkpointer
+# for persistent and reliable state storage.
 memory = MemorySaver()
 
 agent = create_agent(
