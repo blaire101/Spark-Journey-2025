@@ -6731,7 +6731,126 @@ button.v59-audio > .v59-speaker-glyph{
     font-size:11px!important;
   }
 }
-</style></head>
+</style><style id="v85-map-presentation-style">
+/* V85 — Tab1 ETL Map presentation, default collapsed */
+#part1-star #v85-map-presentation{
+  margin:14px 0 2px;
+  border:1px solid #d9e5ed;
+  border-radius:14px;
+  background:#fff;
+  overflow:hidden;
+  box-shadow:0 3px 12px rgba(29,73,105,.05);
+}
+#part1-star #v85-map-presentation > summary{
+  list-style:none;
+  cursor:pointer;
+}
+#part1-star #v85-map-presentation > summary::-webkit-details-marker{display:none}
+#part1-star .v85-pres-summary{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) 28px;
+  gap:10px;
+  align-items:center;
+  padding:12px 14px;
+  background:linear-gradient(90deg,#eef6fb 0%,#f9fcfe 100%);
+}
+#part1-star .v85-pres-icon{
+  width:34px;height:34px;display:grid;place-items:center;
+  border-radius:10px;background:#dfeef7;font-size:17px;
+}
+#part1-star .v85-pres-summary-copy b{
+  display:block;color:#173f5e;font-size:14px;line-height:1.25;
+}
+#part1-star .v85-pres-summary-copy small{
+  display:block;margin-top:2px;color:#70818c;font-size:10.5px;
+}
+#part1-star .v85-pres-chevron{
+  display:grid;place-items:center;color:#5c8096;font-size:21px;font-weight:900;
+  transition:transform .18s ease;
+}
+#part1-star #v85-map-presentation[open] .v85-pres-chevron{transform:rotate(90deg)}
+#part1-star .v85-pres-body{padding:12px 14px 14px;background:#fff}
+#part1-star .v85-pres-lead{
+  margin-bottom:8px;padding:8px 10px;border-left:4px solid #6da7c8;
+  border-radius:8px;background:#f4f9fc;color:#476577;font-size:11.5px;font-weight:700;
+}
+#part1-star .v85-pres-row{
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr) 34px;
+  gap:10px;
+  align-items:center;
+  padding:9px 10px;
+  margin-top:7px;
+  border:1px solid #dfe8ee;
+  border-radius:10px;
+  background:#fbfdfe;
+}
+#part1-star .v85-pres-no{
+  width:27px;height:27px;display:grid;place-items:center;
+  border-radius:50%;background:#e8f3fa;color:#176ea3;
+  font-size:9px;font-weight:900;
+}
+#part1-star .v85-pres-text{
+  color:#2f4857;font-size:12.2px;line-height:1.46;
+}
+#part1-star .v85-pres-row > .v85-pres-audio{
+  justify-self:end!important;
+  display:grid!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+#part1-star .v85-pres-memory{
+  margin-top:9px;padding:9px 11px;border-radius:8px;
+  background:#fff8e9;border-left:4px solid #e9b94b;
+  color:#634f23;font-size:11.5px;
+}
+</style>
+<style id="v86-iqr-qa-style">
+.iqr-qa-v86{
+  margin-top:16px;
+  border:1px solid #d9e4ec;
+  border-radius:14px;
+  overflow:hidden;
+  background:linear-gradient(180deg,#fbfdff 0%,#f7fafc 100%);
+  box-shadow:0 2px 8px rgba(30,64,90,.05);
+}
+.iqr-qa-head-v86,.iqr-qa-answer-v86{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) 42px;
+  gap:12px;
+  align-items:center;
+  padding:13px 15px;
+}
+.iqr-qa-head-v86{
+  border-bottom:1px solid #e4ebf0;
+  background:#f8fbfd;
+}
+.iqr-qa-answer-v86{align-items:start;}
+.iqr-q-v86,.iqr-a-v86{
+  width:30px;height:30px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:15px;
+}
+.iqr-q-v86{background:#e7f1fb;color:#174a73;}
+.iqr-a-v86{background:#e9f7ef;color:#176844;}
+.iqr-qa-v86 strong{color:#183f60;}
+.iqr-qa-v86 p{margin:0;line-height:1.58;}
+.iqr-qa-v86 small{
+  display:block;
+  margin-top:4px;
+  color:#82909d;
+  font-size:12px;
+  line-height:1.45;
+}
+@media(max-width:760px){
+  .iqr-qa-head-v86,.iqr-qa-answer-v86{
+    grid-template-columns:34px minmax(0,1fr) 38px;
+    gap:8px;padding:11px 10px;
+  }
+}
+</style>
+
+</head>
 <body>
 <header>
 <h1>HDB Senior Data Engineer — Presentation Preparation</h1>
@@ -6789,7 +6908,20 @@ button.v59-audio > .v59-speaker-glyph{
 </div>
 </div>
 <div class="branch-key"><span class="failed-key">Failed = invalid or lower-priced duplicate</span><span class="review-key">Review = unusual but still valid</span><span class="clean-key">Cleaned = accepted business records</span></div>
-</section></div></details>
+</section>
+<details class="v85-map-presentation" id="v85-map-presentation">
+<summary class="v85-pres-summary">
+<span class="v85-pres-icon">🎤</span>
+<div class="v85-pres-summary-copy"><b>Presentation — 60-second walkthrough</b><small>Use this after showing the ETL map.</small></div>
+<span class="v85-pres-chevron">›</span>
+</summary>
+<div class="v85-pres-body">
+<div class="v85-pres-lead">Start with the three-stage structure, then explain the exception paths and outputs.</div>
+<div class="v85-pres-row"><span class="v85-pres-no">01</span><div class="v85-pres-text">Let me walk through the pipeline from left to right. It has three stages: ingest and prepare, clean and validate, and create outputs.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="Let me walk through the pipeline from left to right. It has three stages: ingest and prepare, clean and validate, and create outputs." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">02</span><div class="v85-pres-text">First, I read the ZIP programmatically, discover the CSV files, preserve the original source files, combine schema differences, filter the required period, and profile the data.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="First, I read the ZIP programmatically, discover the CSV files, preserve the original source files, combine schema differences, filter the required period, and profile the data." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">03</span><div class="v85-pres-text">Second, I validate and standardise the business fields, and invalid records are written to Failed with an explicit reason.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="Second, I validate and standardise the business fields, and invalid records are written to Failed with an explicit reason." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">04</span><div class="v85-pres-text">I then recalculate the remaining lease using the 99-year rule and a configurable as-of date so the result is reproducible.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="I then recalculate the remaining lease using the 99-year rule and a configurable as-of date so the result is reproducible." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">05</span><div class="v85-pres-text">For duplicates, I use the business key, keep the higher resale price, and send the lower-priced duplicate to Failed.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="For duplicates, I use the business key, keep the higher resale price, and send the lower-priced duplicate to Failed." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">06</span><div class="v85-pres-text">For price anomalies, I use IQR on price per square metre within the year, town, and flat-type peer group. These records remain valid in Cleaned and are also copied to Review.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="For price anomalies, I use IQR on price per square metre within the year, town, and flat-type peer group. These records remain valid in Cleaned and are also copied to Review." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div><div class="v85-pres-row"><span class="v85-pres-no">07</span><div class="v85-pres-text">Finally, I create the prescribed resale identifier and its SHA-256 hash, producing Cleaned, Transformed, and Hashed outputs with clear traceability.</div><button aria-label="Listen" class="v61-tab1-audio v85-pres-audio" data-speak-text="Finally, I create the prescribed resale identifier and its SHA-256 hash, producing Cleaned, Transformed, and Hashed outputs with clear traceability." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div>
+<div class="v85-pres-memory"><b>Line :</b> Ingest &amp; Prepare → Clean &amp; Validate → Create Outputs.</div>
+</div>
+</details>
+</div></details>
 <details class="v82-major-details" id="v82-t1-star"><summary class="v82-major-summary"><span class="v82-major-icon">⭐</span><span class="v82-major-copy"><strong>STAR Story</strong><small>PART 2 OF 3</small></span><span aria-hidden="true" class="v82-major-chevron">›</span><span class="v83-major-badge">02</span></summary><div class="v82-major-body"><section class="star-section" id="p1-s">
 <div class="star-heading s-head"><span class="star-big">S</span><div><h3>Situation — Why was the pipeline needed?</h3><p>Start with the business background, not the code.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="HDB needed a programmatic pipeline to prepare resale flat data from January 2012 to December 2016 for downstream analysis. The source consisted of multiple files with schema differences and required consistent quality controls." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div>
 <div class="star-grid-2">
@@ -6815,9 +6947,15 @@ button.v59-audio > .v59-speaker-glyph{
 <div class="mini-formula"><code>lease_end = lease_commence_date + 99 years</code><code>remaining = floor(lease_end − as_of_date) → years + months</code></div></div></article>
 <article class="action-step"><div class="step-no">4</div><div class="step-body"><h4>Resolve duplicate transactions deterministically</h4><div class="sentence"><div class="sentence-row"><div><p>The composite key uses all original business columns except <code>resale_price</code>.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="The composite key uses all original business columns except resale_price ." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div><div class="sentence"><div class="sentence-row"><div><p>For the same key, I retain the highest price and send lower-priced records to Failed as <code>DUPLICATE_LOWER_PRICE</code>.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="For the same key, I retain the highest price and send lower-priced records to Failed as DUPLICATE_LOWER_PRICE ." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div>
 <div class="decision-flow"><span>Same composite key?</span><b>→</b><span>Sort price descending</span><b>→</b><span class="good">Rank 1: keep</span><span class="bad">Rank &gt;1: Failed</span></div></div></article>
-<article class="action-step"><div class="step-no">5</div><div class="step-body"><h4>Flag unusual resale prices with IQR</h4><div class="sentence"><div class="sentence-row"><div><p>First, I calculate <code>price_per_sqm = resale_price / floor_area_sqm</code> so flats of different sizes are comparable.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="First, I calculate price_per_sqm = resale_price / floor_area_sqm so flats of different sizes are comparable." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div><div class="sentence"><div class="sentence-row"><div><p>Records are compared within peer groups of <strong>year + town + flat_type</strong>.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="Records are compared within peer groups of year + town + flat_type ." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div>
+<article class="action-step"><div class="step-no">5</div><div class="step-body"><h4>Flag unusual resale prices with IQR</h4><div class="sentence"><div class="sentence-row"><div><p>First, I calculate <code>price_per_sqm = resale_price / floor_area_sqm</code> so flats of different sizes are comparable.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="First, I calculate price_per_sqm = resale_price / floor_area_sqm so flats of different sizes are comparable." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div><div class="sentence"><div class="sentence-row"><div><p>I compare similar flats within the same <strong>year, town, and flat type</strong>.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="I compare similar flats within the same year, town, and flat type." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div>
 <div class="iqr-box"><div><b>Q1</b><span>25th percentile</span></div><div><b>IQR</b><span>Q3 − Q1</span></div><div><b>Lower</b><span>Q1 − 1.5 × IQR</span></div><div><b>Upper</b><span>Q3 + 1.5 × IQR</span></div></div>
-<div class="sentence"><div class="sentence-row"><div><p>A flagged record remains in <strong>Cleaned</strong> and is also copied to <strong>Review</strong>, because unusual does not automatically mean invalid.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="A flagged record remains in Cleaned and is also copied to Review , because unusual does not automatically mean invalid." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div></div></article>
+<div class="sentence"><div class="sentence-row"><div><p><strong>IQR</strong> measures the spread of the middle 50 percent of the <code>price_per_sqm</code> values.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="IQR measures the spread of the middle 50 percent of the price per square metre values." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div>
+<div class="sentence"><div class="sentence-row"><div><p>Values outside the <strong>1.5-times-IQR bounds</strong> are flagged for <strong>Review</strong>, but not automatically rejected.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="Values outside the 1.5 times IQR bounds are flagged for Review, but not automatically rejected." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div>
+<div class="sentence"><div class="sentence-row"><div><p>A flagged record remains in <strong>Cleaned</strong> and is also copied to <strong>Review</strong>, because unusual does not automatically mean invalid.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="A flagged record remains in Cleaned and is also copied to Review, because unusual does not automatically mean invalid." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div>
+<div class="iqr-qa-v86">
+  <div class="iqr-qa-head-v86"><span class="iqr-q-v86">Q</span><div><strong>Why did you choose IQR, and where does the 1.5 come from?</strong></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="Why did you choose IQR, and where does the 1.5 come from?" title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div>
+  <div class="iqr-qa-answer-v86"><span class="iqr-a-v86">A</span><div><p>I chose <strong>IQR (Interquartile Range)</strong> because it is simple, explainable, and robust to extreme values. The <strong>1.5-times-IQR threshold</strong> is a standard <strong>Tukey rule</strong> for flagging outliers.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="I chose IQR, Interquartile Range, because it is simple, explainable, and robust to extreme values. The 1.5 times IQR threshold is a standard Tukey rule for flagging outliers." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div>
+</div></div></article>
 <article class="action-step"><div class="step-no">6</div><div class="step-body"><h4>Create the identifier and hash</h4><div class="sentence"><div class="sentence-row"><div><p>After quality rules, the pipeline builds the required identifier: <strong>S + BBB + AA + MM + T</strong>.</p></div><button aria-label="Listen" class="v61-tab1-audio v61-tab1-generic-audio" data-speak-text="After quality rules, the pipeline builds the required identifier: S + BBB + AA + MM + T ." title="Listen" type="button"><span aria-hidden="true" class="v61-tab1-speaker-glyph">🔊</span></button></div></div>
 <div class="identifier-v2"><span>S</span><span>BBB</span><span>AA</span><span>MM</span><span>T</span></div>
 <div class="identifier-notes"><div><b>S</b> fixed prefix</div><div><b>BBB</b> first three block digits, left-padded</div><div><b>AA</b> first two digits of grouped average price</div><div><b>MM</b> transaction month</div><div><b>T</b> first town character</div></div>
