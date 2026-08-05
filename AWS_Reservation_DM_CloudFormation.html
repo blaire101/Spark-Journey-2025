@@ -158,6 +158,533 @@ th,td{padding:8px 9px!important;font-size:12.4px!important}th{background:var(--s
 #tab3 .qa-item .cn{font-size:11.8px!important}
 #tab3 .qa-tag{background:#fff5df!important;color:#9e5d00!important;border:1px solid #efd59f!important}
 #tab3 .one-day-final{margin-top:20px!important;border-left:5px solid #067647!important;background:#f7fffa!important}
+</style><style id="v41-aws-experience">
+.aws-exp-card{
+  border-left:5px solid #d97706!important;
+  background:linear-gradient(135deg,#fffaf2 0%,#fff 58%)!important;
+}
+.aws-exp-question{
+  margin:10px 0 8px;
+  padding:9px 11px;
+  border-radius:9px;
+  background:#173F5F;
+  color:#fff;
+  font-size:12.5px;
+  font-weight:750;
+}
+.aws-exp-answer{
+  padding:12px 14px;
+  background:#fff;
+  border:1px solid #eadfcf;
+  border-radius:11px;
+}
+.aws-exp-answer p{
+  margin:0;
+  font-size:13.4px;
+  line-height:1.65;
+  color:#344054;
+}
+.aws-exp-tech{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin:11px 0 0;
+}
+.aws-exp-chip{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-height:58px;
+  justify-content:center;
+  padding:8px 10px;
+  border:1px solid #DCE6EE;
+  border-radius:9px;
+  background:#F7FAFC;
+}
+.aws-exp-chip b{
+  color:#173F5F;
+  font-size:11.8px;
+}
+.aws-exp-chip span{
+  color:#667085;
+  font-size:10.5px;
+  margin-top:2px;
+}
+@media(max-width:850px){
+  .aws-exp-tech{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+  .aws-exp-tech{grid-template-columns:1fr}
+}
+</style><style id="v42-interview-focused-style">
+#tab1 .local-toc{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.simple-runtime-map{display:flex;align-items:center;gap:8px;overflow:auto;padding:14px 2px}
+.runtime-stage{position:relative;min-width:155px;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px solid #dfe5ee;border-radius:12px;background:#fff;padding:10px 36px 10px 10px;box-shadow:0 4px 12px rgba(16,24,40,.03)}
+.runtime-stage b{display:block;color:#173f5f;font-size:12.5px}.runtime-stage small{display:block;color:#667085;font-size:10.7px;line-height:1.35;margin-top:3px}.runtime-icon{width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:#eef4f8;font-size:19px;margin-bottom:6px}.runtime-arrow{font-size:24px;color:#98a2b3;font-weight:900;text-align:center}.runtime-stage.event{border-top:4px solid #d97706}.runtime-stage.steps{border-top:4px solid #7c3aed}.runtime-stage.dm{border-top:4px solid #2971A8}.runtime-stage.ads{border-top:4px solid #067647}.runtime-stage.upstream{border-top:4px solid #475467}
+.infra-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}.infra-strip span{padding:8px 9px;border:1px solid #dce6ee;border-radius:8px;background:#f7fafc;font-size:11px;color:#667085}.infra-strip b{display:block;color:#173f5f}
+.compact-dm-map{display:flex;align-items:center;justify-content:center;gap:10px;overflow:auto;margin:12px 0 16px;padding:12px;background:#f8fafc;border:1px solid #e1e7ed;border-radius:11px}.dm-source{display:flex;align-items:center;gap:7px}.dm-source>div:not(.plus),.dm-center,.dm-ads>div{min-width:145px;padding:10px;border:1px solid #dce5ed;border-radius:9px;background:#fff;text-align:center}.dm-source b,.dm-center b,.dm-ads b{display:block;color:#173f5f}.dm-source small,.dm-center small,.dm-ads small{display:block;color:#667085;font-size:10.7px;margin-top:2px}.dm-center{border:2px solid #2971A8;background:#f3f9fd;min-width:185px}.dm-ads{display:grid;gap:7px}.plus{font-size:20px;font-weight:900;color:#98a2b3}
+.event-contract-box{margin:13px 0;padding:13px;border:1px solid #d7e4ec;border-radius:11px;background:#fbfdff}.event-title{display:flex;align-items:center;gap:7px;margin-bottom:8px;color:#173f5f}.event-title b{font-size:13px}.event-contract-box pre{margin:0 0 10px!important;font-size:11.3px!important}.event-logic{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:10.8px}.event-logic span{padding:5px 7px;background:#fff;border:1px solid #dce5ed;border-radius:7px;color:#475467}.event-logic b{color:#98a2b3}.event-logic .go{background:#ecfdf3;border-color:#a7e0c4;color:#047857;font-weight:800}
+.last-minute-card{max-width:900px;margin:0 auto!important}.last-minute-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:12px}.last-minute-grid>div{padding:11px;border:1px solid #dfe5ee;border-radius:10px;background:#f8fafc;min-height:112px}.last-minute-grid span{display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:#2971A8;color:#fff;font-size:11px;font-weight:900}.last-minute-grid b{display:block;color:#173f5f;margin-top:8px;font-size:12px}.last-minute-grid small{display:block;color:#667085;font-size:10.8px;line-height:1.4;margin-top:3px}
+#tab1 .aws-exp-tech{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+#tab1 .qa-item{margin:8px 0!important}
+@media(max-width:900px){#tab1 .local-toc{grid-template-columns:repeat(2,minmax(0,1fr))!important}.infra-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.last-minute-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){#tab1 .local-toc,.infra-strip,.last-minute-grid{grid-template-columns:1fr!important}}
+</style><style id="v45-readiness-runtime-compact">
+/* Compact readiness runtime flow — softer palette + per-sentence audio */
+.readiness-runtime-details{
+  margin-top:11px;
+  border:1px solid #d8e3e9;
+  border-radius:11px;
+  background:#fbfcfd;
+  overflow:hidden;
+}
+.readiness-runtime-summary{
+  list-style:none;
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) 24px;
+  gap:9px;
+  align-items:center;
+  padding:9px 11px;
+  cursor:pointer;
+  user-select:none;
+  background:linear-gradient(90deg,#f2f7fa 0%,#fbfcfd 100%);
+}
+.readiness-runtime-summary::-webkit-details-marker{display:none}
+.readiness-runtime-details[open]>.readiness-runtime-summary{
+  border-bottom:1px solid #dce5ea;
+  background:linear-gradient(90deg,#edf5f9 0%,#f8fbfc 100%);
+}
+.rrs-icon{
+  width:32px;height:32px;
+  display:grid;place-items:center;
+  border-radius:9px;
+  background:#e3f0f6;
+  color:#245f85;
+  font-size:16px;
+}
+.rrs-copy{min-width:0;display:grid;gap:2px}
+.rrs-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  min-width:0;
+}
+.rrs-line strong{
+  min-width:0;
+  color:#164968;
+  font-size:12.8px;
+  font-weight:850;
+  line-height:1.25;
+}
+.rrs-line small{
+  min-width:0;
+  color:#6b7b88;
+  font-size:10.2px;
+  line-height:1.25;
+}
+.rrs-chevron{
+  display:grid;place-items:center;
+  color:#4b86a7;
+  font-size:21px;
+  font-weight:900;
+  transition:transform .2s ease;
+}
+.readiness-runtime-details[open] .rrs-chevron{transform:rotate(90deg)}
+
+.readiness-runtime-body{padding:9px 10px 10px}
+.readiness-runtime-toolbar{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:8px;
+  padding:7px 9px;
+  border:1px solid #e1e8ec;
+  border-radius:8px;
+  background:#fff;
+}
+.readiness-runtime-toolbar>div{min-width:0;flex:1}
+.rr-toolbar-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.rr-toolbar-line b{
+  min-width:0;
+  color:#244c64;
+  font-size:11.7px;
+}
+.rr-toolbar-small{margin-top:2px}
+.rr-toolbar-small small{
+  min-width:0;
+  color:#71808b;
+  font-size:9.9px;
+  line-height:1.25;
+}
+
+.readiness-flow-track{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  max-width:650px;
+  margin:0 auto;
+}
+.rf-node{
+  display:grid;
+  grid-template-columns:22px 30px minmax(0,1fr);
+  gap:7px;
+  align-items:center;
+  min-height:49px;
+  padding:6px 8px;
+  border:1px solid #e0e6ea;
+  border-left:3px solid #9aa8b2;
+  border-radius:8px;
+  background:#fff;
+}
+.rf-step-badge{
+  display:grid;place-items:center;
+  width:20px;height:20px;
+  border-radius:6px;
+  background:#f0f3f5;
+  color:#667784;
+  font-size:9px;
+  font-weight:900;
+}
+.rf-main-icon{
+  width:28px;height:28px;
+  display:grid;place-items:center;
+  border-radius:8px;
+  background:#f4f6f8;
+  font-size:14px;
+}
+.rf-copy{min-width:0;display:grid;gap:1px}
+.rf-sentence{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:7px;
+  min-width:0;
+}
+.rf-title-line b{
+  min-width:0;
+  color:#29485c;
+  font-size:10.9px;
+  line-height:1.2;
+}
+.rf-desc-line small{
+  min-width:0;
+  color:#75818a;
+  font-size:9.65px;
+  line-height:1.2;
+}
+.rf-arrow{
+  height:12px;
+  display:grid;
+  place-items:center;
+  color:#a7b2b9;
+  font-size:13px;
+  font-weight:900;
+  line-height:1;
+}
+
+/* Softer category accents */
+.rf-node.upstream{border-left-color:#667784}
+.rf-node.publish{border-left-color:#c98a3e}
+.rf-node.eventbridge{border-left-color:#d69a49}
+.rf-node.steps,.rf-node.state{border-left-color:#8268a8}
+.rf-node.gluecall,.rf-node.dmjob{border-left-color:#4c83a5}
+.rf-node.python,.rf-node.sql{border-left-color:#4a8b82}
+.rf-node.output{
+  border-left-color:#4b8b68;
+  background:#f8fcf9;
+}
+
+/* Tiny sentence-level audio controls */
+.rf-listen{
+  flex:0 0 auto!important;
+  width:22px!important;
+  min-width:22px!important;
+  height:22px!important;
+  padding:0!important;
+  margin:0!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid #c6d5df!important;
+  border-radius:999px!important;
+  background:#f8fbfd!important;
+  color:#3d7293!important;
+  font-size:10px!important;
+  line-height:1!important;
+  box-shadow:none!important;
+}
+.rf-listen:hover{
+  background:#eaf3f8!important;
+  border-color:#9bbcd0!important;
+}
+.rf-listen.speaking{
+  background:#3977a7!important;
+  color:#fff!important;
+  border-color:#3977a7!important;
+}
+
+@media(max-width:620px){
+  .readiness-flow-track{max-width:none}
+  .rf-node{grid-template-columns:20px 28px minmax(0,1fr);gap:6px;padding:6px 7px}
+  .rf-main-icon{width:26px;height:26px;font-size:13px}
+  .rf-title-line b{font-size:10.5px}
+  .rf-desc-line small{font-size:9.4px}
+}
+</style><style id="v46-tab1-clean-compact">
+/* ---------- Tab 1: English-only, sentence-by-sentence ---------- */
+#tab1 .tab1-sentence-list{
+  display:grid;
+  gap:5px;
+  margin:8px 0;
+}
+#tab1 .tab1-sentence-row{
+  display:grid;
+  grid-template-columns:18px minmax(0,1fr) 24px;
+  gap:7px;
+  align-items:center;
+  min-height:31px;
+  padding:5px 7px;
+  border:1px solid #d8e1e7;
+  border-radius:7px;
+  background:#fff;
+}
+#tab1 .tab1-sentence-icon{
+  display:grid;
+  place-items:center;
+  color:#245f85;
+  font-size:11px;
+  font-weight:900;
+}
+#tab1 .tab1-sentence-text{
+  color:#263f50;
+  font-size:11.5px;
+  line-height:1.35;
+}
+#tab1 .tab1-sentence-listen,
+#tab1 .readiness-runtime-details .tab1-sentence-listen{
+  width:22px!important;
+  min-width:22px!important;
+  height:22px!important;
+  padding:0!important;
+  margin:0!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid #9fb9c9!important;
+  border-radius:999px!important;
+  background:#eef5f9!important;
+  color:#245f85!important;
+  font-size:10px!important;
+  box-shadow:none!important;
+}
+#tab1 .tab1-sentence-listen:hover{
+  background:#dcecf4!important;
+  border-color:#6e9db8!important;
+}
+#tab1 .tab1-sentence-listen.speaking{
+  background:#245f85!important;
+  color:#fff!important;
+  border-color:#245f85!important;
+}
+
+/* ---------- Readiness flow: narrower, darker, shorter ---------- */
+#tab1 .readiness-runtime-details{
+  max-width:590px;
+  margin:10px auto 0;
+  border:1px solid #aebfca;
+  background:#f7f9fa;
+}
+#tab1 .readiness-runtime-summary{
+  grid-template-columns:30px minmax(0,1fr) 22px;
+  gap:8px;
+  padding:7px 9px;
+  background:linear-gradient(90deg,#dfeaf0 0%,#f2f6f8 100%);
+}
+#tab1 .readiness-runtime-details[open]>.readiness-runtime-summary{
+  background:linear-gradient(90deg,#d8e6ed 0%,#eef4f7 100%);
+  border-bottom:1px solid #aebfca;
+}
+#tab1 .rrs-icon{
+  width:28px;height:28px;
+  border-radius:7px;
+  background:#c8dde8;
+  color:#173f5f;
+  font-size:14px;
+}
+#tab1 .rrs-line strong{
+  color:#153f58;
+  font-size:12px;
+  font-weight:900;
+}
+#tab1 .rrs-line small{
+  color:#506673;
+  font-size:9.7px;
+}
+#tab1 .rrs-chevron{color:#245f85;font-size:18px}
+#tab1 .readiness-runtime-body{padding:7px 8px 8px}
+#tab1 .readiness-runtime-toolbar{
+  margin-bottom:6px;
+  padding:5px 7px;
+  border-color:#c2cfd7;
+  background:#edf3f6;
+}
+#tab1 .readiness-runtime-toolbar .rr-toolbar-line span{
+  color:#294b60;
+  font-size:10.2px;
+  font-weight:700;
+}
+
+#tab1 .readiness-flow-track{
+  max-width:520px;
+}
+#tab1 .rf-node{
+  grid-template-columns:19px 25px minmax(0,1fr);
+  gap:6px;
+  min-height:40px;
+  padding:4px 6px;
+  border:1px solid #bfcbd2;
+  border-left-width:4px;
+  border-radius:6px;
+  background:#fff;
+}
+#tab1 .rf-step-badge{
+  width:18px;height:18px;
+  border-radius:5px;
+  background:#dfe5e9;
+  color:#405563;
+  font-size:8.5px;
+}
+#tab1 .rf-main-icon{
+  width:23px;height:23px;
+  border-radius:6px;
+  background:#e8edf0;
+  font-size:12px;
+}
+#tab1 .rf-title-line b{
+  color:#193f57;
+  font-size:10.4px;
+  font-weight:850;
+}
+#tab1 .rf-desc-line small{
+  color:#526874;
+  font-size:9.2px;
+}
+#tab1 .rf-arrow{
+  height:8px;
+  color:#718897;
+  font-size:11px;
+}
+#tab1 .rf-node.upstream{border-left-color:#4f6573}
+#tab1 .rf-node.publish{border-left-color:#b66f20}
+#tab1 .rf-node.eventbridge{border-left-color:#d07a17}
+#tab1 .rf-node.steps,#tab1 .rf-node.state{border-left-color:#6e4f9c}
+#tab1 .rf-node.gluecall,#tab1 .rf-node.dmjob{border-left-color:#2e7199}
+#tab1 .rf-node.python,#tab1 .rf-node.sql{border-left-color:#267a70}
+#tab1 .rf-node.output{
+  border-left-color:#2f7a4e;
+  background:#eef8f1;
+}
+
+/* Make the readiness QA area more compact too. */
+#tab1 .readiness-answer-list{gap:4px}
+#tab1 .event-contract-box{
+  max-width:720px;
+  margin-left:auto;
+  margin-right:auto;
+}
+#tab1 .event-contract-box pre{
+  font-size:10.4px!important;
+  padding:10px!important;
+}
+#tab1 .event-logic{
+  gap:4px!important;
+  font-size:9.8px!important;
+}
+#tab1 .event-logic span{padding:4px 6px!important}
+
+/* No Chinese notes in Tab 1. */
+#tab1 .cn{display:none!important}
+
+@media(max-width:650px){
+  #tab1 .readiness-runtime-details{max-width:100%}
+  #tab1 .readiness-flow-track{max-width:100%}
+}
+</style><style id="v47-grouped-runtime-flow">
+/* Group runtime steps 5+6+7 and 8+9+10 without losing information. */
+#tab1 .rf-group{
+  border:1px solid #9fb3bf;
+  border-radius:7px;
+  overflow:hidden;
+  background:#fff;
+}
+#tab1 .rf-group-run{border-left:4px solid #2e7199}
+#tab1 .rf-group-code{border-left:4px solid #267a70}
+
+#tab1 .rf-group-head{
+  display:grid;
+  grid-template-columns:66px minmax(0,1fr) 22px;
+  gap:7px;
+  align-items:center;
+  min-height:31px;
+  padding:4px 6px;
+  background:#e4edf2;
+  border-bottom:1px solid #b7c7d0;
+}
+#tab1 .rf-group-code .rf-group-head{background:#e3efed}
+#tab1 .rf-group-head b{
+  color:#173f5f;
+  font-size:10.7px;
+  font-weight:900;
+}
+#tab1 .rf-group-badge{
+  display:grid;
+  place-items:center;
+  min-height:20px;
+  padding:2px 5px;
+  border-radius:6px;
+  background:#fff;
+  border:1px solid #aebfc9;
+  color:#405563;
+  font-size:8.8px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+#tab1 .rf-group-row{
+  display:grid;
+  grid-template-columns:28px minmax(0,1fr);
+  gap:7px;
+  align-items:center;
+  min-height:42px;
+  padding:4px 6px;
+  border-top:1px dashed #cbd6dc;
+}
+#tab1 .rf-group-row:first-of-type{border-top:0}
+#tab1 .rf-group-icon{
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  border-radius:6px;
+  background:#edf2f5;
+  font-size:12px;
+}
+#tab1 .rf-group-code .rf-group-icon{background:#eaf3f1}
+#tab1 .rf-group-copy{min-width:0}
+#tab1 .rf-group .rf-title-line b{
+  color:#193f57;
+  font-size:10.3px;
+  font-weight:850;
+}
+#tab1 .rf-group .rf-desc-line small{
+  color:#526874;
+  font-size:9.15px;
+}
 </style></head>
 <body>
 <header>
@@ -168,101 +695,89 @@ th,td{padding:8px 9px!important;font-size:12.4px!important}th{background:var(--s
 <nav aria-label="Main tabs" class="tabs">
 <button class="tab-btn active" data-tab="tab1"><span class="tab-no">1</span><span class="tab-label">Project &amp; Architecture</span></button>
 <button class="tab-btn" data-tab="tab2"><span class="tab-no">2</span><span class="tab-label">CloudFormation from Zero</span></button>
-<button class="tab-btn" data-tab="tab3"><span class="tab-no">3</span><span class="tab-label">Interview Q&amp;A</span></button>
+<button class="tab-btn" data-tab="tab3"><span class="tab-no">3</span><span class="tab-label">Last-Minute Review</span></button>
 </nav>
 <main class="tab-panel active" id="tab1">
 <h2 class="page-section-title">1. Project Background &amp; AWS Architecture</h2>
-<nav class="local-toc"><strong>Tab 1 Contents</strong><a href="#t1-story">One-line Story</a><a href="#t1-arch">Architecture</a><a href="#t1-dm">DM Layer</a><a href="#t1-knowledge">Knowledge Map</a><a href="#t1-talk">60-sec Talk</a></nav>
 <section class="card accent" id="t1-story">
 <div class="section-head"><h3>One-line story</h3><button class="listen" data-speak-text="This project is a downstream reservation analytics pipeline. Upstream teams own DWD and DIM, EventBridge receives the data-ready event, Step Functions orchestrates one DM Glue job followed by two parallel ADS Glue jobs, and the curated outputs are stored in S3 and registered in the Glue Data Catalog." title="Listen" type="button">🔊 Listen</button></div>
-<p class="lead">This project is a downstream reservation analytics pipeline. <strong>Upstream teams own DWD and DIM</strong>; EventBridge receives the data-ready event; Step Functions runs <strong>DM first</strong> and then two independent <strong>ADS jobs in parallel</strong>.</p>
-<div class="cn">中文：这是一个下游预约分析管道。上游负责 DWD / DIM；EventBridge 接收“数据就绪”事件；Step Functions 先跑 DM，再并行跑两个 ADS。</div>
-<div class="memory-strip"><b>Remember:</b><span>Upstream ready → EventBridge → Step Functions → DM Glue → Parallel ADS → S3 + Glue Catalog</span></div>
-</section>
-<details class="major" id="t1-arch" open=""><summary><span class="major-icon">🗺️</span><span class="major-copy"><strong>End-to-End Architecture</strong><small>EXPLAIN LEFT TO RIGHT</small></span><span class="chev">›</span><span class="major-badge">01</span></summary><div class="major-body">
-<section class="card">
-<div class="section-head"><h3>Runtime architecture</h3><button class="listen" data-speak-text="The runtime starts only after upstream DWD and DIM are ready. EventBridge matches the event and starts the Step Functions state machine. The state machine waits for the DM Glue job to finish, then starts the campaign and CRM ADS jobs in parallel." title="Listen" type="button">🔊 Listen</button></div>
-<div class="arch-wrap"><div class="arch-grid">
-<div class="arch-box data"><h4>Upstream Data Platform</h4><small>DWD reservation event</small><small>DWD paid order</small><small>DIM campaign</small></div><div class="arch-arrow">→</div>
-<div class="arch-box aws"><h4>Amazon EventBridge</h4><small>Matches source + detail-type</small><small>dwd_ready = true</small><small>dim_ready = true</small></div><div class="arch-arrow">→</div>
-<div class="arch-box aws"><h4>AWS Step Functions</h4><small>Start DM</small><small>Wait synchronously</small><small>Retry / Catch / Fail</small></div><div class="arch-arrow">→</div>
-<div class="arch-box success"><h4>AWS Glue Jobs</h4><div class="mini"><b>1. DM</b>dm_reservation_conversion</div><div style="text-align:center;color:#999">↓</div><div class="parallel"><div class="mini"><b>ADS Campaign</b>conversion metrics</div><div class="mini"><b>ADS CRM</b>reserved-not-paid users</div></div></div>
+<div class="tab1-sentence-list"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">This is a downstream reservation analytics pipeline.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="This is a downstream reservation analytics pipeline." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">Upstream owns the DWD and DIM layers.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Upstream owns the DWD and DIM layers." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">✓</span><span class="tab1-sentence-text">The downstream flow starts only after a data-ready event.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="The downstream flow starts only after a data-ready event." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">◆</span><span class="tab1-sentence-text">It builds one reusable DM and then two ADS outputs.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="It builds one reusable DM and then two ADS outputs." title="Listen" type="button">🔊</button></div></div>
+<div class="memory-strip"><b>Remember:</b><span>Upstream ready → EventBridge → Step Functions → DM → Parallel ADS</span></div>
+</section><nav class="local-toc"><strong>Tab 1 Contents — interview-focused</strong><a href="#t1-aws-experience">AWS Experience</a><a href="#t1-flow">Architecture &amp; Flow</a><a href="#t1-dependency">DM &amp; Dependency</a><a href="#t1-keyqa">Key Interview Q&amp;A</a></nav><section class="card aws-exp-card" id="t1-aws-experience"><div class="section-head"><h3>If asked: “Have you used AWS? What project have you built?”</h3><button aria-label="Listen" class="listen" data-speak-text="Yes. I have hands-on AWS experience mainly in data engineering. I built a reservation analytics pipeline using S3, Glue, Glue Data Catalog, EventBridge and Step Functions. EventBridge starts the workflow after upstream data is ready; Step Functions runs the DM Glue job first and then two ADS jobs in parallel. I use IAM for service permissions and CloudFormation for Infrastructure as Code." title="Listen" type="button">🔊 Listen</button></div><div class="aws-exp-question">Question: Have you used AWS, and can you give me an example of an AWS project you worked on?</div><div class="aws-exp-answer"><div class="tab1-sentence-list aws-exp-sentences"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">Yes. I have hands-on AWS experience mainly in data engineering.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Yes. I have hands-on AWS experience mainly in data engineering." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">I built a reservation analytics pipeline on AWS.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="I built a reservation analytics pipeline on AWS." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">✓</span><span class="tab1-sentence-text">I use S3, Glue and the Glue Data Catalog for data processing and metadata.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="I use S3, Glue and the Glue Data Catalog for data processing and metadata." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">◆</span><span class="tab1-sentence-text">EventBridge starts the workflow after upstream data is ready.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="EventBridge starts the workflow after upstream data is ready." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">▸</span><span class="tab1-sentence-text">Step Functions runs DM first and then two ADS jobs in parallel.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Step Functions runs DM first and then two ADS jobs in parallel." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">○</span><span class="tab1-sentence-text">IAM controls permissions, and CloudFormation provisions the infrastructure.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="IAM controls permissions, and CloudFormation provisions the infrastructure." title="Listen" type="button">🔊</button></div></div></div><div class="aws-exp-tech"><div class="aws-exp-chip"><b>S3</b><span>storage</span></div><div class="aws-exp-chip"><b>Glue / PySpark / SQL</b><span>ETL</span></div><div class="aws-exp-chip"><b>Glue Data Catalog</b><span>metadata</span></div><div class="aws-exp-chip"><b>EventBridge</b><span>event trigger</span></div><div class="aws-exp-chip"><b>Step Functions</b><span>orchestration</span></div><div class="aws-exp-chip"><b>IAM</b><span>security</span></div><div class="aws-exp-chip"><b>CloudFormation</b><span>IaC</span></div></div><div class="memory-strip"><b>Memory line:</b><span>S3 / Catalog → EventBridge → Step Functions → Glue DM → Parallel ADS · CloudFormation provisions it.</span></div></section><details class="major" id="t1-flow" open=""><summary><span class="major-icon">🗺️</span><span class="major-copy"><strong>Architecture &amp; Runtime Flow</strong><small>INTERVIEW FOCUS</small></span><span class="chev">›</span><span class="major-badge">01</span></summary><div class="major-body"><section class="card"><div class="section-head"><h3>End-to-End Flow — explain from left to right</h3><button aria-label="Listen" class="listen" data-speak-text="The upstream platform owns DWD and DIM. When the data-ready event arrives, EventBridge starts Step Functions. Step Functions runs the DM Glue job synchronously, then starts the two independent ADS Glue jobs in parallel." title="Listen" type="button">🔊 Listen</button></div>
+<div class="simple-runtime-map">
+<div class="runtime-stage upstream">
+<div class="runtime-icon">🗃️</div>
+<b>Upstream DWD / DIM</b>
+<small>dwd_reservation_event<br/>dwd_paid_order<br/>dim_campaign</small>
 </div>
-<div class="platform-shell"><div>CloudFormation provisions the infrastructure around the runtime</div><div class="grid-3"><div class="mini"><b>IAM</b>Glue execution role<br/>Step Functions role<br/>EventBridge role</div><div class="mini"><b>Storage &amp; Metadata</b>S3 curated paths<br/>Glue databases<br/>Glue external tables</div><div class="mini"><b>IaC</b>Parameters<br/>Resources<br/>Outputs</div></div></div></div>
-<div class="callout blue"><b>Key distinction</b>CloudFormation does not run the business transformation. It creates the AWS resources. Glue executes the ETL, SQL holds the business logic, Step Functions controls the order, and EventBridge decides when the workflow starts.</div>
-</section>
-<section class="card service-system-card">
-<div class="section-head"><h3>AWS Service System Map — understand the layers, not isolated names</h3><button class="listen" data-speak-text="I group the solution into three layers. CloudFormation and IAM form the provisioning and security layer. EventBridge and Step Functions form the runtime orchestration layer. Glue, S3 and the Glue Data Catalog form the execution, storage and metadata layer." type="button">🔊 Listen</button></div>
-<div class="system-lanes">
-<div class="system-lane control-lane">
-<div class="lane-label"><span>CONTROL</span><b>Provisioning &amp; Security</b></div>
-<div class="lane-services">
-<div class="service-card"><div aria-hidden="true" class="svc-icon"><svg aria-label="CloudFormation" role="img" viewbox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><path d="M12 13l12-7 12 7v14l-12 7-12-7z"></path><path d="M12 13l12 7 12-7M24 20v14"></path><path d="M8 32h8M32 32h8"></path></g></svg></div><div><b>CloudFormation</b><small>Creates the AWS resources as a stack.</small></div></div>
-<div class="service-card"><div aria-hidden="true" class="svc-icon"><svg aria-label="IAM" role="img" viewbox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><path d="M24 6l14 5v10c0 10-6 17-14 21-8-4-14-11-14-21V11z"></path><circle cx="24" cy="19" r="4"></circle><path d="M17 31c2-5 12-5 14 0"></path></g></svg></div><div><b>IAM</b><small>Defines service identities and permissions.</small></div></div>
+<div class="runtime-arrow">→</div>
+<div class="runtime-stage event">
+<div class="runtime-icon">⚡</div>
+<b>EventBridge</b>
+<small>matches data-ready event</small>
 </div>
+<div class="runtime-arrow">→</div>
+<div class="runtime-stage steps">
+<div class="runtime-icon">🔁</div>
+<b>Step Functions</b>
+<small>sequence · sync · retry · parallel</small>
 </div>
-<div class="lane-down">↓</div>
-<div class="system-lane orchestration-lane">
-<div class="lane-label"><span>RUNTIME</span><b>Trigger &amp; Orchestration</b></div>
-<div class="lane-services">
-<div class="service-card"><div aria-hidden="true" class="svc-icon"><svg aria-label="EventBridge" role="img" viewbox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><circle cx="24" cy="24" r="5"></circle><circle cx="9" cy="12" r="3"></circle><circle cx="39" cy="11" r="3"></circle><circle cx="39" cy="37" r="3"></circle><path d="M13 14l7 7M35 14l-7 7M35 34l-7-7"></path></g></svg></div><div><b>EventBridge</b><small>Decides when the downstream flow starts.</small></div></div>
-<div class="system-arrow">→</div>
-<div class="service-card"><div aria-hidden="true" class="svc-icon"><svg aria-label="Step Functions" role="img" viewbox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><rect height="10" rx="2" width="10" x="7" y="7"></rect><rect height="10" rx="2" width="10" x="31" y="7"></rect><rect height="10" rx="2" width="10" x="19" y="31"></rect><path d="M17 12h14M36 17L27 31M12 17l9 14"></path></g></svg></div><div><b>Step Functions</b><small>Controls DM → parallel ADS order, retry and failure.</small></div></div>
+<div class="runtime-arrow">→</div>
+<div class="runtime-stage dm">
+<div class="runtime-icon">🧠</div>
+<b>DM Glue Job</b>
+<small>dm_reservation_conversion</small>
 </div>
-</div>
-<div class="lane-down">↓</div>
-<div class="system-lane data-lane">
-<div class="lane-label"><span>DATA</span><b>Execution, Storage &amp; Metadata</b></div>
-<div class="lane-services three">
-<div class="service-card"><div aria-hidden="true" class="svc-icon"><svg aria-label="AWS Glue" role="img" viewbox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><path d="M11 15h26v18H11z"></path><path d="M17 10v5M31 10v5M17 33v5M31 33v5"></path><circle cx="17" cy="24" r="3"></circle><circle cx="31" cy="24" r="3"></circle><path d="M20 24h8"></path></g></svg></div><div><b>AWS Glue</b><small>Runs the PySpark / SQL transformation.</small></div></div>
-<div class="service-card"><div aria-hidden="true" class="svc-icon"><svg aria-label="Amazon S3" role="img" viewbox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><ellipse cx="24" cy="11" rx="14" ry="6"></ellipse><path d="M10 11v24c0 3 6 6 14 6s14-3 14-6V11"></path><path d="M10 23c0 3 6 6 14 6s14-3 14-6"></path></g></svg></div><div><b>Amazon S3</b><small>Stores code and curated Parquet data.</small></div></div>
-<div class="service-card"><div aria-hidden="true" class="svc-icon"><svg aria-label="Glue Data Catalog" role="img" viewbox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"><path d="M9 11h30v27H9z"></path><path d="M15 17h18M15 23h18M15 29h12"></path><circle cx="34" cy="29" r="2"></circle></g></svg></div><div><b>Glue Data Catalog</b><small>Stores schemas and S3 locations, not the data itself.</small></div></div>
+<div class="runtime-arrow">→</div>
+<div class="runtime-stage ads">
+<div class="runtime-icon">📊</div>
+<b>Parallel ADS</b>
+<small>Campaign Conversion<br/>CRM Reserved-not-paid</small>
 </div>
 </div>
+<div class="infra-strip">
+<span><b>S3</b> actual data</span>
+<span><b>Glue Catalog</b> metadata</span>
+<span><b>IAM</b> permissions</span>
+<span><b>CloudFormation</b> provisioning</span>
 </div>
-<div class="system-equation"><span>CloudFormation</span><b>creates</b><span>Resources</span><b>→</b><span>EventBridge</span><b>triggers</b><span>Step Functions</span><b>orchestrates</b><span>Glue</span><b>writes</b><span>S3</span></div>
-</section>
-</div></details>
-<details class="major" id="t1-dm" open=""><summary><span class="major-icon">🧱</span><span class="major-copy"><strong>DM Layer — why it exists</strong><small>DATA WAREHOUSE KNOWLEDGE</small></span><span class="chev">›</span><span class="major-badge">02</span></summary><div class="major-body">
-<section class="card layer-visual-card">
-<div class="section-head"><h3>Data Layer Map — where DM fits</h3><button class="listen" data-speak-text="DWD keeps detailed facts, DIM adds descriptive context, DM centralizes reusable reservation conversion logic, and ADS serves final analytics and CRM consumers." type="button">🔊 Listen</button></div>
-<div class="layer-map">
-<div class="layer-source-wrap">
-<div class="layer-node dwd"><span class="layer-icon">🧾</span><b>DWD Facts</b><small>dwd_reservation_event<br/>dwd_paid_order</small></div>
-<div class="plus-sign">+</div>
-<div class="layer-node dim"><span class="layer-icon">🏷️</span><b>DIM Context</b><small>dim_campaign</small></div>
+<div class="callout blue"><b>Component roles</b> EventBridge = when to start · Step Functions = execution order · Glue = ETL runtime · SQL = business logic · S3 = data · Glue Catalog = metadata · IAM = access · CloudFormation = IaC.</div></section></div></details><details class="major" id="t1-dependency" open=""><summary><span class="major-icon">🧱</span><span class="major-copy"><strong>DM &amp; Upstream Dependency — the most important follow-up</strong><small>INTERVIEW FOCUS</small></span><span class="chev">›</span><span class="major-badge">02</span></summary><div class="major-body"><section class="card"><div class="section-head"><h3>Where DM fits</h3><button aria-label="Listen" class="listen" data-speak-text="DM is the reusable business layer. It combines reservation events, paid orders and campaign dimensions once, standardizes the conversion logic, and lets both ADS outputs reuse the same definition." title="Listen" type="button">🔊 Listen</button></div>
+<div class="compact-dm-map">
+<div class="dm-source">
+<div><b>DWD</b><small>reservation + paid order</small></div>
+<div class="plus">+</div>
+<div><b>DIM</b><small>campaign context</small></div>
 </div>
-<div class="big-arrow">→</div>
-<div class="layer-node dm-focus"><span class="layer-icon">🧠</span><b>DM</b><small>dm_reservation_conversion</small><em>shared conversion rules</em></div>
-<div class="big-arrow">→</div>
-<div class="ads-split">
-<div class="layer-node ads"><span class="layer-icon">📊</span><b>ADS Campaign</b><small>aggregated conversion metrics</small></div>
-<div class="layer-node ads"><span class="layer-icon">🎯</span><b>ADS CRM</b><small>reserved-not-paid users</small></div>
+<div class="runtime-arrow">→</div>
+<div class="dm-center"><b>DM</b><small>shared reservation-conversion logic</small></div>
+<div class="runtime-arrow">→</div>
+<div class="dm-ads">
+<div><b>ADS Campaign</b><small>aggregated metrics</small></div>
+<div><b>ADS CRM</b><small>user-level targets</small></div>
 </div>
 </div>
-</section>
-<section class="card green-accent">
-<div class="section-head"><h3>DM = reusable business layer</h3><button class="listen" data-speak-text="The DM layer centralizes the reservation-to-payment conversion logic. It combines reservation events, paid orders and campaign dimensions, then exposes reusable flags and conversion attributes so downstream ADS tables do not duplicate the same joins and business rules." title="Listen" type="button">🔊 Listen</button></div>
-<div class="layer-line"><div class="layer-name">DWD</div><div class="layer-desc"><b>Detailed facts.</b> Reservation events and paid orders are detailed, cleaned business records.</div></div>
-<div class="layer-line"><div class="layer-name">DIM</div><div class="layer-desc"><b>Descriptive context.</b> Campaign dimension adds attributes used for analysis and segmentation.</div></div>
-<div class="layer-line"><div class="layer-name">DM</div><div class="layer-desc"><b>Reusable subject logic.</b> `dm_reservation_conversion` combines the facts and dimension and standardizes reserve / order / reserved-not-paid logic.</div></div>
-<div class="layer-line"><div class="layer-name">ADS</div><div class="layer-desc"><b>Consumption outputs.</b> Campaign ADS aggregates metrics; CRM ADS keeps user-level targets.</div></div>
-<div class="callout green"><b>Interview reason for DM</b>Do not let every ADS repeat the same join and conversion definition. Centralizing shared business logic improves consistency, reuse and maintainability.</div>
-</section></div></details>
-<details class="major" id="t1-knowledge"><summary><span class="major-icon">🧠</span><span class="major-copy"><strong>Knowledge Map</strong><small>WHAT THIS DEMO TESTS</small></span><span class="chev">›</span><span class="major-badge">03</span></summary><div class="major-body"><section class="card"><div class="grid-3">
-<div class="concept"><div class="kicker">Data Warehousing</div><h4>DWD / DIM / DM / ADS</h4><p>Layer responsibilities, shared business definitions, reusable marts, aggregated vs user-level outputs.</p></div>
-<div class="concept"><div class="kicker">Orchestration</div><h4>Step Functions</h4><p>Task sequence, `.sync`, Parallel, Retry, Catch, Succeed and Fail states.</p></div>
-<div class="concept"><div class="kicker">Event Driven</div><h4>EventBridge</h4><p>Start downstream processing when upstream data is actually ready instead of relying only on clock time.</p></div>
-<div class="concept"><div class="kicker">ETL Runtime</div><h4>AWS Glue</h4><p>Generic PySpark/SQL runner, Glue Job arguments, workers, timeout and job observability.</p></div>
-<div class="concept"><div class="kicker">Metadata</div><h4>Glue Data Catalog</h4><p>Database and external-table metadata point to Parquet data physically stored in S3.</p></div>
-<div class="concept"><div class="kicker">Security</div><h4>IAM</h4><p>Service role, trust policy, permissions policy, actions, resources and least-privilege thinking.</p></div>
-<div class="concept"><div class="kicker">Infrastructure as Code</div><h4>CloudFormation</h4><p>Parameters, Resources, Outputs, `!Ref`, `!Sub`, `!GetAtt`, dependencies and repeatable deployment.</p></div>
-<div class="concept"><div class="kicker">Storage</div><h4>S3 + Parquet</h4><p>Object storage for scripts and curated data; columnar Parquet for analytical workloads.</p></div>
-<div class="concept"><div class="kicker">Platform Design</div><h4>Ownership</h4><p>Data engineers own data logic; platform/SRE owns reusable orchestration, IAM, logging and deployment standards.</p></div>
-</div></section></div></details>
-<details class="major" id="t1-talk"><summary><span class="major-icon">🎤</span><span class="major-copy"><strong>60-second walkthrough</strong><small>MEMORISE THIS</small></span><span class="chev">›</span><span class="major-badge">04</span></summary><div class="major-body"><section class="card">
-<div class="sentence"><div class="sentence-row"><p>This project is a downstream reservation analytics pipeline built on AWS.</p><button class="listen" data-speak-text="This project is a downstream reservation analytics pipeline built on AWS." title="Listen" type="button">🔊 Listen</button></div><div class="cn">中文：这个项目是 AWS 上的下游预约分析管道。</div></div><div class="sentence"><div class="sentence-row"><p>The upstream platform owns DWD and DIM, and it publishes a data-ready event when those datasets are complete.</p><button class="listen" data-speak-text="The upstream platform owns DWD and DIM, and it publishes a data-ready event when those datasets are complete." title="Listen" type="button">🔊 Listen</button></div><div class="cn">中文：上游平台负责 DWD / DIM，并在数据就绪时发布事件。</div></div><div class="sentence"><div class="sentence-row"><p>EventBridge matches that event and starts a Step Functions state machine.</p><button class="listen" data-speak-text="EventBridge matches that event and starts a Step Functions state machine." title="Listen" type="button">🔊 Listen</button></div><div class="cn">中文：EventBridge 匹配事件并启动 Step Functions。</div></div><div class="sentence"><div class="sentence-row"><p>Step Functions runs the DM Glue job first and waits for it to complete, because both ADS datasets depend on the DM output.</p><button class="listen" data-speak-text="Step Functions runs the DM Glue job first and waits for it to complete, because both ADS datasets depend on the DM output." title="Listen" type="button">🔊 Listen</button></div><div class="cn">中文：先跑 DM 并等待完成，因为两个 ADS 都依赖它。</div></div><div class="sentence"><div class="sentence-row"><p>After DM succeeds, the campaign ADS and CRM ADS jobs run in parallel because they are independent downstream consumers.</p><button class="listen" data-speak-text="After DM succeeds, the campaign ADS and CRM ADS jobs run in parallel because they are independent downstream consumers." title="Listen" type="button">🔊 Listen</button></div><div class="cn">中文：DM 成功后两个 ADS 独立，因此并行。</div></div><div class="sentence"><div class="sentence-row"><p>CloudFormation provisions the Glue resources, IAM roles, state machine and EventBridge rule so the environment is repeatable and auditable.</p><button class="listen" data-speak-text="CloudFormation provisions the Glue resources, IAM roles, state machine and EventBridge rule so the environment is repeatable and auditable." title="Listen" type="button">🔊 Listen</button></div><div class="cn">中文：CloudFormation 用代码统一创建 Glue、IAM、状态机和 EventBridge。</div></div>
-</section></div></details>
+<div class="qa-item"><div class="qa-top"><div><b>Why do you need a DM layer?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="Why do you need a DM layer? Because the reservation-to-payment logic is shared by multiple downstream use cases. I calculate it once in DM so both ADS outputs reuse the same joins, flags and business definition." title="Listen" type="button">🔊 Listen</button></div><div class="tab1-sentence-list qa-sentence-list"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">The reservation-to-payment logic is shared by multiple downstream use cases.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="The reservation-to-payment logic is shared by multiple downstream use cases." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">I calculate the logic once in DM.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="I calculate the logic once in DM." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">✓</span><span class="tab1-sentence-text">Both ADS outputs reuse the same joins, flags and business definition.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Both ADS outputs reuse the same joins, flags and business definition." title="Listen" type="button">🔊</button></div></div></div><div class="qa-item"><div class="qa-top"><div><b>How do you know DWD and DIM are ready before starting DM?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="How do you know DWD and DIM are ready before starting DM? In this demo, the downstream pipeline does not poll S3 to guess whether upstream data is ready. The dependency is an event contract. The upstream platform owns DWD and DIM and publishes a readiness event only after it considers both datasets complete. EventBridge accepts the event only when status is SUCCEEDED, dwd_ready is true, and dim_ready is true. Only then does it start the Step Functions state machine. The event also carries business_date, which is passed to the Glue jobs. In production, I would make the upstream readiness check stricter by validating the required DWD and DIM partitions for the same business date and completing data-quality or reconciliation checks before publishing the event." title="Listen" type="button">🔊 Listen</button></div><div class="tab1-sentence-list readiness-answer-list"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">The downstream flow does not poll S3 for readiness.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="The downstream flow does not poll S3 for readiness." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">The upstream platform owns DWD and DIM.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="The upstream platform owns DWD and DIM." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">✓</span><span class="tab1-sentence-text">It publishes a readiness event only after both datasets are complete.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="It publishes a readiness event only after both datasets are complete." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">◆</span><span class="tab1-sentence-text">EventBridge requires status = SUCCEEDED, dwd_ready = true, and dim_ready = true.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="EventBridge requires status = SUCCEEDED, dwd_ready = true, and dim_ready = true." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">▸</span><span class="tab1-sentence-text">The event carries the business_date into Step Functions and Glue.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="The event carries the business_date into Step Functions and Glue." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">○</span><span class="tab1-sentence-text">In production, I would publish the event only after same-date partitions and data-quality checks pass.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="In production, I would publish the event only after same-date partitions and data-quality checks pass." title="Listen" type="button">🔊</button></div></div></div>
+<div class="event-contract-box">
+<div class="event-title"><span>📨</span><b>Readiness event contract</b></div>
+<pre><code>{
+  "source": "data-platform.upstream",
+  "detail-type": "Reservation DWD Data Ready",
+  "detail": {
+    "status": "SUCCEEDED",
+    "dwd_ready": true,
+    "dim_ready": true,
+    "business_date": "2026-08-05"
+  }
+}</code></pre>
+<div class="event-logic">
+<span>status = SUCCEEDED</span><b>AND</b>
+<span>dwd_ready = true</span><b>AND</b>
+<span>dim_ready = true</span><b>→</b>
+<span class="go">Start Step Functions</span>
+</div>
+<details class="readiness-runtime-details"><summary class="readiness-runtime-summary"><span class="rrs-icon">🔗</span><span class="rrs-copy"><span class="rrs-line"><strong>Runtime Call Chain — Ready Event to DM</strong><button aria-label="Listen" class="listen rf-listen compact-rf-listen" data-speak-text="Runtime Call Chain — Ready Event to DM" title="Listen" type="button">🔊</button></span><span class="rrs-line rrs-small-line"><small>Expand to see how the DM job starts.</small><button aria-label="Listen" class="listen rf-listen compact-rf-listen" data-speak-text="Expand to see how the DM job starts." title="Listen" type="button">🔊</button></span></span><span class="rrs-chevron">›</span></summary><div class="readiness-runtime-body"><div class="readiness-runtime-toolbar"><div class="rr-toolbar-line"><span>Follow the call chain from the ready event to the DM output.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Follow the call chain from the ready event to the DM output." title="Listen" type="button">🔊</button></div></div><div class="readiness-flow-track"><div class="rf-node upstream"><span class="rf-step-badge">1</span><span class="rf-main-icon">🗃️</span><div class="rf-copy"><div class="rf-sentence rf-title-line"><b>DWD + DIM Ready</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="DWD + DIM Ready" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>Upstream confirms both datasets.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Upstream confirms both datasets." title="Listen" type="button">🔊</button></div></div></div><div class="rf-arrow">↓</div><div class="rf-node publish"><span class="rf-step-badge">2</span><span class="rf-main-icon">📨</span><div class="rf-copy"><div class="rf-sentence rf-title-line"><b>Publish Ready Event</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Publish Ready Event" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>Upstream publishes one event.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Upstream publishes one event." title="Listen" type="button">🔊</button></div></div></div><div class="rf-arrow">↓</div><div class="rf-node eventbridge"><span class="rf-step-badge">3</span><span class="rf-main-icon">⚡</span><div class="rf-copy"><div class="rf-sentence rf-title-line"><b>EventBridge</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="EventBridge" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>Matches the event pattern.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Matches the event pattern." title="Listen" type="button">🔊</button></div></div></div><div class="rf-arrow">↓</div><div class="rf-node steps"><span class="rf-step-badge">4</span><span class="rf-main-icon">🔁</span><div class="rf-copy"><div class="rf-sentence rf-title-line"><b>Step Functions</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Step Functions" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>Starts the state machine.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Starts the state machine." title="Listen" type="button">🔊</button></div></div></div><div class="rf-arrow">↓</div><div class="rf-group rf-group-run"><div class="rf-group-head"><span class="rf-group-badge">5 + 6 + 7</span><b>Run the DM Glue Job</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Run the DM Glue Job" title="Listen" type="button">🔊</button></div><div class="rf-group-row"><span class="rf-group-icon">▶️</span><div class="rf-group-copy"><div class="rf-sentence rf-title-line"><b>Run DM Conversion</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Run DM Conversion" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>The first state is the DM task.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="The first state is the DM task." title="Listen" type="button">🔊</button></div></div></div><div class="rf-group-row"><span class="rf-group-icon">🧩</span><div class="rf-group-copy"><div class="rf-sentence rf-title-line"><b>startJobRun.sync</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="startJobRun.sync" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>Step Functions starts Glue and waits for completion.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Step Functions starts Glue and waits for completion." title="Listen" type="button">🔊</button></div></div></div><div class="rf-group-row"><span class="rf-group-icon">🛠️</span><div class="rf-group-copy"><div class="rf-sentence rf-title-line"><b>DmConversionJob</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="DmConversionJob" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>The configured DM Glue Job is invoked.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="The configured DM Glue Job is invoked." title="Listen" type="button">🔊</button></div></div></div></div><div class="rf-arrow">↓</div><div class="rf-group rf-group-code"><div class="rf-group-head"><span class="rf-group-badge">8 + 9 + 10</span><b>Execute the DM Transformation</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Execute the DM Transformation" title="Listen" type="button">🔊</button></div><div class="rf-group-row"><span class="rf-group-icon">🐍</span><div class="rf-group-copy"><div class="rf-sentence rf-title-line"><b>Python Runner</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Python Runner" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>Loads run_single_sql_job.py from S3.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Loads run_single_sql_job.py from S3." title="Listen" type="button">🔊</button></div></div></div><div class="rf-group-row"><span class="rf-group-icon">🧾</span><div class="rf-group-copy"><div class="rf-sentence rf-title-line"><b>DM SQL</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="DM SQL" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>Runs 30_dm_reservation_conversion.sql.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Runs 30_dm_reservation_conversion.sql." title="Listen" type="button">🔊</button></div></div></div><div class="rf-group-row"><span class="rf-group-icon">✅</span><div class="rf-group-copy"><div class="rf-sentence rf-title-line"><b>DM Output</b><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="DM Output" title="Listen" type="button">🔊</button></div><div class="rf-sentence rf-desc-line"><small>Writes dm_reservation_conversion.</small><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Writes dm_reservation_conversion." title="Listen" type="button">🔊</button></div></div></div></div></div></div></details>
+</div>
+<div class="callout orange"><b>Important accuracy point</b> The EventBridge rule only checks the event fields. The current downstream template does not itself prove that S3 partitions are complete; that responsibility belongs to the upstream publisher. For a production design, readiness should mean “same business_date + required partitions + DQ passed”.</div></section></div></details><details class="major" id="t1-keyqa"><summary><span class="major-icon">🎤</span><span class="major-copy"><strong>Key Interview Q&amp;A &amp; 60-second Talk</strong><small>INTERVIEW FOCUS</small></span><span class="chev">›</span><span class="major-badge">03</span></summary><div class="major-body"><section class="card"><div class="section-head"><h3>60-second project explanation</h3><button aria-label="Listen" class="listen" data-speak-text="This is a downstream reservation analytics pipeline on AWS. Upstream DWD and DIM publish a data-ready event. EventBridge starts Step Functions, which runs the DM Glue job synchronously and then runs two independent ADS jobs in parallel. S3 stores the data, the Glue Data Catalog stores metadata, IAM controls service permissions, and CloudFormation provisions the AWS resources." title="Listen" type="button">🔊 Listen</button></div><div class="tab1-sentence-list talk-sentence-list"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">This is a downstream reservation analytics pipeline on AWS.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="This is a downstream reservation analytics pipeline on AWS." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">Upstream publishes a data-ready event after DWD and DIM are ready.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Upstream publishes a data-ready event after DWD and DIM are ready." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">✓</span><span class="tab1-sentence-text">EventBridge starts the Step Functions state machine.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="EventBridge starts the Step Functions state machine." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">◆</span><span class="tab1-sentence-text">Step Functions runs the DM Glue job first.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Step Functions runs the DM Glue job first." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">▸</span><span class="tab1-sentence-text">After DM succeeds, two ADS Glue jobs run in parallel.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="After DM succeeds, two ADS Glue jobs run in parallel." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">○</span><span class="tab1-sentence-text">S3 stores data, the Glue Data Catalog stores metadata, IAM controls permissions, and CloudFormation provisions the resources.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="S3 stores data, the Glue Data Catalog stores metadata, IAM controls permissions, and CloudFormation provisions the resources." title="Listen" type="button">🔊</button></div></div><div class="qa-item"><div class="qa-top"><div><b>What is CloudFormation?</b><span class="qa-tag">CORE</span></div><button aria-label="Listen" class="listen" data-speak-text="What is CloudFormation? CloudFormation is AWS Infrastructure as Code. I declare AWS resources in a template and deploy them together as a stack." title="Listen" type="button">🔊 Listen</button></div><div class="tab1-sentence-list qa-sentence-list"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">CloudFormation is AWS Infrastructure as Code.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="CloudFormation is AWS Infrastructure as Code." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">I declare AWS resources in a template and deploy them together as a stack.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="I declare AWS resources in a template and deploy them together as a stack." title="Listen" type="button">🔊</button></div></div></div><div class="qa-item"><div class="qa-top"><div><b>Does CloudFormation run the ETL?</b><span class="qa-tag">TRAP</span></div><button aria-label="Listen" class="listen" data-speak-text="Does CloudFormation run the ETL? No. CloudFormation provisions the Glue Job and supporting resources. Glue executes the transformation, while SQL contains the business logic." title="Listen" type="button">🔊 Listen</button></div><div class="tab1-sentence-list qa-sentence-list"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">No.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="No." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">CloudFormation provisions the Glue Job and supporting resources.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="CloudFormation provisions the Glue Job and supporting resources." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">✓</span><span class="tab1-sentence-text">Glue executes the transformation, while SQL contains the business logic.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Glue executes the transformation, while SQL contains the business logic." title="Listen" type="button">🔊</button></div></div></div><div class="qa-item"><div class="qa-top"><div><b>Why Step Functions instead of Lambda for orchestration?</b><span class="qa-tag">CORE</span></div><button aria-label="Listen" class="listen" data-speak-text="Why Step Functions instead of Lambda for orchestration? Step Functions makes sequence, synchronous waiting, parallel branches, retry and failure paths explicit. Lambda is better for custom code." title="Listen" type="button">🔊 Listen</button></div><div class="tab1-sentence-list qa-sentence-list"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">Step Functions makes sequence, synchronous waiting, parallel branches, retry and failure paths explicit.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Step Functions makes sequence, synchronous waiting, parallel branches, retry and failure paths explicit." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">Lambda is better for custom code.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Lambda is better for custom code." title="Listen" type="button">🔊</button></div></div></div><div class="qa-item"><div class="qa-top"><div><b>Why are the two ADS jobs parallel?</b><span class="qa-tag">CORE</span></div><button aria-label="Listen" class="listen" data-speak-text="Why are the two ADS jobs parallel? Both depend on DM, but they do not depend on each other. Once DM succeeds, parallel execution reduces end-to-end latency." title="Listen" type="button">🔊 Listen</button></div><div class="tab1-sentence-list qa-sentence-list"><div class="tab1-sentence-row"><span class="tab1-sentence-icon">•</span><span class="tab1-sentence-text">Both depend on DM, but they do not depend on each other.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Both depend on DM, but they do not depend on each other." title="Listen" type="button">🔊</button></div><div class="tab1-sentence-row"><span class="tab1-sentence-icon">→</span><span class="tab1-sentence-text">Once DM succeeds, parallel execution reduces end-to-end latency.</span><button aria-label="Listen" class="listen tab1-sentence-listen" data-speak-text="Once DM succeeds, parallel execution reduces end-to-end latency." title="Listen" type="button">🔊</button></div></div></div><div class="qa-item"><div class="qa-top"><div><b>Why separate IAM roles?</b><span class="qa-tag">CORE</span></div><button aria-label="Listen" class="listen" data-speak-text="Why separate IAM roles? EventBridge, Step Functions and Glue have different responsibilities, so separate roles let me apply least privilege to each service." title="Listen" type="button">🔊 Listen</button></div><p>EventBridge, Step Functions and Glue have different responsibilities, so separate roles let me apply least privilege to each service.</p></div></section></div></details>
 </main>
 <main class="tab-panel" id="tab2">
 <h2 class="page-section-title">2. CloudFormation — From Zero to This DM Pipeline</h2>
@@ -367,35 +882,16 @@ Outputs:
 </div></section></div></details>
 </main>
 <main class="tab-panel" id="tab3">
-<h2 class="page-section-title">3. Interview Q&amp;A — Explain the Design, Not Just the Services</h2>
-
-
-
-
-
-
-
-<section class="card accent one-day-card"><div class="section-head"><h3>One-day review plan — only 11 questions</h3><button aria-label="Listen" class="listen" data-speak-text="For a one-day review, focus on eleven questions only. First understand why the DM layer exists, then learn the CloudFormation mental model, then the runtime orchestration, and finally the IAM role model." title="Listen" type="button">🔊 Listen</button></div><p class="lead">Do not try to memorize every AWS detail. Be able to explain the pipeline from left to right and answer the 11 questions below clearly.</p><div class="memory-strip"><b>Priority:</b><span>DM → CloudFormation → EventBridge / Step Functions / Glue → IAM</span></div></section><nav class="local-toc"><strong>Tab 3 Contents — only the essentials</strong><a href="#qa-core-dm">1 · DM &amp; ADS</a><a href="#qa-core-cf">2 · CloudFormation</a><a href="#qa-core-orch">3 · Runtime Orchestration</a><a href="#qa-core-iam">4 · IAM &amp; Failure</a></nav><details class="major qa-major" id="qa-core-dm" open=""><summary><span class="major-icon">🧱</span><span class="major-copy"><strong>DM &amp; ADS — 2 questions</strong><small>ONE-DAY PRIORITY</small></span><span class="chev">›</span><span class="major-badge">01</span></summary><div class="major-body"><section class="card qa-card"><div class="qa-item"><div class="qa-top"><div><b>Why do you need a DM layer instead of letting ADS join DWD directly?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="Why do you need a DM layer instead of letting ADS join DWD directly? The reservation-to-payment logic is shared by multiple downstream use cases. I centralize that logic in DM so the campaign and CRM ADS tables reuse the same business definition instead of duplicating joins and rules." title="Listen" type="button">🔊 Listen</button></div><p>The reservation-to-payment logic is shared by multiple downstream use cases. I centralize that logic in DM so the campaign and CRM ADS tables reuse the same business definition instead of duplicating joins and rules.</p><div class="cn">中文：预约到支付的逻辑是多个下游共用的，所以放在 DM 统一计算，避免不同 ADS 重复 Join 和口径不一致。</div></div><div class="qa-item"><div class="qa-top"><div><b>What is the difference between DM and ADS in this demo?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="What is the difference between DM and ADS in this demo? DM is the reusable business layer. It combines reservation facts, paid-order facts and campaign dimensions. ADS is the consumption layer: one table aggregates campaign conversion metrics and the other keeps user-level reserved-not-paid targets for CRM." title="Listen" type="button">🔊 Listen</button></div><p>DM is the reusable business layer. It combines reservation facts, paid-order facts and campaign dimensions. ADS is the consumption layer: one table aggregates campaign conversion metrics and the other keeps user-level reserved-not-paid targets for CRM.</p><div class="cn">中文：DM 是复用业务层；ADS 是最终消费层。一个做活动聚合，一个做 CRM 用户明细。</div></div></section></div></details><details class="major qa-major" id="qa-core-cf"><summary><span class="major-icon">☁️</span><span class="major-copy"><strong>CloudFormation — 4 questions</strong><small>ONE-DAY PRIORITY</small></span><span class="chev">›</span><span class="major-badge">02</span></summary><div class="major-body"><section class="card qa-card"><div class="qa-item"><div class="qa-top"><div><b>What is CloudFormation?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="What is CloudFormation? CloudFormation is AWS Infrastructure as Code. I declare the desired AWS resources in a template, and CloudFormation creates and manages them together as a stack." title="Listen" type="button">🔊 Listen</button></div><p>CloudFormation is AWS Infrastructure as Code. I declare the desired AWS resources in a template, and CloudFormation creates and manages them together as a stack.</p><div class="cn">中文：CloudFormation 是 AWS 的 IaC，用模板声明资源，并以 Stack 的方式创建和管理。</div></div><div class="qa-item"><div class="qa-top"><div><b>What are Parameters, Resources and Outputs?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="What are Parameters, Resources and Outputs? Parameters are deployment inputs, Resources are the AWS objects to create, and Outputs expose important values after deployment, such as the state-machine ARN." title="Listen" type="button">🔊 Listen</button></div><p>Parameters are deployment inputs, Resources are the AWS objects to create, and Outputs expose important values after deployment, such as the state-machine ARN.</p><div class="cn">中文：Parameters 是输入，Resources 是要创建的 AWS 资源，Outputs 是部署后的重要输出值。</div></div><div class="qa-item"><div class="qa-top"><div><b>Explain !Ref, !Sub and !GetAtt.</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="Explain !Ref, !Sub and !GetAtt. Ref references a parameter or resource, Sub builds strings by substituting variables, and GetAtt reads a named attribute from another resource, such as an ARN." title="Listen" type="button">🔊 Listen</button></div><p>Ref references a parameter or resource, Sub builds strings by substituting variables, and GetAtt reads a named attribute from another resource, such as an ARN.</p><div class="cn">中文：Ref 用来引用，Sub 用来字符串替换，GetAtt 用来取资源属性，例如 ARN。</div></div><div class="qa-item"><div class="qa-top"><div><b>Does CloudFormation execute the DM transformation?</b><span class="qa-tag">TRAP</span></div><button aria-label="Listen" class="listen" data-speak-text="Does CloudFormation execute the DM transformation? No. CloudFormation provisions the Glue Job and the surrounding infrastructure. Glue executes the transformation, and the SQL file contains the business logic." title="Listen" type="button">🔊 Listen</button></div><p>No. CloudFormation provisions the Glue Job and the surrounding infrastructure. Glue executes the transformation, and the SQL file contains the business logic.</p><div class="cn">中文：不会。CloudFormation 只负责创建资源；Glue 真正执行 ETL，SQL 承载业务逻辑。</div></div></section></div></details><details class="major qa-major" id="qa-core-orch"><summary><span class="major-icon">🔁</span><span class="major-copy"><strong>Runtime Orchestration — 4 questions</strong><small>ONE-DAY PRIORITY</small></span><span class="chev">›</span><span class="major-badge">03</span></summary><div class="major-body"><section class="card qa-card"><div class="qa-item"><div class="qa-top"><div><b>Why use EventBridge here?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="Why use EventBridge here? The downstream pipeline should start when upstream DWD and DIM are actually ready. EventBridge matches the data-ready event and starts the state machine, so the design does not rely only on a fixed clock time." title="Listen" type="button">🔊 Listen</button></div><p>The downstream pipeline should start when upstream DWD and DIM are actually ready. EventBridge matches the data-ready event and starts the state machine, so the design does not rely only on a fixed clock time.</p><div class="cn">中文：下游应该在上游数据真正就绪时启动，所以用 EventBridge 做事件驱动，而不是只依赖固定时间。</div></div><div class="qa-item"><div class="qa-top"><div><b>Why use Step Functions instead of Lambda to orchestrate the workflow?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="Why use Step Functions instead of Lambda to orchestrate the workflow? Step Functions is designed for workflow orchestration. It makes sequence, parallel branches, retries and failure paths explicit, while Lambda is better used for custom code." title="Listen" type="button">🔊 Listen</button></div><p>Step Functions is designed for workflow orchestration. It makes sequence, parallel branches, retries and failure paths explicit, while Lambda is better used for custom code.</p><div class="cn">中文：Step Functions 适合编排顺序、并行、重试和失败路径；Lambda 更适合写自定义代码。</div></div><div class="qa-item"><div class="qa-top"><div><b>What does glue:startJobRun.sync mean?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="What does glue:startJobRun.sync mean? It starts the Glue Job and waits for the run to finish before moving to the next state. This guarantees that DM is complete before the ADS jobs start." title="Listen" type="button">🔊 Listen</button></div><p>It starts the Glue Job and waits for the run to finish before moving to the next state. This guarantees that DM is complete before the ADS jobs start.</p><div class="cn">中文：它会启动 Glue 并等待完成，确保 DM 成功之后才跑 ADS。</div></div><div class="qa-item"><div class="qa-top"><div><b>Why do the two ADS jobs run in parallel?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="Why do the two ADS jobs run in parallel? Both ADS jobs depend on DM, but they do not depend on each other. Once DM succeeds, running them in parallel reduces total pipeline latency." title="Listen" type="button">🔊 Listen</button></div><p>Both ADS jobs depend on DM, but they do not depend on each other. Once DM succeeds, running them in parallel reduces total pipeline latency.</p><div class="cn">中文：两个 ADS 都依赖 DM，但互相不依赖，所以 DM 成功后并行可以缩短总时长。</div></div></section></div></details><details class="major qa-major" id="qa-core-iam"><summary><span class="major-icon">🔐</span><span class="major-copy"><strong>IAM &amp; Failure Handling — 2 questions</strong><small>ONE-DAY PRIORITY</small></span><span class="chev">›</span><span class="major-badge">04</span></summary><div class="major-body"><section class="card qa-card"><div class="qa-item"><div class="qa-top"><div><b>Why are there separate IAM roles for EventBridge, Step Functions and Glue?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="Why are there separate IAM roles for EventBridge, Step Functions and Glue? Each service has a different responsibility. Separate roles support least privilege: EventBridge starts the state machine, Step Functions starts approved Glue jobs, and Glue receives the S3 and Catalog permissions needed for ETL." title="Listen" type="button">🔊 Listen</button></div><p>Each service has a different responsibility. Separate roles support least privilege: EventBridge starts the state machine, Step Functions starts approved Glue jobs, and Glue receives the S3 and Catalog permissions needed for ETL.</p><div class="cn">中文：不同服务职责不同，所以分开 Role：EventBridge 启动状态机，Step Functions 启动 Glue，Glue 访问 S3 和 Catalog。</div></div><div class="qa-item"><div class="qa-top"><div><b>What happens if the DM Glue job fails?</b><span class="qa-tag">MUST KNOW</span></div><button aria-label="Listen" class="listen" data-speak-text="What happens if the DM Glue job fails? Step Functions retries according to the retry policy. If the job still fails, Catch sends the workflow to a Fail state, so the downstream ADS jobs do not run on incomplete DM data." title="Listen" type="button">🔊 Listen</button></div><p>Step Functions retries according to the retry policy. If the job still fails, Catch sends the workflow to a Fail state, so the downstream ADS jobs do not run on incomplete DM data.</p><div class="cn">中文：DM 失败会先重试；仍然失败就进入 Fail，避免 ADS 使用不完整数据。</div></div></section></div></details><section class="card one-day-final"><div class="section-head"><h3>If you only have 5 minutes before the interview</h3><button aria-label="Listen" class="listen" data-speak-text="Upstream DWD and DIM publish a data-ready event. EventBridge starts Step Functions. Step Functions runs the DM Glue job synchronously, then runs two independent ADS jobs in parallel. CloudFormation provisions the Glue resources, IAM roles, EventBridge rule and state machine. S3 stores the data, and the Glue Data Catalog stores table metadata." title="Listen" type="button">🔊 Listen</button></div><p class="lead">Upstream DWD and DIM publish a data-ready event. EventBridge starts Step Functions. Step Functions runs the DM Glue job synchronously, then runs two independent ADS jobs in parallel. CloudFormation provisions the Glue resources, IAM roles, EventBridge rule and state machine. S3 stores the data, and the Glue Data Catalog stores table metadata.</p><div class="cn">中文：上游 DWD/DIM 就绪 → EventBridge → Step Functions → DM Glue → 两个 ADS 并行；CloudFormation 负责创建这些 AWS 资源，S3 存数据，Glue Catalog 存元数据。</div></section></main>
-<script>
-(() => {
-  const voiceSelect=document.getElementById('voice');
-  const rate=document.getElementById('rate');
-  const rateValue=document.getElementById('rateValue');
-  let voices=[];
-  function loadVoices(){voices=speechSynthesis.getVoices();voiceSelect.innerHTML='';voices.forEach((v,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${v.name} — ${v.lang}`;voiceSelect.appendChild(o)});let p=voices.findIndex(v=>v.lang==='en-GB');if(p<0)p=voices.findIndex(v=>v.lang.startsWith('en'));if(p>=0)voiceSelect.value=p;}
-  loadVoices();if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=loadVoices;
-  rate.addEventListener('input',()=>rateValue.textContent=Number(rate.value).toFixed(2)+'×');
-  function stopSpeech(){speechSynthesis.cancel();document.querySelectorAll('.listen.speaking').forEach(x=>x.classList.remove('speaking'));}
-  document.getElementById('stop').addEventListener('click',stopSpeech);
-  document.addEventListener('click',e=>{
-    const tab=e.target.closest('.tab-btn');
-    if(tab){document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(x=>x.classList.remove('active'));tab.classList.add('active');document.getElementById(tab.dataset.tab).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});return;}
-    const btn=e.target.closest('.listen');
-    if(btn){e.preventDefault();e.stopPropagation();if(btn.classList.contains('speaking')){stopSpeech();return;}stopSpeech();const text=(btn.dataset.speakText||'').trim();if(!text)return;const u=new SpeechSynthesisUtterance(text);u.lang='en-GB';u.rate=Number(rate.value)||0.9;const v=voices[Number(voiceSelect.value)];if(v)u.voice=v;btn.classList.add('speaking');u.onend=u.onerror=()=>btn.classList.remove('speaking');speechSynthesis.speak(u);}
-  });
-  document.querySelectorAll('.local-toc a').forEach(a=>a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);const t=document.getElementById(id);if(t&&t.tagName==='DETAILS')t.open=true;}));
-})();
-</script>
+<h2 class="page-section-title">3. Last-Minute Review — 5 Things to Remember</h2>
+<section class="card accent last-minute-card"><div class="section-head"><h3>Five lines only</h3><button aria-label="Listen" class="listen" data-speak-text="First, upstream readiness is event-driven. Second, DM centralizes reusable business logic. Third, EventBridge decides when to start and Step Functions controls the order. Fourth, Glue runs ETL while S3 stores data and the Glue Data Catalog stores metadata. Fifth, IAM controls permissions and CloudFormation provisions the infrastructure." title="Listen" type="button">🔊 Listen</button></div>
+<div class="last-minute-grid">
+<div><span>1</span><b>Dependency</b><small>Upstream publishes ready event only after DWD + DIM are ready.</small></div>
+<div><span>2</span><b>DM</b><small>Shared reservation-conversion business logic.</small></div>
+<div><span>3</span><b>Runtime</b><small>EventBridge → Step Functions → Glue.</small></div>
+<div><span>4</span><b>Data</b><small>S3 = data · Glue Catalog = metadata.</small></div>
+<div><span>5</span><b>Control</b><small>IAM = permission · CloudFormation = IaC.</small></div>
+</div>
+</section></main>
 <script id="v2-audio-coverage">
 (() => {
   function cleanText(el){
@@ -423,34 +919,126 @@ Outputs:
     if(q && a && btn) btn.dataset.speakText=(q.innerText+' '+a.innerText).replace(/\s+/g,' ').trim();
   });
 })();
-</script><script id="v3-hdb-voice-default">
+</script><script id="single-voice-runtime-v42">
 (() => {
-  const voiceSelect=document.getElementById('voice');
-  const rate=document.getElementById('rate');
-  const rateValue=document.getElementById('rateValue');
-  function loadHdbVoices(){
-    if(!window.speechSynthesis||!voiceSelect)return;
-    const voices=speechSynthesis.getVoices();
-    const previous=voiceSelect.value;
-    voiceSelect.innerHTML='';
-    voices.forEach((v,i)=>{
-      const o=document.createElement('option');
-      o.value=i;
-      o.textContent=`${v.name} — ${v.lang}`;
+  const voiceSelect = document.getElementById('voice');
+  const rate = document.getElementById('rate');
+  const rateValue = document.getElementById('rateValue');
+  const stop = document.getElementById('stop');
+  let currentButton = null;
+  let userVoiceURI = null;
+
+  function getVoices(){ return window.speechSynthesis ? window.speechSynthesis.getVoices() : []; }
+
+  function chooseDefault(voices){
+    let v = voices.find(x => /Google UK English Female/i.test(x.name));
+    if(!v) v = voices.find(x => x.lang === 'en-GB' && /female|susan|serena|kate|samantha/i.test(x.name));
+    if(!v) v = voices.find(x => x.lang === 'en-GB');
+    if(!v) v = voices.find(x => /^en[-_]/i.test(x.lang));
+    return v || voices[0] || null;
+  }
+
+  function loadVoices(){
+    if(!voiceSelect) return;
+    const voices = getVoices();
+    const keepURI = userVoiceURI || voiceSelect.value;
+    voiceSelect.innerHTML = '';
+    voices.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v.voiceURI;
+      o.textContent = `${v.name} — ${v.lang}`;
       voiceSelect.appendChild(o);
     });
-    let preferred=voices.findIndex(v=>/Google UK English Female/i.test(v.name));
-    if(preferred<0)preferred=voices.findIndex(v=>v.lang==='en-GB'&&/female|susan|serena|kate|samantha/i.test(v.name));
-    if(preferred<0)preferred=voices.findIndex(v=>v.lang==='en-GB');
-    if(previous!==''&&voices[Number(previous)] && voiceSelect.dataset.userChanged==='true'){
-      voiceSelect.value=previous;
-    }else if(preferred>=0){
-      voiceSelect.value=preferred;
-    }
+    const kept = voices.find(v => v.voiceURI === keepURI);
+    const selected = kept || chooseDefault(voices);
+    if(selected) voiceSelect.value = selected.voiceURI;
   }
-  if(voiceSelect){voiceSelect.addEventListener('change',()=>voiceSelect.dataset.userChanged='true');}
-  if(rate&&rateValue){rate.value='0.9';rateValue.textContent='0.90×';rate.addEventListener('input',()=>rateValue.textContent=Number(rate.value).toFixed(2)+'×');}
-  loadHdbVoices();
-  if(window.speechSynthesis)window.speechSynthesis.onvoiceschanged=loadHdbVoices;
+
+  function stopSpeech(){
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    document.querySelectorAll('.listen.speaking').forEach(b => b.classList.remove('speaking'));
+    currentButton = null;
+  }
+
+  function cleanText(root){
+    if(!root) return '';
+    const c = root.cloneNode(true);
+    c.querySelectorAll('button,.cn,pre,code,svg').forEach(x => x.remove());
+    return (c.innerText || c.textContent || '').replace(/\s+/g,' ').trim();
+  }
+
+  function speak(btn){
+    if(!window.speechSynthesis) return;
+    if(btn.classList.contains('speaking')){ stopSpeech(); return; }
+    stopSpeech();
+
+    const text = (btn.dataset.speakText || btn.dataset.text || '').trim()
+      || cleanText(btn.closest('td,th,.sentence,.qa-item,.speakable') || btn.parentElement);
+    if(!text) return;
+
+    const voices = getVoices();
+    const chosen = voices.find(v => v.voiceURI === voiceSelect?.value) || chooseDefault(voices);
+
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = chosen?.lang || 'en-GB';
+    u.rate = rate ? Number(rate.value) || 0.9 : 0.9;
+    if(chosen) u.voice = chosen;
+
+    btn.classList.add('speaking');
+    currentButton = btn;
+    u.onend = u.onerror = () => {
+      btn.classList.remove('speaking');
+      if(currentButton === btn) currentButton = null;
+    };
+    window.speechSynthesis.speak(u);
+  }
+
+  if(rate && rateValue){
+    rate.value='0.9';
+    rateValue.textContent='0.90×';
+    rate.addEventListener('input', () => rateValue.textContent = Number(rate.value).toFixed(2)+'×');
+  }
+
+  voiceSelect?.addEventListener('change', () => {
+    userVoiceURI = voiceSelect.value;
+    stopSpeech();
+  });
+
+  stop?.addEventListener('click', stopSpeech);
+
+  loadVoices();
+  if(window.speechSynthesis){
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    setTimeout(loadVoices, 250);
+    setTimeout(loadVoices, 1000);
+  }
+
+  document.addEventListener('click', e => {
+    const tab = e.target.closest('.tab-btn');
+    if(tab){
+      e.preventDefault();
+      document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.tab)?.classList.add('active');
+      window.scrollTo({top:document.querySelector('.tabs')?.offsetTop || 0, behavior:'smooth'});
+      return;
+    }
+
+    const btn = e.target.closest('button.listen');
+    if(btn){
+      e.preventDefault();
+      e.stopPropagation();
+      speak(btn);
+      return;
+    }
+
+    const anchor = e.target.closest('.local-toc a');
+    if(anchor){
+      const id = anchor.getAttribute('href')?.replace('#','');
+      const target = id && document.getElementById(id);
+      if(target?.tagName === 'DETAILS') target.open = true;
+    }
+  }, true);
 })();
 </script></body></html>
