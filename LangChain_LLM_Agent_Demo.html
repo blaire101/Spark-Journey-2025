@@ -884,18 +884,113 @@
     padding:13px 14px 14px!important;
   }
 }
+</style><style id="v11-short-story-styles">
+.story-lines-v11{display:grid;gap:6px;margin-top:8px}
+.story-line-v11{display:grid;grid-template-columns:30px minmax(0,1fr) 28px;gap:8px;align-items:center;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--card2)}
+.story-num-v11{width:25px;height:25px;display:grid;place-items:center;border-radius:7px;background:rgba(75,148,196,.14);color:#7EB8D6;font-size:8.7px;font-weight:800}
+.story-line-v11 p{margin:0!important;color:var(--text)!important;font-size:10.8px!important;line-height:1.45!important}
+.story-listen-v11{width:26px!important;min-width:26px!important;height:26px!important;padding:0!important;border-radius:50%!important;font-size:10px!important}
+.story-tip-v11{margin-top:7px;color:var(--muted);font-size:9.4px;line-height:1.4}
+.light .story-line-v11{background:#F8FAFC}
+.light .story-num-v11{background:#E3F0F7;color:#2D759E}
+</style><style id="v12-final-run-styles">
+.run-intro-v12{
+  padding:9px 11px;
+  border-bottom:1px solid var(--line);
+  background:var(--card2);
+}
+.run-intro-v12 b{
+  display:block;
+  color:#8FC4DF;
+  font-size:11px;
+}
+.run-intro-v12 p{
+  margin:2px 0 0;
+  color:var(--muted);
+  font-size:10px;
+}
+.final-program-v12{
+  max-height:760px!important;
+}
+.execution-flow-v12{
+  margin:0!important;
+  padding:14px 18px!important;
+  max-height:720px!important;
+  overflow:auto!important;
+  border:0!important;
+  background:#101820!important;
+  color:#D7E1E8!important;
+  font:10.6px/1.55 Menlo,Consolas,monospace!important;
+  white-space:pre!important;
+}
+.follow-title-v12{
+  padding:8px 11px;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:var(--card2);
+  color:#8FC4DF;
+  font-size:10.5px;
+  font-weight:750;
+}
+.memory-output-v12{
+  display:grid;
+  grid-template-columns:58px minmax(0,1fr);
+  border-top:1px solid var(--line);
+}
+.memory-output-v12 b{
+  padding:9px 7px;
+  text-align:right;
+  background:var(--card2);
+  color:#D99072;
+  font:10px Menlo,Consolas,monospace;
+}
+.memory-output-v12 pre{
+  margin:0!important;
+  padding:9px 12px!important;
+  border:0!important;
+  background:#101820!important;
+  color:#BFD5C4!important;
+  font:10.4px/1.5 Menlo,Consolas,monospace!important;
+  white-space:pre-wrap!important;
+}
+.light .execution-flow-v12,
+.light .memory-output-v12 pre{
+  background:#F7F9FB!important;
+  color:#344054!important;
+}
+.light .run-intro-v12 b,
+.light .follow-title-v12{
+  color:#286F9B;
+}
+.light .memory-output-v12 pre{
+  color:#466B4D!important;
+}
+</style><style id="v13-structured-note">
+.structured-note-v13{
+  margin:8px 10px;
+  padding:8px 10px;
+  border-left:3px solid #D5A24C;
+  border-radius:7px;
+  background:#27261F;
+  color:#D9C99B;
+  font-size:10px;
+  line-height:1.45;
+}
+.light .structured-note-v13{
+  background:#FFF8E8;
+  color:#765C1E;
+  border-left-color:#D5A24C;
+}
 </style></head><body><div class="wrap">
 <header><h1>LangChain Final Demo — Customer Support Copilot</h1><p>One compact project covering modules 1–6.</p><div class="toolbar"><label>Voice <select aria-label="English voice" id="voice"><option value="">Loading voices...</option></select></label><span class="voice-status-v6" id="voiceStatusV6">Voice: loading...</span><label>Speed <input id="rate" max="1.3" min=".7" step=".05" type="range" value=".95"/></label><button class="stop" id="stop">Stop</button><button class="theme" id="theme">☀ Light Mode</button></div></header>
 <div class="top-explain-v4">
 <div class="top-explain-head-v4">
 <div>
 <span class="eyebrow-v4">PROJECT STORY</span>
-<h2>60-Second Explanation</h2>
+<h2>Quick Project Explanation</h2>
 </div>
-<button class="listen top-listen-v4 tts-btn-v6" data-text="I built a small LangChain customer-support copilot that combines structured output, a deterministic preprocessing chain, RAG, conversational memory, evaluation, and a tool-calling agent. Local policy files are split into chunks, converted into embeddings, and indexed with FAISS. I expose retrieval as a policy-search tool and also provide a calculation tool. The agent decides which tools to call, while MemorySaver keeps conversation state for follow-up questions." title="Listen">🔊 Listen</button>
 </div>
-<p>I built a small LangChain customer-support copilot that combines structured output, a deterministic preprocessing chain, RAG, conversational memory, evaluation, and a tool-calling agent. Local policy files are split into chunks, converted into embeddings, and indexed with FAISS. I expose retrieval as a policy-search tool and also provide a calculation tool. The agent decides which tools to call, while MemorySaver keeps conversation state for follow-up questions.</p>
-</div>
+<div class="story-lines-v11"><div class="story-line-v11"><span class="story-num-v11">01</span><p>I built a small LangChain customer-support copilot prototype.</p><button class="listen tts-btn-v6 story-listen-v11" data-text="I built a small LangChain customer-support copilot prototype." title="Listen" type="button">🔊</button></div><div class="story-line-v11"><span class="story-num-v11">02</span><p>It combines a simple chain, RAG, memory, and a tool-calling agent.</p><button class="listen tts-btn-v6 story-listen-v11" data-text="It combines a simple chain, RAG, memory, and a tool-calling agent." title="Listen" type="button">🔊</button></div><div class="story-line-v11"><span class="story-num-v11">03</span><p>I use local policy files as the knowledge source for RAG.</p><button class="listen tts-btn-v6 story-listen-v11" data-text="I use local policy files as the knowledge source for RAG." title="Listen" type="button">🔊</button></div><div class="story-line-v11"><span class="story-num-v11">04</span><p>FAISS retrieves the most relevant policy chunks for each question.</p><button class="listen tts-btn-v6 story-listen-v11" data-text="FAISS retrieves the most relevant policy chunks for each question." title="Listen" type="button">🔊</button></div><div class="story-line-v11"><span class="story-num-v11">05</span><p>The agent can search policy information, calculate costs, and remember follow-up questions.</p><button class="listen tts-btn-v6 story-listen-v11" data-text="The agent can search policy information, calculate costs, and remember follow-up questions." title="Listen" type="button">🔊</button></div></div><div class="story-tip-v11">Speak one sentence at a time. Stop after sentence 3 if the listener only wants a short overview.</div></div>
 <nav class="tabs"><button class="tab active" data-tab="p1">01 Overview</button><button class="tab" data-tab="p2">02 Modules 1–6</button><button class="tab" data-tab="p3">03 Final Demo</button><button class="tab" data-tab="p4">04 Complete Code</button></nav>
 <section class="panel active" id="p1"><div class="card"><h3>What this project is</h3><div class="speak-row-v8"><p>A small LangChain customer-support copilot combining <b>structured output, memory, chains, RAG, evaluation, and a tool-calling agent</b>.</p><button class="listen tts-btn-v6 inline-listen-v8" data-text="A small LangChain customer-support copilot combining structured output, memory, chains, RAG, evaluation, and a tool-calling agent ." title="Listen" type="button">🔊</button></div><div class="flow"><span>User</span><b>→</b><span>Structured Output</span><b>→</b><span>Chain</span><b>→</b><span>Agent + Memory</span><b>→</b><span>RAG / Calculation</span><b>→</b><span>Answer</span></div></div><div class="card"><h3>RAG path</h3><div class="flow"><span>policy_search</span><b>→</b><span>Local Files</span><b>→</b><span>Chunks</span><b>→</b><span>Embeddings</span><b>→</b><span>FAISS</span><b>→</b><span>Relevant Context</span></div></div></section>
 <section class="panel" id="p2"><details class="major" open=""><summary><span class="num">01</span><span><b>Structured Output</b><small>Free text → predictable schema</small></span><span>›</span></summary><div class="body">
@@ -1079,7 +1174,6 @@ agent = <span class="tok-func">create_agent</span>(
 <div class="speak-row-v8"><span>Vector similarity search.</span><button class="listen tts-btn-v6 inline-listen-v8" data-text="Vector similarity search." title="Listen" type="button">🔊</button></div>
 <div class="speak-row-v8"><p>FAISS stores embedding vectors and quickly finds the vectors most similar to the user's question.</p><button class="listen tts-btn-v6 inline-listen-v8" data-text="FAISS stores embedding vectors and quickly finds the vectors most similar to the user's question." title="Listen" type="button">🔊</button></div>
 </div>
-
 <div class="concept-card-v5">
 <strong>Retriever</strong>
 <div class="speak-row-v8"><span>The search step.</span><button class="listen tts-btn-v6 inline-listen-v8" data-text="The search step." title="Listen" type="button">🔊</button></div>
@@ -1110,22 +1204,344 @@ agent = <span class="tok-func">create_agent</span>(
 <div class="speak-row-v8"><span>Conversation state.</span><button class="listen tts-btn-v6 inline-listen-v8" data-text="Conversation state." title="Listen" type="button">🔊</button></div>
 <div class="speak-row-v8"><p>Using the same thread_id lets a follow-up like 'What about 24 months?' reuse earlier context.</p><button class="listen tts-btn-v6 inline-listen-v8" data-text="Using the same thread_id lets a follow-up like 'What about 24 months?' reuse earlier context." title="Listen" type="button">🔊</button></div>
 </div>
-</div><div class="card"><h3>Final End-to-End Run</h3><details class="code-cell-v2"><summary class="code-summary-v2"><span class="code-icon-v2">⌘</span><span class="code-summary-copy-v2"><b>Final Run</b><small>Notebook cell · click to expand</small></span><span class="code-chevron-v2">›</span></summary><div class="code-body-v2"><div class="nb-row-v2"><div class="nb-prompt-v2">In [ ]:</div><pre class="code-pre-v2 code-pre-unified-v8"><code class="python-code-v2">question = <span class="tok-string">"What does the Business plan include and what is the cost for 12 months?"</span>
+</div><div class="card"><h3>End-to-End Demo</h3><details class="code-cell-v2"><summary class="code-summary-v2"><span class="code-icon-v2">⌘</span><span class="code-summary-copy-v2"><b>End-to-End Demo</b><small>Notebook cell · click to expand</small></span><span class="code-chevron-v2">›</span></summary><div class="code-body-v2">
+<div class="run-intro-v12">
+<b>Complete end-to-end program</b>
+<p>This final workflow uses the Normalize Chain, RAG, Tools, Agent, and Memory. Structured Output is kept only as a commented learning reference.</p>
+</div>
+<div class="structured-note-v13">Structured Output is intentionally commented out in the final workflow. It remains in the code as a learning reference for schema validation and explicit routing.</div><div class="nb-row-v2"><div class="nb-prompt-v2">In [ ]:</div><pre class="code-pre-v2 code-pre-unified-v8 final-program-v12"><code class="python-code-v2">from pathlib import Path
+from typing import Literal
 
-info = structured_model.<span class="tok-func">invoke</span>(question)
-normalized = normalization_chain.<span class="tok-func">invoke</span>({<span class="tok-string">"question"</span>: question})
+from dotenv import load_dotenv
+from pydantic import BaseModel
 
-result = agent.<span class="tok-func">invoke</span>(
-    {<span class="tok-string">"messages"</span>: [{<span class="tok-string">"role"</span>: <span class="tok-string">"user"</span>, <span class="tok-string">"content"</span>: normalized}]},
+from langchain.agents import create_agent
+from langchain.chat_models import init_chat_model
+from langchain.tools import tool
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_community.document_loaders import TextLoader
+from langchain_community.vectorstores import FAISS
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+from langgraph.checkpoint.memory import MemorySaver
+
+
+load_dotenv()
+
+
+# ============================================================
+# 1. LLM
+# ============================================================
+
+model = init_chat_model(
+    "openai:gpt-4.1-mini",
+    temperature=0
+)
+
+
+# ============================================================
+# 2. Structured Output
+# Free text -&gt; predictable structure
+# ============================================================
+class RequestInfo(BaseModel):
+    topic: Literal[
+        "plan",
+        "refund",
+        "cancellation",
+        "other"
+    ]
+    needs_calculation: bool
+
+
+structured_model = model.with_structured_output(
+    RequestInfo
+)
+
+
+# ============================================================
+# 3. Chain
+# Fixed flow:
+# user question -&gt; prompt -&gt; model -&gt; string parser
+# ============================================================
+
+normalize_prompt = ChatPromptTemplate.from_template(
+    """
+Rewrite the customer request as one clear sentence.
+Keep all important business details.
+
+Request:
+{question}
+"""
+)
+
+normalize_chain = (
+    normalize_prompt
+    | model
+    | StrOutputParser()
+)
+
+
+# ============================================================
+# 4. RAG
+# Local files -&gt; chunks -&gt; embeddings -&gt; FAISS
+# ============================================================
+
+docs = []
+
+for p in Path("data").glob("*.txt"):
+    loaded = TextLoader(
+        str(p),
+        encoding="utf-8"
+    ).load()
+
+    # Keep the source file name for citation.
+for d in loaded:
+        d.metadata["file_name"] = p.name
+
+    docs.extend(loaded)
+
+
+# Chunk = a small piece of a document.
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=400,
+    chunk_overlap=60
+)
+
+chunks = splitter.split_documents(docs)
+
+
+# Embedding = text converted into semantic vectors.
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-3-small"
+)
+
+
+# FAISS = vector similarity search.
+store = FAISS.from_documents(
+    chunks,
+    embeddings
+)
+
+
+# ============================================================
+# 5. Tools
+# @tool exposes a Python function to the Agent.
+# ============================================================
+@tool
+def policy_search(query: str) -&gt; str:
+    """Search subscription plans and policy documents."""
+
+    retrieved = store.similarity_search(
+        query,
+        k=3
+    )
+
+    return "\n\n".join(
+        f"SOURCE: {d.metadata['file_name']}\n"
+        f"{d.page_content}"
+for d in retrieved
+    )
+
+
+@tool
+def total_cost(
+    monthly_price: float,
+    months: int
+) -&gt; float:
+    """Calculate total subscription cost."""
+return monthly_price * months
+
+
+# ============================================================
+# 6. Memory + Agent
+# ============================================================
+
+memory = MemorySaver()
+
+agent = create_agent(
+    model=model,
+    tools=[
+        policy_search,
+        total_cost
+    ],
+    system_prompt="""
+You are a subscription support assistant.
+
+Use policy_search for:
+- plan features
+- plan prices
+- refund rules
+- cancellation rules
+
+Use total_cost for calculations.
+
+Do not invent policy facts.
+Mention the source file when possible.
+""",
+    checkpointer=memory
+)
+
+
+# Same thread_id = same conversation memory.
+config = {
+    "configurable": {
+        "thread_id": "customer-001"
+    }
+}
+
+
+# ============================================================
+# MAIN
+# ============================================================
+def main():
+
+    # INPUT
+    question = (
+        "What does the Business plan include "
+"and what is the cost for 12 months?"
+    )
+
+    print("User:")
+    print(question)
+
+
+    # Optional Structured Output:
+    #
+    # request_info = structured_model.invoke(
+    #     question
+    # )
+    #
+    # print("\nStructured Output:")
+    # print(request_info)
+    #
+    # This step is not required in the final workflow because
+    # the Agent already decides which tools to call.
+
+    # Step 1: Normalize Chain
+    normalized_question = normalize_chain.invoke({
+        "question": question
+    })
+
+    print("\nNormalized Question:")
+    print(normalized_question)
+
+
+    # Step 2: Agent
+    result = agent.invoke(
+        {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": normalized_question
+                }
+            ]
+        },
+        config=config
+    )
+
+
+    # Agent can decide:
+# 1. policy_search(...)
+# 2. total_cost(99, 12)
+# 3. Generate the final answer
+
+    answer = result["messages"][-1].content
+
+    print("\nFinal Answer:")
+    print(answer)
+
+
+if __name__ == "__main__":
+    main()
+</code></pre></div></div></details><details class="code-cell-v2"><summary class="code-summary-v2"><span class="code-icon-v2">⌘</span><span class="code-summary-copy-v2"><b>Execution Flow &amp; Follow-up</b><small>Notebook cell · click to expand</small></span><span class="code-chevron-v2">›</span></summary><div class="code-body-v2">
+<div class="run-intro-v12">
+<b>Execution flow and follow-up</b>
+<p>This shows the active workflow first, then demonstrates how the same thread_id preserves context for a follow-up question.</p>
+</div>
+<pre class="execution-flow-v12">INPUT
+
+What does the Business plan include
+and what is the cost for 12 months?
+
+        ↓
+
+Optional Structured Output
+(not used in the final workflow)
+
+It can produce:
+topic = plan
+needs_calculation = True
+
+It is commented out because the Agent already
+handles routing and tool selection dynamically.
+
+        ↓
+
+1. Normalize Chain
+
+Prompt
+→ LLM
+→ StrOutputParser
+
+        ↓
+
+Normalized Question
+
+What features are included in the Business plan,
+and what is the total cost for 12 months?
+
+        ↓
+
+2. Agent
+
+        ├── policy_search
+        │       ↓
+        │      RAG
+        │       ↓
+        │      FAISS
+        │       ↓
+        │      plans.txt
+        │       ↓
+        │      $99/month
+        │      audit logs
+        │      API access
+        │
+        └── total_cost
+                ↓
+              99 × 12
+                ↓
+              1188
+
+        ↓
+
+FINAL ANSWER
+
+The Business plan includes audit logs and API access.
+It costs $99 per month.
+The total cost for 12 months is $1,188.
+Source: plans.txt</pre><div class="follow-title-v12">Follow-up Using Conversation Memory</div><div class="nb-row-v2"><div class="nb-prompt-v2">In [ ]:</div><pre class="code-pre-v2 code-pre-unified-v8"><code class="python-code-v2"><span class="tok-comment"># Same config means the same conversation memory.</span>
+follow_up = agent.<span class="tok-func">invoke</span>(
+    {
+        <span class="tok-string">"messages"</span>: [
+            {
+                <span class="tok-string">"role"</span>: <span class="tok-string">"user"</span>,
+                <span class="tok-string">"content"</span>: <span class="tok-string">"What about 24 months?"</span>
+            }
+        ]
+    },
     config=config
 )
 
-<span class="tok-builtin">print</span>(result[<span class="tok-string">"messages"</span>][-<span class="tok-number">1</span>].content)</code></pre></div></div></details><details class="code-cell-v2"><summary class="code-summary-v2"><span class="code-icon-v2">⌘</span><span class="code-summary-copy-v2"><b>Memory Follow-up</b><small>Notebook cell · click to expand</small></span><span class="code-chevron-v2">›</span></summary><div class="code-body-v2"><div class="nb-row-v2"><div class="nb-prompt-v2">In [ ]:</div><pre class="code-pre-v2 code-pre-unified-v8"><code class="python-code-v2">follow_up = agent.<span class="tok-func">invoke</span>(
-    {<span class="tok-string">"messages"</span>: [{<span class="tok-string">"role"</span>: <span class="tok-string">"user"</span>, <span class="tok-string">"content"</span>: <span class="tok-string">"What about 24 months?"</span>}]},
-    config=config
+<span class="tok-builtin">print</span>(
+    follow_up[<span class="tok-string">"messages"</span>][-<span class="tok-number">1</span>].content
 )
-
-<span class="tok-builtin">print</span>(follow_up[<span class="tok-string">"messages"</span>][-<span class="tok-number">1</span>].content)</code></pre></div></div></details></div><div class="card"><h3>1–6 Coverage</h3><table><tr><th>Module</th><th>Implementation</th><th>Meaning</th></tr><tr><td>1. Structured Output</td><td>RequestInfo</td><td>Predictable schema</td></tr><tr><td>2. Memory</td><td>MemorySaver + thread_id</td><td>Conversation state</td></tr><tr><td>3. Chains</td><td>prompt | model | parser</td><td>Fixed workflow</td></tr><tr><td>4. RAG</td><td>Embeddings + FAISS</td><td>External knowledge</td></tr><tr><td>5. Evaluation</td><td>Fixed test cases</td><td>Repeatable quality check</td></tr><tr><td>6. Agents &amp; Tools</td><td>policy_search + total_cost</td><td>Dynamic tool selection</td></tr></table></div>
+</code></pre></div>
+<div class="memory-output-v12">
+<b>Output</b>
+<pre>For 24 months, the Business plan would cost $2,376.</pre>
+</div>
+</div></details></div><div class="card"><h3>1–6 Coverage</h3><table><tr><th>Module</th><th>Implementation</th><th>Meaning</th></tr><tr><td>1. Structured Output</td><td>RequestInfo</td><td>Predictable schema</td></tr><tr><td>2. Memory</td><td>MemorySaver + thread_id</td><td>Conversation state</td></tr><tr><td>3. Chains</td><td>prompt | model | parser</td><td>Fixed workflow</td></tr><tr><td>4. RAG</td><td>Embeddings + FAISS</td><td>External knowledge</td></tr><tr><td>5. Evaluation</td><td>Fixed test cases</td><td>Repeatable quality check</td></tr><tr><td>6. Agents &amp; Tools</td><td>policy_search + total_cost</td><td>Dynamic tool selection</td></tr></table></div>
 <section class="faiss-visual-v9">
 <div class="faiss-head-v9">
 <div>
