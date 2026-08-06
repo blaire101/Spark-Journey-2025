@@ -6850,6 +6850,33 @@ button.v59-audio > .v59-speaker-glyph{
 }
 </style>
 
+
+<style id="v89-related-flow-six">
+#aws-components .v75-related-flow{
+  gap:5px;
+  padding-right:42px;
+}
+#aws-components .v75-flow-node{
+  padding:8px 5px;
+}
+#aws-components .v75-flow-node b{
+  font-size:10.5px;
+  line-height:1.2;
+}
+#aws-components .v75-flow-node span{
+  font-size:9px;
+}
+</style>
+
+
+<style id="v90-tab4-fullwidth">
+#aws-components .v69-top-summary{
+  max-width:none !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -7260,6 +7287,8 @@ button.v59-audio > .v59-speaker-glyph{
 </div>
 </div>
 <div class="v75-related-flow">
+<div class="v75-flow-node"><b>API Gateway</b><span>API entry</span></div>
+<i>→</i>
 <div class="v75-flow-node"><b>Lambda</b><span>event compute</span></div>
 <i>→</i>
 <div class="v75-flow-node"><b>S3</b><span>documents</span></div>
@@ -7269,9 +7298,30 @@ button.v59-audio > .v59-speaker-glyph{
 <div class="v75-flow-node"><b>OpenSearch</b><span>index / retrieve</span></div>
 <i>→</i>
 <div class="v75-flow-node"><b>SageMaker</b><span>ML</span></div>
-<button aria-label="Listen" class="v59-audio v75-flow-audio" data-speak-text="Lambda to S3 to Textract to OpenSearch to SageMaker." title="Listen" type="button"><span aria-hidden="true" class="v59-speaker-glyph">🔊</span></button>
+<button aria-label="Listen" class="v59-audio v75-flow-audio" data-speak-text="API Gateway to Lambda to S3 to Textract to OpenSearch to SageMaker." title="Listen" type="button"><span aria-hidden="true" class="v59-speaker-glyph">🔊</span></button>
 </div>
 <div class="v75-related-grid">
+<article class="v75-related-card">
+<div class="v75-related-card-head">
+<span class="v75-related-icon">🌐</span>
+<h4>Amazon API Gateway</h4>
+</div>
+<div class="v75-related-row">
+<span class="v75-related-label">What it is</span>
+<div class="v75-related-text"><b>API Gateway</b> is a managed service for creating, publishing, securing, and monitoring APIs.</div>
+<button aria-label="Listen" class="v59-audio v75-related-audio" data-speak-text="API Gateway is a managed service for creating, publishing, securing, and monitoring APIs." title="Listen" type="button"><span aria-hidden="true" class="v59-speaker-glyph">🔊</span></button>
+</div>
+<div class="v75-related-row">
+<span class="v75-related-label">Used for</span>
+<div class="v75-related-text">It provides the HTTP entry point for the application and forwards validated requests to <b>Lambda</b> for processing.</div>
+<button aria-label="Listen" class="v59-audio v75-related-audio" data-speak-text="It provides the HTTP entry point for the application and forwards validated requests to Lambda for processing." title="Listen" type="button"><span aria-hidden="true" class="v59-speaker-glyph">🔊</span></button>
+</div>
+<div class="v75-related-row v75-related-key">
+<span class="v75-related-label">Key point</span>
+<div class="v75-related-text">API Gateway handles the API boundary; Lambda runs the application logic behind that API.</div>
+<button aria-label="Listen" class="v59-audio v75-related-audio" data-speak-text="API Gateway handles the API boundary; Lambda runs the application logic behind that API." title="Listen" type="button"><span aria-hidden="true" class="v59-speaker-glyph">🔊</span></button>
+</div>
+</article>
 <article class="v75-related-card">
 <div class="v75-related-card-head">
 <span class="v75-related-icon">⚡</span>
@@ -7380,8 +7430,8 @@ button.v59-audio > .v59-speaker-glyph{
 </div>
 <div class="v75-related-memory">
 <span>LINE :</span>
-<div><b>Lambda → S3 → Textract → OpenSearch → SageMaker</b></div>
-<button aria-label="Listen" class="v59-audio v75-memory-audio" data-speak-text="Lambda to S3 to Textract to OpenSearch to SageMaker." title="Listen" type="button"><span aria-hidden="true" class="v59-speaker-glyph">🔊</span></button>
+<div><b>API Gateway → Lambda → S3 → Textract → OpenSearch → SageMaker</b></div>
+<button aria-label="Listen" class="v59-audio v75-memory-audio" data-speak-text="API Gateway to Lambda to S3 to Textract to OpenSearch to SageMaker." title="Listen" type="button"><span aria-hidden="true" class="v59-speaker-glyph">🔊</span></button>
 </div>
 </section>
 </div></details>
