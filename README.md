@@ -1,6 +1,4 @@
-# Spark Interview Quick Reference
-
----
+# Spark Quick 
 
 <details>
 <summary><strong>Spark doc</strong></summary>
