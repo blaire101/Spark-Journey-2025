@@ -2,6 +2,9 @@
 
 ---
 
+<details>
+<summary><strong>Spark doc</strong></summary>
+
 ## 1. Core Concepts
 
 | Concept | One-Line Answer | Key Points |
